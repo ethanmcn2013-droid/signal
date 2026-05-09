@@ -1,0 +1,253 @@
+@import "tailwindcss";
+
+:root {
+  /* ── Indigo ramp ──────────────────────────────────────────── */
+  --indigo-50:  #eef2ff;
+  --indigo-100: #e0e7ff;
+  --indigo-200: #c7d2fe;
+  --indigo-300: #a5b4fc;
+  --indigo-400: #818cf8;
+  --indigo-500: #6366f1;
+  --indigo-600: #4f46e5;
+  --indigo-700: #4338ca;
+  --indigo-800: #3730a3;
+  --indigo-900: #312e81;
+  --highlight:  #7c5cff;
+
+  /* ── Ink ramp ─────────────────────────────────────────────── */
+  --ink-0:   #ffffff;
+  --ink-50:  #fafafa;
+  --ink-100: #f4f4f5;
+  --ink-200: #e4e4e7;
+  --ink-300: #d4d4d8;
+  --ink-400: #a1a1aa;
+  --ink-500: #71717a;
+  --ink-600: #52525b;
+  --ink-700: #3f3f46;
+  --ink-800: #27272a;
+  --ink-900: #18181b;
+  --ink-950: #09090b;
+
+  /* ── Status tokens ────────────────────────────────────────── */
+  --status-shipped:    #10b981;
+  --status-shipped-bg: #d1fae5;
+  --status-flight:     #f59e0b;
+  --status-flight-bg:  #fef3c7;
+  --status-next:       #6366f1;
+  --status-next-bg:    #eef2ff;
+  --status-blocked:    #ef4444;
+  --status-blocked-bg: #fee2e2;
+  --status-todo:       #6366f1;
+  --status-progress:   #f59e0b;
+  --status-done:       #10b981;
+
+  /* ── Semantic surfaces ────────────────────────────────────── */
+  --bg:          #fafaf7;
+  --bg-elev:     #ffffff;
+  --bg-deep:     #f4f4f0;
+
+  --border:      #e4e4e7;
+  --border-soft: #ececec;
+
+  --ink:         var(--ink-900);
+  --ink-soft:    var(--ink-700);
+  --ink-quiet:   var(--ink-500);
+  --ink-faint:   var(--ink-400);
+
+  /* ── Brand semantics ──────────────────────────────────────── */
+  --brand:       var(--indigo-600);
+  --brand-deep:  var(--indigo-800);
+  --brand-soft:  var(--indigo-50);
+  --brand-glow:  rgba(79, 70, 229, 0.42);
+
+  /* ── Motion springs ───────────────────────────────────────── */
+  --spring-snap:  cubic-bezier(.2, .9, .2, 1.2);
+  --spring-soft:  cubic-bezier(.32, .72, 0, 1);
+  --spring-glide: cubic-bezier(.16, 1, .3, 1);
+  --ease-out:     cubic-bezier(.22, .61, .36, 1);
+
+  /* ── Type ─────────────────────────────────────────────────── */
+  --font-sans-stack: var(--font-geist-sans), 'Geist', -apple-system,
+    system-ui, sans-serif;
+  --font-mono-stack: var(--font-geist-mono), 'Geist Mono', ui-monospace,
+    'SF Mono', monospace;
+
+  --fs-display: clamp(2.75rem, 1.8rem + 4.2vw, 5.5rem);
+  --fs-title:   clamp(1.875rem, 1.4rem + 2.2vw, 3.25rem);
+  --fs-section: clamp(1.5rem, 1.2rem + 1.5vw, 2.25rem);
+
+  /* ── Radii ────────────────────────────────────────────────── */
+  --r-1:    4px;
+  --r-2:    6px;
+  --r-3:    10px;
+  --r-4:    14px;
+  --r-5:    20px;
+  --r-pill: 999px;
+
+  /* ── Shadows ──────────────────────────────────────────────── */
+  --shadow-1: 0 1px 2px rgba(24, 24, 27, .04),
+              0 1px 1px rgba(24, 24, 27, .03);
+  --shadow-2: 0 4px 12px rgba(24, 24, 27, .06),
+              0 1px 3px rgba(24, 24, 27, .04);
+  --shadow-3: 0 24px 60px -20px rgba(24, 24, 27, .18),
+              0 8px 24px -8px rgba(24, 24, 27, .08);
+}
+
+@theme inline {
+  --color-brand:       var(--brand);
+  --color-brand-deep:  var(--brand-deep);
+  --color-brand-soft:  var(--brand-soft);
+  --color-highlight:   var(--highlight);
+
+  --color-indigo-50:   var(--indigo-50);
+  --color-indigo-100:  var(--indigo-100);
+  --color-indigo-200:  var(--indigo-200);
+  --color-indigo-300:  var(--indigo-300);
+  --color-indigo-400:  var(--indigo-400);
+  --color-indigo-500:  var(--indigo-500);
+  --color-indigo-600:  var(--indigo-600);
+  --color-indigo-700:  var(--indigo-700);
+  --color-indigo-800:  var(--indigo-800);
+  --color-indigo-900:  var(--indigo-900);
+
+  --color-ink:         var(--ink);
+  --color-ink-soft:    var(--ink-soft);
+  --color-ink-quiet:   var(--ink-quiet);
+  --color-ink-faint:   var(--ink-faint);
+  --color-ink-0:       var(--ink-0);
+  --color-ink-50:      var(--ink-50);
+  --color-ink-100:     var(--ink-100);
+  --color-ink-200:     var(--ink-200);
+  --color-ink-300:     var(--ink-300);
+  --color-ink-400:     var(--ink-400);
+  --color-ink-500:     var(--ink-500);
+  --color-ink-600:     var(--ink-600);
+  --color-ink-700:     var(--ink-700);
+  --color-ink-800:     var(--ink-800);
+  --color-ink-900:     var(--ink-900);
+  --color-ink-950:     var(--ink-950);
+
+  --color-status-shipped:     var(--status-shipped);
+  --color-status-shipped-bg:  var(--status-shipped-bg);
+  --color-status-flight:      var(--status-flight);
+  --color-status-flight-bg:   var(--status-flight-bg);
+  --color-status-next:        var(--status-next);
+  --color-status-next-bg:     var(--status-next-bg);
+  --color-status-blocked:     var(--status-blocked);
+  --color-status-blocked-bg:  var(--status-blocked-bg);
+  --color-status-todo:        var(--status-todo);
+  --color-status-progress:    var(--status-progress);
+  --color-status-done:        var(--status-done);
+
+  --color-bg:          var(--bg);
+  --color-bg-elev:     var(--bg-elev);
+  --color-bg-deep:     var(--bg-deep);
+  --color-border:      var(--border);
+  --color-border-soft: var(--border-soft);
+
+  --font-sans:    var(--font-geist-sans);
+  --font-mono:    var(--font-geist-mono);
+  --font-display: var(--font-geist-sans);
+
+  --radius-1:    var(--r-1);
+  --radius-2:    var(--r-2);
+  --radius-3:    var(--r-3);
+  --radius-4:    var(--r-4);
+  --radius-5:    var(--r-5);
+  --radius-pill: var(--r-pill);
+
+  --shadow-1:    var(--shadow-1);
+  --shadow-2:    var(--shadow-2);
+  --shadow-3:    var(--shadow-3);
+}
+
+/* ── Base ──────────────────────────────────────────────────── */
+html,
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans-stack);
+  font-feature-settings: "ss01", "cv11";
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--indigo-200);
+  color: var(--ink-900);
+}
+
+/* ── Typography scales ─────────────────────────────────────── */
+.h-display {
+  font-size: var(--fs-display);
+  line-height: 0.96;
+  letter-spacing: -0.045em;
+  font-weight: 600;
+}
+.h-title {
+  font-size: var(--fs-title);
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+  font-weight: 600;
+}
+.h-section {
+  font-size: var(--fs-section);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  font-weight: 600;
+}
+
+/* ── Marker accent ─────────────────────────────────────────── */
+.marker {
+  background: linear-gradient(
+    120deg,
+    transparent 0 6%,
+    color-mix(in srgb, var(--highlight) 32%, transparent) 6% 94%,
+    transparent 94%
+  );
+  background-size: 100% 0.78em;
+  background-position: 0 82%;
+  background-repeat: no-repeat;
+  padding: 0 0.05em;
+}
+
+/* ── Grain texture ─────────────────────────────────────────── */
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.04;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.92' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+
+/* ── Focus ─────────────────────────────────────────────────── */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* ── Rise animation ────────────────────────────────────────── */
+@keyframes rise {
+  0%   { opacity: 0; transform: translateY(14px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.rise {
+  animation: rise 0.85s var(--spring-glide) both;
+}
+
+/* ── Reduced motion ────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
