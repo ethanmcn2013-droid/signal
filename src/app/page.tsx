@@ -4,19 +4,19 @@ import { BriefingAnatomy } from "@/components/marketing/briefing-anatomy";
 
 const PILLARS = [
   {
-    title: "Attention Engine",
+    title: "Attention engine",
     description:
-      "Auto-detects blockers, stalled work, overload, dependency issues, momentum shifts, missed deadlines, inactive projects, bottlenecks. No configuration.",
+      "Flags overloaded work, stalled items, slipping dates, single-owner pressure, and quiet projects. No configuration.",
   },
   {
     title: "Briefings, not dashboards",
     description:
-      "Never \"sprint velocity\" or \"workflow throughput\". Always \"this project is slowing down\" or \"too much work landed this week\".",
+      "Never chart language. Always lines like \"this project is slowing down\" or \"too much work landed this week\".",
   },
   {
-    title: "Priority Compression",
+    title: "Priority compression",
     description:
-      "\"Only 3 things matter today\" instead of \"84 tasks\". The signal, not the noise.",
+      "\"Three things need attention today\" instead of \"84 tasks\". The signal, not the noise.",
   },
 ] as const;
 

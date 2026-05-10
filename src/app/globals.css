@@ -12,7 +12,7 @@
   --indigo-700: #4338ca;
   --indigo-800: #3730a3;
   --indigo-900: #312e81;
-  --highlight:  #7c5cff;
+  --highlight:  var(--indigo-600);
 
   /* ── Ink ramp ─────────────────────────────────────────────── */
   --ink-0:   #ffffff;
