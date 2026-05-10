@@ -21,7 +21,7 @@ const ANN = [
   },
   {
     label: "Needs attention",
-    note: "Surfaced automatically — overload, blockers, stalled work, missed deadlines.",
+    note: "Shown when they matter: overload, stalled work, slipping dates, and crowded weeks.",
   },
   {
     label: "Moving well",

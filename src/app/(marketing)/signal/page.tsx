@@ -10,7 +10,7 @@ const BLOCKS = [
   {
     label: "Needs attention",
     dot: "#f59e0b",
-    body: "The things that will slow you down if left alone. Blocked tasks, overdue work, dependency failures, projects that have gone quiet. Two or three items at most. If it is not actively costing you something, it does not appear here.",
+    body: "The things that will slow you down if left alone. Held-up tasks, overdue work, missing decisions, projects that have gone quiet. Two or three items at most. If it is not actively costing you something, it does not appear here.",
   },
   {
     label: "Moving well",
@@ -20,20 +20,20 @@ const BLOCKS = [
   {
     label: "Quiet risks",
     dot: "#71717a",
-    body: "Nothing is on fire. But something might be. A project that has gone silent for over a week. Most of a project's work sitting on one person. The same blocker holding up several pieces of work. Quiet risks are the ones dashboards miss.",
+    body: "Nothing is on fire. But something might be. A project that has gone silent for over a week. Most of a project's work sitting on one person. The same hold-up affecting several pieces of work. Quiet risks are the ones dashboards miss.",
   },
   {
     label: "Suggested focus",
     dot: "#4f46e5",
-    body: "One to three things worth doing today. Not a ranked list of all open tasks. A considered read of what is blocked, what is late, and where effort would do the most before the day ends.",
+    body: "One to three things worth doing today. Not a ranked list of all open tasks. A considered read of what is held up, what is late, and where effort would do the most before the day ends.",
   },
 ] as const;
 
 const DAILY_CADENCE = {
   label: "Daily",
   when: "Every morning. Two minutes.",
-  what: "A snapshot of where the work stands today. What blocked overnight, what shipped, what needs a decision before noon. Read it before your first meeting.",
-  why: "Most of what matters in a day is visible by 9am. The Signal reads it so you don't have to.",
+  what: "A snapshot of where the work stands today. What got held up overnight, what moved, what needs a decision before noon. Read it before your first meeting.",
+  why: "Most of what matters in a day is visible by 9am. The briefing brings the pattern to the surface.",
 } as const;
 
 const COMING_CADENCES = [
@@ -48,7 +48,7 @@ const BRIEFING_EXAMPLE = [
     items: [
       "Vendor quote signoff has been quiet for 8 days, and Confirm flowers is held up by it.",
       "Send save-the-dates was due 5 days ago.",
-      "Print menus has been blocked for 3 days.",
+      "Print menus has been held up for 3 days.",
     ],
   },
   {
@@ -111,9 +111,8 @@ export default function SignalPage() {
             Your day, before you read it.
           </h1>
           <p style={{ fontSize: 17, color: "var(--ink-soft)", lineHeight: 1.6, maxWidth: 520 }}>
-            The Daily Signal is a short written briefing. It reads what&apos;s in your Signal
-            Tasks workspace and writes the brief. Two minutes. Plain sentences. Everything
-            that matters, nothing that doesn&apos;t.
+            The Daily Signal is the briefing format for Signal Analytics. Two minutes.
+            Plain sentences. Everything that matters, nothing that doesn&apos;t.
           </p>
         </div>
       </section>
@@ -168,7 +167,7 @@ export default function SignalPage() {
               maxWidth: 480,
             }}
           >
-            Daily ships today. Weekly and Launch are designed — not yet live.
+            Daily is the first format. Weekly and Launch are designed, not yet live.
           </p>
 
           {/* Daily — fully shipping */}
