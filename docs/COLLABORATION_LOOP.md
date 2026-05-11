@@ -68,3 +68,26 @@ For the wedding/events wedge, a venue coordinator should open the briefing and u
 - what changed since the last update
 - what action should happen next
 
+## Cycle 2: Invite And First View
+
+Analytics owns the "What matters now" section of the invited collaborator's first view.
+
+Role defaults for Analytics:
+
+- Creator sees the full workspace briefing.
+- Collaborator sees relevant signals and next actions.
+- Guest sees only selected safe briefing content.
+- Client / supplier sees what needs their attention.
+- Viewer sees public-safe summary language only.
+
+Cycle 2 implementation targets:
+
+- Today Signal block for shared workspaces
+- safe signal visibility rules
+- briefing share source tracking
+- signal-to-task approval path
+- no dashboard exposure for guests
+
+Acceptance test:
+
+A couple opens the shared wedding workspace and sees a short briefing that names what needs attention without exposing private planning context.
