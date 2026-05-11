@@ -43,7 +43,7 @@ export function SiteNav() {
             rel="noopener noreferrer"
             style={{ fontSize: 11, color: "var(--ink-quiet)", fontWeight: 400, textDecoration: "none", letterSpacing: "-0.01em" }}
           >
-            signal studio<span style={{ color: "#c9a96a" }}>.</span>
+            signal studio<span style={{ color: "#4f46e5" }}>.</span>
           </a>
           <span aria-hidden style={{ color: "var(--ink-faint)", fontSize: 10 }}>·</span>
           <a
