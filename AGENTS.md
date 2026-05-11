@@ -8,6 +8,8 @@ Signal HQ lives in the Studio repo at `ethanmcn2013-droid/studio` and is the int
 
 When a change in Analytics affects product state, roadmap, launch readiness, GTM, messaging, campaigns, demos, templates, outreach, pilots, metrics, decisions, risks, or strategic learning, update Signal HQ before the task is complete.
 
+Before briefing, signal, sharing, guest-facing, source-tracking, or cross-product data work, read `docs/COLLABORATION_LOOP.md`. Analytics owns the attention and briefing moment in the collaboration loop.
+
 In practice, open or update a Studio PR that changes:
 
 - `src/lib/hq/data.ts`
