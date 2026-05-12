@@ -1,5 +1,37 @@
 # Signal Analytics · Changelog
 
+## 2026-05-13 (even later still) · Phase B.3 · Real movedToShippedAt from activities
+
+Replaced the v1 heuristic (`lane='shipped' && idleDays<1 → now - idleDays*DAY`)
+with a real join into Tasks's `activities` table. The just-shipped
+trigger now fires from honest data instead of guessing.
+
+The query joins each task to a subquery returning the MAX
+`created_at` from activities where `kind IN ('toggleComplete', 'move')`.
+Unix seconds converted to ms inline (`* 1000`). Used only when
+`lane='shipped'`; null otherwise.
+
+  SELECT
+    t.id, …,
+    ( SELECT MAX(a.created_at) * 1000
+      FROM activities a
+      WHERE a.task_id = t.id
+        AND a.kind IN ('toggleComplete', 'move') ) AS shipped_activity_at
+  FROM tasks t
+  …
+
+Honest finding worth documenting: in the owner's current Tasks DB,
+**no shipped task has a `toggleComplete` or `move` activity recorded
+yet** — only `taskAdd`. So the just-shipped trigger fires more rarely
+than the v1 heuristic, but it now fires *correctly*. The
+collaboration-loop brand promise ("never claim what the data doesn't
+prove") favours strict correctness over false-positive frequency.
+
+Tasks-side observation surfaced to a future cycle: the toggleComplete
+write path on the Tasks API should be audited to confirm it actually
+logs activities. Memory says it does; this DB suggests it doesn't,
+for these particular tasks.
+
 ## 2026-05-13 (even later) · Phase E.3 · Engine unit tests — math defended
 
 The briefing engine has accrued enough load-bearing math (4 triggers,

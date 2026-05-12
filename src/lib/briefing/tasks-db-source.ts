@@ -3,8 +3,6 @@ import { createClient, type Client } from "@libsql/client";
 import type { BriefingContext, BriefingSource } from "./source";
 import type { Lane, TaskSignal } from "./types";
 
-const DAY = 86_400_000;
-
 /**
  * Reads the signed-in user's Tasks workspaces and maps them to
  * TaskSignal[]. Joins on EMAIL (Tasks/Analytics may live in
@@ -24,9 +22,11 @@ const DAY = 86_400_000;
  *                 measurable cost and the engine doesn't use this in
  *                 v1 triggers
  *   - sourceLabel: "Tasks · {workspace.name}"
- *   - movedToShippedAt: heuristic — lane='done' AND idleDays<1 →
- *                 (now - idleDays*DAY), else null. Phase B.3 will
- *                 replace this with a real activities-table read.
+ *   - movedToShippedAt: real read of the activities table — most
+ *                 recent toggleComplete or move event per task,
+ *                 converted from unix seconds to ms. Used only when
+ *                 lane='shipped'; null otherwise. The just-shipped
+ *                 trigger fires reliably from real data now.
  */
 export function makeTasksDbSource(): BriefingSource | null {
   const url = process.env.TASKS_DATABASE_URL;
@@ -45,9 +45,16 @@ export function makeTasksDbSource(): BriefingSource | null {
       const tasksUserId = userRow.rows[0]?.id;
       if (!tasksUserId) return [];
 
-      // Get all tasks in workspaces this user belongs to.
+      // Get all tasks in workspaces this user belongs to, with the
+      // most recent shipping-relevant activity timestamp joined in.
       // Limit 200 — defends the engine if a workspace is huge; the
       // cap-3-per-bucket renderer doesn't need more than that.
+      //
+      // shipped_activity_at:
+      //   activities.created_at is unix SECONDS (default unixepoch());
+      //   we multiply by 1000 to align with the rest of the engine's
+      //   millisecond clock. Considered only on lane=done tasks
+      //   below — null on everything else.
       const result = await client.execute({
         sql: `
           SELECT
@@ -58,7 +65,13 @@ export function makeTasksDbSource(): BriefingSource | null {
             t.due_at       AS due_at,
             t.idle_days    AS idle_days,
             t.blocked_by   AS blocked_by,
-            w.name         AS workspace_name
+            w.name         AS workspace_name,
+            (
+              SELECT MAX(a.created_at) * 1000
+              FROM activities a
+              WHERE a.task_id = t.id
+                AND a.kind IN ('toggleComplete', 'move')
+            ) AS shipped_activity_at
           FROM tasks t
           INNER JOIN workspaces w ON w.id = t.workspace_id
           WHERE t.workspace_id IN (
@@ -69,15 +82,20 @@ export function makeTasksDbSource(): BriefingSource | null {
         args: [String(tasksUserId)],
       });
 
-      const now = Date.now();
       const signals: TaskSignal[] = [];
       for (const row of result.rows) {
         const lane = canonicaliseLane(row.lane as string);
         const priority = parsePriority(row.priority as string);
         const idleDays = Number(row.idle_days ?? 0);
         const blockedBy = parseBlockedBy(row.blocked_by as string | null);
+        // Only credit shipped tasks with a shipping timestamp. The
+        // subquery returns the latest toggleComplete or move event;
+        // for an actively-shipped task that's the moment it shipped.
+        const shippedAt = row.shipped_activity_at;
         const movedToShippedAt =
-          lane === "shipped" && idleDays < 1 ? now - idleDays * DAY : null;
+          lane === "shipped" && shippedAt != null
+            ? Number(shippedAt)
+            : null;
         signals.push({
           id: String(row.id),
           title: String(row.title),
