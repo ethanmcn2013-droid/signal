@@ -5,11 +5,13 @@ import { usePathname } from "next/navigation";
 import { Wordmark } from "@/components/brand/wordmark";
 import { STUDIO_URL, ROADMAP_URL, TASKS_URL } from "@/lib/product-urls";
 
-const NAV = [
-  { href: "/signal",  label: "Signal"  },
-  { href: "/method",  label: "Method"  },
-  { href: "/pricing", label: "Pricing" },
-  { href: "/about",   label: "About"   },
+const UMBRELLA_PRICING = "https://signalstudio.ie/pricing";
+
+const NAV: { href: string; label: string; external?: boolean }[] = [
+  { href: "/signal",        label: "Signal"  },
+  { href: "/method",        label: "Method"  },
+  { href: UMBRELLA_PRICING, label: "Pricing", external: true },
+  { href: "/about",         label: "About"   },
 ];
 
 export function SiteNav() {
@@ -78,19 +80,26 @@ export function SiteNav() {
         {/* Desktop nav — right cluster */}
         <nav className="hidden items-center md:flex" style={{ gap: 28 }}>
           {NAV.map((item) => {
-            const active = pathname === item.href;
-            return (
-              <Link
+            const active = !item.external && pathname === item.href;
+            const linkStyle: React.CSSProperties = {
+              fontSize: 13.5,
+              color: active ? "var(--ink)" : "var(--ink-soft)",
+              fontWeight: active ? 600 : 400,
+              textDecoration: "none",
+              transition: "color 200ms",
+            };
+            return item.external ? (
+              <a
                 key={item.href}
                 href={item.href}
-                style={{
-                  fontSize: 13.5,
-                  color: active ? "var(--ink)" : "var(--ink-soft)",
-                  fontWeight: active ? 600 : 400,
-                  textDecoration: "none",
-                  transition: "color 200ms",
-                }}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={linkStyle}
               >
+                {item.label}
+              </a>
+            ) : (
+              <Link key={item.href} href={item.href} style={linkStyle}>
                 {item.label}
               </Link>
             );
@@ -120,19 +129,31 @@ export function SiteNav() {
             }}
           >
             {NAV.map((item) => {
-              const active = pathname === item.href;
-              return (
+              const active = !item.external && pathname === item.href;
+              const linkStyle: React.CSSProperties = {
+                fontSize: 13.5,
+                color: active ? "var(--ink)" : "var(--ink-soft)",
+                fontWeight: active ? 600 : 400,
+                textDecoration: "none",
+                transition: "color 200ms",
+              };
+              return item.external ? (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block px-4 py-2"
+                  style={linkStyle}
+                >
+                  {item.label}
+                </a>
+              ) : (
                 <Link
                   key={item.href}
                   href={item.href}
                   className="block px-4 py-2"
-                  style={{
-                    fontSize: 13.5,
-                    color: active ? "var(--ink)" : "var(--ink-soft)",
-                    fontWeight: active ? 600 : 400,
-                    textDecoration: "none",
-                    transition: "color 200ms",
-                  }}
+                  style={linkStyle}
                 >
                   {item.label}
                 </Link>

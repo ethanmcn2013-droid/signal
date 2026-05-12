@@ -67,7 +67,7 @@ export function SiteFooter() {
             links={[
               { href: "/signal",  label: "Signal"  },
               { href: "/method",  label: "Method"  },
-              { href: "/pricing", label: "Pricing" },
+              { href: "https://signalstudio.ie/pricing", label: "Pricing", external: true },
             ]}
           />
 
