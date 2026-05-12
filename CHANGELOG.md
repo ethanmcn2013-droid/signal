@@ -2,6 +2,21 @@
 
 ## 2026-05-12
 
+### Suite review patch — the primary CTA stopped opening nothing.
+
+The Analytics hero shipped with a primary CTA reading "Open the
+briefing," routed to `/app`. The `/app` route does not exist in
+this repo. Every visitor who clicked the loudest button on the
+page hit a 404. That's the §2.2 failure mode written in the brand
+handbook — demo-vs-reality drift — quietly running on production.
+
+Repointed the CTA to `/wedding-planning`, the page that already
+exists and reads honestly as an example briefing. Changed the verb
+from "Open the briefing" to "See a sample briefing." Promise now
+matches what the click delivers. The briefing pipeline still has
+to be built before `/app` is the right destination; this is the
+honest interim, not the final answer.
+
 ### Cycle 11.4 shipped — cinematic briefing rebuilt at the Tasks bar.
 
 The old homepage demo (HeroMotion + a thin BriefingMotion fade-in
