@@ -1,5 +1,36 @@
 # Signal Analytics · Changelog
 
+## 2026-05-12 (even later) · Phase A · Settings + opt-out, before any email can send
+
+Analytics earned an authenticated app surface today, and the first
+thing built on it is the kill-switch — by design. Before a single
+briefing email is allowed to be wired up (Phase C), users have a
+weekly-by-default preference, a settings page with three radio options
+(daily / weekly / off), and a no-auth one-click unsubscribe route that
+honours both link clicks (`/u/[token]`) and the RFC 8058
+`List-Unsubscribe-Post` header (`/api/unsubscribe/[token]`). Tokens
+rotate on every send so a forwarded link can't be replayed.
+
+Foundation that landed alongside: Clerk wired into the root layout,
+`/app/*` routes protected via middleware, Turso/libSQL via Drizzle
+with a `user_preferences` table (userId · email · cadence ·
+unsubscribeToken · lastSentAt), and a clean .env.example documenting
+every secret the operator owes before this can deploy. Phase B
+(engine) and Phase C (Resend + cron fanout) sit on top of this
+without re-shaping anything.
+
+Brand call buried in here: the unsubscribe landing says "You're off."
+in 32-point and a one-line "Change your mind →" link. No "are you
+sure", no marketing recovery, no friction. The moment of leaving
+treated with the same care as the moment of arriving.
+
+Owner setup owed before this can run anywhere: create a Turso DB
+(`turso db create signal-analytics`), set
+`TURSO_ANALYTICS_DATABASE_URL` + `TURSO_ANALYTICS_AUTH_TOKEN` and
+`NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` + `CLERK_SECRET_KEY` on Vercel
+(both Turso vars Sensitive), and run `npm run db:push` once locally
+to apply the migration. Phase B starts the morning after.
+
 ## 2026-05-12 (later still)
 
 ### Suite chrome consolidated — one bar, breadcrumb prefix.
