@@ -1,21 +1,6 @@
-export type BlockId = "attention" | "moving" | "risks" | "focus";
+import type { BlockId, DemoBlock, DemoItem, DomainId } from "@/lib/domains";
 
-export type BriefingItem = {
-  id: string;
-  /** All phrasing variants for this item — used to demonstrate the rotation engine. */
-  variants: string[];
-  /** Index into variants[] currently rendered. */
-  variantIndex: number;
-};
-
-export type Block = {
-  id: BlockId;
-  label: string;
-  dot: string;
-  items: BriefingItem[];
-  /** Items that tried to enter the block but failed the cap. */
-  overflow: { id: string; text: string }[];
-};
+export type { BlockId, DemoBlock, DemoItem, DomainId };
 
 export type Scene =
   | "boot"
@@ -26,21 +11,14 @@ export type Scene =
   | "reset";
 
 export type DemoState = {
-  blocks: Block[];
+  blocks: DemoBlock[];
   scene: Scene;
   delivered: boolean;
-};
-
-export const BLOCK_DOT: Record<BlockId, string> = {
-  attention: "#f59e0b",
-  moving: "#10b981",
-  risks: "#71717a",
-  focus: "var(--brand)",
-};
-
-export const BLOCK_LABEL: Record<BlockId, string> = {
-  attention: "Needs attention",
-  moving: "Moving well",
-  risks: "Quiet risks",
-  focus: "Suggested focus",
+  /** id of item whose phrasing is mid-swap (drives the visual highlight). */
+  swappingItemId: string | null;
+  /** map from item id to current variant index */
+  variantByItemId: Record<string, number>;
+  /** overflow items currently visible under "Needs attention" */
+  overflowVisible: { id: string; text: string }[];
+  domain: DomainId;
 };

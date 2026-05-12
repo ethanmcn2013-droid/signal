@@ -1,5 +1,4 @@
-import { HeroMotion } from "@/components/landing/hero-motion";
-import { AnalyticsDemo } from "@/components/landing/analytics-demo";
+import { Hero } from "@/components/landing/hero";
 import { BriefingAnatomy } from "@/components/marketing/briefing-anatomy";
 
 const PILLARS = [
@@ -39,8 +38,7 @@ const ANTI_FEATURES = [
 export default function HomePage() {
   return (
     <div style={{ background: "var(--bg)" }}>
-      <HeroMotion />
-      <AnalyticsDemo />
+      <Hero />
       <BriefingAnatomy />
 
       {/* ── Pillars ─────────────────────────────────────────────── */}
