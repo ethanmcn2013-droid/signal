@@ -1,5 +1,15 @@
 # Signal Analytics · Changelog
 
+## 2026-05-12 (later still)
+
+### Suite chrome consolidated — one bar, breadcrumb prefix.
+
+The thin cross-product strip is gone from every Analytics marketing
+page. The Analytics wordmark now sits next to a small "signal
+studio. /" back-link on a single row. Cross-product discovery
+falls back to the footer Suite column. See the umbrella changelog
+for the dissent captured inside the decision.
+
 ## 2026-05-12
 
 ### Suite review patch — the primary CTA stopped opening nothing.

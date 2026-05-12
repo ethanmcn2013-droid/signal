@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Wordmark } from "@/components/brand/wordmark";
-import { STUDIO_URL, ROADMAP_URL, TASKS_URL } from "@/lib/product-urls";
+import { STUDIO_URL } from "@/lib/product-urls";
 
 const UMBRELLA_PRICING = "https://signalstudio.ie/pricing";
 
@@ -27,53 +27,27 @@ export function SiteNav() {
         borderBottomColor: "var(--border-soft)",
       }}
     >
-      {/* ── Suite chrome — cross-product strip ──────────────────── */}
-      <div
-        className="border-b"
-        style={{
-          background: "color-mix(in srgb, var(--bg-deep) 55%, transparent)",
-          borderBottomColor: "var(--border-soft)",
-        }}
-      >
-        <div
-          className="mx-auto flex h-7 w-full max-w-[1140px] items-center px-6"
-          style={{ gap: 16 }}
-        >
+      <div className="mx-auto flex h-14 w-full max-w-[1140px] items-center justify-between px-6">
+
+        <div className="flex items-center" style={{ gap: 12 }}>
           <a
             href={STUDIO_URL}
             target="_blank"
             rel="noopener noreferrer"
-            style={{ fontSize: 11, color: "var(--ink-quiet)", fontWeight: 400, textDecoration: "none", letterSpacing: "-0.01em" }}
+            aria-label="Signal Studio — home"
+            className="hidden sm:inline-flex"
+            style={{
+              fontSize: 12,
+              color: "var(--ink-quiet)",
+              fontWeight: 400,
+              textDecoration: "none",
+              letterSpacing: "-0.01em",
+              transition: "color 200ms",
+            }}
           >
             signal studio<span style={{ color: "#4f46e5" }}>.</span>
           </a>
-          <span aria-hidden style={{ color: "var(--ink-faint)", fontSize: 10 }}>·</span>
-          <a
-            href={TASKS_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ fontSize: 11, color: "var(--ink-quiet)", fontWeight: 400, textDecoration: "none", letterSpacing: "-0.01em" }}
-          >
-            tasks
-          </a>
-          <a
-            href={ROADMAP_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ fontSize: 11, color: "var(--ink-quiet)", fontWeight: 400, textDecoration: "none", letterSpacing: "-0.01em" }}
-          >
-            roadmap
-          </a>
-          <span style={{ fontSize: 11, color: "var(--ink)", fontWeight: 600, letterSpacing: "-0.01em" }}>
-            analytics
-          </span>
-        </div>
-      </div>
-
-      <div className="mx-auto flex h-14 w-full max-w-[1140px] items-center justify-between px-6">
-
-        {/* Brand lockup — Analytics wordmark */}
-        <div className="flex items-center">
+          <span aria-hidden className="hidden sm:inline" style={{ color: "var(--ink-faint)", fontSize: 12 }}>/</span>
           <Wordmark size="0.9375rem" />
         </div>
 
