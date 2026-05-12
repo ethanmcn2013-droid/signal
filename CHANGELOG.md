@@ -1,5 +1,43 @@
 # Signal Analytics · Changelog
 
+## 2026-05-13 (even later) · Phase E.3 · Engine unit tests — math defended
+
+The briefing engine has accrued enough load-bearing math (4 triggers,
+severity weighting, focus ranking, dedup, bucket caps, per-day prose
+rotation) that not having unit tests was reckless. Today the engine
+got 35 of them. Pure-function, deterministic, < 1s to run.
+
+  - `triggers.test.ts` — 21 tests across all four detectors. Confirms
+    the boundary conditions hold (idle < 3 stays out, idle ≥ 3 flags;
+    overload at exactly 5 ignored, > 5 flags; due within 2 days flags,
+    > 2 days doesn't; etc.). Also asserts the severity ordering claims
+    the engine documents in comments (overdue > due-today, P0-stuck >
+    P3-stuck, 10-day overdue > 1-day overdue, etc.).
+
+  - `build.test.ts` — 14 tests on the orchestration. Hard 3-cap per
+    bucket asserted four ways. Dedup confirmed (a task that hits both
+    due-soon and stuck-work appears only in Needs attention). Focus
+    ranking confirmed (due-soon outranks stuck-work; overdue outranks
+    future-due). Per-(user, day) prose rotation: same day → same
+    phrasing, 7 days of input → at least 2 distinct phrasings. Plus a
+    Wedding 2026 regression check that doubles as a guard for marketing
+    surfaces describing this shape.
+
+Runner: `node --test --import tsx`. Zero new dependencies beyond the
+existing tsx (added earlier this session). No Jest/Vitest needed —
+the engine is pure functions, Node's built-in test runner is the
+right tool. Output is the standard TAP-style spec list.
+
+  npm test
+  ℹ tests 35
+  ℹ pass 35
+  ℹ fail 0
+  ℹ duration_ms 531
+
+This is the test floor, not the ceiling. Phase B.3 (real
+movedToShippedAt) will need tests; future trigger additions must come
+with their own. The engine's contract is now explicit in test code.
+
 ## 2026-05-13 (later) · Phase E.2 · /app/brief cinematic polish
 
 The web brief learned its motion grammar. Until this cycle, the
