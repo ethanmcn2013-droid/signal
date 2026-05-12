@@ -1,5 +1,47 @@
 # Signal Analytics · Changelog
 
+## 2026-05-13 (later) · Phase E.2 · /app/brief cinematic polish
+
+The web brief learned its motion grammar. Until this cycle, the
+in-app surface was a clean read but a static one — the moment of
+opening the brief didn't earn the suite's claim about being
+"different from a dashboard." It does now.
+
+  Entry stagger. Greeting → summary → bucket headers → items
+  cascade in at 60-80ms intervals on first paint. Total reveal
+  budget ≈ 800ms — long enough to feel deliberate, short enough
+  that you don't wait on it.
+
+  Reader-cursor hover. Hovering any item in a bucket pulls a 2px
+  brand-coloured left border onto it and dims the bucket's other
+  items to 45% opacity. Lifted from the marketing demo's cursor
+  pattern, simpler implementation. Move the mouse, the cursor
+  follows. Mouse leaves, everything reverts.
+
+  Why-this as a real motion accordion. Replaced the browser-default
+  <details> element with a motion accordion: the disclosure arrow
+  rotates 90° on toggle, the height eases open with outExpo, and
+  each reason inside fades + slides in on a 60ms internal stagger.
+  This is the one expansion email by design omits, so the web view
+  owes it the polish.
+
+  Live indicator chip. The top-right of the header now carries a
+  small "● Live" dot that pulses on a 2.4s loop — same recipe as
+  the assignee-presence pulse in Tasks's anatomy section.
+
+  Ambient focus mark. The Suggested Focus block carries a subtle
+  brand-violet dot in the corner that pulses on a 3.2s cycle —
+  reinforces that this block is the live actionable layer.
+
+  MotionConfig reducedMotion="user" wraps the entire view, so
+  every motion above collapses to zero for users who prefer
+  reduced motion. Accessibility prefs win in one line; the
+  reader-cursor and accordion still work without animation.
+
+The email render stays deliberately calmer — no motion, no
+accordion — because that's the locked v1 contract for the email
+surface. The web view is now the one that earns the extra cost.
+
 ## 2026-05-13 · Phase E.1 · Personalised greeting + middleware → proxy rename
 
 Two hygiene cycles in one tick.
