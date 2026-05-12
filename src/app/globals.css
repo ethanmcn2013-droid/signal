@@ -241,6 +241,20 @@ body {
   animation: rise 0.85s var(--spring-glide) both;
 }
 
+.wedding-signal-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr);
+  gap: 40px;
+  align-items: start;
+}
+
+@media (max-width: 760px) {
+  .wedding-signal-layout {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
+
 /* ── Reduced motion ────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   *,

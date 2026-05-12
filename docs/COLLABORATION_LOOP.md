@@ -91,3 +91,20 @@ Cycle 2 implementation targets:
 Acceptance test:
 
 A couple opens the shared wedding workspace and sees a short briefing that names what needs attention without exposing private planning context.
+
+## Cycle 7: Wedding Today Signal
+
+Analytics now shows the wedding/events proof scene directly:
+
+- a Harbour House wedding Today Signal block
+- attention, waiting-on, still-clear, and suggested-focus signals
+- plain-language briefing copy tied to the same venue meeting, Tasks template, and Roadmap update
+
+This is the attention layer for the same scene already used by Notes, Tasks, and Roadmap.
+
+Next implementation targets:
+
+- feed the briefing from real shared events
+- add source tracking for briefing shares
+- connect a suggested focus item back into Signal Tasks
+- keep guest-safe briefings separate from internal creator-only signals
