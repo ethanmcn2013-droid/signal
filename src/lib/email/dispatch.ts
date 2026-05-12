@@ -6,7 +6,10 @@ import { db } from "@/lib/db";
 import { userPreferences } from "@/lib/db/schema";
 import type { Briefing } from "@/lib/briefing/types";
 import { BriefingEmail } from "./briefing-email";
+import { renderBriefingText } from "./plain-text";
 import { generateUnsubscribeToken } from "./tokens";
+
+const REPLY_TO = process.env.RESEND_REPLY_TO ?? "hello@signalstudio.ie";
 
 const FROM = process.env.RESEND_FROM ?? "Signal Analytics <hello@signalstudio.ie>";
 
@@ -74,6 +77,11 @@ export async function dispatchBriefing({
       cadence,
     }),
   );
+  const text = renderBriefingText(
+    briefing,
+    { unsubscribeUrl, preferencesUrl, viewInBrowserUrl },
+    cadence,
+  );
 
   const subject = subjectFor(briefing, cadence);
 
@@ -81,8 +89,10 @@ export async function dispatchBriefing({
   const { data, error } = await resend.emails.send({
     from: FROM,
     to: email,
+    replyTo: REPLY_TO,
     subject,
     html,
+    text,
     headers: {
       // RFC 2369 + RFC 8058 — surfaces Gmail/Apple Mail's native
       // unsubscribe button at the TOP of the message.
@@ -105,19 +115,31 @@ export async function dispatchBriefing({
 }
 
 function subjectFor(b: Briefing, cadence: "daily" | "weekly"): string {
-  // Lead with the most attention-worthy item, capped short.
-  // Falls back to a calm timestamp if nothing's on fire.
-  const headline =
-    b.needsAttention[0]?.text ??
-    b.suggestedFocus[0]?.text ??
-    b.quietRisks[0]?.text;
+  // Calm, brand-consistent, low-noise subject. Same shape every day.
+  // The content does the talking once the email is opened — the
+  // subject's job is to be recognizable in the inbox, not alarming.
+  //
+  // Earlier iterations led with the loudest item ("Signal · Send
+  // invitations is 14 days overdue") — Gmail flagged it as spam-like
+  // and the brand never just calls itself "Signal" alone (collides
+  // with Signal Messenger). Fixed both at once.
   const date = new Date(b.generatedAt).toLocaleDateString("en-IE", {
     weekday: "short",
     day: "numeric",
     month: "short",
   });
-  const prefix = cadence === "weekly" ? "Weekly Signal" : "Signal";
-  if (!headline) return `${prefix} · ${date}`;
-  const trimmed = headline.length > 60 ? `${headline.slice(0, 57)}…` : headline;
-  return `${prefix} · ${trimmed}`;
+  const prefix = cadence === "weekly" ? "Weekly Signal" : "Daily Signal";
+  const tail = subjectTail(b);
+  return tail ? `${prefix} · ${date} · ${tail}` : `${prefix} · ${date}`;
+}
+
+function subjectTail(b: Briefing): string {
+  // A short, neutral shape-of-the-day clause that adds context
+  // without naming the alarming item. Empty when nothing's pulling.
+  const att = b.needsAttention.length;
+  if (att >= 3) return "three things to watch";
+  if (att === 2) return "two things to watch";
+  if (att === 1) return "one thing to watch";
+  if (b.quietRisks.length > 0) return "quiet morning";
+  return "";
 }

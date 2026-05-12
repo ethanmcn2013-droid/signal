@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getOrCreatePreferences } from "@/lib/preferences";
 import { CadenceForm } from "./cadence-form";
+import { SendTestButton } from "./send-test-button";
 
 export const metadata: Metadata = {
   title: "Notifications — Signal Analytics",
@@ -36,6 +37,8 @@ export default async function NotificationsPage() {
       </p>
 
       <CadenceForm initial={prefs.cadence as "daily" | "weekly" | "off"} />
+
+      <SendTestButton email={prefs.email} />
 
       <div
         className="mt-12 rounded-xl border p-5"

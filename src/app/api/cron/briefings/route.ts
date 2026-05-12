@@ -4,7 +4,7 @@ import { eq } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { userPreferences } from "@/lib/db/schema";
 import { buildBriefing } from "@/lib/briefing/build";
-import { mockBriefingSource } from "@/lib/briefing/mock-source";
+import { getBriefingSource } from "@/lib/briefing/get-source";
 import { dispatchBriefing } from "@/lib/email/dispatch";
 
 export const dynamic = "force-dynamic";
@@ -45,12 +45,17 @@ export async function POST(req: Request) {
     result: Awaited<ReturnType<typeof dispatchBriefing>>;
   }> = [];
 
+  const source = getBriefingSource();
   for (const [cadenceLabel, rows] of [
     ["daily", targets[0]],
     ["weekly", targets[1]],
   ] as const) {
     for (const row of rows) {
-      const briefing = await buildBriefing(mockBriefingSource, row.userId, now);
+      const briefing = await buildBriefing(
+        source,
+        { userId: row.userId, email: row.email },
+        now,
+      );
       const result = await dispatchBriefing({
         userId: row.userId,
         email: row.email,

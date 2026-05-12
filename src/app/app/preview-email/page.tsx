@@ -1,7 +1,7 @@
-import { auth } from "@clerk/nextjs/server";
 import { render } from "@react-email/render";
 import { buildBriefing } from "@/lib/briefing/build";
-import { mockBriefingSource } from "@/lib/briefing/mock-source";
+import { getMockSource } from "@/lib/briefing/get-source";
+import { getOrCreatePreferences } from "@/lib/preferences";
 import { BriefingEmail } from "@/lib/email/briefing-email";
 
 export const metadata = {
@@ -18,14 +18,15 @@ export const metadata = {
  * this before every meaningful Phase C change.
  */
 export default async function PreviewEmailPage() {
-  const { userId } = await auth();
-  if (!userId) {
-    return (
-      <main className="mx-auto max-w-[640px] px-6 py-16">Not signed in.</main>
-    );
-  }
-
-  const briefing = await buildBriefing(mockBriefingSource, userId);
+  // Preview deliberately uses the mock source so the QA surface
+  // shows the demo brief regardless of whether real Tasks data
+  // is wired. Catches Outlook/Gmail layout regressions before
+  // production sends do.
+  const prefs = await getOrCreatePreferences();
+  const briefing = await buildBriefing(getMockSource(), {
+    userId: prefs.userId,
+    email: prefs.email,
+  });
   const base =
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://analytics.signalstudio.ie";
 

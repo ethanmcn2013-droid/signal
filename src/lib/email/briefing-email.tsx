@@ -12,21 +12,32 @@ import {
 } from "@react-email/components";
 import type { BriefItem, Briefing, FocusItem } from "@/lib/briefing/types";
 
+// ─────────────────────────────────────────────────────────────
+// Brand tokens — kept inline because email clients don't have
+// CSS variables. Mirrors the marketing site's design language.
+// ─────────────────────────────────────────────────────────────
 const ink = "#14151a";
 const inkSoft = "#535560";
 const inkQuiet = "#7a7d87";
 const brand = "#7c5cff";
-const lineSoft = "#e7e7ec";
-const sunken = "#f6f6f8";
+const accentAttention = "#c2410c"; // muted amber-orange
+const accentMoving = "#2e7d57"; // muted green
+const accentRisk = "#7c5cff"; // brand violet (quiet risks share brand colour)
+const lineSoft = "#ececf0";
+const surface = "#ffffff";
+const surfaceTint = "#fafafb";
 
 const fontStack =
   "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif";
+const monoStack =
+  "ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace";
 
 /**
  * The email render of the briefing. Voice + structure match
- * <BriefingView/> but the layout is email-safe: inline styles,
- * no Tailwind, no CSS vars, no motion. Why-this expansions are
- * deliberately not rendered here — locked v1 contract.
+ * <BriefingView/> on the web, but the layout is email-safe:
+ * inline styles, table-based focus block, no CSS variables,
+ * no Tailwind, no motion. Why-this expansions stay on the web
+ * by design (locked v1 contract).
  */
 export function BriefingEmail({
   briefing,
@@ -42,15 +53,14 @@ export function BriefingEmail({
   cadence: "daily" | "weekly";
 }) {
   const preview = previewText(briefing);
-  const dateLine = new Date(briefing.generatedAt).toLocaleDateString(
-    "en-IE",
-    {
-      weekday: "long",
+  const dateLine = new Date(briefing.generatedAt)
+    .toLocaleDateString("en-IE", {
+      weekday: "short",
       day: "numeric",
       month: "short",
-      year: "numeric",
-    },
-  );
+    })
+    .toUpperCase();
+  const summary = summaryLine(briefing);
 
   return (
     <Html>
@@ -58,9 +68,9 @@ export function BriefingEmail({
       <Preview>{preview}</Preview>
       <Body
         style={{
-          backgroundColor: "#fafafb",
+          backgroundColor: surfaceTint,
           margin: 0,
-          padding: "32px 0",
+          padding: "40px 0",
           fontFamily: fontStack,
         }}
       >
@@ -68,91 +78,186 @@ export function BriefingEmail({
           style={{
             maxWidth: 560,
             margin: "0 auto",
-            backgroundColor: "#ffffff",
+            backgroundColor: surface,
             border: `1px solid ${lineSoft}`,
-            borderRadius: 12,
-            padding: "32px 28px",
+            borderRadius: 14,
+            padding: 0,
+            overflow: "hidden",
           }}
         >
-          {/* Stamp */}
-          <Text
+          {/* Wordmark header — branded identity strip */}
+          <Section
             style={{
-              fontSize: 11,
-              fontWeight: 600,
-              letterSpacing: "0.14em",
-              textTransform: "uppercase",
-              color: inkQuiet,
-              margin: 0,
-              marginBottom: 4,
+              padding: "20px 28px 16px",
+              borderBottom: `1px solid ${lineSoft}`,
+              backgroundColor: surface,
             }}
           >
-            {cadence === "weekly" ? "Weekly Signal" : "Daily Signal"} · {dateLine}
-          </Text>
+            <table
+              width="100%"
+              cellPadding={0}
+              cellSpacing={0}
+              style={{ borderCollapse: "collapse" }}
+            >
+              <tbody>
+                <tr>
+                  <td
+                    style={{
+                      fontSize: 14,
+                      fontWeight: 600,
+                      color: ink,
+                      letterSpacing: "-0.01em",
+                    }}
+                  >
+                    signal studio.{" "}
+                    <span
+                      style={{
+                        color: inkQuiet,
+                        fontWeight: 500,
+                      }}
+                    >
+                      / analytics
+                    </span>
+                  </td>
+                  <td
+                    align="right"
+                    style={{
+                      fontFamily: monoStack,
+                      fontSize: 10.5,
+                      letterSpacing: "0.16em",
+                      color: inkQuiet,
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {dateLine}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </Section>
 
-          {/* Greeting */}
-          <Heading
-            as="h1"
+          {/* Body */}
+          <Section style={{ padding: "28px 28px 24px" }}>
+            {/* Greeting + one-line summary */}
+            <Heading
+              as="h1"
+              style={{
+                fontSize: 30,
+                lineHeight: 1.15,
+                fontWeight: 600,
+                color: ink,
+                margin: 0,
+                marginBottom: 8,
+                letterSpacing: "-0.015em",
+              }}
+            >
+              {greeting(briefing.greetingHour)}
+            </Heading>
+            <Text
+              style={{
+                fontSize: 15.5,
+                color: inkSoft,
+                margin: 0,
+                marginBottom: 28,
+                lineHeight: 1.5,
+              }}
+            >
+              {summary}
+            </Text>
+
+            {briefing.needsAttention.length > 0 && (
+              <Bucket
+                title="Needs attention"
+                items={briefing.needsAttention}
+                accent={accentAttention}
+              />
+            )}
+            {briefing.movingWell.length > 0 && (
+              <Bucket
+                title="Moving well"
+                items={briefing.movingWell}
+                accent={accentMoving}
+                muted
+              />
+            )}
+            {briefing.quietRisks.length > 0 && (
+              <Bucket
+                title="Quiet risks"
+                items={briefing.quietRisks}
+                accent={accentRisk}
+              />
+            )}
+            {briefing.suggestedFocus.length > 0 && (
+              <FocusBlock items={briefing.suggestedFocus} />
+            )}
+
+            {/* Grace note */}
+            <Text
+              style={{
+                fontSize: 13,
+                color: inkQuiet,
+                fontStyle: "italic",
+                margin: 0,
+                marginTop: 28,
+              }}
+            >
+              {graceNote(briefing)}
+            </Text>
+          </Section>
+
+          {/* Footer */}
+          <Section
             style={{
-              fontSize: 28,
-              lineHeight: 1.2,
-              fontWeight: 600,
-              color: ink,
-              margin: 0,
-              marginBottom: 28,
+              padding: "16px 28px 20px",
+              borderTop: `1px solid ${lineSoft}`,
+              backgroundColor: surfaceTint,
             }}
           >
-            {greeting(briefing.greetingHour)}
-          </Heading>
-
-          {briefing.needsAttention.length > 0 && (
-            <Bucket title="Needs attention" items={briefing.needsAttention} />
-          )}
-          {briefing.movingWell.length > 0 && (
-            <Bucket title="Moving well" items={briefing.movingWell} muted />
-          )}
-          {briefing.quietRisks.length > 0 && (
-            <Bucket title="Quiet risks" items={briefing.quietRisks} />
-          )}
-          {briefing.suggestedFocus.length > 0 && (
-            <FocusBlock items={briefing.suggestedFocus} />
-          )}
-
-          <Hr
-            style={{ borderColor: lineSoft, margin: "32px 0 20px" }}
-          />
-
-          <Text
-            style={{
-              fontSize: 11.5,
-              color: inkQuiet,
-              margin: 0,
-              marginBottom: 8,
-            }}
-          >
-            Three items per block. Hard cap. The signal, not the noise.
-          </Text>
-
-          {/* Footer — opt-out and preferences */}
-          <Text
-            style={{
-              fontSize: 12,
-              color: inkSoft,
-              margin: 0,
-              lineHeight: 1.5,
-            }}
-          >
-            <Link href={unsubscribeUrl} style={{ color: inkSoft }}>
-              Stop these emails
-            </Link>
-            {"  ·  "}
-            <Link href={preferencesUrl} style={{ color: inkSoft }}>
-              Send {cadence === "daily" ? "weekly" : "daily"} instead
-            </Link>
-            {"  ·  "}
-            <Link href={viewInBrowserUrl} style={{ color: inkSoft }}>
-              View in browser
-            </Link>
-          </Text>
+            <Text
+              style={{
+                fontSize: 11,
+                fontFamily: monoStack,
+                letterSpacing: "0.10em",
+                textTransform: "uppercase",
+                color: inkQuiet,
+                margin: 0,
+                marginBottom: 8,
+              }}
+            >
+              Three per block. Hard cap.
+            </Text>
+            <Text
+              style={{
+                fontSize: 12,
+                color: inkSoft,
+                margin: 0,
+                lineHeight: 1.6,
+              }}
+            >
+              <Link href={unsubscribeUrl} style={{ color: inkSoft, textDecoration: "underline" }}>
+                Stop these emails
+              </Link>
+              {"   ·   "}
+              <Link href={preferencesUrl} style={{ color: inkSoft, textDecoration: "underline" }}>
+                {cadence === "daily" ? "Send weekly instead" : "Send daily instead"}
+              </Link>
+              {"   ·   "}
+              <Link href={viewInBrowserUrl} style={{ color: inkSoft, textDecoration: "underline" }}>
+                View in browser
+              </Link>
+            </Text>
+            <Text
+              style={{
+                fontSize: 11,
+                color: inkQuiet,
+                margin: 0,
+                marginTop: 10,
+              }}
+            >
+              Sent by signal studio. — one short read per day, no marketing,
+              no upsells.
+            </Text>
+          </Section>
         </Container>
       </Body>
     </Html>
@@ -162,29 +267,58 @@ export function BriefingEmail({
 function Bucket({
   title,
   items,
+  accent,
   muted,
 }: {
   title: string;
   items: BriefItem[];
+  accent: string;
   muted?: boolean;
 }) {
   return (
-    <Section style={{ marginBottom: 24 }}>
-      <Text
-        style={{
-          fontSize: 14,
-          fontWeight: 600,
-          color: muted ? inkSoft : ink,
-          margin: 0,
-          marginBottom: 12,
-        }}
-      >
-        {title}
-      </Text>
+    <Section style={{ marginBottom: 22 }}>
+      <table cellPadding={0} cellSpacing={0} style={{ borderCollapse: "collapse", marginBottom: 10 }}>
+        <tbody>
+          <tr>
+            <td
+              style={{
+                width: 8,
+                paddingRight: 8,
+                verticalAlign: "middle",
+              }}
+            >
+              <span
+                style={{
+                  display: "inline-block",
+                  width: 6,
+                  height: 6,
+                  borderRadius: 999,
+                  backgroundColor: accent,
+                }}
+              />
+            </td>
+            <td
+              style={{
+                fontSize: 13,
+                fontWeight: 600,
+                textTransform: "uppercase",
+                letterSpacing: "0.06em",
+                color: muted ? inkSoft : ink,
+              }}
+            >
+              {title}
+            </td>
+          </tr>
+        </tbody>
+      </table>
       {items.map((item) => (
         <Section
           key={item.id}
-          style={{ marginBottom: 14 }}
+          style={{
+            marginBottom: 12,
+            paddingLeft: 16,
+            borderLeft: `2px solid ${muted ? lineSoft : accent}33`,
+          }}
         >
           <Text
             style={{
@@ -198,10 +332,12 @@ function Bucket({
           </Text>
           <Text
             style={{
-              fontSize: 12,
+              fontSize: 11.5,
+              fontFamily: monoStack,
+              letterSpacing: "0.04em",
               color: inkQuiet,
               margin: 0,
-              marginTop: 2,
+              marginTop: 3,
             }}
           >
             from {item.sourceLabel}
@@ -216,28 +352,51 @@ function FocusBlock({ items }: { items: FocusItem[] }) {
   return (
     <Section
       style={{
-        marginTop: 24,
-        padding: "20px 18px",
-        borderRadius: 10,
+        marginTop: 28,
+        padding: "20px 20px 16px",
+        borderRadius: 12,
         border: `1px solid ${brand}26`,
-        backgroundColor: `${brand}0a`,
+        backgroundColor: `${brand}08`,
       }}
     >
-      <Text
-        style={{
-          fontSize: 14,
-          fontWeight: 600,
-          color: ink,
-          margin: 0,
-          marginBottom: 12,
-        }}
-      >
-        Suggested focus
-      </Text>
+      <table cellPadding={0} cellSpacing={0} style={{ borderCollapse: "collapse", marginBottom: 12 }}>
+        <tbody>
+          <tr>
+            <td
+              style={{
+                width: 8,
+                paddingRight: 8,
+                verticalAlign: "middle",
+              }}
+            >
+              <span
+                style={{
+                  display: "inline-block",
+                  width: 6,
+                  height: 6,
+                  borderRadius: 999,
+                  backgroundColor: brand,
+                }}
+              />
+            </td>
+            <td
+              style={{
+                fontSize: 13,
+                fontWeight: 600,
+                textTransform: "uppercase",
+                letterSpacing: "0.06em",
+                color: ink,
+              }}
+            >
+              Suggested focus
+            </td>
+          </tr>
+        </tbody>
+      </table>
       {items.map((item) => (
         <Section
           key={item.id}
-          style={{ marginBottom: 10 }}
+          style={{ marginBottom: 8 }}
         >
           <table
             width="100%"
@@ -260,8 +419,9 @@ function FocusBlock({ items }: { items: FocusItem[] }) {
                 <td
                   align="right"
                   style={{
-                    fontSize: 11,
-                    letterSpacing: "0.1em",
+                    fontSize: 10.5,
+                    fontFamily: monoStack,
+                    letterSpacing: "0.08em",
                     textTransform: "uppercase",
                     color: inkQuiet,
                     whiteSpace: "nowrap",
@@ -286,12 +446,44 @@ function greeting(hour: number): string {
   return "Good evening.";
 }
 
+/**
+ * Calm one-line summary under the greeting. Shape of the day in
+ * plain English — no numbers without a "so what".
+ */
+function summaryLine(b: Briefing): string {
+  const att = b.needsAttention.length;
+  const risks = b.quietRisks.length;
+  const moving = b.movingWell.length;
+  if (att === 0 && risks === 0) {
+    if (moving > 0) return "Light morning. The board is moving.";
+    return "Quiet morning. Nothing pulling.";
+  }
+  if (att === 0 && risks > 0) {
+    return `A quiet morning, but ${plural(risks, "risk", "risks")} worth watching.`;
+  }
+  if (att === 1) return "One thing's calling.";
+  if (att === 2) return "Two things calling — and a few quieter signals below.";
+  return `Three things calling${risks > 0 ? ", more quietly behind them" : ""}.`;
+}
+
+/**
+ * Soft sign-off. Adjusts to the shape of the brief without ever
+ * becoming chatty. Read aloud — if it sounds like a friend, keep it.
+ */
+function graceNote(b: Briefing): string {
+  if (b.isEmpty) return "That's the read.";
+  if (b.suggestedFocus.length === 0) return "That's the read — good day.";
+  if (b.needsAttention.length >= 2) return "Take the focus block first. The rest can wait.";
+  return "That's the read. Open Tasks when you're ready.";
+}
+
 function previewText(b: Briefing): string {
-  // First line shown by Gmail/Apple Mail in the inbox list view.
-  // Critical real estate. Lead with the most attention-worthy item.
-  const first = b.needsAttention[0] ?? b.quietRisks[0] ?? b.suggestedFocus[0];
-  if (!first) return "Nothing to flag today.";
-  return "text" in first
-    ? first.text
-    : (first as FocusItem).text;
+  // Inbox-snippet copy. Calmer than the subject — names the *shape*
+  // of the day, not the alarming first item.
+  if (b.isEmpty) return "Nothing to flag today.";
+  return summaryLine(b);
+}
+
+function plural(n: number, single: string, many: string): string {
+  return `${n} ${n === 1 ? single : many}`;
 }

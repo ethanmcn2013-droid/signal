@@ -1,5 +1,5 @@
 import { phraseFor } from "./prose";
-import type { BriefingSource } from "./source";
+import type { BriefingContext, BriefingSource } from "./source";
 import {
   detectDueSoon,
   detectJustShipped,
@@ -19,10 +19,11 @@ const DAY = 86_400_000;
  */
 export async function buildBriefing(
   source: BriefingSource,
-  userId: string,
+  ctx: BriefingContext,
   now: number = Date.now(),
 ): Promise<Briefing> {
-  const signals = await source.getSignalsForUser(userId);
+  const signals = await source.getSignalsForUser(ctx);
+  const userId = ctx.userId;
 
   const stuck = detectStuckWork(signals);
   const dueSoon = detectDueSoon(signals, now);

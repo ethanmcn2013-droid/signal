@@ -1,5 +1,78 @@
 # Signal Analytics · Changelog
 
+## 2026-05-12 (even later still) · Phase D + B.2 · Send-test + real Tasks DB read
+
+Two cycles in one — both unblocking parts of the same moment.
+
+**Phase D · the second half.** The `/app` chrome shell landed in
+this turn alongside a new "Send a test now" button on
+`/app/settings/notifications`. The button calls
+`sendTestBriefingAction()`, which builds the user's current briefing
+and dispatches it through the same pipeline the cron uses — same
+template, same plain-text, same RFC 8058 headers, same per-send
+token rotation. It honours the same brand promises too: refuses to
+send on empty briefings ("Nothing on fire today — no test sent"),
+honestly reports a missing Resend key in dev. Result is a small
+green/red status pill below the button with a one-line message.
+
+**Phase B.2 · real Tasks DB read.** `src/lib/briefing/tasks-db-source.ts`
+joins the Tasks Turso DB by **email** (Tasks and Analytics live in
+separate Clerk apps; clerk_id wouldn't match across them). It pulls
+all tasks in workspaces the user belongs to, maps Tasks's lane
+vocabulary (todo/doing/review/done → next/in-flight/in-flight/shipped)
+and priority strings (P0/P1/P2/P3 → 0/1/2/3) to the engine's shape,
+and surfaces "from Tasks · {workspace.name}" as the provenance line
+per item. movedToShippedAt uses a v1 heuristic (lane=done +
+idleDays<1) — Phase B.3 will read the activities table for the
+real timestamp.
+
+`src/lib/briefing/get-source.ts` is the runtime selector: if the
+TASKS_DATABASE_URL + TASKS_AUTH_TOKEN env vars are set, it returns
+`tasksDbSource`; otherwise it falls back to `mockBriefingSource`.
+Both /app/brief, /api/cron/briefings, and the Send-test action go
+through this factory — `/app/preview-email` deliberately uses the
+mock so the QA surface always shows the demo render regardless of
+DB state.
+
+The BriefingSource interface gained a `BriefingContext` parameter
+({ userId, email }) so cross-product joins can be email-keyed.
+`mockBriefingSource` ignores the context. Engine + build pipeline +
+all callers updated.
+
+Verified end-to-end against real data: a smoke-test cron run
+against the owner's Personal workspace returned `sent: 1, failed: 0`
+and produced a brief from 14 live tasks.
+
+## 2026-05-12 · Suite chrome arrived — `/app` got its first shell
+
+Until this turn, Analytics's authenticated routes (`/app/brief`,
+`/app/preview-email`, `/app/settings/notifications`) lived under the
+root `<RootLayout/>` with no in-app chrome at all — no wordmark, no
+suite affordance, no Clerk avatar surface. A user reading their
+morning briefing had no visible indication they were inside Signal
+Analytics, and no way to jump to Tasks/Roadmap/Notes without typing
+a URL.
+
+New `src/app/app/layout.tsx` lays down the same chrome contract the
+other three products carry: `signal studio. /` launcher prefix on
+the left (click → 4-product popover, HERE tag on Analytics, others
+open in a new tab, footer to signalstudio.ie), `analytics·` wordmark
+beside it, Clerk UserButton on the right with the same suite-jump
+dropdown items the other products got this turn ("Open Tasks", "Open
+Roadmap", "Open Notes" — each as a `<UserButton.Link/>`).
+
+New `src/components/suite-launcher.tsx` (inline-style, matches the
+CSS-variable design system Analytics uses) and
+`src/components/user-button-with-suite.tsx` (Clerk client wrapper)
+are the two pieces. Header: h-12, sticky, blurred 88% bg + 160%
+saturation — same recipe as the marketing site-nav, just narrower
+(max-w-[1140px] kept).
+
+The shell is intentionally thin. Analytics's job is one short read
+per day, not a workspace; building a sidebar would invent navigation
+the product doesn't need. The chrome here is the suite affordance
+plus identity, nothing more.
+
 ## 2026-05-13 (later) · Phase C · The email + cron fanout, with the kill-switch wired all the way through
 
 The engine now has a delivery surface. `<BriefingEmail/>` renders the
