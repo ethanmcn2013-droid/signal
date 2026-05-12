@@ -45,7 +45,9 @@ export type TriggerKind =
   | "stuck-work"
   | "due-soon"
   | "just-shipped"
-  | "overload";
+  | "overload"
+  | "crowded-week"
+  | "blocked-too-long";
 
 export type FocusItem = {
   id: string;

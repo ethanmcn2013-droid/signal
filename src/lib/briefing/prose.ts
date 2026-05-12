@@ -51,11 +51,25 @@ const OVERLOAD: Phrasing[] = [
   (t) => `Cognitive load is high — ${t.title.toLowerCase()}`,
 ];
 
+const CROWDED_WEEK: Phrasing[] = [
+  (t) => `Heavy week — ${t.title.toLowerCase()}`,
+  (t) => `${t.title.toLowerCase()} — plan the week early`,
+  (t) => `A pile-up is forming — ${t.title.toLowerCase()}`,
+];
+
+const BLOCKED_TOO_LONG: Phrasing[] = [
+  (t, days = 0) => `${t.title} has been blocked for ${plural(days, "day", "days")}`,
+  (t, days = 0) => `${t.title} is waiting on something — ${plural(days, "day", "days")} now`,
+  (t, days = 0) => `${t.title} hasn't cleared its blocker in ${plural(days, "day", "days")}`,
+];
+
 const LIBRARY: Record<TriggerKind, Phrasing[]> = {
   "stuck-work": STUCK,
   "due-soon": DUE_SOON,
   "just-shipped": JUST_SHIPPED,
   overload: OVERLOAD,
+  "crowded-week": CROWDED_WEEK,
+  "blocked-too-long": BLOCKED_TOO_LONG,
 };
 
 export function phraseFor(
@@ -66,8 +80,11 @@ export function phraseFor(
 ): string {
   const options = LIBRARY[trigger];
   const phrasing = options[rotationIndex % options.length];
-  if (trigger === "stuck-work") return phrasing(task, context?.idleDays ?? task.idleDays);
+  if (trigger === "stuck-work")
+    return phrasing(task, context?.idleDays ?? task.idleDays);
   if (trigger === "due-soon") return phrasing(task, context?.daysOut ?? 0);
+  if (trigger === "blocked-too-long")
+    return phrasing(task, context?.idleDays ?? task.idleDays);
   return phrasing(task);
 }
 

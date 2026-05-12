@@ -96,6 +96,79 @@ export function detectJustShipped(
     }));
 }
 
+/** Crowded week: ≥ 3 open tasks due within the same 7-day window.
+ *  Emits a single synthetic trigger representing the week, not one
+ *  per task — the signal is the cluster, not the items.
+ *
+ *  This pairs with due-soon (which fires per-task on ≤2-day items)
+ *  by surfacing the broader 7-day pressure earlier in the planning
+ *  horizon. Wedding-planner archetype: "three things due this
+ *  Friday" is exactly the alert they need before the day arrives. */
+export function detectCrowdedWeek(
+  signals: TaskSignal[],
+  now: number = Date.now(),
+): Triggered[] {
+  const horizon = 7 * DAY;
+  const upcoming = signals.filter(
+    (s) =>
+      s.lane !== "shipped" &&
+      s.dueAt != null &&
+      s.dueAt - now > 0 &&
+      s.dueAt - now <= horizon,
+  );
+  if (upcoming.length < 3) return [];
+
+  const synthetic: TaskSignal = {
+    id: "synthetic:crowded-week",
+    title: `${upcoming.length} items due this week`,
+    lane: "in-flight",
+    priority: 1,
+    dueAt: null,
+    idleDays: 0,
+    commentCount: 0,
+    blockedBy: [],
+    sourceLabel: upcoming[0]?.sourceLabel ?? "Tasks",
+    movedToShippedAt: null,
+  };
+  return [
+    {
+      task: synthetic,
+      trigger: "crowded-week",
+      reasons: [
+        `${upcoming.length} items have due dates inside the next seven days.`,
+        "Cluster threshold crossed → surfaced before the crunch.",
+      ],
+      severity: 55 + Math.min(30, upcoming.length * 4),
+    },
+  ];
+}
+
+/** Blocked too long: open task with blockedBy.length > 0 AND
+ *  idleDays ≥ 5. The stuck-work trigger deliberately excludes
+ *  blocked tasks (a blocker is a different problem); this trigger
+ *  closes that gap. Persistent blockers deserve visibility, not
+ *  silence. */
+export function detectBlockedTooLong(signals: TaskSignal[]): Triggered[] {
+  return signals
+    .filter(
+      (s) =>
+        s.lane !== "shipped" &&
+        s.blockedBy.length > 0 &&
+        s.idleDays >= 5,
+    )
+    .map((task) => ({
+      task,
+      trigger: "blocked-too-long" as const,
+      reasons: [
+        `Blocked for ${task.idleDays} days — the blocker is outlasting reasonable waiting.`,
+        task.blockedBy.length === 1
+          ? "One upstream dependency hasn't cleared."
+          : `${task.blockedBy.length} upstream dependencies haven't cleared.`,
+      ],
+      severity: Math.min(90, 30 + task.idleDays * 3 + task.blockedBy.length * 4),
+    }));
+}
+
 /** Overload: > 5 in-flight tasks for the user. The triggered
  *  signal isn't a task — it's the situation itself. We return a
  *  pseudo-task representing the overload state. */

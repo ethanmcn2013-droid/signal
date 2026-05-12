@@ -1,5 +1,52 @@
 # Signal Analytics · Changelog
 
+## 2026-05-14 · Phase F.1 · Trigger library 4 → 6 (crowded-week + blocked-too-long), prose tests close coverage gap
+
+Two new triggers, both with tests, both real product additions:
+
+**`crowded-week`.** Fires when ≥ 3 open tasks have due dates inside
+the next 7 days. Emits a single synthetic signal — the cluster is
+the signal, not the items. Lands in Needs attention. Earlier than
+due-soon (which fires on ≤ 2 days), giving planners visibility on
+load *before* the crunch. The wedding-planner archetype: "three
+things due this Friday" is the alert they actually need.
+
+**`blocked-too-long`.** Closes a real gap. `stuck-work` deliberately
+excludes tasks with `blockedBy.length > 0` (a blocker is a different
+problem from neglect). Without `blocked-too-long`, persistent blockers
+silently fell through every bucket. Now: any open task with a blocker
+AND ≥ 5 idle days lands in Quiet risks with the action "chase the
+blocker on {title}". Tests assert these two triggers cover the full
+idle-task space together — neither double-counts.
+
+Focus weights for the six v1 triggers:
+
+  due-soon          1000
+  crowded-week       800
+  stuck-work         700
+  blocked-too-long   600
+  overload           500
+  just-shipped       100
+
+Tests
+  - `triggers.test.ts` gained 14 tests across the two new detectors
+    (boundary conditions, severity ordering, gap-coverage proof)
+  - New `prose.test.ts` (29 tests) drives every trigger × every
+    rotation index → asserts non-empty output, context propagation,
+    three distinct phrasings per trigger, no chart-language artifacts,
+    modulo rotation behaviour
+
+Suite is now **89 tests in 266ms**, up from 46. Coverage moved:
+
+                  line%   branch%  func%
+  all files       96.88   84.38    98.20    (was 95.53 / 83.26 / 91.84)
+  prose.ts        97.39   83.05    100.00   (was 82.65 / 77.50 /  73.91)
+  triggers.ts     98.53   92.65    100.00   (was 96.95 / 92.00 / 100.00)
+
+Email body also got the cadence stamp lead — the date strip in the
+wordmark header reads `DAILY SIGNAL · TUE 14 NOV` so the body alone
+tells the reader which cadence this is.
+
 ## 2026-05-14 · Phase E.4 · Email-render smoke tests + coverage tooling + cadence stamp in body
 
 Three small wins, all in service of "we know this isn't broken".

@@ -1,6 +1,8 @@
 import { strict as assert } from "node:assert";
 import { describe, test } from "node:test";
 import {
+  detectBlockedTooLong,
+  detectCrowdedWeek,
   detectDueSoon,
   detectJustShipped,
   detectOverload,
@@ -270,5 +272,140 @@ describe("detectOverload", () => {
     const [s6] = detectOverload(six);
     const [s10] = detectOverload(ten);
     assert.ok(s10.severity > s6.severity);
+  });
+});
+
+// ─────────────────────────────────────────────────────────────
+// detectCrowdedWeek
+// ─────────────────────────────────────────────────────────────
+describe("detectCrowdedWeek", () => {
+  test("flags when ≥ 3 open tasks have due dates inside 7 days", () => {
+    const tasks = Array.from({ length: 4 }, (_, i) =>
+      makeTask({ id: `t${i}`, dueAt: NOW + (i + 1) * DAY }),
+    );
+    const out = detectCrowdedWeek(tasks, NOW);
+    assert.equal(out.length, 1);
+    assert.equal(out[0].trigger, "crowded-week");
+    assert.equal(out[0].task.id, "synthetic:crowded-week");
+    assert.match(out[0].task.title, /4 items/);
+  });
+
+  test("does not flag at exactly 2 upcoming items", () => {
+    const tasks = [
+      makeTask({ id: "a", dueAt: NOW + 1 * DAY }),
+      makeTask({ id: "b", dueAt: NOW + 3 * DAY }),
+    ];
+    assert.equal(detectCrowdedWeek(tasks, NOW).length, 0);
+  });
+
+  test("ignores tasks more than 7 days out", () => {
+    const tasks = [
+      makeTask({ id: "a", dueAt: NOW + 1 * DAY }),
+      makeTask({ id: "b", dueAt: NOW + 10 * DAY }),
+      makeTask({ id: "c", dueAt: NOW + 15 * DAY }),
+    ];
+    assert.equal(detectCrowdedWeek(tasks, NOW).length, 0);
+  });
+
+  test("ignores overdue items (in the past) — they're due-soon's job", () => {
+    const tasks = [
+      makeTask({ id: "a", dueAt: NOW - 2 * DAY }),
+      makeTask({ id: "b", dueAt: NOW - 1 * DAY }),
+      makeTask({ id: "c", dueAt: NOW - 3 * DAY }),
+    ];
+    assert.equal(detectCrowdedWeek(tasks, NOW).length, 0);
+  });
+
+  test("ignores shipped tasks even if due in window", () => {
+    const tasks = Array.from({ length: 4 }, (_, i) =>
+      makeTask({
+        id: `t${i}`,
+        dueAt: NOW + (i + 1) * DAY,
+        lane: "shipped",
+      }),
+    );
+    assert.equal(detectCrowdedWeek(tasks, NOW).length, 0);
+  });
+
+  test("more items raises severity", () => {
+    const three = Array.from({ length: 3 }, (_, i) =>
+      makeTask({ id: `t${i}`, dueAt: NOW + (i + 1) * DAY }),
+    );
+    const seven = Array.from({ length: 7 }, (_, i) =>
+      makeTask({ id: `t${i}`, dueAt: NOW + (i + 1) * DAY }),
+    );
+    const [s3] = detectCrowdedWeek(three, NOW);
+    const [s7] = detectCrowdedWeek(seven, NOW);
+    assert.ok(s7.severity > s3.severity);
+  });
+});
+
+// ─────────────────────────────────────────────────────────────
+// detectBlockedTooLong
+// ─────────────────────────────────────────────────────────────
+describe("detectBlockedTooLong", () => {
+  test("flags blocked tasks idle ≥ 5 days", () => {
+    const out = detectBlockedTooLong([
+      makeTask({
+        id: "a",
+        blockedBy: ["other"],
+        idleDays: 7,
+      }),
+    ]);
+    assert.equal(out.length, 1);
+    assert.equal(out[0].trigger, "blocked-too-long");
+  });
+
+  test("does not flag blocked but recently-active (idle < 5)", () => {
+    const out = detectBlockedTooLong([
+      makeTask({ blockedBy: ["other"], idleDays: 2 }),
+    ]);
+    assert.equal(out.length, 0);
+  });
+
+  test("does not flag stuck tasks that aren't blocked — that's stuck-work's job", () => {
+    const out = detectBlockedTooLong([
+      makeTask({ blockedBy: [], idleDays: 30 }),
+    ]);
+    assert.equal(out.length, 0);
+  });
+
+  test("does not flag shipped blocked tasks", () => {
+    const out = detectBlockedTooLong([
+      makeTask({
+        blockedBy: ["other"],
+        idleDays: 30,
+        lane: "shipped",
+      }),
+    ]);
+    assert.equal(out.length, 0);
+  });
+
+  test("more blockers raises severity", () => {
+    const [one] = detectBlockedTooLong([
+      makeTask({ id: "one", blockedBy: ["a"], idleDays: 7 }),
+    ]);
+    const [many] = detectBlockedTooLong([
+      makeTask({ id: "many", blockedBy: ["a", "b", "c"], idleDays: 7 }),
+    ]);
+    assert.ok(many.severity > one.severity);
+  });
+
+  test("more idle days raises severity", () => {
+    const [low] = detectBlockedTooLong([
+      makeTask({ id: "low", blockedBy: ["a"], idleDays: 5 }),
+    ]);
+    const [high] = detectBlockedTooLong([
+      makeTask({ id: "high", blockedBy: ["a"], idleDays: 30 }),
+    ]);
+    assert.ok(high.severity > low.severity);
+  });
+
+  test("closes the gap left by detectStuckWork — stuck-work excludes blocked", () => {
+    // A blocked-idle task should not appear in stuck-work but SHOULD
+    // appear in blocked-too-long. Together they cover all idle paths.
+    const t = makeTask({ blockedBy: ["other"], idleDays: 10 });
+    assert.equal(detectStuckWork([t]).length, 0);
+    assert.equal(detectBlockedTooLong([t]).length, 1);
   });
 });

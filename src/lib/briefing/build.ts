@@ -1,6 +1,8 @@
 import { phraseFor } from "./prose";
 import type { BriefingContext, BriefingSource } from "./source";
 import {
+  detectBlockedTooLong,
+  detectCrowdedWeek,
   detectDueSoon,
   detectJustShipped,
   detectOverload,
@@ -29,12 +31,18 @@ export async function buildBriefing(
   const dueSoon = detectDueSoon(signals, now);
   const shipped = detectJustShipped(signals, now);
   const overload = detectOverload(signals);
+  const crowded = detectCrowdedWeek(signals, now);
+  const blocked = detectBlockedTooLong(signals);
 
   const rotationIndex = dayRotation(userId, now);
 
-  // ─ Needs attention: due-soon (incl. overdue) + overload, ordered by severity.
+  // ─ Needs attention: due-soon (incl. overdue) + overload + crowded-week,
+  // ordered by severity. The week-cluster signal lands here because it's
+  // load-this-week, not background.
   const attention = pickTop(
-    [...dueSoon, ...overload].sort((a, b) => b.severity - a.severity),
+    [...dueSoon, ...overload, ...crowded].sort(
+      (a, b) => b.severity - a.severity,
+    ),
     BUCKET_CAP,
   );
 
@@ -54,8 +62,11 @@ export async function buildBriefing(
     ...attention.map((t) => t.task.id),
     ...moving.map((t) => t.task.id),
   ]);
+  // Quiet risks: stuck-work + blocked-too-long, severity-sorted,
+  // excluding anything already in attention or moving. blocked-too-long
+  // lives here because it's about a long-tail issue, not today's load.
   const risks = pickTop(
-    stuck
+    [...stuck, ...blocked]
       .filter((t) => !usedIds.has(t.task.id))
       .sort((a, b) => b.severity - a.severity),
     BUCKET_CAP,
@@ -141,6 +152,10 @@ function focusText(t: Triggered, now: number): string {
       return `Drop two in-flight items by end of day`;
     case "just-shipped":
       return `Acknowledge ${t.task.title.toLowerCase()}`;
+    case "crowded-week":
+      return `Plan the week — pull two items earlier`;
+    case "blocked-too-long":
+      return `Chase the blocker on ${t.task.title.toLowerCase()}`;
   }
 }
 
@@ -154,6 +169,8 @@ function focusDue(t: Triggered, now: number): string {
     return "this week";
   }
   if (t.trigger === "overload") return "today";
+  if (t.trigger === "crowded-week") return "this week";
+  if (t.trigger === "blocked-too-long") return "this week";
   return "this week";
 }
 
@@ -161,11 +178,19 @@ function weekday(ts: number): string {
   return new Date(ts).toLocaleDateString("en-IE", { weekday: "long" });
 }
 
-/** Focus ranking: due-soon (overdue first) > stuck-work > overload > just-shipped. */
+/** Focus ranking — locked weights for the six v1 triggers.
+ *  due-soon outranks everything (real deadline pressure).
+ *  crowded-week sits between due-soon and stuck-work — it's a
+ *  cluster signal but not yet a per-task deadline.
+ *  blocked-too-long ranks below stuck-work because the action
+ *  ("chase the blocker") is upstream, not the user's own work.
+ *  just-shipped is celebration-only — never the lead of focus. */
 function focusWeight(t: Triggered): number {
   const base: Record<TriggerKind, number> = {
     "due-soon": 1000,
+    "crowded-week": 800,
     "stuck-work": 700,
+    "blocked-too-long": 600,
     overload: 500,
     "just-shipped": 100,
   };
