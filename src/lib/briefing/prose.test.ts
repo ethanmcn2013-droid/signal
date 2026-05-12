@@ -133,22 +133,31 @@ describe("phraseFor — blocked-too-long multi-blocker rendering", () => {
     assert.doesNotMatch(text, /and \d+ more/);
   });
 
-  test("two blockers render 'X (and 1 more)'", () => {
+  test("two blockers names both — 'X and Y'", () => {
     const t = task({ blockedBy: ["x", "y"], idleDays: 7 });
     const text = phraseFor("blocked-too-long", t, 0, {
       idleDays: 7,
       blockedByTitles: ["Music supplier", "Venue agreement"],
     });
-    assert.match(text, /Music supplier \(and 1 more\)/);
+    assert.match(text, /Music supplier and Venue agreement/);
+    assert.doesNotMatch(text, /\bmore\b/);
   });
 
-  test("three blockers render 'X (and 2 more)'", () => {
+  test("three blockers render 'X and 2 more'", () => {
     const t = task({ blockedBy: ["x", "y", "z"], idleDays: 7 });
     const text = phraseFor("blocked-too-long", t, 0, {
       idleDays: 7,
       blockedByTitles: ["Music supplier", "Venue agreement", "Stationer"],
     });
-    assert.match(text, /Music supplier \(and 2 more\)/);
+    assert.match(text, /Music supplier and 2 more/);
+  });
+
+  test("six blockers render 'X and 5 more'", () => {
+    const text = phraseFor("blocked-too-long", task(), 0, {
+      idleDays: 14,
+      blockedByTitles: ["A", "B", "C", "D", "E", "F"],
+    });
+    assert.match(text, /A and 5 more/);
   });
 
   test("falls back to 'has been blocked for N days' when no titles", () => {
@@ -170,8 +179,8 @@ describe("phraseFor — blocked-too-long multi-blocker rendering", () => {
       });
       assert.match(
         text,
-        /Music supplier \(and 1 more\)/,
-        `phrasing ${r} should carry multi-blocker subject`,
+        /Music supplier and Venue agreement/,
+        `phrasing ${r} should name both blockers`,
       );
     }
   });

@@ -1,5 +1,39 @@
 # Signal Analytics · Changelog
 
+## 2026-05-14 (latest) · Phase F.4 · Multi-blocker voice tune + plain-text coverage + CONTRIBUTING
+
+Three small wins:
+
+**Multi-blocker voice.** Previously a task blocked by two upstreams
+read "blocked by Music supplier (and 1 more)". Now: "blocked by
+Music supplier and Venue agreement" — both names. Three+ blockers
+keep the "X and N more" form. Reads more conversational, matches
+how someone would actually describe the situation. Phrasing helper
+takes the full titles array and chooses the form by length.
+
+  0 titles   → "blocked for 9 days"          (generic fallback)
+  1 title    → "blocked by Music supplier"
+  2 titles   → "blocked by Music supplier and Venue agreement"
+  3+ titles  → "blocked by Music supplier and 2 more"
+
+**Plain-text coverage tightened** with 4 new tests targeting the
+SUGGESTED FOCUS block (which the prior tests skipped) and the
+weekly-cadence footer ("Send daily instead" vs "Send weekly
+instead"). `plain-text.ts` branch coverage: 72.73 → 88.00.
+
+**CONTRIBUTING.md.** Documents the two traps that have bitten
+already: (1) `import "server-only"` throwing in Node tests, with
+the "if it's going to be unit-tested, don't server-only it" rule;
+(2) the stray `pnpm-lock.yaml` that keeps re-appearing and breaks
+Vercel deploys via package-manager auto-detection. Plus an
+architecture quick map and the conventions tests now enforce.
+
+Suite is now **119/119 in 1026ms**. Coverage:
+
+  all files     96.91 / 86.29 / 98.65  →  96.92 / 86.72 / 98.65
+  prose.ts      98.08 / 85.33 /100.00  →  97.53 / 85.90 / 100.00
+  plain-text    91.40 / 83.33 /100.00  →  92.47 / 88.00 / 100.00
+
 ## 2026-05-14 (even later) · Phase F.3 · Dispatch error-branch tests + multi-blocker phrasing
 
 The most important untested branch was `dispatchBriefing`'s error

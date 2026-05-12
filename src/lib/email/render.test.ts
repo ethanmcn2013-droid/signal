@@ -217,4 +217,60 @@ describe("renderBriefingText (plain-text alt)", () => {
     assert.ok(text.includes(LINKS.preferencesUrl));
     assert.ok(text.includes(LINKS.viewInBrowserUrl));
   });
+
+  test("renders SUGGESTED FOCUS block + due tags when focus items present", () => {
+    const text = renderBriefingText(
+      brief({
+        isEmpty: false,
+        suggestedFocus: [
+          {
+            id: "f1",
+            text: "Confirm florist deposit Monday",
+            due: "today",
+            trigger: "stuck-work",
+          },
+          {
+            id: "f2",
+            text: "Send catering headcount by Friday",
+            due: "by Friday",
+            trigger: "due-soon",
+          },
+        ],
+      }),
+      LINKS,
+      "daily",
+    );
+    assert.match(text, /SUGGESTED FOCUS/);
+    assert.match(text, /Confirm florist deposit Monday.*\(today\)/);
+    assert.match(text, /Send catering headcount by Friday.*\(by Friday\)/);
+  });
+
+  test("weekly cadence offers 'Send daily instead' in the footer", () => {
+    const text = renderBriefingText(
+      brief({ isEmpty: false }),
+      LINKS,
+      "weekly",
+    );
+    assert.match(text, /Send daily instead/);
+    assert.doesNotMatch(text, /Send weekly instead/);
+  });
+
+  test("daily cadence offers 'Send weekly instead' in the footer", () => {
+    const text = renderBriefingText(
+      brief({ isEmpty: false }),
+      LINKS,
+      "daily",
+    );
+    assert.match(text, /Send weekly instead/);
+    assert.doesNotMatch(text, /Send daily instead/);
+  });
+
+  test("weekly header reads 'Weekly brief'", () => {
+    const text = renderBriefingText(
+      brief({ isEmpty: false }),
+      LINKS,
+      "weekly",
+    );
+    assert.match(text, /Weekly brief/);
+  });
 });

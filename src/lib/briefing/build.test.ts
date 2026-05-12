@@ -275,7 +275,7 @@ describe("buildBriefing — name-the-blocker prose", () => {
     );
   });
 
-  test("multi-blocker brief item names the first and counts the rest", async () => {
+  test("two-blocker brief item names both blockers", async () => {
     const signals = [
       task({ id: "music", title: "Music supplier" }),
       task({ id: "venue", title: "Venue agreement" }),
@@ -289,7 +289,25 @@ describe("buildBriefing — name-the-blocker prose", () => {
     const b = await buildBriefing(source(signals), CTX, NOW);
     const item = b.quietRisks.find((i) => i.id === "florist");
     assert.ok(item, "blocked-too-long item should be present");
-    assert.match(item!.text, /Music supplier \(and 1 more\)/);
+    assert.match(item!.text, /Music supplier and Venue agreement/);
+  });
+
+  test("three-blocker brief item names the first and counts the rest", async () => {
+    const signals = [
+      task({ id: "m", title: "Music supplier" }),
+      task({ id: "v", title: "Venue agreement" }),
+      task({ id: "s", title: "Stationer" }),
+      task({
+        id: "florist",
+        title: "Florist deposit",
+        blockedBy: ["m", "v", "s"],
+        idleDays: 9,
+      }),
+    ];
+    const b = await buildBriefing(source(signals), CTX, NOW);
+    const item = b.quietRisks.find((i) => i.id === "florist");
+    assert.ok(item);
+    assert.match(item!.text, /Music supplier and 2 more/);
   });
 
   test("falls back to generic phrasing when blocker title is unresolvable", async () => {
