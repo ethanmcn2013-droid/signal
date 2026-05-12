@@ -9,3 +9,9 @@ export const ROADMAP_URL =
 
 export const ANALYTICS_URL =
   process.env.NEXT_PUBLIC_ANALYTICS_URL ?? "https://analytics.signalstudio.ie";
+
+export const NOTES_URL =
+  process.env.NEXT_PUBLIC_NOTES_URL ?? "https://notes.signalstudio.ie";
+
+export const CONTACT_EMAIL = "hello@signalstudio.ie";
+export const CONTACT_MAILTO = `mailto:${CONTACT_EMAIL}`;
