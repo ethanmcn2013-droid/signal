@@ -1,15 +1,32 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
-import { DOMAINS, type DomainId } from "@/lib/domains";
+import { DOMAINS, type DomainId, type DemoBlock } from "@/lib/domains";
 import {
+  type CursorState,
   type DemoState,
   type Scene,
+  type CadenceView,
 } from "./types";
 import { BriefingItem } from "./briefing-item";
 import { CapOverflow } from "./cap-overflow";
 import { TickCursor } from "./tick-cursor";
+import { Cursor } from "./cursor";
+import { ViewToggle } from "./view-toggle";
+import { DemoToast } from "./toast";
+
+const CURSOR_COLOR = "#4f46e5";
+
+function emptyCursor(): CursorState {
+  return {
+    x: -30,
+    y: 80,
+    visible: false,
+    reading: false,
+    label: "reading",
+  };
+}
 
 function buildInitialState(domain: DomainId): DemoState {
   const pack = DOMAINS[domain];
@@ -20,12 +37,18 @@ function buildInitialState(domain: DomainId): DemoState {
     }
   }
   return {
-    blocks: pack.blocks,
     scene: "boot",
+    view: "today",
     delivered: false,
     swappingItemId: null,
     variantByItemId,
     overflowVisible: [],
+    whyThisItemId: null,
+    whyThisReveal: 0,
+    acknowledgingItemId: null,
+    acknowledgedSet: new Set(),
+    toast: null,
+    cursor: emptyCursor(),
     domain,
   };
 }
@@ -42,33 +65,69 @@ export function AnalyticsDemo({ domain = "wedding" }: Props = {}) {
   const [state, setState] = useState<DemoState>(() => buildInitialState(domain));
   const aliveRef = useRef(true);
   const loopKeyRef = useRef(0);
+  const surfaceRef = useRef<HTMLDivElement | null>(null);
+  const itemRefsRef = useRef<Map<string, HTMLDivElement>>(new Map());
 
   useEffect(() => {
     setState(buildInitialState(domain));
     loopKeyRef.current += 1;
   }, [domain]);
 
+  const onRegisterItem = useCallback(
+    (id: string, el: HTMLDivElement | null) => {
+      if (el) {
+        itemRefsRef.current.set(id, el);
+      } else {
+        itemRefsRef.current.delete(id);
+      }
+    },
+    []
+  );
+
+  const getItemCenter = useCallback(
+    (itemId: string): { x: number; y: number } | null => {
+      const surface = surfaceRef.current;
+      const el = itemRefsRef.current.get(itemId);
+      if (!surface || !el) return null;
+      const surfaceRect = surface.getBoundingClientRect();
+      const elRect = el.getBoundingClientRect();
+      return {
+        x: elRect.left - surfaceRect.left + Math.min(elRect.width * 0.35, 220),
+        y: elRect.top - surfaceRect.top + elRect.height * 0.5,
+      };
+    },
+    []
+  );
+
   const setScene = useCallback((scene: Scene) => {
     setState((s) => ({ ...s, scene }));
+  }, []);
+
+  const setView = useCallback((view: CadenceView) => {
+    setState((s) => ({ ...s, view }));
   }, []);
 
   const setSwapping = useCallback((id: string | null) => {
     setState((s) => ({ ...s, swappingItemId: id }));
   }, []);
 
-  const swapVariant = useCallback((itemId: string) => {
-    setState((s) => {
-      const item = pack.blocks
-        .flatMap((b) => b.items)
-        .find((it) => it.id === itemId);
-      if (!item) return s;
-      const next = ((s.variantByItemId[itemId] ?? 0) + 1) % item.variants.length;
-      return {
-        ...s,
-        variantByItemId: { ...s.variantByItemId, [itemId]: next },
-      };
-    });
-  }, [pack]);
+  const swapVariant = useCallback(
+    (itemId: string) => {
+      setState((s) => {
+        const item = pack.blocks
+          .flatMap((b) => b.items)
+          .find((it) => it.id === itemId);
+        if (!item) return s;
+        const next =
+          ((s.variantByItemId[itemId] ?? 0) + 1) % item.variants.length;
+        return {
+          ...s,
+          variantByItemId: { ...s.variantByItemId, [itemId]: next },
+        };
+      });
+    },
+    [pack]
+  );
 
   const setOverflow = useCallback(
     (overflow: { id: string; text: string }[]) => {
@@ -81,7 +140,50 @@ export function AnalyticsDemo({ domain = "wedding" }: Props = {}) {
     setState((s) => ({ ...s, delivered }));
   }, []);
 
-  /** The scene timeline. */
+  const setWhyThis = useCallback(
+    (itemId: string | null, reveal = 0) => {
+      setState((s) => ({
+        ...s,
+        whyThisItemId: itemId,
+        whyThisReveal: reveal,
+      }));
+    },
+    []
+  );
+
+  const setAcknowledging = useCallback((itemId: string | null) => {
+    setState((s) => ({ ...s, acknowledgingItemId: itemId }));
+  }, []);
+
+  const finalizeAcknowledge = useCallback((itemId: string) => {
+    setState((s) => {
+      const nextSet = new Set(s.acknowledgedSet);
+      nextSet.add(itemId);
+      return { ...s, acknowledgedSet: nextSet, acknowledgingItemId: null };
+    });
+  }, []);
+
+  const setToast = useCallback((toast: DemoState["toast"]) => {
+    setState((s) => ({ ...s, toast }));
+  }, []);
+
+  const setCursor = useCallback((patch: Partial<CursorState>) => {
+    setState((s) => ({ ...s, cursor: { ...s.cursor, ...patch } }));
+  }, []);
+
+  const setCursorToItem = useCallback(
+    (itemId: string, reading = false, label?: string) => {
+      const center = getItemCenter(itemId);
+      if (!center) {
+        setCursor({ reading });
+        return;
+      }
+      setCursor({ x: center.x, y: center.y, reading, label: label ?? "reading" });
+    },
+    [getItemCenter, setCursor]
+  );
+
+  /** Scene timeline. */
   useEffect(() => {
     if (reducedMotion) return;
     aliveRef.current = true;
@@ -89,54 +191,131 @@ export function AnalyticsDemo({ domain = "wedding" }: Props = {}) {
     const isCurrent = () =>
       aliveRef.current && myLoopKey === loopKeyRef.current;
 
+    async function typeWhyThis(itemId: string) {
+      const item = pack.blocks
+        .flatMap((b) => b.items)
+        .find((it) => it.id === itemId);
+      if (!item?.whyThis) return;
+      const lastLine = item.whyThis[item.whyThis.length - 1];
+      for (let i = 1; i <= lastLine.length; i++) {
+        if (!isCurrent()) return;
+        setState((s) => ({ ...s, whyThisReveal: i }));
+        await wait(24 + Math.random() * 18);
+      }
+    }
+
     async function runLoop() {
       setState(buildInitialState(domain));
-      await wait(1600);
+      await wait(900);
       if (!isCurrent()) return;
 
-      // Scene 1 — phrasing swap on the named item.
+      // Arrival — briefing already visible, "Delivered" pip fires
+      setScene("arrival");
+      await wait(900);
+      if (!isCurrent()) return;
+      setDelivered(true);
+      setToast("delivered");
+      await wait(1600);
+      if (!isCurrent()) return;
+      setToast(null);
+      await wait(400);
+
+      // Cursor arrives — drifts in from left edge
+      setScene("cursor-arrive");
+      setCursor({ visible: true, x: -20, y: 240 });
+      await wait(280);
+      setCursorToItem(pack.inspectItemId, false);
+      await wait(900);
+      if (!isCurrent()) return;
+
+      // Cursor reads the item
+      setScene("cursor-reads");
+      setCursor({ reading: true });
+      await wait(900);
+      if (!isCurrent()) return;
+
+      // "Why this?" expands beneath the inspected item
+      setScene("why-this-open");
+      setWhyThis(pack.inspectItemId, 0);
+      await wait(800);
+      if (!isCurrent()) return;
+
+      setScene("why-this-typing");
+      await typeWhyThis(pack.inspectItemId);
+      if (!isCurrent()) return;
+      await wait(1600);
+
+      setScene("why-this-close");
+      setWhyThis(null);
+      setCursor({ reading: false });
+      await wait(700);
+      if (!isCurrent()) return;
+
+      // Phrasing swap
       setScene("phrasing-swap");
       setSwapping(pack.swapItemId);
       await wait(160);
       swapVariant(pack.swapItemId);
-      await wait(2000);
+      await wait(1800);
       if (!isCurrent()) return;
       setSwapping(null);
 
-      // Scene 2 — overflow attempt: extra items try to enter "Needs attention".
+      // Cap overflow attempt
       const attentionBlock = pack.blocks.find((b) => b.id === "attention");
       if (attentionBlock?.overflow) {
         setScene("cap-attempt");
         setOverflow(attentionBlock.overflow);
-        await wait(2200);
+        await wait(2000);
         if (!isCurrent()) return;
-
         setScene("cap-drop");
-        await wait(700);
+        await wait(600);
         if (!isCurrent()) return;
         setOverflow([]);
-        await wait(900);
-        if (!isCurrent()) return;
+        await wait(700);
       }
 
-      // Scene 3 — delivered pip.
-      setScene("delivered");
-      setDelivered(true);
+      // Cursor moves to a focus item and acknowledges it
+      setScene("cursor-focus");
+      setCursorToItem(pack.acknowledgeItemId, true, "today's");
+      await wait(1100);
+      if (!isCurrent()) return;
+
+      setScene("acknowledge");
+      setAcknowledging(pack.acknowledgeItemId);
+      await wait(900);
+      if (!isCurrent()) return;
+      setScene("acknowledged-toast");
+      setToast("acknowledged");
+      await wait(900);
+      finalizeAcknowledge(pack.acknowledgeItemId);
+      await wait(700);
+      if (!isCurrent()) return;
+      setToast(null);
+
+      // View morph to Yesterday — show the engine's freshness
+      setScene("view-morph-yesterday");
+      setCursor({ visible: false, reading: false });
+      setView("yesterday");
       await wait(2200);
       if (!isCurrent()) return;
 
-      // Scene 4 — second phrasing swap (different cadence).
-      setSwapping(pack.swapItemId);
-      await wait(120);
-      swapVariant(pack.swapItemId);
-      setSwapping(null);
-      await wait(1400);
+      setScene("yesterday-hold");
+      await wait(1800);
       if (!isCurrent()) return;
 
-      // Scene 5 — reset.
+      // Morph back to Today
+      setScene("view-morph-today");
+      setView("today");
+      await wait(1600);
+      if (!isCurrent()) return;
+
+      setScene("cursor-leaves");
+      setCursor({ visible: false });
+      await wait(600);
+      if (!isCurrent()) return;
+
       setScene("reset");
-      setDelivered(false);
-      await wait(1200);
+      await wait(900);
     }
 
     let cancelled = false;
@@ -158,10 +337,24 @@ export function AnalyticsDemo({ domain = "wedding" }: Props = {}) {
     swapVariant,
     setOverflow,
     setDelivered,
+    setWhyThis,
+    setAcknowledging,
+    finalizeAcknowledge,
+    setToast,
+    setCursor,
+    setCursorToItem,
+    setView,
   ]);
+
+  // Pick the active block set based on view
+  const activeBlocks: DemoBlock[] = useMemo(
+    () => (state.view === "today" ? pack.blocks : pack.yesterdayBlocks),
+    [state.view, pack]
+  );
 
   return (
     <div
+      ref={surfaceRef}
       className="relative w-full overflow-hidden"
       style={{
         borderRadius: "var(--r-4)",
@@ -170,7 +363,7 @@ export function AnalyticsDemo({ domain = "wedding" }: Props = {}) {
         boxShadow: "var(--shadow-2, 0 2px 6px rgba(20,21,26,0.06))",
       }}
     >
-      {/* Top bar — sender chrome */}
+      {/* Top bar — sender chrome + view toggle */}
       <div
         className="flex items-center gap-3 border-b px-5 py-2.5"
         style={{
@@ -220,30 +413,21 @@ export function AnalyticsDemo({ domain = "wedding" }: Props = {}) {
             for · {pack.workspaceName}
           </span>
         </div>
-        <span
-          className="rounded-full border px-2.5 py-1 text-[11px] font-medium"
-          style={{
-            borderColor: "var(--border-soft)",
-            color: "var(--ink-soft)",
-          }}
-        >
-          Briefing
-        </span>
+        <ViewToggle view={state.view} onChange={setView} />
       </div>
 
       {/* Briefing body */}
       <motion.div
-        initial={false}
-        style={{
-          padding: "32px 36px 36px",
-        }}
+        key={state.view}
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.42, ease: [0.16, 1, 0.3, 1] }}
+        style={{ padding: "32px 36px 36px" }}
       >
-        {/* Timestamp + tick + delivered pip */}
         <div className="mb-5">
           <TickCursor delivered={state.delivered} />
         </div>
 
-        {/* Greeting */}
         <p
           style={{
             fontSize: 26,
@@ -257,9 +441,8 @@ export function AnalyticsDemo({ domain = "wedding" }: Props = {}) {
           {pack.greeting}
         </p>
 
-        {/* Blocks */}
         <div style={{ display: "flex", flexDirection: "column", gap: 26 }}>
-          {state.blocks.map((block) => (
+          {activeBlocks.map((block) => (
             <div key={block.id}>
               <div
                 style={{
@@ -298,22 +481,48 @@ export function AnalyticsDemo({ domain = "wedding" }: Props = {}) {
                   paddingLeft: 14,
                 }}
               >
-                {block.items.map((item) => {
-                  const variantIndex = state.variantByItemId[item.id] ?? 0;
-                  const text = item.variants[variantIndex] ?? item.variants[0];
-                  return (
-                    <BriefingItem
-                      key={item.id}
-                      text={text}
-                      variantKey={variantIndex}
-                      swapping={state.swappingItemId === item.id}
-                      provenance={item.provenance}
-                    />
-                  );
-                })}
+                {block.items
+                  .filter((item) => !state.acknowledgedSet.has(item.id))
+                  .map((item) => {
+                    const variantIndex = state.variantByItemId[item.id] ?? 0;
+                    const text = item.variants[variantIndex] ?? item.variants[0];
+                    return (
+                      <BriefingItem
+                        key={item.id}
+                        text={text}
+                        variantKey={variantIndex}
+                        swapping={state.swappingItemId === item.id}
+                        provenance={item.provenance}
+                        itemId={item.id}
+                        onRegister={onRegisterItem}
+                        highlight={
+                          state.cursor.reading &&
+                          state.scene !== "view-morph-yesterday" &&
+                          state.scene !== "yesterday-hold" &&
+                          state.scene !== "view-morph-today" &&
+                          state.scene !== "cursor-leaves" &&
+                          state.scene !== "reset" &&
+                          (state.whyThisItemId === item.id ||
+                            (state.cursor.reading && state.scene !== "why-this-close" &&
+                              [pack.inspectItemId, pack.acknowledgeItemId].includes(item.id) &&
+                              !(state.scene === "cursor-focus" && item.id === pack.inspectItemId) &&
+                              !(state.scene === "cursor-reads" && item.id === pack.acknowledgeItemId)))
+                        }
+                        whyThisVisible={state.whyThisItemId === item.id}
+                        whyThisReasons={item.whyThis}
+                        whyThisReveal={state.whyThisReveal}
+                        acknowledging={state.acknowledgingItemId === item.id}
+                        showAcknowledgeAffordance={
+                          block.id === "focus" &&
+                          item.id === pack.acknowledgeItemId &&
+                          state.scene !== "reset"
+                        }
+                      />
+                    );
+                  })}
               </div>
 
-              {block.id === "attention" ? (
+              {block.id === "attention" && state.view === "today" ? (
                 <CapOverflow
                   overflow={state.overflowVisible}
                   phase={
@@ -329,7 +538,6 @@ export function AnalyticsDemo({ domain = "wedding" }: Props = {}) {
           ))}
         </div>
 
-        {/* Footer */}
         <div
           style={{
             marginTop: 32,
@@ -361,6 +569,22 @@ export function AnalyticsDemo({ domain = "wedding" }: Props = {}) {
           </span>
         </div>
       </motion.div>
+
+      {/* Cursor layer */}
+      {state.view === "today" ? (
+        <div className="pointer-events-none absolute inset-0">
+          <Cursor
+            x={state.cursor.x}
+            y={state.cursor.y}
+            visible={state.cursor.visible}
+            color={CURSOR_COLOR}
+            label={state.cursor.label}
+            reading={state.cursor.reading}
+          />
+        </div>
+      ) : null}
+
+      <DemoToast variant={state.toast} />
     </div>
   );
 }
