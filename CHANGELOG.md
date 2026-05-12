@@ -1,5 +1,44 @@
 # Signal Analytics · Changelog
 
+## 2026-05-14 · Phase E.4 · Email-render smoke tests + coverage tooling + cadence stamp in body
+
+Three small wins, all in service of "we know this isn't broken".
+
+**Email-render smoke tests.** 11 new tests in `src/lib/email/render.test.ts`
+covering `<BriefingEmail/>` and `renderBriefingText()`. Asserts that
+the React Email integration produces valid HTML for empty / full
+brief shapes, that firstName personalisation works (and falls back),
+that all three footer links land in both html and plain-text, that
+both cadence variants are recognisable from the body alone. Total
+suite is now 46 tests in ~300ms.
+
+The smoke tests caught a real UX gap before any user did: the email
+body had no visible cadence indicator after the Phase C polish
+rebuild (the wordmark header strip replaced the old "DAILY SIGNAL"
+eyebrow). The subject line said "Daily Signal · …" but the body
+glanceably looked the same for daily and weekly. The render test
+asserted what we *wanted* the body to communicate, then the failing
+test surfaced what was missing.
+
+**Fix:** the date strip in the wordmark header now leads with the
+cadence stamp: `DAILY SIGNAL · TUE 14 NOV` instead of just `TUE 14
+NOV`. The body alone now answers "which cadence is this" — useful
+when someone wants to switch via the footer link.
+
+**Coverage tooling.** Added `npm run test:coverage` using Node's
+built-in `--experimental-test-coverage`. Zero new deps. Today's
+snapshot:
+
+  all files            95.53% line / 83.26% branch / 91.84% function
+  build.ts             97.30% / 84.62% / 96.30%
+  triggers.ts          96.95% / 92.00% / 100.00%
+  briefing-email.tsx   97.80% / 82.35% / 94.12%
+  plain-text.ts        91.40% / 72.73% / 100.00%
+  prose.ts             82.65% / 77.50% / 73.91%
+
+prose.ts is the laggard — not every phrasing variant is exercised
+yet. Worth backfilling when adding the next trigger.
+
 ## 2026-05-13 (even later still) · Phase B.3 · Real movedToShippedAt from activities
 
 Replaced the v1 heuristic (`lane='shipped' && idleDays<1 → now - idleDays*DAY`)

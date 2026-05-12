@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
-    "test": "node --import tsx --test 'src/lib/briefing/*.test.ts'",
+    "test": "node --import tsx --test 'src/lib/**/*.test.ts'",
+    "test:coverage": "node --import tsx --test --experimental-test-coverage 'src/lib/**/*.test.ts'",
     "db:generate": "drizzle-kit generate",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio"

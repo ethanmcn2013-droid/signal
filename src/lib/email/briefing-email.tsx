@@ -54,13 +54,18 @@ export function BriefingEmail({
   firstName?: string | null;
 }) {
   const preview = previewText(briefing);
-  const dateLine = new Date(briefing.generatedAt)
+  const dateOnly = new Date(briefing.generatedAt)
     .toLocaleDateString("en-IE", {
       weekday: "short",
       day: "numeric",
       month: "short",
     })
     .toUpperCase();
+  // Lead the date line with the cadence so the body alone tells the
+  // reader which kind of brief this is (the subject line does it too,
+  // but a glance at the body should confirm without backtracking).
+  const cadenceLabel = cadence === "weekly" ? "Weekly Signal" : "Daily Signal";
+  const dateLine = `${cadenceLabel.toUpperCase()} · ${dateOnly}`;
   const summary = summaryLine(briefing);
 
   return (
