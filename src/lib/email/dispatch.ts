@@ -40,11 +40,13 @@ export async function dispatchBriefing({
   email,
   briefing,
   cadence,
+  firstName,
 }: {
   userId: string;
   email: string;
   briefing: Briefing;
   cadence: "daily" | "weekly";
+  firstName?: string | null;
 }): Promise<DispatchResult> {
   if (briefing.isEmpty) {
     return { ok: true, skipped: true, reason: "empty-briefing" };
@@ -55,12 +57,10 @@ export async function dispatchBriefing({
     return { ok: true, skipped: true, reason: "no-resend-key" };
   }
 
-  // Rotate the unsubscribe token. This is the moment.
+  // Generate the new token but don't write it to the DB yet. We rotate
+  // only on confirmed Resend success — if Resend errors, the token
+  // already in the user's inbox (from a prior email) stays valid.
   const newToken = generateUnsubscribeToken();
-  await db
-    .update(userPreferences)
-    .set({ unsubscribeToken: newToken, updatedAt: Date.now() })
-    .where(eq(userPreferences.userId, userId));
 
   const base = siteBaseUrl();
   const unsubscribeUrl = `${base}/u/${encodeURIComponent(newToken)}`;
@@ -75,12 +75,14 @@ export async function dispatchBriefing({
       preferencesUrl,
       viewInBrowserUrl,
       cadence,
+      firstName,
     }),
   );
   const text = renderBriefingText(
     briefing,
     { unsubscribeUrl, preferencesUrl, viewInBrowserUrl },
     cadence,
+    firstName,
   );
 
   const subject = subjectFor(briefing, cadence);
@@ -106,9 +108,11 @@ export async function dispatchBriefing({
     return { ok: false, error: error.message ?? String(error) };
   }
 
+  // Resend confirmed delivery — now safe to rotate the token and record lastSentAt.
+  // The email in the user's inbox carries the new token; the old one is now dead.
   await db
     .update(userPreferences)
-    .set({ lastSentAt: Date.now(), updatedAt: Date.now() })
+    .set({ unsubscribeToken: newToken, lastSentAt: Date.now(), updatedAt: Date.now() })
     .where(eq(userPreferences.userId, userId));
 
   return { ok: true, id: data?.id ?? "" };

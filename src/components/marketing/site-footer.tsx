@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { Wordmark } from "@/components/brand/wordmark";
 import {
-  ANALYTICS_URL,
   NOTES_URL,
   ROADMAP_URL,
   STUDIO_URL,

@@ -3,7 +3,6 @@ import {
   Container,
   Head,
   Heading,
-  Hr,
   Html,
   Link,
   Preview,
@@ -45,12 +44,14 @@ export function BriefingEmail({
   preferencesUrl,
   viewInBrowserUrl,
   cadence,
+  firstName,
 }: {
   briefing: Briefing;
   unsubscribeUrl: string;
   preferencesUrl: string;
   viewInBrowserUrl: string;
   cadence: "daily" | "weekly";
+  firstName?: string | null;
 }) {
   const preview = previewText(briefing);
   const dateLine = new Date(briefing.generatedAt)
@@ -151,7 +152,7 @@ export function BriefingEmail({
                 letterSpacing: "-0.015em",
               }}
             >
-              {greeting(briefing.greetingHour)}
+              {greeting(briefing.greetingHour, firstName)}
             </Heading>
             <Text
               style={{
@@ -439,11 +440,16 @@ function FocusBlock({ items }: { items: FocusItem[] }) {
   );
 }
 
-function greeting(hour: number): string {
-  if (hour < 5) return "It's late.";
-  if (hour < 12) return "Good morning.";
-  if (hour < 17) return "Good afternoon.";
-  return "Good evening.";
+function greeting(hour: number, firstName?: string | null): string {
+  const base =
+    hour < 5
+      ? "It's late"
+      : hour < 12
+        ? "Good morning"
+        : hour < 17
+          ? "Good afternoon"
+          : "Good evening";
+  return firstName ? `${base}, ${firstName}.` : `${base}.`;
 }
 
 /**

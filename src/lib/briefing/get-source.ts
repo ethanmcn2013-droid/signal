@@ -3,10 +3,20 @@ import type { BriefingSource } from "./source";
 import { makeTasksDbSource } from "./tasks-db-source";
 
 /**
+ * An empty source that returns no signals. Used when the Tasks env
+ * vars are not set — the empty-state render (BriefingEmpty) is the
+ * correct truthful render in that case. Never falls back to mock in
+ * production.
+ */
+const emptySource: BriefingSource = {
+  getSignalsForUser: async () => [],
+};
+
+/**
  * Runtime source selection. If the Tasks read-only Turso env vars
- * are set, return a real Tasks DB reader. Otherwise fall back to
- * the mock (Wedding 2026 demo) — useful in dev and as a
- * "no-real-data" graceful degrade in production.
+ * are set, return a real Tasks DB reader. Otherwise return the
+ * empty source — the empty-state briefing is the honest signal that
+ * no workspace data is connected.
  *
  * Cached per server process so we don't recreate the libsql client
  * on every request.
@@ -16,7 +26,7 @@ let cached: BriefingSource | null = null;
 export function getBriefingSource(): BriefingSource {
   if (cached) return cached;
   const real = makeTasksDbSource();
-  cached = real ?? mockBriefingSource;
+  cached = real ?? emptySource;
   return cached;
 }
 

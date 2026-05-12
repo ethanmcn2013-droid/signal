@@ -36,7 +36,7 @@ export function SendTestButton({ email }: { email: string }) {
       >
         Fires a real briefing to{" "}
         <span style={{ color: "var(--ink-soft)" }}>{email}</span>. Skipped if
-        nothing's worth surfacing.
+        nothing&apos;s worth surfacing.
       </p>
       {result && (
         <p

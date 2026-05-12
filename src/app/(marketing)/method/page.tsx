@@ -18,9 +18,9 @@ const STEPS = [
   },
   {
     label: "2 · Detect",
-    title: "Look for ten patterns.",
+    title: "Look for four patterns.",
     body:
-      "Ten rules run across the read model. Held-up work. Overdue items. Projects gone quiet. Most of a project sitting on one person. The same hold-up affecting several things at once. Each rule is named, each rule is auditable, each rule fires only when its condition is met.",
+      "Four rules run across the read model. Held-up work. Overdue items. Items just shipped. Too much in flight at once. Each rule is named, each rule is auditable, each rule fires only when its condition is met.",
     detail:
       "Every rule has a threshold. Every threshold is published. No detection is fuzzy.",
   },
@@ -36,7 +36,7 @@ const STEPS = [
     label: "4 · Write",
     title: "Pick a phrasing. From a library written by hand.",
     body:
-      "Every sentence in the briefing comes from a curated prose library — about fifty-five phrasings written by a person, slot-filled with the names and numbers from the rule that fired. The engine never generates language. It picks language.",
+      "Every sentence in the briefing comes from a curated prose library — twelve phrasings written by a person, slot-filled with the names and numbers from the rule that fired. The engine never generates language. It picks language.",
     detail:
       "No LLM in the path. Not today, not in v1. The brand is in the writing.",
   },

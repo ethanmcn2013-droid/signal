@@ -118,7 +118,6 @@ function toItem(t: Triggered, rotation: number, now: number): BriefItem {
 }
 
 function toFocus(t: Triggered, rotation: number, now: number): FocusItem {
-  const item = toItem(t, rotation, now);
   return {
     id: t.task.id,
     text: focusText(t, now),

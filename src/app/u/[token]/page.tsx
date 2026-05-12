@@ -26,7 +26,7 @@ export default async function UnsubscribePage({
             className="mb-4 text-[11px] font-semibold uppercase tracking-[0.14em]"
             style={{ color: "var(--ink-quiet)" }}
           >
-            You're off.
+            You&apos;re off.
           </p>
           <h1
             className="mb-4 text-[32px] font-semibold leading-[1.15]"
@@ -39,7 +39,7 @@ export default async function UnsubscribePage({
             className="mb-8 text-[15px] leading-[1.6]"
             style={{ color: "var(--ink-soft)" }}
           >
-            That's it. Nothing else lands in your inbox from us. You can
+            That&apos;s it. Nothing else lands in your inbox from us. You can
             still open the briefing in the app whenever you want, and you
             can turn emails back on any time from settings.
           </p>
@@ -57,13 +57,13 @@ export default async function UnsubscribePage({
             className="mb-4 text-[28px] font-semibold leading-[1.15]"
             style={{ color: "var(--ink)" }}
           >
-            This link doesn't match an account.
+            This link doesn&apos;t match an account.
           </h1>
           <p
             className="mb-8 text-[15px] leading-[1.6]"
             style={{ color: "var(--ink-soft)" }}
           >
-            Either you've already used it, or it was meant for someone else.
+            Either you&apos;ve already used it, or it was meant for someone else.
             You can manage your briefing emails from settings.
           </p>
           <Link

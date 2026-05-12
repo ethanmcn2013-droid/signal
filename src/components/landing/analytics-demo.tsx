@@ -68,11 +68,6 @@ export function AnalyticsDemo({ domain = "wedding" }: Props = {}) {
   const surfaceRef = useRef<HTMLDivElement | null>(null);
   const itemRefsRef = useRef<Map<string, HTMLDivElement>>(new Map());
 
-  useEffect(() => {
-    setState(buildInitialState(domain));
-    loopKeyRef.current += 1;
-  }, [domain]);
-
   const onRegisterItem = useCallback(
     (id: string, el: HTMLDivElement | null) => {
       if (el) {

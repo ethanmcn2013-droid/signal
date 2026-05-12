@@ -15,12 +15,12 @@ const BLOCKS = [
   {
     label: "Moving well",
     dot: "#10b981",
-    body: "Quiet wins. Where momentum is. A project on a run of completion. A person shipping more than usual. The briefing names these so you know what's working and leave it alone.",
+    body: "Quiet wins. Tasks that closed in the last 24 hours. The briefing names these so you know what shipped and can leave it alone.",
   },
   {
     label: "Quiet risks",
     dot: "#71717a",
-    body: "Nothing is on fire. But something might be. A project that has gone silent for over a week. Most of a project's work sitting on one person. The same hold-up affecting several pieces of work. Quiet risks are the ones dashboards miss.",
+    body: "Nothing is on fire. But something might be. Work that hasn't moved in three or more days, sitting open without a blocker to explain it. These are the items dashboards miss because they're neither overdue nor blocked — just stuck.",
   },
   {
     label: "Suggested focus",
@@ -46,35 +46,34 @@ const BRIEFING_EXAMPLE = [
     label: "Needs attention",
     dot: "#f59e0b",
     items: [
-      "Vendor quote signoff has been quiet for 8 days, and Confirm flowers is held up by it.",
-      "Send save-the-dates was due 5 days ago.",
-      "Print menus has been held up for 3 days.",
+      "Send save-the-dates is 5 days overdue.",
+      "Confirm venue deposit comes due today.",
+      "8 items in flight at once — that's heavy for one person.",
     ],
   },
   {
     label: "Moving well",
     dot: "#10b981",
     items: [
-      "Brand refresh has shipped 4 things this week.",
-      "You closed 5 things this week.",
+      "Book photographer closed out.",
+      "Finalise guest list is done.",
     ],
   },
   {
     label: "Quiet risks",
     dot: "#71717a",
     items: [
-      "Vendor quote signoff is in the way of 3 other things.",
-      "Most of Q3 launch is sitting on one person.",
-      "Studio website has had no activity in 9 days.",
+      "Vendor quote signoff hasn't moved in 8 days.",
+      "Print menus is sitting open — 5 days ago.",
     ],
   },
   {
     label: "Suggested focus",
     dot: "#4f46e5",
     items: [
-      "Chase Vendor quote signoff today — Confirm flowers is waiting on it.",
-      "Close out Send save-the-dates today — it was due 5 days ago.",
-      "Touch Studio website today — silent for 9 days.",
+      "Catch up on Send save-the-dates — 5 days past due.",
+      "Close out Confirm venue deposit today.",
+      "Move Vendor quote signoff forward.",
     ],
   },
 ] as const;
