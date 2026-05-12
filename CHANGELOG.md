@@ -1,5 +1,33 @@
 # Signal Analytics · Changelog
 
+## 2026-05-13 · Phase B.1 · The engine + /app/brief surface, on mock data
+
+The briefing engine is real now. Four triggers (stuck-work · due-soon ·
+just-shipped · overload). Three prose phrasings per trigger, rotating
+per (userId, day) via a stable hash so a user doesn't read the same
+sentence two mornings in a row. Suggested Focus ranks across attention
++ risks with a weighted scheme (due-soon outranks stuck-work outranks
+overload), capped at three. Hard cap of three per bucket — overflow
+lives on the web view, never in email.
+
+The in-app surface lives at `/app/brief`. Server component, auth-gated,
+calls `buildBriefing(mockSource, userId)` and renders the typed
+Briefing through a shared `<BriefingView/>` — the same render tree
+Phase C's `<BriefingEmail/>` will inline. Empty-day behaviour shipped
+too: when no trigger fires, the brief shows "Nothing to flag today"
+and Phase C will skip the send.
+
+Voice rules honoured throughout: plain English, never chart language,
+provenance line "from Tasks · Wedding 2026" under every item, "why
+this →" details element on web (skipped in email by locked v1 contract).
+
+Data source is mocked for this phase — a `BriefingSource` interface
+with `getSignalsForUser(userId)` whose mock returns the Wedding 2026
+shape from the marketing demo. Phase B.2 swaps mock for a Tasks DB
+read in one line; the engine doesn't change. This lets the email
+render path (Phase C) be built and reviewed today without waiting on
+the cross-product Turso token plumbing.
+
 ## 2026-05-12 (even later) · Phase A · Settings + opt-out, before any email can send
 
 Analytics earned an authenticated app surface today, and the first
