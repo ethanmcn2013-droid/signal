@@ -1,5 +1,47 @@
 # Signal Analytics · Changelog
 
+## 2026-05-13 (later) · Phase C · The email + cron fanout, with the kill-switch wired all the way through
+
+The engine now has a delivery surface. `<BriefingEmail/>` renders the
+typed Briefing through `@react-email/components` — same hierarchy as
+`<BriefingView/>`, but with inline styles, table-based layout for the
+Suggested Focus block (the only place a real layout regression would
+hide in Outlook), no Tailwind, no CSS vars, no motion. The "why this
+→" expansions stay on the web by design (locked v1 contract).
+
+`dispatchBriefing()` is the wrapper. It refuses to send on two
+conditions: the briefing is empty (brand promise — no email on quiet
+days) or `RESEND_API_KEY` is unset (graceful no-key dev fallback). On
+every real send it rotates the user's `unsubscribeToken` first, so
+the new email's unsubscribe links are unique and the old ones die at
+the same moment. Headers carry RFC 8058 `List-Unsubscribe` +
+`List-Unsubscribe-Post: List-Unsubscribe=One-Click` so Gmail and
+Apple Mail surface their native unsubscribe button at the top of the
+message — the entire reason we built the POST handler in Phase A.
+
+The cron handler is `/api/cron/briefings`. Bearer `CRON_SECRET` auth.
+On every run it fans out to `cadence='daily'` users; on Mondays (UTC)
+it also fans out to `cadence='weekly'` users. `cadence='off'` never
+gets touched. `vercel.json` schedules a single run at `0 6 * * *`.
+The response carries counts (considered / sent / skipped / failed)
+and failure reasons by clerk userId, but never email addresses —
+the failure log is operator-visible only.
+
+`/app/preview-email` renders the actual email HTML into a sandboxed
+iframe. The brief promise: visit this before any Phase C change
+that touches render, and you'll see exactly what Gmail sees before
+your inbox does.
+
+Subject lines lead with the most attention-worthy item, capped at 60
+chars, prefixed `Signal · ` or `Weekly Signal · `. Preview text (the
+inbox-list snippet) matches the lead item. Nothing on fire? Falls
+back to a calm `Signal · Mon 13 May`.
+
+Owner env still owed before any of this can actually send: `RESEND_API_KEY`,
+`RESEND_FROM`, `CRON_SECRET` on the analytics Vercel project (mark
+RESEND + CRON_SECRET Sensitive). DKIM for signalstudio.ie still
+pending per the older email memory.
+
 ## 2026-05-13 · Phase B.1 · The engine + /app/brief surface, on mock data
 
 The briefing engine is real now. Four triggers (stuck-work · due-soon ·
