@@ -1,5 +1,5 @@
 import { HeroMotion } from "@/components/landing/hero-motion";
-import { BriefingMotion } from "@/components/landing/briefing-motion";
+import { AnalyticsDemo } from "@/components/landing/analytics-demo";
 import { BriefingAnatomy } from "@/components/marketing/briefing-anatomy";
 
 const PILLARS = [
@@ -40,7 +40,7 @@ export default function HomePage() {
   return (
     <div style={{ background: "var(--bg)" }}>
       <HeroMotion />
-      <BriefingMotion />
+      <AnalyticsDemo />
       <BriefingAnatomy />
 
       {/* ── Pillars ─────────────────────────────────────────────── */}
