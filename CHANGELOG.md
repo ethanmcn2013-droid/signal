@@ -1,5 +1,27 @@
 # Signal Analytics · Changelog
 
+## 2026-05-13 · Phase E.1 · Personalised greeting + middleware → proxy rename
+
+Two hygiene cycles in one tick.
+
+**Personalisation.** Greetings now read "Good morning, Ethan." instead
+of "Good morning." when the recipient's Clerk firstName is available.
+The plumbing is opt-in and graceful: the cron handler calls
+`clerkClient.users.getUser(userId)` per fanout iteration, catches and
+nulls any failure (test rows, deleted users, Clerk hiccup), and passes
+`firstName?: string | null` through `dispatchBriefing()` →
+`BriefingEmail`/`renderBriefingText`. /app/brief and the Send-test
+action read from `currentUser()` directly. When firstName is missing
+the greeting silently falls back to the impersonal form. Real product
+warmth, no over-claim on data we don't have.
+
+**`src/middleware.ts` → `src/proxy.ts`.** Next 16 deprecated the
+`middleware` file convention in favour of `proxy`. The build was
+warning about it at every deploy. File renamed (git mv), no behaviour
+change — `clerkMiddleware()` from `@clerk/nextjs/server` is still the
+right export name (Clerk hasn't moved). Build log now reads
+`ƒ Proxy (Middleware)` instead of the deprecation line.
+
 ## 2026-05-12 (even later still) · Phase D + B.2 · Send-test + real Tasks DB read
 
 Two cycles in one — both unblocking parts of the same moment.

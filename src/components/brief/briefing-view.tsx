@@ -6,7 +6,13 @@ import type { BriefItem, Briefing, FocusItem } from "@/lib/briefing/types";
  * the same hierarchy without the why-this expansions and without
  * the cursor/hover affordances.
  */
-export function BriefingView({ briefing }: { briefing: Briefing }) {
+export function BriefingView({
+  briefing,
+  firstName,
+}: {
+  briefing: Briefing;
+  firstName?: string | null;
+}) {
   const stamp = new Date(briefing.generatedAt).toLocaleString("en-IE", {
     weekday: "long",
     hour: "2-digit",
@@ -35,7 +41,7 @@ export function BriefingView({ briefing }: { briefing: Briefing }) {
         className="mb-10 text-[32px] font-semibold leading-[1.15]"
         style={{ color: "var(--ink)" }}
       >
-        {greeting(briefing.greetingHour)}
+        {greeting(briefing.greetingHour, firstName)}
       </h1>
 
       {briefing.isEmpty ? (
@@ -185,9 +191,14 @@ function EmptyState() {
   );
 }
 
-function greeting(hour: number): string {
-  if (hour < 5) return "It's late.";
-  if (hour < 12) return "Good morning.";
-  if (hour < 17) return "Good afternoon.";
-  return "Good evening.";
+function greeting(hour: number, firstName?: string | null): string {
+  const base =
+    hour < 5
+      ? "It's late"
+      : hour < 12
+        ? "Good morning"
+        : hour < 17
+          ? "Good afternoon"
+          : "Good evening";
+  return firstName ? `${base}, ${firstName}.` : `${base}.`;
 }

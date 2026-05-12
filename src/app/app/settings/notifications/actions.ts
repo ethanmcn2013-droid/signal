@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { currentUser } from "@clerk/nextjs/server";
 import { buildBriefing } from "@/lib/briefing/build";
 import { getBriefingSource } from "@/lib/briefing/get-source";
 import { dispatchBriefing } from "@/lib/email/dispatch";
@@ -29,6 +30,7 @@ export type SendTestResult =
  */
 export async function sendTestBriefingAction(): Promise<SendTestResult> {
   const prefs = await getOrCreatePreferences();
+  const me = await currentUser();
   const source = getBriefingSource();
   const briefing = await buildBriefing(source, {
     userId: prefs.userId,
@@ -39,6 +41,7 @@ export async function sendTestBriefingAction(): Promise<SendTestResult> {
     email: prefs.email,
     briefing,
     cadence: "daily",
+    firstName: me?.firstName ?? null,
   });
   if (!result.ok) {
     return { ok: false, message: `Could not send: ${result.error}` };

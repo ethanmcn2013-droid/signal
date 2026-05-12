@@ -13,6 +13,7 @@ export function renderBriefingText(
     viewInBrowserUrl: string;
   },
   cadence: "daily" | "weekly",
+  firstName?: string | null,
 ): string {
   const date = new Date(b.generatedAt).toLocaleDateString("en-IE", {
     weekday: "long",
@@ -27,7 +28,7 @@ export function renderBriefingText(
   );
   lines.push(date);
   lines.push("");
-  lines.push(greeting(b.greetingHour));
+  lines.push(greeting(b.greetingHour, firstName));
   lines.push("");
 
   if (b.needsAttention.length > 0) {
@@ -79,9 +80,14 @@ export function renderBriefingText(
   return lines.join("\n");
 }
 
-function greeting(hour: number): string {
-  if (hour < 5) return "It's late.";
-  if (hour < 12) return "Good morning.";
-  if (hour < 17) return "Good afternoon.";
-  return "Good evening.";
+function greeting(hour: number, firstName?: string | null): string {
+  const base =
+    hour < 5
+      ? "It's late"
+      : hour < 12
+        ? "Good morning"
+        : hour < 17
+          ? "Good afternoon"
+          : "Good evening";
+  return firstName ? `${base}, ${firstName}.` : `${base}.`;
 }
