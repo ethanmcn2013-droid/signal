@@ -1,0 +1,293 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Method — Signal Analytics",
+  description:
+    "How the briefing gets made. A rule engine, a curated library of phrasings, and one job: surface what matters today. No LLM in the path.",
+};
+
+const STEPS = [
+  {
+    label: "1 · Read",
+    title: "Read the state of your work.",
+    body:
+      "The engine reads your Signal Tasks workspace. Tags become projects. Lanes become status. Assignees stay assignees. Nothing is invented, nothing is interpreted — the briefing only knows what your workspace already says.",
+    detail:
+      "Today the only source is Signal Tasks. Other sources will be added when they earn it.",
+  },
+  {
+    label: "2 · Detect",
+    title: "Look for ten patterns.",
+    body:
+      "Ten rules run across the read model. Held-up work. Overdue items. Projects gone quiet. Most of a project sitting on one person. The same hold-up affecting several things at once. Each rule is named, each rule is auditable, each rule fires only when its condition is met.",
+    detail:
+      "Every rule has a threshold. Every threshold is published. No detection is fuzzy.",
+  },
+  {
+    label: "3 · Compress",
+    title: "Keep three. Drop the rest.",
+    body:
+      "Insights are ranked by cascade (does this slow other things?), irreversibility (can it be fixed in five minutes?), and proximity (does it matter today?). Each block is capped at three items. Anything below the cap is dropped silently — the briefing doesn't apologise for what it left out.",
+    detail:
+      "Silence is also signal. A short briefing means a calm day.",
+  },
+  {
+    label: "4 · Write",
+    title: "Pick a phrasing. From a library written by hand.",
+    body:
+      "Every sentence in the briefing comes from a curated prose library — about fifty-five phrasings written by a person, slot-filled with the names and numbers from the rule that fired. The engine never generates language. It picks language.",
+    detail:
+      "No LLM in the path. Not today, not in v1. The brand is in the writing.",
+  },
+] as const;
+
+const REFUSALS = [
+  {
+    label: "Not a dashboard.",
+    body:
+      "Dashboards ask you to interpret. The briefing tells you what changed and what matters.",
+  },
+  {
+    label: "Not a recommendation engine.",
+    body:
+      "The engine names things. It does not decide. The phrase \"Suggested focus\" is the strongest verb the briefing uses.",
+  },
+  {
+    label: "Not an AI workspace.",
+    body:
+      "There is no model in the path. No agent. No copilot. A rule engine and a phrasing library, both auditable, both written by hand.",
+  },
+  {
+    label: "Not exhaustive.",
+    body:
+      "Three items per block. Always three. If five things need attention, the engine picks the three with the highest cascade — and trusts you to find the rest yourself.",
+  },
+] as const;
+
+const PROSE_MAX = {
+  maxWidth: 640,
+  margin: "0 auto",
+  paddingLeft: 24,
+  paddingRight: 24,
+};
+
+function Eyebrow({ children }: { children: React.ReactNode }) {
+  return (
+    <p
+      style={{
+        fontSize: 11,
+        letterSpacing: "0.14em",
+        fontWeight: 600,
+        color: "var(--ink-quiet)",
+        fontFamily: "var(--font-mono-stack)",
+        textTransform: "uppercase",
+        marginBottom: 20,
+      }}
+    >
+      {children}
+    </p>
+  );
+}
+
+export default function MethodPage() {
+  return (
+    <div style={{ background: "var(--bg)", paddingBottom: 120 }}>
+      <section style={{ paddingTop: 96, paddingBottom: 56 }}>
+        <div style={PROSE_MAX}>
+          <Eyebrow>Method</Eyebrow>
+          <h1
+            className="h-display"
+            style={{ marginBottom: 22 }}
+          >
+            How the briefing gets made.
+          </h1>
+          <p
+            style={{
+              fontSize: 18,
+              lineHeight: 1.55,
+              color: "var(--ink-soft)",
+              marginBottom: 12,
+            }}
+          >
+            A rule engine, a curated library of phrasings, and one job: surface
+            what matters today.
+          </p>
+          <p
+            style={{
+              fontSize: 14,
+              lineHeight: 1.6,
+              color: "var(--ink-quiet)",
+            }}
+          >
+            Four steps. Every one of them is auditable. None of them is a guess.
+          </p>
+        </div>
+      </section>
+
+      <section style={{ paddingTop: 24, paddingBottom: 0 }}>
+        <div style={PROSE_MAX}>
+          <ul
+            style={{
+              listStyle: "none",
+              padding: 0,
+              margin: 0,
+              display: "flex",
+              flexDirection: "column",
+              gap: 56,
+            }}
+          >
+            {STEPS.map((step) => (
+              <li key={step.label}>
+                <p
+                  style={{
+                    fontSize: 11,
+                    letterSpacing: "0.14em",
+                    fontWeight: 600,
+                    color: "var(--ink-quiet)",
+                    fontFamily: "var(--font-mono-stack)",
+                    textTransform: "uppercase",
+                    marginBottom: 10,
+                  }}
+                >
+                  {step.label}
+                </p>
+                <h2
+                  style={{
+                    fontSize: 22,
+                    fontWeight: 600,
+                    letterSpacing: "-0.02em",
+                    color: "var(--ink)",
+                    marginBottom: 12,
+                    lineHeight: 1.2,
+                  }}
+                >
+                  {step.title}
+                </h2>
+                <p
+                  style={{
+                    fontSize: 16,
+                    lineHeight: 1.65,
+                    color: "var(--ink-soft)",
+                    marginBottom: 10,
+                  }}
+                >
+                  {step.body}
+                </p>
+                <p
+                  style={{
+                    fontSize: 13.5,
+                    lineHeight: 1.65,
+                    color: "var(--ink-quiet)",
+                  }}
+                >
+                  {step.detail}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <section style={{ paddingTop: 96, paddingBottom: 0 }}>
+        <div style={PROSE_MAX}>
+          <Eyebrow>What the method refuses</Eyebrow>
+          <h2
+            style={{
+              fontSize: 32,
+              fontWeight: 600,
+              letterSpacing: "-0.025em",
+              color: "var(--ink)",
+              marginBottom: 36,
+              lineHeight: 1.15,
+            }}
+          >
+            Four things the engine does not do.
+          </h2>
+          <ul
+            style={{
+              listStyle: "none",
+              padding: 0,
+              margin: 0,
+              display: "flex",
+              flexDirection: "column",
+              gap: 28,
+            }}
+          >
+            {REFUSALS.map((r) => (
+              <li
+                key={r.label}
+                style={{
+                  borderTop: "1px solid var(--border-soft)",
+                  paddingTop: 18,
+                }}
+              >
+                <h3
+                  style={{
+                    fontSize: 17,
+                    fontWeight: 600,
+                    letterSpacing: "-0.01em",
+                    color: "var(--ink)",
+                    marginBottom: 8,
+                  }}
+                >
+                  {r.label}
+                </h3>
+                <p
+                  style={{
+                    fontSize: 15,
+                    lineHeight: 1.65,
+                    color: "var(--ink-soft)",
+                  }}
+                >
+                  {r.body}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <section style={{ paddingTop: 96 }}>
+        <div style={PROSE_MAX}>
+          <p
+            style={{
+              fontSize: 14,
+              color: "var(--ink-quiet)",
+              marginBottom: 18,
+            }}
+          >
+            See it in motion.
+          </p>
+          <div style={{ display: "flex", gap: 20, flexWrap: "wrap" }}>
+            <Link
+              href="/signal"
+              style={{
+                fontSize: 15,
+                color: "var(--ink)",
+                textDecoration: "underline",
+                textDecorationColor: "var(--border-soft)",
+                textUnderlineOffset: 4,
+              }}
+            >
+              What&apos;s in a briefing
+            </Link>
+            <span style={{ color: "var(--ink-quiet)" }}>·</span>
+            <Link
+              href="/demo"
+              style={{
+                fontSize: 15,
+                color: "var(--ink)",
+                textDecoration: "underline",
+                textDecorationColor: "var(--border-soft)",
+                textUnderlineOffset: 4,
+              }}
+            >
+              Thirty seconds
+            </Link>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
