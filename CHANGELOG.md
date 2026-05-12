@@ -1,5 +1,61 @@
 # Signal Analytics · Changelog
 
+## 2026-05-14 (even later) · Phase F.3 · Dispatch error-branch tests + multi-blocker phrasing
+
+The most important untested branch was `dispatchBriefing`'s error
+path — what happens when Resend rejects the send. Now defended.
+
+**Lightweight DI for the sender.** dispatchBriefing accepts an
+optional `sender: EmailSender` parameter. Default path constructs
+the Resend client from `RESEND_API_KEY` (existing behavior); test
+path passes a fake sender that returns whatever response you
+construct. No network, no mocking framework, just a parameter. A
+companion `persist: boolean` flag (default true) lets tests skip the
+DB write that follows a successful send — the error path doesn't
+reach the DB anyway, so this only matters for the contract tests.
+
+**13 new dispatch tests** cover:
+  - Empty briefing → skipped:`empty-briefing` (sender NOT called)
+  - No sender + no `RESEND_API_KEY` → skipped:`no-resend-key`
+  - Sender returns error → `{ ok: false, error: "rate_limited" }`
+  - Sender error without message → still produces a string error
+  - Contract: recipient passed through, Reply-To header set,
+    List-Unsubscribe + List-Unsubscribe-Post:One-Click present,
+    Daily/Weekly subject prefix, html + text both populated
+
+This locks the email contract in test form. A future refactor that
+silently drops the RFC 8058 headers (and breaks Gmail's native
+unsubscribe) would now fail a test.
+
+**Multi-blocker prose.** When a task is blocked by ≥ 2 upstream
+tasks, the prose now says "Florist deposit has been blocked by
+Music supplier (and 1 more) for 9 days" instead of just naming the
+first one. Centralised in a `blockerSubject(by, more)` helper so all
+three blocked-too-long phrasings produce consistent multi-blocker
+form. 6 new prose tests + 1 orchestration test through buildBriefing.
+
+**Server-only import removed from dispatch.ts.** The `import
+"server-only"` throws at Node test-load time. dispatch.ts is only
+imported by route handlers and server actions (both already server-
+only at the framework level), so the redundant safety net was
+removed with a comment explaining why. `db/index.ts` and other
+real server-only modules keep theirs.
+
+**Env file loaded by test runner.** `npm test` now uses Node 22+
+`--env-file-if-exists=.env.local` so the DB-module env check passes
+without a real DB call (the tests don't hit the DB; they just need
+the module to import without throwing).
+
+Suite is now **113/113 in 530ms**. Coverage:
+
+  all files       97.06 / 84.87 / 99.12  →  96.91 / 86.29 / 98.65
+  dispatch.ts          (no tests prior)  →  93.72 / 67.65 / 91.67
+  prose.ts        96.27 / 80.60 / 100.00 →  98.08 / 85.33 / 100.00
+
+(all-files line% dipped marginally because dispatch.ts is wider in
+absolute terms and only 93% covered; the new coverage is real new
+ground, not regression.)
+
 ## 2026-05-14 (later) · Phase F.2 · Name-the-blocker + buildBriefing orchestration tests
 
 Two follow-ups to F.1's trigger expansion:

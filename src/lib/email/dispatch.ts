@@ -1,4 +1,8 @@
-import "server-only";
+// Note: `import "server-only"` would protect against accidental
+// client-bundle import, but it throws at Node-test import time.
+// dispatch.ts is only imported by route handlers and server actions
+// (both already server-only), so this protection is redundant in
+// practice. Removed so the test suite can mount it directly.
 import { Resend } from "resend";
 import { render } from "@react-email/render";
 import { eq } from "drizzle-orm";
@@ -23,6 +27,24 @@ export type DispatchResult =
   | { ok: false; error: string };
 
 /**
+ * The minimal shape we need from the email sender. Lets tests
+ * inject a fake without hauling in the real Resend SDK or mocking
+ * the network.
+ */
+export type EmailSender = (params: {
+  from: string;
+  to: string;
+  replyTo: string;
+  subject: string;
+  html: string;
+  text: string;
+  headers: Record<string, string>;
+}) => Promise<{
+  data?: { id?: string } | null;
+  error?: { message?: string; name?: string } | null;
+}>;
+
+/**
  * Send one briefing to one user.
  *
  * Side effects:
@@ -41,20 +63,39 @@ export async function dispatchBriefing({
   briefing,
   cadence,
   firstName,
+  sender,
+  persist = true,
 }: {
   userId: string;
   email: string;
   briefing: Briefing;
   cadence: "daily" | "weekly";
   firstName?: string | null;
+  /** Inject a fake sender to test without calling Resend. When
+   *  omitted, the default Resend client is used (requires
+   *  RESEND_API_KEY). */
+  sender?: EmailSender;
+  /** When false, skip the DB write that rotates the unsubscribe
+   *  token + sets lastSentAt. Useful for tests that exercise the
+   *  send path without a real Turso connection. Default: true. */
+  persist?: boolean;
 }): Promise<DispatchResult> {
   if (briefing.isEmpty) {
     return { ok: true, skipped: true, reason: "empty-briefing" };
   }
 
-  const apiKey = process.env.RESEND_API_KEY;
-  if (!apiKey) {
-    return { ok: true, skipped: true, reason: "no-resend-key" };
+  // Resolve the sender. An injected sender bypasses the env-key
+  // check; the default path requires RESEND_API_KEY.
+  let send: EmailSender;
+  if (sender) {
+    send = sender;
+  } else {
+    const apiKey = process.env.RESEND_API_KEY;
+    if (!apiKey) {
+      return { ok: true, skipped: true, reason: "no-resend-key" };
+    }
+    const resend = new Resend(apiKey);
+    send = (p) => resend.emails.send(p);
   }
 
   // Generate the new token but don't write it to the DB yet. We rotate
@@ -87,8 +128,7 @@ export async function dispatchBriefing({
 
   const subject = subjectFor(briefing, cadence);
 
-  const resend = new Resend(apiKey);
-  const { data, error } = await resend.emails.send({
+  const { data, error } = await send({
     from: FROM,
     to: email,
     replyTo: REPLY_TO,
@@ -110,10 +150,12 @@ export async function dispatchBriefing({
 
   // Resend confirmed delivery — now safe to rotate the token and record lastSentAt.
   // The email in the user's inbox carries the new token; the old one is now dead.
-  await db
-    .update(userPreferences)
-    .set({ unsubscribeToken: newToken, lastSentAt: Date.now(), updatedAt: Date.now() })
-    .where(eq(userPreferences.userId, userId));
+  if (persist) {
+    await db
+      .update(userPreferences)
+      .set({ unsubscribeToken: newToken, lastSentAt: Date.now(), updatedAt: Date.now() })
+      .where(eq(userPreferences.userId, userId));
+  }
 
   return { ok: true, id: data?.id ?? "" };
 }

@@ -122,6 +122,72 @@ describe("phraseFor — rotation produces distinct phrasings across the library"
   });
 });
 
+describe("phraseFor — blocked-too-long multi-blocker rendering", () => {
+  test("single blocker is named without 'and N more'", () => {
+    const t = task({ blockedBy: ["x"], idleDays: 7 });
+    const text = phraseFor("blocked-too-long", t, 0, {
+      idleDays: 7,
+      blockedByTitles: ["Music supplier"],
+    });
+    assert.match(text, /blocked by Music supplier/);
+    assert.doesNotMatch(text, /and \d+ more/);
+  });
+
+  test("two blockers render 'X (and 1 more)'", () => {
+    const t = task({ blockedBy: ["x", "y"], idleDays: 7 });
+    const text = phraseFor("blocked-too-long", t, 0, {
+      idleDays: 7,
+      blockedByTitles: ["Music supplier", "Venue agreement"],
+    });
+    assert.match(text, /Music supplier \(and 1 more\)/);
+  });
+
+  test("three blockers render 'X (and 2 more)'", () => {
+    const t = task({ blockedBy: ["x", "y", "z"], idleDays: 7 });
+    const text = phraseFor("blocked-too-long", t, 0, {
+      idleDays: 7,
+      blockedByTitles: ["Music supplier", "Venue agreement", "Stationer"],
+    });
+    assert.match(text, /Music supplier \(and 2 more\)/);
+  });
+
+  test("falls back to 'has been blocked for N days' when no titles", () => {
+    const t = task({ blockedBy: ["x"], idleDays: 7 });
+    const text = phraseFor("blocked-too-long", t, 0, {
+      idleDays: 7,
+      blockedByTitles: [],
+    });
+    assert.match(text, /blocked for 7 days/);
+    assert.doesNotMatch(text, /by /);
+  });
+
+  test("each of the three phrasings handles multi-blocker", () => {
+    const t = task({ blockedBy: ["x", "y"], idleDays: 7 });
+    for (let r = 0; r < 3; r++) {
+      const text = phraseFor("blocked-too-long", t, r, {
+        idleDays: 7,
+        blockedByTitles: ["Music supplier", "Venue agreement"],
+      });
+      assert.match(
+        text,
+        /Music supplier \(and 1 more\)/,
+        `phrasing ${r} should carry multi-blocker subject`,
+      );
+    }
+  });
+
+  test("each phrasing has a generic fallback when no titles supplied", () => {
+    const t = task({ idleDays: 7 });
+    const variants = new Set<string>();
+    for (let r = 0; r < 3; r++) {
+      const text = phraseFor("blocked-too-long", t, r, { idleDays: 7 });
+      assert.doesNotMatch(text, /by /, `phrasing ${r} should not name a blocker`);
+      variants.add(text);
+    }
+    assert.equal(variants.size, 3);
+  });
+});
+
 describe("phraseFor — voice rules from BRAND.md / COLLABORATION_LOOP.md", () => {
   test("no chart-language artifacts (%, =, count:, kpi)", () => {
     for (const trigger of ALL_TRIGGERS) {

@@ -12,7 +12,15 @@ import type { TaskSignal, TriggerKind } from "./types";
  *  - No percentages without an action.
  */
 
-type Phrasing = (task: TaskSignal, days?: number, extra?: string) => string;
+type Phrasing = (
+  task: TaskSignal,
+  days?: number,
+  /** Resolved title of the FIRST upstream blocker (when applicable). */
+  by?: string,
+  /** Count of ADDITIONAL blockers beyond the first. > 0 means
+   *  multi-blocker; prose appends "(and N more)" to the subject. */
+  moreCount?: number,
+) => string;
 
 const STUCK: Phrasing[] = [
   (t, days = 0) => `${t.title} has been held up since ${ago(days)}`,
@@ -57,19 +65,33 @@ const CROWDED_WEEK: Phrasing[] = [
   (t) => `A pile-up is forming — ${t.title.toLowerCase()}`,
 ];
 
+// Build the blocker subject string. Centralised so all three
+// phrasings produce consistent multi-blocker form: "X (and 2 more)".
+function blockerSubject(by?: string, more = 0): string | null {
+  if (!by) return null;
+  if (more <= 0) return by;
+  return `${by} (and ${more} more)`;
+}
+
 const BLOCKED_TOO_LONG: Phrasing[] = [
-  (t, days = 0, by) =>
-    by
-      ? `${t.title} has been blocked by ${by} for ${plural(days, "day", "days")}`
-      : `${t.title} has been blocked for ${plural(days, "day", "days")}`,
-  (t, days = 0, by) =>
-    by
-      ? `${t.title} is waiting on ${by} — ${plural(days, "day", "days")} now`
-      : `${t.title} is waiting on something — ${plural(days, "day", "days")} now`,
-  (t, days = 0, by) =>
-    by
-      ? `${t.title} hasn't cleared ${by} in ${plural(days, "day", "days")}`
-      : `${t.title} hasn't cleared its blocker in ${plural(days, "day", "days")}`,
+  (t, days = 0, by, more = 0) => {
+    const subject = blockerSubject(by, more);
+    return subject
+      ? `${t.title} has been blocked by ${subject} for ${plural(days, "day", "days")}`
+      : `${t.title} has been blocked for ${plural(days, "day", "days")}`;
+  },
+  (t, days = 0, by, more = 0) => {
+    const subject = blockerSubject(by, more);
+    return subject
+      ? `${t.title} is waiting on ${subject} — ${plural(days, "day", "days")} now`
+      : `${t.title} is waiting on something — ${plural(days, "day", "days")} now`;
+  },
+  (t, days = 0, by, more = 0) => {
+    const subject = blockerSubject(by, more);
+    return subject
+      ? `${t.title} hasn't cleared ${subject} in ${plural(days, "day", "days")}`
+      : `${t.title} hasn't cleared its blocker in ${plural(days, "day", "days")}`;
+  },
 ];
 
 const LIBRARY: Record<TriggerKind, Phrasing[]> = {
@@ -98,12 +120,12 @@ export function phraseFor(
   if (trigger === "stuck-work")
     return phrasing(task, context?.idleDays ?? task.idleDays);
   if (trigger === "due-soon") return phrasing(task, context?.daysOut ?? 0);
-  if (trigger === "blocked-too-long")
-    return phrasing(
-      task,
-      context?.idleDays ?? task.idleDays,
-      context?.blockedByTitles?.[0],
-    );
+  if (trigger === "blocked-too-long") {
+    const titles = context?.blockedByTitles ?? [];
+    const by = titles[0];
+    const more = Math.max(0, titles.length - 1);
+    return phrasing(task, context?.idleDays ?? task.idleDays, by, more);
+  }
   return phrasing(task);
 }
 
