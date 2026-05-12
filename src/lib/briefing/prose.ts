@@ -12,7 +12,7 @@ import type { TaskSignal, TriggerKind } from "./types";
  *  - No percentages without an action.
  */
 
-type Phrasing = (task: TaskSignal, days?: number) => string;
+type Phrasing = (task: TaskSignal, days?: number, extra?: string) => string;
 
 const STUCK: Phrasing[] = [
   (t, days = 0) => `${t.title} has been held up since ${ago(days)}`,
@@ -58,9 +58,18 @@ const CROWDED_WEEK: Phrasing[] = [
 ];
 
 const BLOCKED_TOO_LONG: Phrasing[] = [
-  (t, days = 0) => `${t.title} has been blocked for ${plural(days, "day", "days")}`,
-  (t, days = 0) => `${t.title} is waiting on something — ${plural(days, "day", "days")} now`,
-  (t, days = 0) => `${t.title} hasn't cleared its blocker in ${plural(days, "day", "days")}`,
+  (t, days = 0, by) =>
+    by
+      ? `${t.title} has been blocked by ${by} for ${plural(days, "day", "days")}`
+      : `${t.title} has been blocked for ${plural(days, "day", "days")}`,
+  (t, days = 0, by) =>
+    by
+      ? `${t.title} is waiting on ${by} — ${plural(days, "day", "days")} now`
+      : `${t.title} is waiting on something — ${plural(days, "day", "days")} now`,
+  (t, days = 0, by) =>
+    by
+      ? `${t.title} hasn't cleared ${by} in ${plural(days, "day", "days")}`
+      : `${t.title} hasn't cleared its blocker in ${plural(days, "day", "days")}`,
 ];
 
 const LIBRARY: Record<TriggerKind, Phrasing[]> = {
@@ -76,7 +85,13 @@ export function phraseFor(
   trigger: TriggerKind,
   task: TaskSignal,
   rotationIndex: number,
-  context?: { idleDays?: number; daysOut?: number },
+  context?: {
+    idleDays?: number;
+    daysOut?: number;
+    /** Resolved titles of upstream blocker tasks (in order). Only
+     *  the first is used today; future phrasings may enumerate. */
+    blockedByTitles?: string[];
+  },
 ): string {
   const options = LIBRARY[trigger];
   const phrasing = options[rotationIndex % options.length];
@@ -84,7 +99,11 @@ export function phraseFor(
     return phrasing(task, context?.idleDays ?? task.idleDays);
   if (trigger === "due-soon") return phrasing(task, context?.daysOut ?? 0);
   if (trigger === "blocked-too-long")
-    return phrasing(task, context?.idleDays ?? task.idleDays);
+    return phrasing(
+      task,
+      context?.idleDays ?? task.idleDays,
+      context?.blockedByTitles?.[0],
+    );
   return phrasing(task);
 }
 

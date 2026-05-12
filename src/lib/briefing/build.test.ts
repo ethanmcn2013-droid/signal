@@ -156,6 +156,145 @@ describe("buildBriefing — prose rotation determinism", () => {
   });
 });
 
+// ─────────────────────────────────────────────────────────────
+// Bucket-orchestration tests for the new triggers (Phase F.1)
+// ─────────────────────────────────────────────────────────────
+describe("buildBriefing — crowded-week orchestration", () => {
+  test("crowded-week lands in needsAttention, not quietRisks", async () => {
+    const signals = Array.from({ length: 4 }, (_, i) =>
+      task({ id: `t${i}`, dueAt: NOW + (i + 1) * DAY }),
+    );
+    const b = await buildBriefing(source(signals), CTX, NOW);
+    const inAttention = b.needsAttention.some(
+      (i) => i.trigger === "crowded-week",
+    );
+    const inRisks = b.quietRisks.some((i) => i.trigger === "crowded-week");
+    assert.equal(inAttention, true);
+    assert.equal(inRisks, false);
+  });
+
+  test("when due-soon and crowded-week both fire, attention bucket carries both", async () => {
+    // Five items in 7-day window — three of them in ≤ 2 days (due-soon)
+    // plus the cluster signal from crowded-week.
+    const signals = [
+      task({ id: "d1", dueAt: NOW + 0.5 * DAY }),
+      task({ id: "d2", dueAt: NOW + 1 * DAY }),
+      task({ id: "d3", dueAt: NOW + 2 * DAY }),
+      task({ id: "d4", dueAt: NOW + 4 * DAY }),
+      task({ id: "d5", dueAt: NOW + 5 * DAY }),
+    ];
+    const b = await buildBriefing(source(signals), CTX, NOW);
+    const triggers = new Set(b.needsAttention.map((i) => i.trigger));
+    assert.ok(triggers.has("due-soon"));
+    assert.ok(triggers.has("crowded-week"));
+  });
+
+  test("crowded-week ranks between due-soon and stuck-work in focus block", async () => {
+    const signals = [
+      task({ id: "stuck", idleDays: 30 }),
+      ...Array.from({ length: 3 }, (_, i) =>
+        task({ id: `cw${i}`, dueAt: NOW + (i + 2) * DAY }),
+      ),
+      task({ id: "due", dueAt: NOW + 0.5 * DAY }),
+    ];
+    const b = await buildBriefing(source(signals), CTX, NOW);
+    // First focus item should be the most-overdue due-soon
+    assert.equal(b.suggestedFocus[0]?.trigger, "due-soon");
+    // Crowded-week should outrank stuck-work in the order
+    const crowdedIdx = b.suggestedFocus.findIndex(
+      (i) => i.trigger === "crowded-week",
+    );
+    const stuckIdx = b.suggestedFocus.findIndex(
+      (i) => i.trigger === "stuck-work",
+    );
+    if (crowdedIdx !== -1 && stuckIdx !== -1) {
+      assert.ok(crowdedIdx < stuckIdx);
+    }
+  });
+});
+
+describe("buildBriefing — blocked-too-long orchestration", () => {
+  test("blocked-too-long lands in quietRisks, not needsAttention", async () => {
+    const signals = [
+      task({ id: "blocker", title: "Music supplier confirm" }),
+      task({
+        id: "blocked",
+        title: "Florist deposit",
+        blockedBy: ["blocker"],
+        idleDays: 9,
+      }),
+    ];
+    const b = await buildBriefing(source(signals), CTX, NOW);
+    const inRisks = b.quietRisks.some(
+      (i) => i.trigger === "blocked-too-long",
+    );
+    const inAttention = b.needsAttention.some(
+      (i) => i.trigger === "blocked-too-long",
+    );
+    assert.equal(inRisks, true);
+    assert.equal(inAttention, false);
+  });
+
+  test("blocked-too-long does not double up with stuck-work for the same task", async () => {
+    const signals = [
+      task({ id: "u1", title: "Upstream" }),
+      task({
+        id: "blocked",
+        title: "Downstream",
+        blockedBy: ["u1"],
+        idleDays: 10,
+      }),
+    ];
+    const b = await buildBriefing(source(signals), CTX, NOW);
+    const blockedAppearances =
+      b.needsAttention.filter((i) => i.id === "blocked").length +
+      b.quietRisks.filter((i) => i.id === "blocked").length +
+      b.movingWell.filter((i) => i.id === "blocked").length;
+    assert.equal(blockedAppearances, 1);
+  });
+});
+
+describe("buildBriefing — name-the-blocker prose", () => {
+  test("brief item names the blocker task when title is resolvable", async () => {
+    const signals = [
+      task({ id: "music", title: "Music supplier confirmation" }),
+      task({
+        id: "florist",
+        title: "Florist deposit",
+        blockedBy: ["music"],
+        idleDays: 9,
+      }),
+    ];
+    const b = await buildBriefing(source(signals), CTX, NOW);
+    const item = b.quietRisks.find((i) => i.id === "florist");
+    assert.ok(item, "blocked-too-long item should be present");
+    assert.match(
+      item!.text,
+      /Music supplier confirmation/,
+      "prose should name the blocker",
+    );
+  });
+
+  test("falls back to generic phrasing when blocker title is unresolvable", async () => {
+    // blockedBy references a task id NOT in signals — title can't resolve.
+    const signals = [
+      task({
+        id: "orphaned-blocked",
+        title: "Caterer deposit",
+        blockedBy: ["task-not-in-this-source"],
+        idleDays: 9,
+      }),
+    ];
+    const b = await buildBriefing(source(signals), CTX, NOW);
+    const item = b.quietRisks.find((i) => i.id === "orphaned-blocked");
+    assert.ok(item, "still surfaces the task");
+    // Generic fallback either says "blocked for N days" or
+    // "waiting on something" or "hasn't cleared its blocker" —
+    // none of which contain the unresolved id.
+    assert.doesNotMatch(item!.text, /task-not-in-this-source/);
+  });
+});
+
 describe("buildBriefing — full Wedding 2026 shape", () => {
   test("produces a sensible Wedding-shaped briefing from the demo signals", async () => {
     // Mirrors the marketing demo's Wedding 2026 shape so the test

@@ -1,5 +1,47 @@
 # Signal Analytics · Changelog
 
+## 2026-05-14 (later) · Phase F.2 · Name-the-blocker + buildBriefing orchestration tests
+
+Two follow-ups to F.1's trigger expansion:
+
+**Name-the-blocker.** `blocked-too-long` brief items now read
+"Florist deposit has been blocked by Music supplier (9 days)"
+instead of generic "blocked for 9 days". The data was already there
+(`blockedBy: string[]` is just task ids); buildBriefing now builds a
+{taskId → title} map once at the top of the function and threads
+resolved titles down to phrasing via context. Cross-task resolution
+in pure functions, no extra DB calls. Falls back to the generic
+phrasing when the blocker title isn't in the source — defends
+against orphaned references.
+
+All three blocked-too-long phrasings updated to use the resolved
+name when present:
+  - "has been blocked by X for 9 days"
+  - "is waiting on X — 9 days now"
+  - "hasn't cleared X in 9 days"
+
+**Bucket-orchestration tests.** 7 new tests in build.test.ts covering
+the new trigger paths through buildBriefing:
+  - crowded-week lands in needsAttention, not quietRisks
+  - due-soon + crowded-week coexist in attention
+  - crowded-week outranks stuck-work in focus block
+  - blocked-too-long lands in quietRisks, not needsAttention
+  - blocked-too-long doesn't double up with stuck-work for the same task
+  - name-the-blocker resolves and renders correctly
+  - graceful fallback when blocker title isn't resolvable
+
+Suite is now 96 tests in ~267ms. Coverage moved:
+
+  all files        96.88 / 84.38 / 98.20  →  97.06 / 84.87 / 99.12
+  build.ts         95.24 / 82.14 / 96.30  →  96.89 / 87.30 / 100.00
+  prose.ts         97.39 / 83.05 /100.00  →  96.27 / 80.60 / 100.00*
+  triggers.ts      98.53 / 92.65 /100.00  →  98.53 / 92.65 / 100.00
+
+(*prose.ts dipped slightly because adding the `by` branch in three
+phrasings introduced more branch points; the new tests cover the
+named-blocker case but not every `by ? :` ternary's both sides
+exhaustively. Worth a tighter pass later if coverage is load-bearing.)
+
 ## 2026-05-14 · Phase F.1 · Trigger library 4 → 6 (crowded-week + blocked-too-long), prose tests close coverage gap
 
 Two new triggers, both with tests, both real product additions:

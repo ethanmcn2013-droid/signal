@@ -34,6 +34,12 @@ export async function buildBriefing(
   const crowded = detectCrowdedWeek(signals, now);
   const blocked = detectBlockedTooLong(signals);
 
+  // Build a {taskId → title} map once so blocked-too-long prose can
+  // name the upstream blocker ("blocked by Music supplier") instead
+  // of saying "blocked for 9 days" without context.
+  const titlesById = new Map<string, string>();
+  for (const s of signals) titlesById.set(s.id, s.title);
+
   const rotationIndex = dayRotation(userId, now);
 
   // ─ Needs attention: due-soon (incl. overdue) + overload + crowded-week,
@@ -79,13 +85,13 @@ export async function buildBriefing(
     .slice(0, BUCKET_CAP);
 
   const needsAttention: BriefItem[] = attention.map((t) =>
-    toItem(t, rotationIndex, now),
+    toItem(t, rotationIndex, now, titlesById),
   );
   const movingWell: BriefItem[] = moving.map((t) =>
-    toItem(t, rotationIndex, now),
+    toItem(t, rotationIndex, now, titlesById),
   );
   const quietRisks: BriefItem[] = risks.map((t) =>
-    toItem(t, rotationIndex, now),
+    toItem(t, rotationIndex, now, titlesById),
   );
   const suggestedFocus: FocusItem[] = focusSource.map((t) =>
     toFocus(t, rotationIndex, now),
@@ -112,12 +118,21 @@ function pickTop(list: Triggered[], cap: number): Triggered[] {
   return list.slice(0, cap);
 }
 
-function toItem(t: Triggered, rotation: number, now: number): BriefItem {
+function toItem(
+  t: Triggered,
+  rotation: number,
+  now: number,
+  titlesById: Map<string, string>,
+): BriefItem {
   const daysOut =
     t.task.dueAt != null ? (t.task.dueAt - now) / DAY : undefined;
+  const blockedByTitles = t.task.blockedBy
+    .map((id) => titlesById.get(id))
+    .filter((title): title is string => Boolean(title));
   const text = phraseFor(t.trigger, t.task, rotation, {
     idleDays: t.task.idleDays,
     daysOut,
+    blockedByTitles,
   });
   return {
     id: t.task.id,
