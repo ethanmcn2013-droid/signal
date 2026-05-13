@@ -1,5 +1,29 @@
 # Signal Analytics · Changelog
 
+## 2026-05-13 · Cycle 8.4.9 · Cron now reports it ran
+
+The daily briefing cron handler — the one Vercel hits at 06:00 UTC
+against `/api/cron/briefings` — now fires a single observability ping at
+the end of the run, before the JSON response. The ping goes to a sibling
+endpoint on studio (`signalstudio.ie/api/internal/cron-ping`),
+Bearer-authed via `STUDIO_CRON_PING_SECRET`, with a 2s `AbortController`
+timeout. Studio records the run into a `cron_runs` Turso table that
+backs the new `/hq/health` operator view.
+
+The new helper at `src/lib/ops/ping-studio.ts` is deliberately defensive:
+returns silently if either of `STUDIO_CRON_PING_URL` or
+`STUDIO_CRON_PING_SECRET` is unset, and wraps the fetch in a try/catch
+that swallows every error. The contract is *observability must not break
+dispatch* — if studio is unreachable, or the secret is wrong, or the
+fetch times out, the cron run still finishes, still sends emails, still
+returns the same JSON shape. The only thing that changes is whether the
+HQ dashboard learns it happened.
+
+Until both env vars land on Vercel production (handoff in
+`studio/docs/CYCLE_8_4_9_CRON_STALENESS_HANDOFF.md`), the ping returns
+early and the run is invisible to HQ — exactly the same as before the
+helper was added.
+
 ## 2026-05-14 (latest) · Phase F.4 · Multi-blocker voice tune + plain-text coverage + CONTRIBUTING
 
 Three small wins:

@@ -8,6 +8,7 @@ import { userPreferences } from "@/lib/db/schema";
 import { buildBriefing } from "@/lib/briefing/build";
 import { getBriefingSource } from "@/lib/briefing/get-source";
 import { dispatchBriefing } from "@/lib/email/dispatch";
+import { pingStudio } from "@/lib/ops/ping-studio";
 
 type ClerkLike = Awaited<ReturnType<typeof clerkClient>>;
 
@@ -97,6 +98,17 @@ export async function POST(req: Request) {
     (r) => r.result.ok && "skipped" in r.result && r.result.skipped,
   );
   const failed = results.filter((r) => !r.result.ok);
+
+  await pingStudio({
+    source: "analytics_daily",
+    ranAt: now,
+    ok: failed.length === 0,
+    considered: results.length,
+    sent: sent.length,
+    skipped: skipped.length,
+    failed: failed.length,
+    isMondayUtc: isMonday,
+  });
 
   return NextResponse.json({
     ok: true,
