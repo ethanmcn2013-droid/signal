@@ -1,5 +1,141 @@
 # Signal Analytics · Changelog
 
+## 2026-05-13 · Suite design-system v1 · Paper turns white, the dot learns to tick
+
+Fourth product across the line after Studio, Tasks, and Roadmap.
+
+**Paper white, ink at #111.** `--bg` reset from warm-stone `#fafaf7`
+to pure `#ffffff`. Ink moved from `var(--ink-900)` (which was `#18181b`)
+to the spec's `#111111`. The semantic-token layer (`--paper`,
+`--paper-soft`, `--paper-deep`, `--ink`, `--ink-soft`, `--ink-faint`,
+`--ink-ghost`, `--hairline`, `--hairline-2`, `--indigo`, `--indigo-soft`)
+lands in `globals.css` alongside the existing ramp + aliases so legacy
+callsites keep working.
+
+**`.analytics-dot` learns to tick.** Previously the wordmark dot was a
+static 5×5 circle with no motion — Analytics's gesture was "ambient,
+no animation." Per the new suite spec, Analytics's gesture is now
+**M·04 tick — a scope-style vertical pulse every 2.4s.** The dot
+squeezes vertically then settles. Registering a signal. The Wordmark
+component now renders `.analytics-dot` instead of an inline-styled
+span, so the motion picks up from `globals.css`.
+
+**What didn't change.** The Wordmark API (sm/md/lg pseudo-sizes via
+font-size string, href, className) is unchanged. Briefing view, the
+email template surfaces, and the marketing chrome are all intact —
+those get retouched per-page as the system permeates.
+
+**Carries forward.** Phase 5 is Notes — same token set, wordmark
+motion to settle (3.2s slow breath).
+
+## 2026-05-13 · Suite review · cron idempotency, GET-safe unsubscribe, voice helpers deduped
+
+### `lastSentAt` was being written but never read.
+
+The cron route at `/api/cron/briefings` now filters `userPreferences`
+rows where `lastSentAt` is null OR older than 20h. The column has
+been in the schema since Phase A; dispatch has been writing it on
+success since Phase C. Nothing was reading it as a filter — a
+Vercel retry, manual re-trigger, or deploy rotation would re-send
+to everyone considered. Twenty hours is below 24 so a daily run
+that slips by a couple of hours still goes out; above 6 so a
+fast retry can't.
+
+### `/u/[token]` no longer unsubscribes you when Slack unfurls.
+
+The human-facing unsubscribe landing used to call
+`unsubscribeByToken(token)` directly inside the page render — a
+GET with side effects. Any image preloader, Slack link unfurl,
+AV scanner, or link-checker that followed the URL silently
+unsubscribed the user.
+
+Now: GET is a read-only lookup via `lookupByToken`, renders a
+"Stop sending briefings to <email>? Yes, unsubscribe" form, and
+the mutation happens via a server action POST. Redirects to
+`?confirmed=1` after the flip to show the post-unsubscribe state
+without re-mutating.
+
+RFC 8058 `/api/unsubscribe/[token]` POST stays auto-confirming
+because that's what Gmail and Apple Mail's native one-click button
+needs.
+
+### Six triggers, eighteen phrasings, no more pretending.
+
+The engine has had six triggers for a while — stuck-work, due-soon,
+just-shipped, crowded-week, blocked-too-long, overload — with three
+phrasings each. The closing memo for cycle 6.4 said ten and ~55;
+the marketing site's `/method` said "twelve phrasings written by a
+person". Three different numbers, three different places, one
+correct count.
+
+`/method` now says "eighteen phrasings". The trigger file's own
+comment ("Four, intentionally") got bumped to six. Memory entries
+that overclaimed the engine size were amended to point at the
+real numbers without rewriting history.
+
+### `tasksDbSource` no longer murders the cron when one user fails.
+
+The libSQL `client.execute` calls in `tasks-db-source.ts` had no
+error handling. A Turso outage, expired token, or schema drift in
+Tasks would throw and abort the whole fanout — every user queued
+after the failure would lose their send. Both queries (user
+lookup, signals lookup) are now wrapped in try/catch with logs;
+either failure returns `[]` so the empty-state render fires for
+that user and the rest of the cron continues.
+
+### Voice helpers, one source of truth.
+
+`greeting()`, `summaryLine()`, and `graceNote()` were duplicated
+verbatim across three files: `briefing-email.tsx`,
+`briefing-view.tsx`, `plain-text.ts`. A voice change in the email
+HTML wouldn't reach the web render. Hoisted to
+`@/lib/briefing/voice` — every surface imports from one place.
+
+### Cron loop, finally parallel.
+
+The fanout used to be a single serial loop with `await` on every
+Resend call. At ~600ms per user, the 60-second `maxDuration` would
+fall off a cliff past ~80-100 users. Now chunked with `Promise.all`
+six at a time — stays under Resend's per-second rate limit while
+not letting one slow user starve the rest. Resend client also now
+memoised at module level instead of constructed per dispatch.
+
+### Test-send button, throttled.
+
+`sendTestBriefingAction` had no rate limit — click-spam ran up
+Resend cost. Now refuses if `lastSentAt < 60s` ago, with a
+specific countdown in the error message.
+
+### Security headers landed (finally).
+
+`next.config.ts` was empty. The Plan 4.1 suite-baseline (HSTS,
+X-Frame, Referrer-Policy, Permissions-Policy, CSP Report-Only)
+was supposed to be on all four products and never was on
+Analytics. Roadmap-pattern headers with Clerk hosts in the
+allowlist now live in the config.
+
+### dispatch failure mode named.
+
+`dispatchBriefing` rotates the unsubscribe token AFTER Resend
+confirms delivery. If the post-send DB write fails (network blip,
+Turso quota), the new email carries a token that doesn't exist in
+the DB — clicking unsubscribe would 404. The window is small but
+real. Wrapped the DB write in try/catch, logged loudly on
+failure, return `ok: true` anyway because the send succeeded.
+Next dispatch rotates again cleanly. Documented in the code,
+named here so it isn't surprising the day it happens.
+
+### Hygiene.
+
+Duplicate `package-lock.json` deleted (pnpm-only). Resend client
+hoisted. The `localHourMatches()` per-TZ scheduling helper is
+still dormant — daily UTC fixed-slot remains the only cadence
+until per-user TZ lands.
+
+Operator action owed: verify the cron is actually firing in
+Vercel logs. The Phase C closing assumed it does; nobody's
+checked the log timestamps recently.
+
 ## 2026-05-13 · Cycle 8.4.9 · Cron now reports it ran
 
 The daily briefing cron handler — the one Vercel hits at 06:00 UTC

@@ -41,24 +41,40 @@
   --status-progress:   #f59e0b;
   --status-done:       #10b981;
 
-  /* ── Semantic surfaces ────────────────────────────────────── */
-  --bg:          #fafaf7;
-  --bg-elev:     #ffffff;
-  --bg-deep:     #f4f4f0;
+  /* ── Semantic surfaces · design-system v1 (2026-05-13) ────── */
+  /* Paper is white now. Warm-stone retired with the suite spec. */
+  --paper:       #ffffff;
+  --paper-elev:  #ffffff;
+  --paper-soft:  #fafafa;
+  --paper-deep:  #f4f4f5;
 
-  --border:      #e4e4e7;
-  --border-soft: #ececec;
+  --bg:          var(--paper);
+  --bg-elev:     var(--paper-elev);
+  --bg-deep:     var(--paper-deep);
 
-  --ink:         var(--ink-900);
-  --ink-soft:    var(--ink-700);
-  --ink-quiet:   var(--ink-500);
-  --ink-faint:   var(--ink-400);
+  /* Hairlines — stronger than the cream era; white needs definition. */
+  --hairline:    rgba(17, 17, 17, 0.10);
+  --hairline-2:  rgba(17, 17, 17, 0.06);
+
+  --border:      var(--hairline);
+  --border-soft: var(--hairline-2);
+
+  /* Ink — off-black per the design-system spec. */
+  --ink:         #111111;
+  --ink-soft:    #3f3f46;
+  --ink-faint:   #71717a;
+  --ink-ghost:   #d4d4d8;
+  --ink-quiet:   var(--ink-faint);
 
   /* ── Brand semantics ──────────────────────────────────────── */
   --brand:       var(--indigo-600);
   --brand-deep:  var(--indigo-800);
   --brand-soft:  var(--indigo-50);
   --brand-glow:  rgba(79, 70, 229, 0.42);
+
+  /* Indigo aliases per the design-system spec. */
+  --indigo:      var(--indigo-600);
+  --indigo-soft: rgba(79, 70, 229, 0.12);
 
   /* ── Motion springs ───────────────────────────────────────── */
   --spring-snap:  cubic-bezier(.2, .9, .2, 1.2);
@@ -239,6 +255,33 @@ body {
 }
 .rise {
   animation: rise 0.85s var(--spring-glide) both;
+}
+
+/* ────────────────────────────────────────────────────────────
+   Analytics wordmark dot — M·04 tick.
+   Per suite design-system v1 (2026-05-13): analytics is a verb,
+   the gesture is tick — a scope-style vertical pulse. The dot
+   squeezes vertically then settles every 2.4s. Registering a
+   signal. Quieter than tasks' heartbeat, more active than
+   notes' settle.
+   ──────────────────────────────────────────────────────────── */
+.analytics-dot {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--indigo);
+  margin-left: 3px;
+  transform: translateY(-3px);
+  transform-origin: center;
+  flex-shrink: 0;
+  animation: analytics-dot-tick 2.4s var(--spring-glide) infinite;
+}
+@keyframes analytics-dot-tick {
+  0%, 70%, 100% { transform: translateY(-3px) scaleY(1); }
+  78%           { transform: translateY(-3px) scaleY(1.45) scaleX(0.82); }
+  85%           { transform: translateY(-3px) scaleY(0.88) scaleX(1.1); }
+  92%           { transform: translateY(-3px) scaleY(1); }
 }
 
 /* ── Reduced motion ────────────────────────────────────────── */

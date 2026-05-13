@@ -6,6 +6,12 @@ interface WordmarkProps {
   href?: string;
 }
 
+/**
+ * Signal Analytics wordmark — `analytics·` with the M·04 tick gesture
+ * per the suite design system (v1, 2026-05-13). The dot is the canonical
+ * middot (lifted), and its motion is a scope-style vertical pulse —
+ * registering a signal — running every 2.4s on `spring-glide`.
+ */
 export function Wordmark({
   className,
   size = "1.125rem",
@@ -25,23 +31,11 @@ export function Wordmark({
           fontWeight: 600,
           fontSize: size,
           letterSpacing: "-0.03em",
-          color: "var(--ink-900)",
+          color: "var(--ink)",
         }}
       >
         analytics
-        <span
-          style={{
-            display: "inline-block",
-            width: 5,
-            height: 5,
-            borderRadius: "50%",
-            background: "var(--indigo-600)",
-            marginLeft: 3,
-            transform: "translateY(-3px)",
-            flexShrink: 0,
-          }}
-          aria-hidden
-        />
+        <span className="analytics-dot" aria-hidden />
       </span>
     </Link>
   );
