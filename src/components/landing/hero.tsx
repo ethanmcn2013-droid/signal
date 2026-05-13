@@ -16,7 +16,7 @@ export function Hero() {
   const [domain, setDomain] = useState<DomainId>("wedding");
 
   return (
-    <section className="relative isolate overflow-hidden pt-12 md:pt-20">
+    <section className="relative isolate overflow-hidden pt-8 md:pt-14">
       <div className="mx-auto w-full max-w-[1240px] px-5 md:px-6">
         <p
           className="font-mono text-[11px] font-semibold uppercase"
@@ -98,7 +98,8 @@ export function Hero() {
           Demo is live · choose an audience to reseed
         </p>
 
-        <div className="mt-12 md:mt-14">
+        {/* id="demo" anchors deep-links from the suite landing page. */}
+        <div id="demo" className="mt-8 scroll-mt-20 md:mt-10">
           <AudienceToggle domain={domain} onChange={setDomain} />
         </div>
 
