@@ -26,7 +26,7 @@ export default function AboutPage() {
           marginBottom: 40,
         }}
       >
-        Operational clarity for teams that already know what to do.
+        Operational clarity for people running it themselves.
       </h1>
 
       <div

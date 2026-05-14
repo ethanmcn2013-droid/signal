@@ -43,6 +43,16 @@ export const maxDuration = 60;
  * and TASKS_AUTH_TOKEN are set, otherwise emptySource (no mock data in prod).
  */
 export async function POST(req: Request) {
+  return run(req);
+}
+
+// Vercel cron invokes the path via GET; keep POST for manual triggers
+// and tests. Both routes share the same auth + fanout.
+export async function GET(req: Request) {
+  return run(req);
+}
+
+async function run(req: Request) {
   const auth = req.headers.get("authorization") ?? "";
   const expected = `Bearer ${process.env.CRON_SECRET ?? ""}`;
   // Guard: CRON_SECRET must be set, and the buffers must be the same length
@@ -151,10 +161,22 @@ export async function POST(req: Request) {
   );
   const failed = results.filter((r) => !r.result.ok);
 
+  // Surface configuration gaps as warnings. A missing RESEND_API_KEY
+  // would otherwise look identical to an unsubscribed-or-empty skip.
+  const missingResendKey = skipped.filter(
+    (r) => "reason" in r.result && r.result.reason === "no-resend-key",
+  ).length;
+  const warnings: string[] = [];
+  if (missingResendKey > 0) {
+    warnings.push(
+      `RESEND_API_KEY is not set — ${missingResendKey} briefing(s) were skipped without sending.`,
+    );
+  }
+
   await pingStudio({
     source: "analytics_daily",
     ranAt: now,
-    ok: failed.length === 0,
+    ok: failed.length === 0 && warnings.length === 0,
     considered: results.length,
     sent: sent.length,
     skipped: skipped.length,
@@ -172,6 +194,7 @@ export async function POST(req: Request) {
       skipped: skipped.length,
       failed: failed.length,
     },
+    warnings,
     // Surface failure reasons but not user PII beyond clerk id (which is opaque).
     failures: failed.map((r) => ({
       userId: r.userId,

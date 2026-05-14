@@ -14,7 +14,7 @@ export function SiteFooter() {
         <div>
           <Wordmark size="1.25rem" />
           <p className="mt-4 max-w-xs text-[13.5px] leading-relaxed text-ink-soft">
-            Operational clarity for teams that already know what to do.
+            Operational clarity for people running it themselves.
           </p>
           <p className="mt-4 text-[12px] text-ink-quiet">
             A{" "}

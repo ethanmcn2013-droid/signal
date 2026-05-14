@@ -23,7 +23,7 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   title: "Signal Analytics — Operational clarity. Know what needs your attention.",
   description:
-    "Signal Analytics turns the work happening across your team into a short briefing. What needs you. What's moving. What's quiet. What to do next.",
+    "Signal Analytics reads the state of your work and writes a short briefing. What needs you. What's moving. What's quiet. What to do next.",
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://analytics.signalstudio.ie"
   ),
