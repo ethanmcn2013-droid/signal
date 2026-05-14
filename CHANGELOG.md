@@ -1,5 +1,19 @@
 # Signal Analytics · Changelog
 
+## 2026-05-14 · Email dispatch gated on Workspace tier
+
+The briefing engine runs identically for every tier — what's gated
+now is delivery. The daily/weekly cron skips users below Workspace
+(reads tier from the shared `signal-entitlements` DB), logging
+`reason: free-tier-no-email` in the run summary. Free users still
+see their briefing at `/app/brief`; a small aside beneath it links
+to `signalstudio.ie/pricing` with one short line about email.
+
+The shared-entitlements client landed in this repo at the same time
+(`src/lib/entitlements-shared/`). Forward-compat for E-5b — when we
+gate customisation or multi-source reads, the resolver is already in
+place.
+
 ## 2026-05-13 · Suite design-system v1 · Paper turns white, the dot learns to tick
 
 Fourth product across the line after Studio, Tasks, and Roadmap.
