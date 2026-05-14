@@ -1,4 +1,5 @@
 import type { Briefing } from "@/lib/briefing/types";
+import { greeting } from "@/lib/briefing/voice";
 
 /**
  * Plain-text alternative for the briefing email. Providing both
@@ -80,14 +81,4 @@ export function renderBriefingText(
   return lines.join("\n");
 }
 
-function greeting(hour: number, firstName?: string | null): string {
-  const base =
-    hour < 5
-      ? "It's late"
-      : hour < 12
-        ? "Good morning"
-        : hour < 17
-          ? "Good afternoon"
-          : "Good evening";
-  return firstName ? `${base}, ${firstName}.` : `${base}.`;
-}
+// greeting moved to @/lib/briefing/voice (single source of truth).

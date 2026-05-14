@@ -36,7 +36,7 @@ const STEPS = [
     label: "4 · Write",
     title: "Pick a phrasing. From a library written by hand.",
     body:
-      "Every sentence in the briefing comes from a curated prose library — twelve phrasings written by a person, slot-filled with the names and numbers from the rule that fired. The engine never generates language. It picks language.",
+      "Every sentence in the briefing comes from a curated prose library — eighteen phrasings written by a person, slot-filled with the names and numbers from the rule that fired. The engine never generates language. It picks language.",
     detail:
       "No LLM in the path. Not today, not in v1. The brand is in the writing.",
   },

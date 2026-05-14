@@ -3,6 +3,7 @@
 import { AnimatePresence, MotionConfig, motion } from "motion/react";
 import { useState } from "react";
 import type { BriefItem, Briefing, FocusItem } from "@/lib/briefing/types";
+import { graceNote, greeting, summaryLine } from "@/lib/briefing/voice";
 
 // ─────────────────────────────────────────────────────────────
 // Motion grammar — calm, purposeful. The brief is supposed to feel
@@ -436,37 +437,5 @@ function EmptyState() {
   );
 }
 
-function greeting(hour: number, firstName?: string | null): string {
-  const base =
-    hour < 5
-      ? "It's late"
-      : hour < 12
-        ? "Good morning"
-        : hour < 17
-          ? "Good afternoon"
-          : "Good evening";
-  return firstName ? `${base}, ${firstName}.` : `${base}.`;
-}
-
-function summaryLine(b: Briefing): string {
-  const att = b.needsAttention.length;
-  const risks = b.quietRisks.length;
-  const moving = b.movingWell.length;
-  if (att === 0 && risks === 0) {
-    if (moving > 0) return "Light morning. The board is moving.";
-    return "Quiet morning. Nothing pulling.";
-  }
-  if (att === 0 && risks > 0) {
-    return `A quiet morning, but ${risks} ${risks === 1 ? "risk" : "risks"} worth watching.`;
-  }
-  if (att === 1) return "One thing's calling.";
-  if (att === 2) return "Two things calling — and a few quieter signals below.";
-  return `Three things calling${risks > 0 ? ", more quietly behind them" : ""}.`;
-}
-
-function graceNote(b: Briefing): string {
-  if (b.isEmpty) return "That's the read.";
-  if (b.suggestedFocus.length === 0) return "That's the read — good day.";
-  if (b.needsAttention.length >= 2) return "Take the focus block first. The rest can wait.";
-  return "That's the read. Open Tasks when you're ready.";
-}
+// greeting / summaryLine / graceNote moved to @/lib/briefing/voice
+// (single source of truth across email/text/web).

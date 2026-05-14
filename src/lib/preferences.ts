@@ -86,3 +86,22 @@ export async function unsubscribeByToken(
     .where(eq(userPreferences.userId, row.userId));
   return { ok: true, email: row.email };
 }
+
+/**
+ * Read-only token lookup — used by the human-facing /u/[token] page
+ * to show a confirmation step BEFORE mutating. Side-effect-free so
+ * Slack link unfurls, AV scanners, and image preloaders can't silently
+ * unsubscribe a user just by following the URL.
+ */
+export async function lookupByToken(
+  token: string,
+): Promise<{ ok: true; email: string } | { ok: false }> {
+  const rows = await db
+    .select({ email: userPreferences.email })
+    .from(userPreferences)
+    .where(eq(userPreferences.unsubscribeToken, token))
+    .limit(1);
+  const row = rows[0];
+  if (!row) return { ok: false };
+  return { ok: true, email: row.email };
+}

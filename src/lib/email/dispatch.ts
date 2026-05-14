@@ -21,6 +21,14 @@ function siteBaseUrl(): string {
   return process.env.NEXT_PUBLIC_SITE_URL ?? "https://analytics.signalstudio.ie";
 }
 
+// Memoised Resend client. SDK construction is cheap, but doing it once
+// per cron-loop iteration is wasteful when the loop is N users wide.
+let _resend: Resend | null = null;
+function getResend(apiKey: string): Resend {
+  if (!_resend) _resend = new Resend(apiKey);
+  return _resend;
+}
+
 export type DispatchResult =
   | { ok: true; id: string; skipped?: false }
   | { ok: true; skipped: true; reason: string }
@@ -94,7 +102,7 @@ export async function dispatchBriefing({
     if (!apiKey) {
       return { ok: true, skipped: true, reason: "no-resend-key" };
     }
-    const resend = new Resend(apiKey);
+    const resend = getResend(apiKey);
     send = (p) => resend.emails.send(p);
   }
 
@@ -150,11 +158,24 @@ export async function dispatchBriefing({
 
   // Resend confirmed delivery — now safe to rotate the token and record lastSentAt.
   // The email in the user's inbox carries the new token; the old one is now dead.
+  //
+  // If the DB write fails after a successful send, the inbox has the new
+  // token but the DB still references the old one. The user's unsubscribe
+  // link in this specific email would 404. We log loudly but still return
+  // ok: true — the send succeeded, idempotency-cutoff still holds, and the
+  // next dispatch will rotate cleanly.
   if (persist) {
-    await db
-      .update(userPreferences)
-      .set({ unsubscribeToken: newToken, lastSentAt: Date.now(), updatedAt: Date.now() })
-      .where(eq(userPreferences.userId, userId));
+    try {
+      await db
+        .update(userPreferences)
+        .set({ unsubscribeToken: newToken, lastSentAt: Date.now(), updatedAt: Date.now() })
+        .where(eq(userPreferences.userId, userId));
+    } catch (err) {
+      console.error(
+        "[dispatch] post-send DB write failed — unsubscribe in this email may 404 until next rotation:",
+        { userId, error: String(err) },
+      );
+    }
   }
 
   return { ok: true, id: data?.id ?? "" };

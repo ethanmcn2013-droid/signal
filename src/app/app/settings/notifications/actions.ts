@@ -30,6 +30,22 @@ export type SendTestResult =
  */
 export async function sendTestBriefingAction(): Promise<SendTestResult> {
   const prefs = await getOrCreatePreferences();
+
+  // Throttle: refuse a fresh test send within 60s of the last successful
+  // send (cron or test). `lastSentAt` is the source of truth for "last
+  // time Resend confirmed delivery." Prevents click-spam from running
+  // up Resend cost.
+  const COOLDOWN_MS = 60_000;
+  if (prefs.lastSentAt && Date.now() - prefs.lastSentAt < COOLDOWN_MS) {
+    const seconds = Math.ceil(
+      (COOLDOWN_MS - (Date.now() - prefs.lastSentAt)) / 1000,
+    );
+    return {
+      ok: false,
+      message: `Just sent one. Try again in about ${seconds}s.`,
+    };
+  }
+
   const me = await currentUser();
   const source = getBriefingSource();
   const briefing = await buildBriefing(source, {

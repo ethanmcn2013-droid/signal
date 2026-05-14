@@ -1,5 +1,5 @@
 import "server-only";
-import { createClient, type Client } from "@libsql/client";
+import { createClient, type Client, type Value } from "@libsql/client";
 import type { BriefingContext, BriefingSource } from "./source";
 import type { Lane, TaskSignal } from "./types";
 
@@ -38,11 +38,24 @@ export function makeTasksDbSource(): BriefingSource | null {
   return {
     async getSignalsForUser(ctx: BriefingContext): Promise<TaskSignal[]> {
       // Resolve email → Tasks user_id. Email is the cross-product key.
-      const userRow = await client.execute({
-        sql: "SELECT id FROM users WHERE email = ? LIMIT 1",
-        args: [ctx.email],
-      });
-      const tasksUserId = userRow.rows[0]?.id;
+      // Any Tasks DB outage / expired token / schema drift here must
+      // not abort the cron run — return [] so the empty-state render
+      // fires for this user and the fanout continues for the rest.
+      const signals: TaskSignal[] = [];
+      let tasksUserId: Value | undefined;
+      try {
+        const userRow = await client.execute({
+          sql: "SELECT id FROM users WHERE email = ? LIMIT 1",
+          args: [ctx.email],
+        });
+        tasksUserId = userRow.rows[0]?.id;
+      } catch (err) {
+        console.error(
+          "[tasks-db-source] user lookup failed — returning empty signals:",
+          { email: ctx.email, error: String(err) },
+        );
+        return [];
+      }
       if (!tasksUserId) return [];
 
       // Get all tasks in workspaces this user belongs to, with the
@@ -55,35 +68,44 @@ export function makeTasksDbSource(): BriefingSource | null {
       //   we multiply by 1000 to align with the rest of the engine's
       //   millisecond clock. Considered only on lane=done tasks
       //   below — null on everything else.
-      const result = await client.execute({
-        sql: `
-          SELECT
-            t.id           AS id,
-            t.title        AS title,
-            t.lane         AS lane,
-            t.priority     AS priority,
-            t.due_at       AS due_at,
-            t.idle_days    AS idle_days,
-            t.blocked_by   AS blocked_by,
-            w.name         AS workspace_name,
-            (
-              SELECT MAX(a.created_at) * 1000
-              FROM activities a
-              WHERE a.task_id = t.id
-                AND a.kind IN ('toggleComplete', 'move')
-            ) AS shipped_activity_at
-          FROM tasks t
-          INNER JOIN workspaces w ON w.id = t.workspace_id
-          WHERE t.workspace_id IN (
-            SELECT workspace_id FROM workspace_members WHERE user_id = ?
-          )
-          LIMIT 200
-        `,
-        args: [String(tasksUserId)],
-      });
+      let rows: Awaited<ReturnType<typeof client.execute>>["rows"];
+      try {
+        const result = await client.execute({
+          sql: `
+            SELECT
+              t.id           AS id,
+              t.title        AS title,
+              t.lane         AS lane,
+              t.priority     AS priority,
+              t.due_at       AS due_at,
+              t.idle_days    AS idle_days,
+              t.blocked_by   AS blocked_by,
+              w.name         AS workspace_name,
+              (
+                SELECT MAX(a.created_at) * 1000
+                FROM activities a
+                WHERE a.task_id = t.id
+                  AND a.kind IN ('toggleComplete', 'move')
+              ) AS shipped_activity_at
+            FROM tasks t
+            INNER JOIN workspaces w ON w.id = t.workspace_id
+            WHERE t.workspace_id IN (
+              SELECT workspace_id FROM workspace_members WHERE user_id = ?
+            )
+            LIMIT 200
+          `,
+          args: [String(tasksUserId)],
+        });
+        rows = result.rows;
+      } catch (err) {
+        console.error(
+          "[tasks-db-source] signals query failed — returning empty signals:",
+          { email: ctx.email, error: String(err) },
+        );
+        return [];
+      }
 
-      const signals: TaskSignal[] = [];
-      for (const row of result.rows) {
+      for (const row of rows) {
         const lane = canonicaliseLane(row.lane as string);
         const priority = parsePriority(row.priority as string);
         const idleDays = Number(row.idle_days ?? 0);

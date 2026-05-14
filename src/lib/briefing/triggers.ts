@@ -3,8 +3,8 @@ import type { TaskSignal, TriggerKind } from "./types";
 const DAY = 86_400_000;
 
 /**
- * v1 triggers. Four, intentionally. The old Plan 6 spec'd ten —
- * overbuilt for an engine no user has stressed yet. Ship four, see
+ * v1 triggers. Six, intentionally. The old Plan 6 spec'd ten —
+ * overbuilt for an engine no user has stressed yet. Ship six, see
  * which land, expand only what works.
  */
 

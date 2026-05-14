@@ -10,6 +10,7 @@ import {
   Text,
 } from "@react-email/components";
 import type { BriefItem, Briefing, FocusItem } from "@/lib/briefing/types";
+import { graceNote, greeting, summaryLine } from "@/lib/briefing/voice";
 
 // ─────────────────────────────────────────────────────────────
 // Brand tokens — kept inline because email clients don't have
@@ -445,48 +446,8 @@ function FocusBlock({ items }: { items: FocusItem[] }) {
   );
 }
 
-function greeting(hour: number, firstName?: string | null): string {
-  const base =
-    hour < 5
-      ? "It's late"
-      : hour < 12
-        ? "Good morning"
-        : hour < 17
-          ? "Good afternoon"
-          : "Good evening";
-  return firstName ? `${base}, ${firstName}.` : `${base}.`;
-}
-
-/**
- * Calm one-line summary under the greeting. Shape of the day in
- * plain English — no numbers without a "so what".
- */
-function summaryLine(b: Briefing): string {
-  const att = b.needsAttention.length;
-  const risks = b.quietRisks.length;
-  const moving = b.movingWell.length;
-  if (att === 0 && risks === 0) {
-    if (moving > 0) return "Light morning. The board is moving.";
-    return "Quiet morning. Nothing pulling.";
-  }
-  if (att === 0 && risks > 0) {
-    return `A quiet morning, but ${plural(risks, "risk", "risks")} worth watching.`;
-  }
-  if (att === 1) return "One thing's calling.";
-  if (att === 2) return "Two things calling — and a few quieter signals below.";
-  return `Three things calling${risks > 0 ? ", more quietly behind them" : ""}.`;
-}
-
-/**
- * Soft sign-off. Adjusts to the shape of the brief without ever
- * becoming chatty. Read aloud — if it sounds like a friend, keep it.
- */
-function graceNote(b: Briefing): string {
-  if (b.isEmpty) return "That's the read.";
-  if (b.suggestedFocus.length === 0) return "That's the read — good day.";
-  if (b.needsAttention.length >= 2) return "Take the focus block first. The rest can wait.";
-  return "That's the read. Open Tasks when you're ready.";
-}
+// greeting / summaryLine / graceNote moved to @/lib/briefing/voice
+// (single source of truth across email/text/web).
 
 function previewText(b: Briefing): string {
   // Inbox-snippet copy. Calmer than the subject — names the *shape*
@@ -495,6 +456,3 @@ function previewText(b: Briefing): string {
   return summaryLine(b);
 }
 
-function plural(n: number, single: string, many: string): string {
-  return `${n} ${n === 1 ? single : many}`;
-}
