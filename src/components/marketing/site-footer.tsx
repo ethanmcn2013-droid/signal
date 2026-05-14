@@ -40,7 +40,7 @@ export function SiteFooter() {
         <FooterCol
           heading="Resources"
           links={[
-            { href: "https://signalstudio.ie/changelog", label: "Changelog", external: true },
+            { href: "https://signalstudio.ie/dispatch", label: "Dispatch", external: true },
             { href: "/about", label: "About" },
             { href: "https://signalstudio.ie/contact", label: "Contact", external: true },
           ]}
