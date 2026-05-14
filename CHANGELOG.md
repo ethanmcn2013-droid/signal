@@ -3,6 +3,22 @@
 Convention: BRAND.md §6.5. Entries before 2026-05-14 keep their
 original shape; the new shape starts at the next cycle.
 
+## 2026-05-14 · A·2 · ships · atlas drift-trigger wires into analytics commits
+
+**Analytics commits now flag the umbrella's atlas when a referenced
+file changes.** A pre-commit hook in `.githooks/` runs a node
+script against the staged file list, resolves any atlas references
+that point at this repo, and writes drift into the studio repo's
+canonical sidecar. The hook never blocks — drift is a signal, not
+a gate. Activation is one `git config core.hooksPath .githooks`.
+
+This is the spec's sign-off criterion: editing
+`src/lib/briefing/triggers.ts` flags `analytics-daily-cron` on the
+next commit. Verified end-to-end. Auto-stage is gated on
+`REPO_ROOT === STUDIO_ROOT`, so commits here leave studio's sidecar
+uncommitted for the studio operator. Full spec lives at
+`~/Projects/personal/studio/docs/ATLAS_DRIFT_TRIGGER.md`.
+
 ## 2026-05-14 · A·1 · tightens · the briefing reads on a phone
 
 **Signal Analytics gets the same mobile parity the umbrella, Tasks,
