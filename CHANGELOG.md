@@ -1,4 +1,7 @@
-# Signal Analytics · Changelog
+# Signal Analytics · the dispatch
+
+Convention: BRAND.md §6.5. Entries before 2026-05-14 keep their
+original shape; the new shape starts at the next cycle.
 
 ## 2026-05-14 · Email dispatch gated on Workspace tier
 

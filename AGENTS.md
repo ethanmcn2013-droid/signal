@@ -15,7 +15,7 @@ In practice, open or update a Studio PR that changes:
 - `src/lib/hq/data.ts`
 - `src/lib/hq/signals.ts` if derived signal logic changes
 - relevant files under `signal-growth/`
-- `CHANGELOG.md` for meaningful operator-visible changes
+- `CHANGELOG.md` for meaningful operator-visible changes — write entries in the dispatch shape (Studio BRAND.md §6.5): `## YYYY-MM-DD · A·NN · verb · headline`, then a bold impact-lead sentence, then prose. Verbs are `ships / tightens / cuts / holds / reads`.
 
 Also bump `seedHqData.updatedAt` so `/hq` can detect newer repo-backed data.
 
