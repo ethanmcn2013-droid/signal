@@ -1,5 +1,6 @@
 import { Hero } from "@/components/landing/hero";
 import { BriefingAnatomy } from "@/components/marketing/briefing-anatomy";
+import { SiteFooter } from "@/components/marketing/site-footer";
 
 const PILLARS = [
   {
@@ -37,6 +38,7 @@ const ANTI_FEATURES = [
 
 export default function HomePage() {
   return (
+    <>
     <div style={{ background: "var(--bg)" }}>
       <Hero />
       <BriefingAnatomy />
@@ -155,5 +157,7 @@ export default function HomePage() {
         </div>
       </section>
     </div>
+    <SiteFooter />
+    </>
   );
 }
