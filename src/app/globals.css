@@ -186,6 +186,11 @@ body {
   font-feature-settings: "ss01", "cv11";
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  /* Belt-and-braces guard against horizontal scroll on mobile.
+     overflow-x: clip preserves position: sticky on descendants.
+     Mirrors studio S·26 and tasks T·47. Also masks the 4px overflow
+     observed at 390w on the live home page pre-A·1. */
+  overflow-x: clip;
 }
 
 ::selection {
@@ -211,6 +216,17 @@ body {
   line-height: 1.1;
   letter-spacing: -0.03em;
   font-weight: 600;
+}
+
+/* Mobile leading correction — display-tight desktop leading (0.96–1.10)
+   lets descenders touch the next line's cap-height once clamp() shrinks
+   the font on phones. Loosen below 640px so wrapped headlines breathe.
+   Mirrors studio S·26 and tasks T·47. */
+@media (max-width: 640px) {
+  .h-display { line-height: 1.04; }
+  .h-title   { line-height: 1.1;  }
+  .h-section { line-height: 1.18; }
+  h1         { line-height: 1.08; }
 }
 
 /* ── Marker accent ─────────────────────────────────────────── */

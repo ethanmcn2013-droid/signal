@@ -3,6 +3,42 @@
 Convention: BRAND.md §6.5. Entries before 2026-05-14 keep their
 original shape; the new shape starts at the next cycle.
 
+## 2026-05-14 · A·1 · tightens · the briefing reads on a phone
+
+**Signal Analytics gets the same mobile parity the umbrella, Tasks,
+and Roadmap just shipped. The home page hero "A briefing, not a
+dashboard." had a 4px horizontal overflow at 390w and a descender
+collision in the H1; both fixed. Clerk sign-up tap targets bumped to
+48px, viewport-fit for notch hardware, footer legal strip lifted to
+32×12. No product change — mobile hygiene against the same
+disciplines as S·26, T·47, and R·1.**
+
+The 4px overflow at 390w wasn't a UX-breaking horizontal scroll
+today, but it told the truth that no overflow guard was in place.
+`html, body { overflow-x: clip }` lands as the belt-and-braces fix;
+the 4px is now clipped rather than scrollable. A future audit can
+find the actual element extending past the viewport without it being
+a live conversion-path problem.
+
+The H1 collision was the same pattern: 47px font / 45px line-height,
+descenders into next-row caps. A `@media (max-width: 640px)` block
+in globals loosens `.h-display`, `.h-title`, `.h-section`, and `h1`
+leading from 0.96–1.10 to 1.04–1.18.
+
+Clerk got the mobile correctness treatment — `ClerkProvider` was
+previously bare on Analytics, no `appearance` prop. Added one with
+`formFieldInput` `!min-h-[48px] !text-[16px]`, `formButtonPrimary`
+and `socialButtonsBlockButton` `!min-h-[48px]`. 16px on inputs
+prevents iOS Safari's auto-zoom on focus; 48px is the WCAG 2.5.5
+floor.
+
+Viewport export gains `viewportFit: "cover"`. Footer legal links
+jump from 17×11 to 32×12 with `inline-flex` hit areas and
+`safe-area-inset-bottom` padding.
+
+Typecheck clean.
+
+
 ## 2026-05-14 · Email dispatch gated on Workspace tier
 
 The briefing engine runs identically for every tier — what's gated
