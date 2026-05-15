@@ -3,6 +3,27 @@
 Convention: BRAND.md §6.5. Entries before 2026-05-14 keep their
 original shape; the new shape starts at the next cycle.
 
+## 2026-05-15 · A·8 · tightens · the marketing pages stop saying "LLM"
+
+**A full-surface pixel audit at 390px and 1440px found one real
+voice defect: "no LLM in the path" on /method and /demo.** Every
+public route was screenshotted on the live site at both widths and
+read against §3 — the homepage, /demo, /method, /signal, /pricing,
+/wedding-planning, /about. Layout, voice, and suite chrome hold
+across all of them on a phone and a desktop. The single miss: the
+product described its own architecture with "LLM", a tech acronym a
+wedding planner would never say, used not as a refusal but as a
+positive boast. It read like the thing it refuses to be.
+
+Three strings fixed. "No LLM in the path" becomes "No machine writes
+these lines" / "every line, a person wrote it" — same promise (the
+words are hand-written and rule-picked, never generated), now in
+words the 80% actually use. The "Not an AI workspace" refusal block
+is untouched on purpose: naming the jargon to reject it is the
+established anti-feature pattern, not a violation.
+
+Copy only. Typecheck and build clean.
+
 ## 2026-05-15 · A·7 · cuts · the demo stops promising what the briefing doesn't do
 
 **The cinematic demo used to mime a "Mark done" button and a

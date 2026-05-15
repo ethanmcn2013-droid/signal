@@ -136,7 +136,7 @@ export default function DemoPage() {
               }}
             >
               Every sentence in the demo is one the engine actually fires.
-              Drawn from the curated prose library — no LLM in the path.
+              Drawn from a library written by hand — every line, a person wrote it.
             </p>
             <p
               style={{

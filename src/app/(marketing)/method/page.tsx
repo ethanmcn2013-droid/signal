@@ -4,7 +4,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Method — Signal Analytics",
   description:
-    "How the briefing gets made. A rule engine, a curated library of phrasings, and one job: surface what matters today. No LLM in the path.",
+    "How the briefing gets made. A rule engine, a library of phrasings written by hand, and one job: surface what matters today. No machine writes the words.",
 };
 
 const STEPS = [
@@ -38,7 +38,7 @@ const STEPS = [
     body:
       "Every sentence in the briefing comes from a curated prose library — eighteen phrasings written by a person, slot-filled with the names and numbers from the rule that fired. The engine never generates language. It picks language.",
     detail:
-      "No LLM in the path. Not today, not in v1. The brand is in the writing.",
+      "No machine writes these lines. Not today, not in v1. The brand is in the writing.",
   },
 ] as const;
 
