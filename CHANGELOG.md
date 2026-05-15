@@ -3,6 +3,31 @@
 Convention: BRAND.md §6.5. Entries before 2026-05-14 keep their
 original shape; the new shape starts at the next cycle.
 
+## 2026-05-15 · A·6 · tightens · the demo speaks to the people it's for
+
+**The homepage audience toggle now offers a wedding planner, a builder,
+a freelancer, and a student — not a product launch and a startup.**
+The cinematic briefing is the most-seen surface on the site, and two of
+its four audiences spoke a language the brand exists to refuse. "Product
+launch" talked about export branches, open PRs awaiting review, and an
+API v1 spec. "Startup plan" talked about SOC 2 readiness, a closed seed
+round, and an investor update letter. A wedding planner clicking through
+the demo two interactions in watched the product talk like Jira — the
+exact failure the brand is built against, staged in its own shop window.
+
+Both packs are gone. In their place: **Client work** — a freelancer with
+an invoice unpaid 31 days, a client sitting on logo feedback, a tax
+return due in six days, three projects landing the same week in April —
+and **Final year** — a student with a dissertation chapter due in three
+days, unread supervisor feedback, seminar reading not started, deadlines
+stacked into the last week of term. Real money, real deadlines, real
+consequences, in the words those people actually use. The toggle is now
+wedding · building · freelance · student — the audience the suite is
+for, end to end, with no seam where the voice slips.
+
+Content only. No engine change, no schema change. The highest-leverage
+lever was the words, and the words now hold.
+
 ## 2026-05-15 · A·5 · hardens · the briefing stops overpromising and starts failing loud
 
 **A full code review went looking for the gap between what Analytics

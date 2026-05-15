@@ -3,7 +3,7 @@
  * Drives the AudienceToggle and reseeds the cinematic briefing demo.
  */
 
-export type DomainId = "wedding" | "construction" | "launch" | "startup";
+export type DomainId = "wedding" | "construction" | "freelance" | "student";
 
 export type BlockId = "attention" | "moving" | "risks" | "focus";
 
@@ -47,8 +47,8 @@ export type DomainPack = {
 export const DOMAIN_ORDER: DomainId[] = [
   "wedding",
   "construction",
-  "launch",
-  "startup",
+  "freelance",
+  "student",
 ];
 
 export const BLOCK_DOT: Record<BlockId, string> = {
@@ -288,43 +288,43 @@ const CONSTRUCTION_YESTERDAY: DemoBlock[] = [
   },
 ];
 
-// ── Launch pack ────────────────────────────────────────────────────────────
-const LAUNCH_TODAY: DemoBlock[] = [
+// ── Freelance pack ─────────────────────────────────────────────────────────
+const FREELANCE_TODAY: DemoBlock[] = [
   {
     id: "attention",
     label: BLOCK_LABEL.attention,
     dot: BLOCK_DOT.attention,
     items: [
       {
-        id: "exports",
-        provenance: "from Tasks · April Release",
+        id: "invoice",
+        provenance: "from Tasks · Client work",
         variants: [
-          "PDF export held up since March 11",
-          "Export work hasn't moved in 18 days",
-          "Exports need owner sign-off before they can ship",
+          "Brand project invoice unpaid since February 12",
+          "The biggest invoice has been unpaid 31 days",
+          "Invoice needs a payment reminder before it ages further",
         ],
         whyThis: [
-          "No commits to the export branch in 18 days.",
-          "Blocked on a design review that hasn't been scheduled.",
+          "Payment terms were 14 days. It has been 31.",
+          "Largest of four invoices still owed to you.",
           "Threshold crossed → surfaced for attention.",
         ],
       },
       {
-        id: "billing",
-        provenance: "from Tasks · April Release",
-        variants: ["Billing rewrite is 9 days behind sprint plan"],
-        whyThis: ["Sprint plan called for shipment 9 days ago.", "Two open PRs awaiting review."],
+        id: "logo",
+        provenance: "from Tasks · Client work",
+        variants: ["Maple Café logo — client feedback overdue since March 4"],
+        whyThis: ["Waiting on the client for 12 days.", "The final round can't start until they reply."],
       },
       {
-        id: "search",
-        provenance: "from Tasks · April Release",
-        variants: ["Search beta has 4 unresolved bug reports"],
-        whyThis: ["4 open issues filed in the last 7 days.", "All marked P1 or P2."],
+        id: "tax",
+        provenance: "from Tasks · Client work",
+        variants: ["Self-assessment tax return due in 6 days"],
+        whyThis: ["Deadline in 6 days.", "Nothing gathered yet."],
       },
     ],
     overflow: [
-      { id: "docs", text: "Release notes still need owner copy" },
-      { id: "perf", text: "Perf budget regressed 6% last week" },
+      { id: "portfolio", text: "Portfolio site still shows last year's work" },
+      { id: "enquiry", text: "New-enquiry form is going to spam" },
     ],
   },
   {
@@ -332,8 +332,8 @@ const LAUNCH_TODAY: DemoBlock[] = [
     label: BLOCK_LABEL.moving,
     dot: BLOCK_DOT.moving,
     items: [
-      { id: "share", provenance: "from Tasks · April Release", variants: ["Public share links shipped two days early"] },
-      { id: "perf2", provenance: "from Tasks · April Release", variants: ["Performance pass came in 18% faster than the goal"] },
+      { id: "album", provenance: "from Tasks · Client work", variants: ["Wedding album delivered — client signed off"] },
+      { id: "retainer", provenance: "from Tasks · Client work", variants: ["Retainer renewed for another six months"] },
     ],
   },
   {
@@ -341,9 +341,9 @@ const LAUNCH_TODAY: DemoBlock[] = [
     label: BLOCK_LABEL.risks,
     dot: BLOCK_DOT.risks,
     items: [
-      { id: "api", provenance: "from Tasks · April Release", variants: ["Public API v1 spec hasn't been touched in 12 days"] },
-      { id: "mobile", provenance: "from Tasks · April Release", variants: ["Mobile read-only depends entirely on one engineer"] },
-      { id: "comms", provenance: "from Tasks · April Release", variants: ["Customer comms plan not started — 21 days out"] },
+      { id: "stack", provenance: "from Tasks · Client work", variants: ["Three projects all land in the same week in April"] },
+      { id: "enquiries", provenance: "from Tasks · Client work", variants: ["No new enquiries in 9 days"] },
+      { id: "hosting", provenance: "from Tasks · Client work", variants: ["Hosting renewal auto-charges in 12 days"] },
     ],
   },
   {
@@ -351,21 +351,21 @@ const LAUNCH_TODAY: DemoBlock[] = [
     label: BLOCK_LABEL.focus,
     dot: BLOCK_DOT.focus,
     items: [
-      { id: "exports-focus", provenance: "today's priority", variants: ["Unblock PDF exports with owner today"] },
-      { id: "billing-focus", provenance: "by Friday", variants: ["Recover billing rewrite slippage by Friday"] },
-      { id: "api-focus", provenance: "this week", variants: ["Restart API spec drafting this week"] },
+      { id: "invoice-focus", provenance: "today's priority", variants: ["Send the invoice reminder this morning"] },
+      { id: "logo-focus", provenance: "by Thursday", variants: ["Chase Maple Café for logo feedback"] },
+      { id: "tax-focus", provenance: "this week", variants: ["Start the tax return"] },
     ],
   },
 ];
 
-const LAUNCH_YESTERDAY: DemoBlock[] = [
+const FREELANCE_YESTERDAY: DemoBlock[] = [
   {
     id: "attention",
     label: BLOCK_LABEL.attention,
     dot: BLOCK_DOT.attention,
     items: [
-      { id: "exports-y", provenance: "from Tasks · April Release", variants: ["PDF export held up since March 11"] },
-      { id: "billing-y", provenance: "from Tasks · April Release", variants: ["Billing rewrite is 8 days behind sprint plan"] },
+      { id: "invoice-y", provenance: "from Tasks · Client work", variants: ["Brand project invoice unpaid since February 12"] },
+      { id: "tax-y", provenance: "from Tasks · Client work", variants: ["Self-assessment tax return due in 7 days"] },
     ],
   },
   {
@@ -373,8 +373,8 @@ const LAUNCH_YESTERDAY: DemoBlock[] = [
     label: BLOCK_LABEL.moving,
     dot: BLOCK_DOT.moving,
     items: [
-      { id: "search-y", provenance: "from Tasks · April Release", variants: ["Search beta opened to 200 testers"] },
-      { id: "share-y", provenance: "from Tasks · April Release", variants: ["Public share links shipped two days early"] },
+      { id: "logo-y", provenance: "from Tasks · Client work", variants: ["Maple Café approved the second logo round"] },
+      { id: "album-y", provenance: "from Tasks · Client work", variants: ["Wedding album delivered — client signed off"] },
     ],
   },
   {
@@ -382,8 +382,8 @@ const LAUNCH_YESTERDAY: DemoBlock[] = [
     label: BLOCK_LABEL.risks,
     dot: BLOCK_DOT.risks,
     items: [
-      { id: "api-y", provenance: "from Tasks · April Release", variants: ["Public API v1 spec hasn't been touched in 11 days"] },
-      { id: "comms-y", provenance: "from Tasks · April Release", variants: ["Customer comms plan not started — 22 days out"] },
+      { id: "enquiries-y", provenance: "from Tasks · Client work", variants: ["No new enquiries in 8 days"] },
+      { id: "hosting-y", provenance: "from Tasks · Client work", variants: ["Hosting renewal auto-charges in 13 days"] },
     ],
   },
   {
@@ -391,49 +391,49 @@ const LAUNCH_YESTERDAY: DemoBlock[] = [
     label: BLOCK_LABEL.focus,
     dot: BLOCK_DOT.focus,
     items: [
-      { id: "exports-y-focus", provenance: "yesterday's priority", variants: ["Push exports unblock"] },
-      { id: "api-y-focus", provenance: "by Friday", variants: ["Schedule API spec working session"] },
+      { id: "invoice-y-focus", provenance: "yesterday's priority", variants: ["Send the first payment reminder"] },
+      { id: "tax-y-focus", provenance: "by Friday", variants: ["Gather receipts for the tax return"] },
     ],
   },
 ];
 
-// ── Startup pack ───────────────────────────────────────────────────────────
-const STARTUP_TODAY: DemoBlock[] = [
+// ── Student pack ───────────────────────────────────────────────────────────
+const STUDENT_TODAY: DemoBlock[] = [
   {
     id: "attention",
     label: BLOCK_LABEL.attention,
     dot: BLOCK_DOT.attention,
     items: [
       {
-        id: "compliance",
-        provenance: "from Tasks · Q2 plan",
+        id: "chapter",
+        provenance: "from Tasks · Final year",
         variants: [
-          "SOC 2 readiness held up since March 8",
-          "Compliance hasn't moved in 14 days",
-          "SOC 2 needs the auditor scheduled before April 1",
+          "Dissertation chapter draft due in 3 days",
+          "The chapter draft hasn't moved in 11 days",
+          "Chapter needs a full draft before the supervisor meeting",
         ],
         whyThis: [
-          "No status update in 14 days.",
-          "April 1 audit deadline is hard.",
+          "Deadline in 3 days.",
+          "Only the introduction is written.",
           "Threshold crossed → surfaced for attention.",
         ],
       },
       {
-        id: "pricing",
-        provenance: "from Tasks · Q2 plan",
-        variants: ["Pricing decision is 6 days overdue"],
-        whyThis: ["Decision due 6 days ago.", "Public beta marketing is waiting on this."],
+        id: "feedback",
+        provenance: "from Tasks · Final year",
+        variants: ["Supervisor feedback unread since March 6"],
+        whyThis: ["Sent 9 days ago.", "Revisions can't start until it's read."],
       },
       {
-        id: "alpha",
-        provenance: "from Tasks · Q2 plan",
-        variants: ["Alpha cohort has 3 customers stuck on activation"],
-        whyThis: ["3 customers reported activation failures in the last 4 days.", "Onboarding completion rate down 22%."],
+        id: "seminar",
+        provenance: "from Tasks · Final year",
+        variants: ["Seminar reading for Thursday not started"],
+        whyThis: ["Seminar in 2 days.", "About 40 pages outstanding."],
       },
     ],
     overflow: [
-      { id: "hire", text: "Engineer 2 hire offer pending acceptance" },
-      { id: "investor", text: "Investor update letter not started" },
+      { id: "library", text: "Library books due back in 4 days" },
+      { id: "ethics", text: "Ethics form still not submitted" },
     ],
   },
   {
@@ -441,8 +441,8 @@ const STARTUP_TODAY: DemoBlock[] = [
     label: BLOCK_LABEL.moving,
     dot: BLOCK_DOT.moving,
     items: [
-      { id: "seed", provenance: "from Tasks · Q2 plan", variants: ["Seed round closed 12 days ahead of target"] },
-      { id: "retention", provenance: "from Tasks · Q2 plan", variants: ["First-week retention is up 22% over last month"] },
+      { id: "litreview", provenance: "from Tasks · Final year", variants: ["Literature review handed in two days early"] },
+      { id: "abstract", provenance: "from Tasks · Final year", variants: ["Conference abstract accepted"] },
     ],
   },
   {
@@ -450,9 +450,9 @@ const STARTUP_TODAY: DemoBlock[] = [
     label: BLOCK_LABEL.risks,
     dot: BLOCK_DOT.risks,
     items: [
-      { id: "single", provenance: "from Tasks · Q2 plan", variants: ["72% of customer-facing work runs through one engineer"] },
-      { id: "beta-plan", provenance: "from Tasks · Q2 plan", variants: ["Public beta plan not started — 42 days out"] },
-      { id: "metrics", provenance: "from Tasks · Q2 plan", variants: ["Investor metrics dashboard hasn't been updated in 8 days"] },
+      { id: "termstack", provenance: "from Tasks · Final year", variants: ["Three deadlines stacked in the last week of term"] },
+      { id: "funding", provenance: "from Tasks · Final year", variants: ["Funding application not started — closes in 21 days"] },
+      { id: "lab", provenance: "from Tasks · Final year", variants: ["Lab time still not booked for the experiment"] },
     ],
   },
   {
@@ -460,21 +460,21 @@ const STARTUP_TODAY: DemoBlock[] = [
     label: BLOCK_LABEL.focus,
     dot: BLOCK_DOT.focus,
     items: [
-      { id: "compliance-focus", provenance: "today's priority", variants: ["Schedule SOC 2 auditor call today"] },
-      { id: "pricing-focus", provenance: "by Friday", variants: ["Decide pricing with the team by Friday"] },
-      { id: "alpha-focus", provenance: "this week", variants: ["Unblock the 3 stuck alpha customers"] },
+      { id: "chapter-focus", provenance: "today's priority", variants: ["Draft the dissertation chapter"] },
+      { id: "feedback-focus", provenance: "by Wednesday", variants: ["Read the supervisor feedback"] },
+      { id: "seminar-focus", provenance: "this week", variants: ["Do the seminar reading"] },
     ],
   },
 ];
 
-const STARTUP_YESTERDAY: DemoBlock[] = [
+const STUDENT_YESTERDAY: DemoBlock[] = [
   {
     id: "attention",
     label: BLOCK_LABEL.attention,
     dot: BLOCK_DOT.attention,
     items: [
-      { id: "compliance-y", provenance: "from Tasks · Q2 plan", variants: ["SOC 2 readiness held up since March 8"] },
-      { id: "pricing-y", provenance: "from Tasks · Q2 plan", variants: ["Pricing decision is 5 days overdue"] },
+      { id: "chapter-y", provenance: "from Tasks · Final year", variants: ["Dissertation chapter draft due in 4 days"] },
+      { id: "feedback-y", provenance: "from Tasks · Final year", variants: ["Supervisor feedback unread since March 6"] },
     ],
   },
   {
@@ -482,9 +482,8 @@ const STARTUP_YESTERDAY: DemoBlock[] = [
     label: BLOCK_LABEL.moving,
     dot: BLOCK_DOT.moving,
     items: [
-      { id: "alpha-y", provenance: "from Tasks · Q2 plan", variants: ["Alpha cohort grew to 9 active customers"] },
-      { id: "seed-y", provenance: "from Tasks · Q2 plan", variants: ["Seed round closed 12 days ahead of target"] },
-      { id: "retention-y", provenance: "from Tasks · Q2 plan", variants: ["First-week retention is up 20% over last month"] },
+      { id: "litreview-y", provenance: "from Tasks · Final year", variants: ["Literature review handed in two days early"] },
+      { id: "abstract-y", provenance: "from Tasks · Final year", variants: ["Conference abstract accepted"] },
     ],
   },
   {
@@ -492,8 +491,8 @@ const STARTUP_YESTERDAY: DemoBlock[] = [
     label: BLOCK_LABEL.risks,
     dot: BLOCK_DOT.risks,
     items: [
-      { id: "single-y", provenance: "from Tasks · Q2 plan", variants: ["72% of customer-facing work runs through one engineer"] },
-      { id: "beta-plan-y", provenance: "from Tasks · Q2 plan", variants: ["Public beta plan not started — 43 days out"] },
+      { id: "funding-y", provenance: "from Tasks · Final year", variants: ["Funding application not started — closes in 22 days"] },
+      { id: "lab-y", provenance: "from Tasks · Final year", variants: ["Lab time still not booked for the experiment"] },
     ],
   },
   {
@@ -501,8 +500,8 @@ const STARTUP_YESTERDAY: DemoBlock[] = [
     label: BLOCK_LABEL.focus,
     dot: BLOCK_DOT.focus,
     items: [
-      { id: "compliance-y-focus", provenance: "yesterday's priority", variants: ["Pin down SOC 2 auditor"] },
-      { id: "pricing-y-focus", provenance: "by Wednesday", variants: ["Bring pricing options to leadership"] },
+      { id: "chapter-y-focus", provenance: "yesterday's priority", variants: ["Outline the dissertation chapter"] },
+      { id: "seminar-y-focus", provenance: "by Thursday", variants: ["Start the seminar reading"] },
     ],
   },
 ];
@@ -534,30 +533,31 @@ export const DOMAINS: Record<DomainId, DomainPack> = {
     blocks: CONSTRUCTION_TODAY,
     yesterdayBlocks: CONSTRUCTION_YESTERDAY,
   },
-  launch: {
-    id: "launch",
-    label: "Product launch",
-    description: "a team that needs the lay of the land before the morning sync",
-    workspaceName: "April release",
+  freelance: {
+    id: "freelance",
+    label: "Client work",
+    description:
+      "a freelancer juggling several clients who needs to know which one needs them this week",
+    workspaceName: "Client work",
     workspaceEyebrow: "Wednesday · 06:00",
     greeting: "Good morning.",
-    swapItemId: "exports",
-    inspectItemId: "exports",
-    acknowledgeItemId: "billing-focus",
-    blocks: LAUNCH_TODAY,
-    yesterdayBlocks: LAUNCH_YESTERDAY,
+    swapItemId: "invoice",
+    inspectItemId: "invoice",
+    acknowledgeItemId: "logo-focus",
+    blocks: FREELANCE_TODAY,
+    yesterdayBlocks: FREELANCE_YESTERDAY,
   },
-  startup: {
-    id: "startup",
-    label: "Startup plan",
-    description: "a founder who needs to know what slipped overnight",
-    workspaceName: "Q2 plan",
+  student: {
+    id: "student",
+    label: "Final year",
+    description: "a student running research, teaching, and writing in parallel",
+    workspaceName: "Final year",
     workspaceEyebrow: "Wednesday · 06:00",
     greeting: "Good morning.",
-    swapItemId: "compliance",
-    inspectItemId: "compliance",
-    acknowledgeItemId: "pricing-focus",
-    blocks: STARTUP_TODAY,
-    yesterdayBlocks: STARTUP_YESTERDAY,
+    swapItemId: "chapter",
+    inspectItemId: "chapter",
+    acknowledgeItemId: "feedback-focus",
+    blocks: STUDENT_TODAY,
+    yesterdayBlocks: STUDENT_YESTERDAY,
   },
 };
