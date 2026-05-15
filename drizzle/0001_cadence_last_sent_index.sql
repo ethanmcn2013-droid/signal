@@ -1,0 +1,1 @@
+CREATE INDEX `user_preferences_cadence_last_sent_idx` ON `user_preferences` (`cadence`,`last_sent_at`);

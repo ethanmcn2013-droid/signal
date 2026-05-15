@@ -39,8 +39,25 @@ export function AudienceToggle({ domain, onChange }: Props) {
 
       <LayoutGroup id="analytics-audience-toggle">
         <div
-          role="tablist"
+          role="radiogroup"
           aria-label="Choose an audience"
+          onKeyDown={(e) => {
+            const dirs: Record<string, number> = {
+              ArrowRight: 1,
+              ArrowDown: 1,
+              ArrowLeft: -1,
+              ArrowUp: -1,
+            };
+            const step = dirs[e.key];
+            if (!step) return;
+            e.preventDefault();
+            const i = DOMAIN_ORDER.indexOf(domain);
+            const next =
+              DOMAIN_ORDER[
+                (i + step + DOMAIN_ORDER.length) % DOMAIN_ORDER.length
+              ];
+            onChange(next);
+          }}
           className="relative inline-flex flex-wrap items-center gap-0.5 rounded-full border p-1 backdrop-blur"
           style={{
             borderColor: "var(--border)",
@@ -54,8 +71,9 @@ export function AudienceToggle({ domain, onChange }: Props) {
             return (
               <button
                 key={id}
-                role="tab"
-                aria-selected={isActive}
+                role="radio"
+                aria-checked={isActive}
+                tabIndex={isActive ? 0 : -1}
                 onClick={() => onChange(id)}
                 className={
                   "relative inline-flex items-center rounded-full px-3.5 py-1.5 text-[12.5px] font-medium transition-colors " +

@@ -21,12 +21,14 @@ function siteBaseUrl(): string {
   return process.env.NEXT_PUBLIC_SITE_URL ?? "https://analytics.signalstudio.ie";
 }
 
-// Memoised Resend client. SDK construction is cheap, but doing it once
-// per cron-loop iteration is wasteful when the loop is N users wide.
-let _resend: Resend | null = null;
+// Memoised Resend client, keyed on the API key so a key rotation
+// inside a long-lived process doesn't keep using the stale client.
+let _resend: { key: string; client: Resend } | null = null;
 function getResend(apiKey: string): Resend {
-  if (!_resend) _resend = new Resend(apiKey);
-  return _resend;
+  if (!_resend || _resend.key !== apiKey) {
+    _resend = { key: apiKey, client: new Resend(apiKey) };
+  }
+  return _resend.client;
 }
 
 export type DispatchResult =
@@ -100,6 +102,12 @@ export async function dispatchBriefing({
   } else {
     const apiKey = process.env.RESEND_API_KEY;
     if (!apiKey) {
+      // In production a missing key is a real misconfiguration, not a
+      // benign dev no-op. Returning a "skipped" success here would let
+      // the cron report ok:true while zero emails go out for days.
+      if (process.env.NODE_ENV === "production") {
+        return { ok: false, error: "RESEND_API_KEY missing in production" };
+      }
       return { ok: true, skipped: true, reason: "no-resend-key" };
     }
     const resend = getResend(apiKey);

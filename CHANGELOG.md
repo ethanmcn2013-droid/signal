@@ -3,6 +3,48 @@
 Convention: BRAND.md §6.5. Entries before 2026-05-14 keep their
 original shape; the new shape starts at the next cycle.
 
+## 2026-05-15 · A·5 · hardens · the briefing stops overpromising and starts failing loud
+
+**A full code review went looking for the gap between what Analytics
+says and what Analytics does, and closed it.** The marketing site sold
+a four-rule engine; the engine has shipped six rules since v1. `/method`,
+the homepage pillar, and the briefing anatomy now name all six —
+stalled work, due-and-overdue, just-shipped, a crowded week, long-held
+blockers, and too much in flight — and the bucket copy matches where
+those rules actually land. The brand also quietly retired antique gold
+months ago, but the in-app brief and *every email ever sent* still
+fell back to a purple `#7c5cff`; it's indigo `#4f46e5` now, the way
+the rest of the suite has been all along.
+
+**The sign-in and sign-up pages rendered an empty `<body>`.** Anyone
+clicking through from /pricing hit a blank screen. Clerk's `<SignIn/>`
+and `<SignUp/>` are mounted now, hash-routed so no catch-all segment
+was needed.
+
+**Silent success was the backend's favourite failure mode.** A missing
+`RESEND_API_KEY` in production used to return `ok: true · skipped` —
+the cron stayed green while zero emails went out. It's a hard error in
+production now. The read-only Tasks token self-heals on rotation
+instead of returning empty signals forever. The cron pacing respects
+Resend's rate limit so a burst doesn't 429 real subscribers into a
+24-hour wait. Preferences upsert is race-safe. The Studio ping refuses
+to send its bearer anywhere that isn't a signalstudio.ie host. And the
+DB client is lazy now, so a preview without Turso envs builds instead
+of throwing at import.
+
+**The test-send button skipped the tier gate the cron enforces** —
+free users could spam it every 60s. Same `workspace`-tier check now.
+
+**Hygiene.** `clsx` and `zod` were installed and never imported —
+gone. `packageManager` is pinned so Vercel stops guessing and the
+stray `pnpm-lock.yaml` stops re-appearing. `npm test` no longer loads
+`.env.local` (and its live prod tokens) into the test process; use
+`test:local` for that. A composite `(cadence, last_sent_at)` index
+keeps the daily fanout off a full table scan. The off-screen demo
+loop now pauses instead of burning the main thread forever, and the
+audience/view toggles are real `radiogroup`s with arrow-key support
+instead of broken `tablist`s. Dead `hero-motion.tsx` deleted.
+
 ## 2026-05-14 · A·2 · ships · atlas drift-trigger wires into analytics commits
 
 **Analytics commits now flag the umbrella's atlas when a referenced
@@ -196,8 +238,9 @@ named here so it isn't surprising the day it happens.
 
 ### Hygiene.
 
-Duplicate `package-lock.json` deleted (pnpm-only). Resend client
-hoisted. The `localHourMatches()` per-TZ scheduling helper is
+Duplicate `pnpm-lock.yaml` deleted (this repo is npm-only;
+`package-lock.json` is canonical — see CONTRIBUTING.md "Trap 2").
+Resend client hoisted. The `localHourMatches()` per-TZ scheduling helper is
 still dormant — daily UTC fixed-slot remains the only cadence
 until per-user TZ lands.
 

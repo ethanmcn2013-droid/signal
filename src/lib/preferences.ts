@@ -48,8 +48,20 @@ export async function getOrCreatePreferences(): Promise<UserPreferences> {
     createdAt: now,
     updatedAt: now,
   };
-  await db.insert(userPreferences).values(row);
-  return row;
+  // Two concurrent first-loads (e.g. settings + brief tabs racing)
+  // both miss the SELECT above; ON CONFLICT DO NOTHING makes the
+  // loser a no-op instead of a PK crash. Re-select so we return the
+  // row that actually persisted, whichever request won.
+  await db
+    .insert(userPreferences)
+    .values(row)
+    .onConflictDoNothing({ target: userPreferences.userId });
+  const persisted = await db
+    .select()
+    .from(userPreferences)
+    .where(eq(userPreferences.userId, userId))
+    .limit(1);
+  return persisted[0] ?? row;
 }
 
 export async function setCadence(cadence: Cadence): Promise<UserPreferences> {

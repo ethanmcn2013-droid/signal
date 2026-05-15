@@ -18,9 +18,9 @@ const STEPS = [
   },
   {
     label: "2 · Detect",
-    title: "Look for four patterns.",
+    title: "Look for six patterns.",
     body:
-      "Four rules run across the read model. Held-up work. Overdue items. Items just shipped. Too much in flight at once. Each rule is named, each rule is auditable, each rule fires only when its condition is met.",
+      "Six rules run across the read model. Stalled work. Due or overdue dates. Items just shipped. A crowded week ahead. Blockers that have outlasted reasonable waiting. Too much in flight at once. Each rule is named, each rule is auditable, each rule fires only when its condition is met.",
     detail:
       "Every rule has a threshold. Every threshold is published. No detection is fuzzy.",
   },
@@ -61,7 +61,7 @@ const REFUSALS = [
   {
     label: "Not exhaustive.",
     body:
-      "Three items per block. Always three. If five things need attention, the engine picks the three with the highest cascade — and trusts you to find the rest yourself.",
+      "Three items per block. Always three. If five things need attention, the engine ranks by cascade, then irreversibility, then proximity — keeps the top three, and trusts you to find the rest yourself.",
   },
 ] as const;
 

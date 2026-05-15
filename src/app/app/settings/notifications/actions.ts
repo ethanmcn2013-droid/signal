@@ -7,6 +7,8 @@ import { getBriefingSource } from "@/lib/briefing/get-source";
 import { dispatchBriefing } from "@/lib/email/dispatch";
 import { setCadence } from "@/lib/preferences";
 import { getOrCreatePreferences } from "@/lib/preferences";
+import { resolveEntitlement } from "@/lib/entitlements-shared/reads";
+import { tierAtLeast } from "@/lib/entitlements-shared/tiers";
 import type { Cadence } from "@/lib/db/schema";
 
 export async function updateCadenceAction(cadence: Cadence) {
@@ -30,6 +32,18 @@ export type SendTestResult =
  */
 export async function sendTestBriefingAction(): Promise<SendTestResult> {
   const prefs = await getOrCreatePreferences();
+
+  // Same gate the cron enforces: email dispatch is workspace-tier+.
+  // Without this, free users could spam test sends every 60s and
+  // bypass the tier check that lives in the cron fanout (E-5).
+  const { tier } = await resolveEntitlement(prefs.userId);
+  if (!tierAtLeast(tier, "workspace")) {
+    return {
+      ok: false,
+      message:
+        "Email briefings are a Workspace feature. You can read every briefing in the app on any plan.",
+    };
+  }
 
   // Throttle: refuse a fresh test send within 60s of the last successful
   // send (cron or test). `lastSentAt` is the source of truth for "last

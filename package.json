@@ -2,14 +2,17 @@
   "name": "analytics",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "npm@11.12.1",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
-    "test": "node --env-file-if-exists=.env.local --import tsx --test 'src/lib/**/*.test.ts'",
-    "test:coverage": "node --env-file-if-exists=.env.local --import tsx --test --experimental-test-coverage 'src/lib/**/*.test.ts'",
+    "test": "node --import tsx --test 'src/lib/**/*.test.ts'",
+    "test:local": "node --env-file-if-exists=.env.local --import tsx --test 'src/lib/**/*.test.ts'",
+    "test:watch": "node --watch --import tsx --test 'src/lib/**/*.test.ts'",
+    "test:coverage": "node --import tsx --test --experimental-test-coverage 'src/lib/**/*.test.ts'",
     "db:generate": "drizzle-kit generate",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio"
@@ -19,7 +22,6 @@
     "@libsql/client": "^0.17.3",
     "@react-email/components": "^1.0.12",
     "@react-email/render": "^2.0.8",
-    "clsx": "^2.1.1",
     "drizzle-orm": "^0.45.2",
     "geist": "^1.7.0",
     "motion": "^12.38.0",
@@ -27,8 +29,7 @@
     "next": "16.2.4",
     "react": "19.2.4",
     "react-dom": "19.2.4",
-    "resend": "^6.12.3",
-    "zod": "^4.4.3"
+    "resend": "^6.12.3"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

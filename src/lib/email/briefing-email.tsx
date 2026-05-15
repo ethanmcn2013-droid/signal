@@ -19,10 +19,10 @@ import { graceNote, greeting, summaryLine } from "@/lib/briefing/voice";
 const ink = "#14151a";
 const inkSoft = "#535560";
 const inkQuiet = "#7a7d87";
-const brand = "#7c5cff";
+const brand = "#4f46e5";
 const accentAttention = "#c2410c"; // muted amber-orange
 const accentMoving = "#2e7d57"; // muted green
-const accentRisk = "#7c5cff"; // brand violet (quiet risks share brand colour)
+const accentRisk = "#4f46e5"; // brand indigo (quiet risks share brand colour)
 const lineSoft = "#ececf0";
 const surface = "#ffffff";
 const surfaceTint = "#fafafb";

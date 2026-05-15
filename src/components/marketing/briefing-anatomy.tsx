@@ -21,7 +21,7 @@ const ANN = [
   },
   {
     label: "Needs attention",
-    note: "Shown when they matter: overload, stalled work, slipping dates, and crowded weeks.",
+    note: "Shown when they matter: due and overdue dates, too much in flight, and a crowded week ahead.",
   },
   {
     label: "Moving well",
@@ -29,7 +29,7 @@ const ANN = [
   },
   {
     label: "Quiet risks",
-    note: "What's invisible but accumulating. Inactive projects, single points of failure, slipping dates.",
+    note: "What's invisible but accumulating. Stalled work and blockers that have outlasted reasonable waiting.",
   },
   {
     label: "Suggested focus",

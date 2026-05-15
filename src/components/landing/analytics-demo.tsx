@@ -68,6 +68,32 @@ export function AnalyticsDemo({ domain = "wedding" }: Props = {}) {
   const surfaceRef = useRef<HTMLDivElement | null>(null);
   const itemRefsRef = useRef<Map<string, HTMLDivElement>>(new Map());
 
+  // The scene timeline is an infinite setTimeout chain. Gate it on
+  // viewport visibility + tab visibility so it isn't burning the
+  // main thread (and mobile battery) while scrolled off-screen or
+  // backgrounded. The loop restarts cleanly when it re-enters view.
+  const [active, setActive] = useState(false);
+  useEffect(() => {
+    const el = surfaceRef.current;
+    if (!el) return;
+    let onScreen = false;
+    const recompute = () =>
+      setActive(onScreen && document.visibilityState === "visible");
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        onScreen = entry.isIntersecting;
+        recompute();
+      },
+      { threshold: 0.2 },
+    );
+    io.observe(el);
+    document.addEventListener("visibilitychange", recompute);
+    return () => {
+      io.disconnect();
+      document.removeEventListener("visibilitychange", recompute);
+    };
+  }, []);
+
   const onRegisterItem = useCallback(
     (id: string, el: HTMLDivElement | null) => {
       if (el) {
@@ -181,6 +207,7 @@ export function AnalyticsDemo({ domain = "wedding" }: Props = {}) {
   /** Scene timeline. */
   useEffect(() => {
     if (reducedMotion) return;
+    if (!active) return;
     aliveRef.current = true;
     const myLoopKey = loopKeyRef.current;
     const isCurrent = () =>
@@ -325,6 +352,7 @@ export function AnalyticsDemo({ domain = "wedding" }: Props = {}) {
     };
   }, [
     reducedMotion,
+    active,
     domain,
     pack,
     setScene,

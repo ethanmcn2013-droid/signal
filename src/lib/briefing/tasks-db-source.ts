@@ -1,4 +1,9 @@
-import "server-only";
+// Note: `import "server-only"` would guard against a client-bundle
+// import, but it throws at node:test import time. This module is only
+// reached via get-source.ts → the cron route / preview surfaces (all
+// already server-only), so the guard is redundant in practice and its
+// removal lets the pure mappers below be unit-tested. Same exception
+// dispatch.ts documents.
 import { createClient, type Client, type Value } from "@libsql/client";
 import type { BriefingContext, BriefingSource } from "./source";
 import type { Lane, TaskSignal } from "./types";
@@ -32,7 +37,7 @@ import type { Lane, TaskSignal } from "./types";
  *  expired / was revoked? If so we drop the cached client so the
  *  next call rebuilds it instead of returning [] for every user for
  *  the rest of the process lifetime. */
-function isAuthError(err: unknown): boolean {
+export function isAuthError(err: unknown): boolean {
   const s = String(err).toLowerCase();
   return (
     s.includes("401") ||
@@ -165,7 +170,7 @@ export function makeTasksDbSource(): BriefingSource | null {
   };
 }
 
-function canonicaliseLane(raw: string): Lane {
+export function canonicaliseLane(raw: string): Lane {
   switch (raw) {
     case "todo":
       return "next";
@@ -179,7 +184,7 @@ function canonicaliseLane(raw: string): Lane {
   }
 }
 
-function parsePriority(raw: string): 0 | 1 | 2 | 3 {
+export function parsePriority(raw: string): 0 | 1 | 2 | 3 {
   const m = /^P([0-3])$/.exec(raw ?? "");
   if (m) return Number(m[1]) as 0 | 1 | 2 | 3;
   // Tasks pre-2024 uses numeric strings; tolerate them.
@@ -188,7 +193,7 @@ function parsePriority(raw: string): 0 | 1 | 2 | 3 {
   return 2;
 }
 
-function parseBlockedBy(raw: string | null): string[] {
+export function parseBlockedBy(raw: string | null): string[] {
   if (!raw) return [];
   try {
     const v = JSON.parse(raw);

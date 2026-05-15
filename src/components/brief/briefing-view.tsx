@@ -20,10 +20,10 @@ const EASE_OUT_EXPO = [0.16, 1, 0.3, 1] as const;
 const EASE_IN_OUT = [0.65, 0, 0.35, 1] as const;
 
 const bucketAccents = {
-  attention: "var(--brand, #7c5cff)",
+  attention: "var(--brand, #4f46e5)",
   moving: "rgb(46, 160, 110)",
-  risks: "var(--brand, #7c5cff)",
-  focus: "var(--brand, #7c5cff)",
+  risks: "var(--brand, #4f46e5)",
+  focus: "var(--brand, #4f46e5)",
 } as const;
 
 /**
@@ -359,7 +359,7 @@ function FocusBlock({ items }: { items: FocusItem[] }) {
       <motion.span
         aria-hidden
         className="absolute -top-1 -right-1 block h-2 w-2 rounded-full"
-        style={{ background: "var(--brand, #7c5cff)" }}
+        style={{ background: "var(--brand, #4f46e5)" }}
         animate={{ opacity: [0.6, 1, 0.6], scale: [0.85, 1.05, 0.85] }}
         transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut" }}
       />
@@ -368,7 +368,7 @@ function FocusBlock({ items }: { items: FocusItem[] }) {
         <span
           aria-hidden
           className="inline-block h-1.5 w-1.5 rounded-full"
-          style={{ background: "var(--brand, #7c5cff)" }}
+          style={{ background: "var(--brand, #4f46e5)" }}
         />
         <h2
           className="text-[13px] font-semibold uppercase tracking-[0.06em]"

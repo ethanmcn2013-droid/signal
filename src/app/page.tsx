@@ -6,7 +6,7 @@ const PILLARS = [
   {
     title: "Attention engine",
     description:
-      "Flags overloaded work, stalled items, slipping dates, single-owner pressure, and quiet projects. No configuration.",
+      "Flags stalled work, due and overdue dates, a crowded week ahead, long-held blockers, and too much in flight. No configuration.",
   },
   {
     title: "Briefings, not dashboards",

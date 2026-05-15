@@ -4,6 +4,12 @@ node_modules/
 .pnp.js
 .yarn/install-state.gz
 
+# This repo is npm-only. pnpm artifacts keep regenerating from tool
+# auto-detection and break Vercel's package-manager inference — keep
+# them out of the tree entirely. See CONTRIBUTING.md "Trap 2".
+pnpm-lock.yaml
+pnpm-workspace.yaml
+
 # Next.js
 .next/
 out/

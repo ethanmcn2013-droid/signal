@@ -1,7 +1,18 @@
 import type { Metadata } from "next";
+import { SignUp } from "@clerk/nextjs";
 
 export const metadata: Metadata = {
   title: "Sign up — Signal Analytics",
+};
+
+const shell = {
+  minHeight: "100vh",
+  display: "flex",
+  flexDirection: "column" as const,
+  alignItems: "center",
+  justifyContent: "center",
+  padding: "64px 24px",
+  background: "var(--bg)",
 };
 
 export default function SignUpPage() {
@@ -9,17 +20,7 @@ export default function SignUpPage() {
 
   if (!hasClerk) {
     return (
-      <main
-        style={{
-          minHeight: "100vh",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: "64px 24px",
-          background: "var(--bg)",
-        }}
-      >
+      <main style={shell}>
         <p
           style={{
             fontSize: 17,
@@ -33,5 +34,9 @@ export default function SignUpPage() {
     );
   }
 
-  return null;
+  return (
+    <main style={shell}>
+      <SignUp routing="hash" signInUrl="/sign-in" fallbackRedirectUrl="/app/brief" />
+    </main>
+  );
 }

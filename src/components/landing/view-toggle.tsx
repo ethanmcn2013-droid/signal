@@ -23,8 +23,19 @@ export function ViewToggle({ view, onChange }: Props) {
   return (
     <LayoutGroup id="analytics-view-toggle">
       <div
-        role="tablist"
+        role="radiogroup"
         aria-label="View"
+        onKeyDown={(e) => {
+          if (
+            e.key !== "ArrowRight" &&
+            e.key !== "ArrowLeft" &&
+            e.key !== "ArrowUp" &&
+            e.key !== "ArrowDown"
+          )
+            return;
+          e.preventDefault();
+          onChange?.(view === "today" ? "yesterday" : "today");
+        }}
         className="relative inline-flex items-center gap-0.5 rounded-full border p-0.5"
         style={{
           borderColor: "var(--border-soft)",
@@ -36,8 +47,9 @@ export function ViewToggle({ view, onChange }: Props) {
           return (
             <button
               key={item.id}
-              role="tab"
-              aria-selected={isActive}
+              role="radio"
+              aria-checked={isActive}
+              tabIndex={isActive ? 0 : -1}
               onClick={() => onChange?.(item.id)}
               className="relative inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-medium transition-colors"
               style={{

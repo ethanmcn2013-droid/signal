@@ -53,12 +53,17 @@ export async function GET(req: Request) {
 }
 
 async function run(req: Request) {
+  const secret = process.env.CRON_SECRET;
+  // Short-circuit before building the expected header so a missing
+  // secret can never be compared against a literal "Bearer ".
+  if (!secret) {
+    return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
+  }
   const auth = req.headers.get("authorization") ?? "";
-  const expected = `Bearer ${process.env.CRON_SECRET ?? ""}`;
-  // Guard: CRON_SECRET must be set, and the buffers must be the same length
-  // before timingSafeEqual — different lengths short-circuit to reject.
+  const expected = `Bearer ${secret}`;
+  // Buffers must be the same length before timingSafeEqual —
+  // different lengths short-circuit to reject.
   if (
-    !process.env.CRON_SECRET ||
     auth.length !== expected.length ||
     !timingSafeEqual(Buffer.from(auth), Buffer.from(expected))
   ) {
@@ -100,12 +105,15 @@ async function run(req: Request) {
   const source = getBriefingSource();
   const clerk = await clerkClient();
 
-  // Concurrency: process up to 6 users at a time. Resend latency is
-  // the dominant cost (~200-400ms/call) and the serial loop fell off
-  // a cliff near ~80-100 users on maxDuration=60. Capped at 6 so we
-  // stay below Resend's per-second rate limit and don't fan out so
-  // wide that one bad user's signals query starves the rest.
-  const CONCURRENCY = 6;
+  // Concurrency + pacing. Resend's free tier is ~2 req/s; a wide
+  // burst gets 429'd and those users then wait a full day for the
+  // next cron. Process 2 at a time with a short pause between chunks
+  // so we stay under the rate limit. A 429'd user leaves lastSentAt
+  // unset (dispatch only stamps it on success), so the next run
+  // retries them automatically.
+  const CONCURRENCY = 2;
+  const CHUNK_PAUSE_MS = 1100;
+  const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
   async function processOne(
     cadenceLabel: "daily" | "weekly",
@@ -152,6 +160,7 @@ async function run(req: Request) {
         chunk.map((row) => processOne(cadenceLabel, row)),
       );
       results.push(...settled);
+      if (i + CONCURRENCY < rows.length) await sleep(CHUNK_PAUSE_MS);
     }
   }
 
