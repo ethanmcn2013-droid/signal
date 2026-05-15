@@ -34,14 +34,10 @@ export type DomainPack = {
   workspaceEyebrow: string;
   greeting: string;
   blocks: DemoBlock[];
-  /** Yesterday's briefing — shown when view toggles to Yesterday. */
-  yesterdayBlocks: DemoBlock[];
   /** Item id whose phrasing swaps mid-loop. */
   swapItemId: string;
   /** Item id that the cursor inspects with "Why this?". */
   inspectItemId: string;
-  /** Focus item id that gets the acknowledge gesture. */
-  acknowledgeItemId: string;
 };
 
 export const DOMAIN_ORDER: DomainId[] = [
@@ -138,46 +134,6 @@ const WEDDING_TODAY: DemoBlock[] = [
   },
 ];
 
-const WEDDING_YESTERDAY: DemoBlock[] = [
-  {
-    id: "attention",
-    label: BLOCK_LABEL.attention,
-    dot: BLOCK_DOT.attention,
-    items: [
-      { id: "florist-y", provenance: "from Tasks · Wedding 2026", variants: ["Florist deposit has been held up since March 2"] },
-      { id: "invitations-y", provenance: "from Tasks · Wedding 2026", variants: ["Invitations are 13 days overdue"] },
-    ],
-  },
-  {
-    id: "moving",
-    label: BLOCK_LABEL.moving,
-    dot: BLOCK_DOT.moving,
-    items: [
-      { id: "catering-y", provenance: "from Tasks · Wedding 2026", variants: ["Catering tasting on track for Friday"] },
-      { id: "rsvps-y", provenance: "from Tasks · Wedding 2026", variants: ["Save-the-dates landed at 92 confirmed RSVPs"] },
-      { id: "venue-y", provenance: "from Tasks · Wedding 2026", variants: ["Venue contract signed three weeks ahead of plan"] },
-    ],
-  },
-  {
-    id: "risks",
-    label: BLOCK_LABEL.risks,
-    dot: BLOCK_DOT.risks,
-    items: [
-      { id: "music-y", provenance: "from Tasks · Wedding 2026", variants: ["Music supplier hasn't replied in 8 days"] },
-      { id: "honeymoon-y", provenance: "from Tasks · Wedding 2026", variants: ["Honeymoon flights still unbooked at 48 days out"] },
-    ],
-  },
-  {
-    id: "focus",
-    label: BLOCK_LABEL.focus,
-    dot: BLOCK_DOT.focus,
-    items: [
-      { id: "florist-y-focus", provenance: "yesterday's priority", variants: ["Chase florist for status"] },
-      { id: "rsvps-y-focus", provenance: "by Wednesday", variants: ["Close out RSVP follow-ups"] },
-      { id: "music-y-focus", provenance: "this week", variants: ["Chase music supplier"] },
-    ],
-  },
-];
 
 // ── Construction pack ──────────────────────────────────────────────────────
 const CONSTRUCTION_TODAY: DemoBlock[] = [
@@ -249,44 +205,6 @@ const CONSTRUCTION_TODAY: DemoBlock[] = [
   },
 ];
 
-const CONSTRUCTION_YESTERDAY: DemoBlock[] = [
-  {
-    id: "attention",
-    label: BLOCK_LABEL.attention,
-    dot: BLOCK_DOT.attention,
-    items: [
-      { id: "windows-y", provenance: "from Tasks · Oak House", variants: ["Windows on backorder since March 3"] },
-      { id: "planning-y", provenance: "from Tasks · Oak House", variants: ["Planning amendment is 10 days overdue"] },
-    ],
-  },
-  {
-    id: "moving",
-    label: BLOCK_LABEL.moving,
-    dot: BLOCK_DOT.moving,
-    items: [
-      { id: "electrical-y", provenance: "from Tasks · Oak House", variants: ["Electrical first-fix scheduled for Friday"] },
-      { id: "frame-y", provenance: "from Tasks · Oak House", variants: ["Frame raised three days ahead of plan"] },
-    ],
-  },
-  {
-    id: "risks",
-    label: BLOCK_LABEL.risks,
-    dot: BLOCK_DOT.risks,
-    items: [
-      { id: "plumber-y", provenance: "from Tasks · Oak House", variants: ["Plumber hasn't replied in 6 days"] },
-      { id: "weather-y", provenance: "from Tasks · Oak House", variants: ["Plaster scheduled on a forecast rain week"] },
-    ],
-  },
-  {
-    id: "focus",
-    label: BLOCK_LABEL.focus,
-    dot: BLOCK_DOT.focus,
-    items: [
-      { id: "windows-y-focus", provenance: "yesterday's priority", variants: ["Chase window supplier"] },
-      { id: "council-y-focus", provenance: "by Friday", variants: ["Phone council for planning update"] },
-    ],
-  },
-];
 
 // ── Freelance pack ─────────────────────────────────────────────────────────
 const FREELANCE_TODAY: DemoBlock[] = [
@@ -358,44 +276,6 @@ const FREELANCE_TODAY: DemoBlock[] = [
   },
 ];
 
-const FREELANCE_YESTERDAY: DemoBlock[] = [
-  {
-    id: "attention",
-    label: BLOCK_LABEL.attention,
-    dot: BLOCK_DOT.attention,
-    items: [
-      { id: "invoice-y", provenance: "from Tasks · Client work", variants: ["Brand project invoice unpaid since February 12"] },
-      { id: "tax-y", provenance: "from Tasks · Client work", variants: ["Self-assessment tax return due in 7 days"] },
-    ],
-  },
-  {
-    id: "moving",
-    label: BLOCK_LABEL.moving,
-    dot: BLOCK_DOT.moving,
-    items: [
-      { id: "logo-y", provenance: "from Tasks · Client work", variants: ["Maple Café approved the second logo round"] },
-      { id: "album-y", provenance: "from Tasks · Client work", variants: ["Wedding album delivered — client signed off"] },
-    ],
-  },
-  {
-    id: "risks",
-    label: BLOCK_LABEL.risks,
-    dot: BLOCK_DOT.risks,
-    items: [
-      { id: "enquiries-y", provenance: "from Tasks · Client work", variants: ["No new enquiries in 8 days"] },
-      { id: "hosting-y", provenance: "from Tasks · Client work", variants: ["Hosting renewal auto-charges in 13 days"] },
-    ],
-  },
-  {
-    id: "focus",
-    label: BLOCK_LABEL.focus,
-    dot: BLOCK_DOT.focus,
-    items: [
-      { id: "invoice-y-focus", provenance: "yesterday's priority", variants: ["Send the first payment reminder"] },
-      { id: "tax-y-focus", provenance: "by Friday", variants: ["Gather receipts for the tax return"] },
-    ],
-  },
-];
 
 // ── Student pack ───────────────────────────────────────────────────────────
 const STUDENT_TODAY: DemoBlock[] = [
@@ -467,44 +347,6 @@ const STUDENT_TODAY: DemoBlock[] = [
   },
 ];
 
-const STUDENT_YESTERDAY: DemoBlock[] = [
-  {
-    id: "attention",
-    label: BLOCK_LABEL.attention,
-    dot: BLOCK_DOT.attention,
-    items: [
-      { id: "chapter-y", provenance: "from Tasks · Final year", variants: ["Dissertation chapter draft due in 4 days"] },
-      { id: "feedback-y", provenance: "from Tasks · Final year", variants: ["Supervisor feedback unread since March 6"] },
-    ],
-  },
-  {
-    id: "moving",
-    label: BLOCK_LABEL.moving,
-    dot: BLOCK_DOT.moving,
-    items: [
-      { id: "litreview-y", provenance: "from Tasks · Final year", variants: ["Literature review handed in two days early"] },
-      { id: "abstract-y", provenance: "from Tasks · Final year", variants: ["Conference abstract accepted"] },
-    ],
-  },
-  {
-    id: "risks",
-    label: BLOCK_LABEL.risks,
-    dot: BLOCK_DOT.risks,
-    items: [
-      { id: "funding-y", provenance: "from Tasks · Final year", variants: ["Funding application not started — closes in 22 days"] },
-      { id: "lab-y", provenance: "from Tasks · Final year", variants: ["Lab time still not booked for the experiment"] },
-    ],
-  },
-  {
-    id: "focus",
-    label: BLOCK_LABEL.focus,
-    dot: BLOCK_DOT.focus,
-    items: [
-      { id: "chapter-y-focus", provenance: "yesterday's priority", variants: ["Outline the dissertation chapter"] },
-      { id: "seminar-y-focus", provenance: "by Thursday", variants: ["Start the seminar reading"] },
-    ],
-  },
-];
 
 export const DOMAINS: Record<DomainId, DomainPack> = {
   wedding: {
@@ -516,9 +358,7 @@ export const DOMAINS: Record<DomainId, DomainPack> = {
     greeting: "Good morning.",
     swapItemId: "florist",
     inspectItemId: "florist",
-    acknowledgeItemId: "headcount-focus",
     blocks: WEDDING_TODAY,
-    yesterdayBlocks: WEDDING_YESTERDAY,
   },
   construction: {
     id: "construction",
@@ -529,9 +369,7 @@ export const DOMAINS: Record<DomainId, DomainPack> = {
     greeting: "Good morning.",
     swapItemId: "windows",
     inspectItemId: "windows",
-    acknowledgeItemId: "wiring-focus",
     blocks: CONSTRUCTION_TODAY,
-    yesterdayBlocks: CONSTRUCTION_YESTERDAY,
   },
   freelance: {
     id: "freelance",
@@ -543,9 +381,7 @@ export const DOMAINS: Record<DomainId, DomainPack> = {
     greeting: "Good morning.",
     swapItemId: "invoice",
     inspectItemId: "invoice",
-    acknowledgeItemId: "logo-focus",
     blocks: FREELANCE_TODAY,
-    yesterdayBlocks: FREELANCE_YESTERDAY,
   },
   student: {
     id: "student",
@@ -556,8 +392,6 @@ export const DOMAINS: Record<DomainId, DomainPack> = {
     greeting: "Good morning.",
     swapItemId: "chapter",
     inspectItemId: "chapter",
-    acknowledgeItemId: "feedback-focus",
     blocks: STUDENT_TODAY,
-    yesterdayBlocks: STUDENT_YESTERDAY,
   },
 };

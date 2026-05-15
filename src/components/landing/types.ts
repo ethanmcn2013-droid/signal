@@ -1,8 +1,12 @@
 import type { BlockId, DemoBlock, DemoItem, DomainId } from "@/lib/domains";
-import type { CadenceView } from "./view-toggle";
 
-export type { BlockId, DemoBlock, DemoItem, DomainId, CadenceView };
+export type { BlockId, DemoBlock, DemoItem, DomainId };
 
+// The demo only choreographs what the shipped web brief actually does:
+// it arrives each morning, the reader scans it, "Why this" expands a
+// real reason chain, the phrasing rotates day to day, and the hard
+// three-item cap holds. No acknowledge gesture and no Today/Yesterday
+// toggle — the product has neither, so the demo claims neither.
 export type Scene =
   | "boot"
   | "arrival"
@@ -15,12 +19,6 @@ export type Scene =
   | "cap-attempt"
   | "cap-drop"
   | "delivered"
-  | "cursor-focus"
-  | "acknowledge"
-  | "acknowledged-toast"
-  | "view-morph-yesterday"
-  | "yesterday-hold"
-  | "view-morph-today"
   | "cursor-leaves"
   | "reset";
 
@@ -34,7 +32,6 @@ export type CursorState = {
 
 export type DemoState = {
   scene: Scene;
-  view: CadenceView;
   delivered: boolean;
   swappingItemId: string | null;
   /** map from item id to current variant index */
@@ -45,12 +42,8 @@ export type DemoState = {
   whyThisItemId: string | null;
   /** character count of typed final reason line */
   whyThisReveal: number;
-  /** item id currently being acknowledged (struck through then removed) */
-  acknowledgingItemId: string | null;
-  /** set of focus item ids that have been removed via acknowledge */
-  acknowledgedSet: Set<string>;
   /** toast variant currently visible */
-  toast: "delivered" | "acknowledged" | null;
+  toast: "delivered" | null;
   cursor: CursorState;
   domain: DomainId;
 };

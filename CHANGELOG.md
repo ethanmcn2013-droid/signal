@@ -3,6 +3,31 @@
 Convention: BRAND.md §6.5. Entries before 2026-05-14 keep their
 original shape; the new shape starts at the next cycle.
 
+## 2026-05-15 · A·7 · cuts · the demo stops promising what the briefing doesn't do
+
+**The cinematic demo used to mime a "Mark done" button and a
+Today/Yesterday toggle. The shipped briefing has neither, so the demo
+now claims neither.** The single failure mode the brand is built
+against is the demo-vs-reality gap: a beautiful demo, then an empty,
+different product. Ours had two of them staged on the homepage. The
+reader-cursor would glide to a focus line, a "Mark done" pill would
+appear, the line would strike through, a "Marked done" toast would
+fire — none of which exists in the real brief, because Analytics is a
+briefing, not a task manager, and the line between it and Tasks is
+load-bearing. A "Today | Yesterday" pill let the demo morph between
+two days; the real brief is one read per morning with no view to
+switch.
+
+Both are gone. What's left is only what the engine genuinely does:
+the briefing arrives, the reader scans it, "Why this" expands a real
+reason chain, the phrasing rotates the way it rotates day to day, and
+the hard three-item cap holds. The phantom "yesterday" dataset and the
+acknowledge wiring were deleted from the data model too — no dead
+substrate left implying a feature that was never built. Delight, but
+earned by what's true.
+
+Demo-and-data only. 154/154 tests pass, typecheck and build clean.
+
 ## 2026-05-15 · A·6 · tightens · the demo speaks to the people it's for
 
 **The homepage audience toggle now offers a wedding planner, a builder,

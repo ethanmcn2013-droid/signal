@@ -19,10 +19,6 @@ type Props = {
   whyThisReasons?: string[];
   /** Character reveal for the typing line in why-this. */
   whyThisReveal?: number;
-  /** When true, render strike-through fade (acknowledge). */
-  acknowledging?: boolean;
-  /** When true, this item is in the focus block and acknowledge is in play. */
-  showAcknowledgeAffordance?: boolean;
 };
 
 export function BriefingItem({
@@ -36,8 +32,6 @@ export function BriefingItem({
   whyThisVisible,
   whyThisReasons,
   whyThisReveal,
-  acknowledging,
-  showAcknowledgeAffordance,
 }: Props) {
   return (
     <div
@@ -55,13 +49,7 @@ export function BriefingItem({
         transition: "background 220ms cubic-bezier(.16,1,.3,1)",
       }}
     >
-      <motion.div
-        animate={{
-          opacity: acknowledging ? 0.36 : 1,
-        }}
-        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-        className="flex items-baseline gap-2"
-      >
+      <div className="flex items-baseline gap-2">
         <span
           aria-hidden
           style={{
@@ -87,8 +75,6 @@ export function BriefingItem({
                 color: "var(--ink-soft)",
                 lineHeight: 1.5,
                 margin: 0,
-                textDecoration: acknowledging ? "line-through" : undefined,
-                textDecorationColor: "var(--ink-quiet)",
               }}
             >
               {text}
@@ -128,34 +114,7 @@ export function BriefingItem({
             </p>
           ) : null}
         </div>
-        {showAcknowledgeAffordance ? (
-          <AnimatePresence>
-            {!acknowledging ? (
-              <motion.span
-                initial={{ opacity: 0, x: 4 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 4 }}
-                transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-                className="font-mono"
-                style={{
-                  fontSize: 10.5,
-                  color: "var(--ink-quiet)",
-                  letterSpacing: "0.02em",
-                  textTransform: "uppercase",
-                  border: "1px solid var(--border-soft)",
-                  borderRadius: 999,
-                  padding: "2px 7px",
-                  background: "var(--bg-elev)",
-                  flexShrink: 0,
-                  cursor: "default",
-                }}
-              >
-                Mark done
-              </motion.span>
-            ) : null}
-          </AnimatePresence>
-        ) : null}
-      </motion.div>
+      </div>
       {whyThisReasons ? (
         <WhyThis
           visible={!!whyThisVisible}

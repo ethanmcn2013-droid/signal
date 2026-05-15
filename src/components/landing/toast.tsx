@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from "motion/react";
 
-export type ToastVariant = "delivered" | "acknowledged";
+export type ToastVariant = "delivered";
 
 type Props = {
   variant: ToastVariant | null;
@@ -27,24 +27,6 @@ const COPY: Record<ToastVariant, { icon: React.ReactNode; text: string }> = {
       </svg>
     ),
     text: "Delivered to inbox",
-  },
-  acknowledged: {
-    icon: (
-      <svg
-        width="11"
-        height="11"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2.4"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        aria-hidden
-      >
-        <path d="M20 6 9 17l-5-5" />
-      </svg>
-    ),
-    text: "Marked done",
   },
 };
 

@@ -7,13 +7,11 @@ import {
   type CursorState,
   type DemoState,
   type Scene,
-  type CadenceView,
 } from "./types";
 import { BriefingItem } from "./briefing-item";
 import { CapOverflow } from "./cap-overflow";
 import { TickCursor } from "./tick-cursor";
 import { Cursor } from "./cursor";
-import { ViewToggle } from "./view-toggle";
 import { DemoToast } from "./toast";
 
 const CURSOR_COLOR = "#4f46e5";
@@ -38,15 +36,12 @@ function buildInitialState(domain: DomainId): DemoState {
   }
   return {
     scene: "boot",
-    view: "today",
     delivered: false,
     swappingItemId: null,
     variantByItemId,
     overflowVisible: [],
     whyThisItemId: null,
     whyThisReveal: 0,
-    acknowledgingItemId: null,
-    acknowledgedSet: new Set(),
     toast: null,
     cursor: emptyCursor(),
     domain,
@@ -124,10 +119,6 @@ export function AnalyticsDemo({ domain = "wedding" }: Props = {}) {
     setState((s) => ({ ...s, scene }));
   }, []);
 
-  const setView = useCallback((view: CadenceView) => {
-    setState((s) => ({ ...s, view }));
-  }, []);
-
   const setSwapping = useCallback((id: string | null) => {
     setState((s) => ({ ...s, swappingItemId: id }));
   }, []);
@@ -171,18 +162,6 @@ export function AnalyticsDemo({ domain = "wedding" }: Props = {}) {
     },
     []
   );
-
-  const setAcknowledging = useCallback((itemId: string | null) => {
-    setState((s) => ({ ...s, acknowledgingItemId: itemId }));
-  }, []);
-
-  const finalizeAcknowledge = useCallback((itemId: string) => {
-    setState((s) => {
-      const nextSet = new Set(s.acknowledgedSet);
-      nextSet.add(itemId);
-      return { ...s, acknowledgedSet: nextSet, acknowledgingItemId: null };
-    });
-  }, []);
 
   const setToast = useCallback((toast: DemoState["toast"]) => {
     setState((s) => ({ ...s, toast }));
@@ -296,48 +275,16 @@ export function AnalyticsDemo({ domain = "wedding" }: Props = {}) {
         await wait(700);
       }
 
-      // Cursor moves to a focus item and acknowledges it
-      setScene("cursor-focus");
-      setCursorToItem(pack.acknowledgeItemId, true, "today's");
-      await wait(1100);
-      if (!isCurrent()) return;
-
-      setScene("acknowledge");
-      setAcknowledging(pack.acknowledgeItemId);
-      await wait(900);
-      if (!isCurrent()) return;
-      setScene("acknowledged-toast");
-      setToast("acknowledged");
-      await wait(900);
-      finalizeAcknowledge(pack.acknowledgeItemId);
-      await wait(700);
-      if (!isCurrent()) return;
-      setToast(null);
-
-      // View morph to Yesterday — show the engine's freshness
-      setScene("view-morph-yesterday");
-      setCursor({ visible: false, reading: false });
-      setView("yesterday");
-      await wait(2200);
-      if (!isCurrent()) return;
-
-      setScene("yesterday-hold");
-      await wait(1800);
-      if (!isCurrent()) return;
-
-      // Morph back to Today
-      setScene("view-morph-today");
-      setView("today");
-      await wait(1600);
-      if (!isCurrent()) return;
-
+      // The reader lets the briefing settle and steps away. No
+      // acknowledge gesture, no Yesterday toggle — the shipped brief
+      // has neither, so the demo holds the same line.
       setScene("cursor-leaves");
-      setCursor({ visible: false });
-      await wait(600);
+      setCursor({ visible: false, reading: false });
+      await wait(700);
       if (!isCurrent()) return;
 
       setScene("reset");
-      await wait(900);
+      await wait(2200);
     }
 
     let cancelled = false;
@@ -361,18 +308,16 @@ export function AnalyticsDemo({ domain = "wedding" }: Props = {}) {
     setOverflow,
     setDelivered,
     setWhyThis,
-    setAcknowledging,
-    finalizeAcknowledge,
     setToast,
     setCursor,
     setCursorToItem,
-    setView,
   ]);
 
-  // Pick the active block set based on view
+  // One briefing per morning — there is no Yesterday view in the
+  // shipped product, so there is none here either.
   const activeBlocks: DemoBlock[] = useMemo(
-    () => (state.view === "today" ? pack.blocks : pack.yesterdayBlocks),
-    [state.view, pack]
+    () => pack.blocks,
+    [pack]
   );
 
   return (
@@ -386,7 +331,7 @@ export function AnalyticsDemo({ domain = "wedding" }: Props = {}) {
         boxShadow: "var(--shadow-2, 0 2px 6px rgba(20,21,26,0.06))",
       }}
     >
-      {/* Top bar — sender chrome + view toggle */}
+      {/* Top bar — sender chrome */}
       <div
         className="flex items-center gap-3 border-b px-5 py-2.5"
         style={{
@@ -436,12 +381,10 @@ export function AnalyticsDemo({ domain = "wedding" }: Props = {}) {
             for · {pack.workspaceName}
           </span>
         </div>
-        <ViewToggle view={state.view} onChange={setView} />
       </div>
 
       {/* Briefing body */}
       <motion.div
-        key={state.view}
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.42, ease: [0.16, 1, 0.3, 1] }}
@@ -504,48 +447,35 @@ export function AnalyticsDemo({ domain = "wedding" }: Props = {}) {
                   paddingLeft: 14,
                 }}
               >
-                {block.items
-                  .filter((item) => !state.acknowledgedSet.has(item.id))
-                  .map((item) => {
-                    const variantIndex = state.variantByItemId[item.id] ?? 0;
-                    const text = item.variants[variantIndex] ?? item.variants[0];
-                    return (
-                      <BriefingItem
-                        key={item.id}
-                        text={text}
-                        variantKey={variantIndex}
-                        swapping={state.swappingItemId === item.id}
-                        provenance={item.provenance}
-                        itemId={item.id}
-                        onRegister={onRegisterItem}
-                        highlight={
-                          state.cursor.reading &&
-                          state.scene !== "view-morph-yesterday" &&
-                          state.scene !== "yesterday-hold" &&
-                          state.scene !== "view-morph-today" &&
-                          state.scene !== "cursor-leaves" &&
-                          state.scene !== "reset" &&
-                          (state.whyThisItemId === item.id ||
-                            (state.cursor.reading && state.scene !== "why-this-close" &&
-                              [pack.inspectItemId, pack.acknowledgeItemId].includes(item.id) &&
-                              !(state.scene === "cursor-focus" && item.id === pack.inspectItemId) &&
-                              !(state.scene === "cursor-reads" && item.id === pack.acknowledgeItemId)))
-                        }
-                        whyThisVisible={state.whyThisItemId === item.id}
-                        whyThisReasons={item.whyThis}
-                        whyThisReveal={state.whyThisReveal}
-                        acknowledging={state.acknowledgingItemId === item.id}
-                        showAcknowledgeAffordance={
-                          block.id === "focus" &&
-                          item.id === pack.acknowledgeItemId &&
-                          state.scene !== "reset"
-                        }
-                      />
-                    );
-                  })}
+                {block.items.map((item) => {
+                  const variantIndex = state.variantByItemId[item.id] ?? 0;
+                  const text = item.variants[variantIndex] ?? item.variants[0];
+                  return (
+                    <BriefingItem
+                      key={item.id}
+                      text={text}
+                      variantKey={variantIndex}
+                      swapping={state.swappingItemId === item.id}
+                      provenance={item.provenance}
+                      itemId={item.id}
+                      onRegister={onRegisterItem}
+                      highlight={
+                        state.cursor.reading &&
+                        state.scene !== "cursor-leaves" &&
+                        state.scene !== "reset" &&
+                        (state.whyThisItemId === item.id ||
+                          (state.scene !== "why-this-close" &&
+                            item.id === pack.inspectItemId))
+                      }
+                      whyThisVisible={state.whyThisItemId === item.id}
+                      whyThisReasons={item.whyThis}
+                      whyThisReveal={state.whyThisReveal}
+                    />
+                  );
+                })}
               </div>
 
-              {block.id === "attention" && state.view === "today" ? (
+              {block.id === "attention" ? (
                 <CapOverflow
                   overflow={state.overflowVisible}
                   phase={
@@ -594,18 +524,16 @@ export function AnalyticsDemo({ domain = "wedding" }: Props = {}) {
       </motion.div>
 
       {/* Cursor layer */}
-      {state.view === "today" ? (
-        <div className="pointer-events-none absolute inset-0">
-          <Cursor
-            x={state.cursor.x}
-            y={state.cursor.y}
-            visible={state.cursor.visible}
-            color={CURSOR_COLOR}
-            label={state.cursor.label}
-            reading={state.cursor.reading}
-          />
-        </div>
-      ) : null}
+      <div className="pointer-events-none absolute inset-0">
+        <Cursor
+          x={state.cursor.x}
+          y={state.cursor.y}
+          visible={state.cursor.visible}
+          color={CURSOR_COLOR}
+          label={state.cursor.label}
+          reading={state.cursor.reading}
+        />
+      </div>
 
       <DemoToast variant={state.toast} />
     </div>
