@@ -3,6 +3,32 @@
 Convention: BRAND.md §6.5. Entries before 2026-05-14 keep their
 original shape; the new shape starts at the next cycle.
 
+## 2026-05-15 · A·9 · tightens · the briefing reads like a person wrote it
+
+**Pixel-verifying the actual signed-in briefing surface caught the
+product writing sentences a wedding planner never would.** The
+public site was clean; the briefing itself — the thing people pay
+for — was not. "Save-the-dates — 96 RSVPs confirmed is done."
+"Catch up on send invitations." A task titled with a verb, slotted
+raw into a phrase that already had one, came out broken. This only
+showed up by rendering the real BriefingView through the real engine
+on a phone and a desktop, behind the auth wall.
+
+Three fixes, all in the engine, not the chrome. The Suggested Focus
+line now names the task and lets the block header and the due chip
+carry the action — "Send invitations · OVERDUE", not "Catch up on
+send invitations". This is also more on-brand: §3 says "Suggested
+focus" is the strongest verb the briefing is allowed; stacking
+"Catch up on" / "Move … forward" onto a title broke that rule as
+well as the grammar. The just-shipped phrasing drops "is done" for
+"— done" so a title that already states a result doesn't double up.
+And the demo/QA task titles are now what a person actually types —
+"Save-the-dates", "Music supplier", "Catering headcount" — not
+result-stuffed labels built to look good in a screenshot.
+
+Engine + demo data only. 154/154 tests pass, typecheck and build
+clean. Verified at 390px and 1440px against the real render.
+
 ## 2026-05-15 · A·8 · tightens · the marketing pages stop saying "LLM"
 
 **A full-surface pixel audit at 390px and 1440px found one real

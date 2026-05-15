@@ -146,31 +146,31 @@ function toItem(
 function toFocus(t: Triggered, rotation: number, now: number): FocusItem {
   return {
     id: t.task.id,
-    text: focusText(t, now),
+    text: focusText(t),
     due: focusDue(t, now),
     trigger: t.trigger,
   };
 }
 
-function focusText(t: Triggered, now: number): string {
-  // The focus block is more action-oriented than the buckets:
-  // "Confirm florist deposit Monday" not "Florist deposit has been held up".
+function sentenceCase(s: string): string {
+  const t = s.trim();
+  return t.length ? t[0].toUpperCase() + t.slice(1) : t;
+}
+
+function focusText(t: Triggered): string {
+  // BRAND.md §3: "'Suggested focus' is the strongest verb the
+  // briefing uses." So the focus line names the task — it does not
+  // stack an imperative verb onto a title that may already start
+  // with one ("Catch up on send invitations" was the failure). The
+  // block header and the due chip carry the directive; the engine
+  // names, it does not command.
   switch (t.trigger) {
-    case "stuck-work":
-      return `Move ${t.task.title.toLowerCase()} forward`;
-    case "due-soon": {
-      const daysOut = t.task.dueAt != null ? (t.task.dueAt - now) / DAY : 0;
-      if (daysOut < 0) return `Catch up on ${t.task.title.toLowerCase()}`;
-      return `Send/close ${t.task.title.toLowerCase()}`;
-    }
     case "overload":
       return `Drop two in-flight items by end of day`;
-    case "just-shipped":
-      return `Acknowledge ${t.task.title.toLowerCase()}`;
     case "crowded-week":
       return `Plan the week — pull two items earlier`;
-    case "blocked-too-long":
-      return `Chase the blocker on ${t.task.title.toLowerCase()}`;
+    default:
+      return sentenceCase(t.task.title);
   }
 }
 

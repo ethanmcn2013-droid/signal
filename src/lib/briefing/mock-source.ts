@@ -26,7 +26,7 @@ function makeMockSignals(now: number): TaskSignal[] {
     },
     {
       id: "t-catering-headcount",
-      title: "Catering tasting — final headcount",
+      title: "Catering headcount",
       lane: "next",
       priority: 1,
       dueAt: now + 3 * DAY, // due Friday-ish
@@ -50,7 +50,7 @@ function makeMockSignals(now: number): TaskSignal[] {
     },
     {
       id: "t-music-supplier",
-      title: "Confirm music supplier",
+      title: "Music supplier",
       lane: "in-flight",
       priority: 2,
       dueAt: null,
@@ -62,7 +62,7 @@ function makeMockSignals(now: number): TaskSignal[] {
     },
     {
       id: "t-hmu-overlap",
-      title: "Hair-and-makeup trial schedule",
+      title: "Hair-and-makeup trial",
       lane: "in-flight",
       priority: 2,
       dueAt: now + 12 * DAY,
@@ -87,7 +87,7 @@ function makeMockSignals(now: number): TaskSignal[] {
     // Moving well
     {
       id: "t-save-the-dates",
-      title: "Save-the-dates — 96 RSVPs confirmed",
+      title: "Save-the-dates",
       lane: "shipped",
       priority: 1,
       dueAt: null,
@@ -99,7 +99,7 @@ function makeMockSignals(now: number): TaskSignal[] {
     },
     {
       id: "t-venue-signed",
-      title: "Venue contract signed",
+      title: "Venue contract",
       lane: "shipped",
       priority: 0,
       dueAt: null,

@@ -49,7 +49,7 @@ const DUE_SOON: Phrasing[] = [
 
 const JUST_SHIPPED: Phrasing[] = [
   (t) => `${t.title} landed`,
-  (t) => `${t.title} is done`,
+  (t) => `${t.title} — done`,
   (t) => `${t.title} closed out`,
 ];
 
