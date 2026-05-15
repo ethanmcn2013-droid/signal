@@ -28,12 +28,37 @@ import type { Lane, TaskSignal } from "./types";
  *                 lane='shipped'; null otherwise. The just-shipped
  *                 trigger fires reliably from real data now.
  */
+/** Heuristic: does this error look like the read-only Turso token
+ *  expired / was revoked? If so we drop the cached client so the
+ *  next call rebuilds it instead of returning [] for every user for
+ *  the rest of the process lifetime. */
+function isAuthError(err: unknown): boolean {
+  const s = String(err).toLowerCase();
+  return (
+    s.includes("401") ||
+    s.includes("403") ||
+    s.includes("unauthorized") ||
+    s.includes("forbidden") ||
+    s.includes("token") ||
+    s.includes("auth")
+  );
+}
+
 export function makeTasksDbSource(): BriefingSource | null {
   const url = process.env.TASKS_DATABASE_URL;
   const authToken = process.env.TASKS_AUTH_TOKEN;
   if (!url || !authToken) return null;
 
-  const client: Client = createClient({ url, authToken });
+  // Lazily created and reset on auth-class failures so a rotated /
+  // expired read-only token self-heals on the next run.
+  let client: Client | null = null;
+  function getClient(): Client {
+    if (!client) client = createClient({ url: url!, authToken: authToken! });
+    return client;
+  }
+  function dropClientIfAuth(err: unknown) {
+    if (isAuthError(err)) client = null;
+  }
 
   return {
     async getSignalsForUser(ctx: BriefingContext): Promise<TaskSignal[]> {
@@ -44,15 +69,16 @@ export function makeTasksDbSource(): BriefingSource | null {
       const signals: TaskSignal[] = [];
       let tasksUserId: Value | undefined;
       try {
-        const userRow = await client.execute({
+        const userRow = await getClient().execute({
           sql: "SELECT id FROM users WHERE email = ? LIMIT 1",
           args: [ctx.email],
         });
         tasksUserId = userRow.rows[0]?.id;
       } catch (err) {
+        dropClientIfAuth(err);
         console.error(
           "[tasks-db-source] user lookup failed — returning empty signals:",
-          { email: ctx.email, error: String(err) },
+          { userId: ctx.userId, error: String(err) },
         );
         return [];
       }
@@ -68,9 +94,9 @@ export function makeTasksDbSource(): BriefingSource | null {
       //   we multiply by 1000 to align with the rest of the engine's
       //   millisecond clock. Considered only on lane=done tasks
       //   below — null on everything else.
-      let rows: Awaited<ReturnType<typeof client.execute>>["rows"];
+      let rows: Awaited<ReturnType<Client["execute"]>>["rows"];
       try {
-        const result = await client.execute({
+        const result = await getClient().execute({
           sql: `
             SELECT
               t.id           AS id,
@@ -92,15 +118,18 @@ export function makeTasksDbSource(): BriefingSource | null {
             WHERE t.workspace_id IN (
               SELECT workspace_id FROM workspace_members WHERE user_id = ?
             )
+              AND t.parent_task_id IS NULL
+            ORDER BY t.id
             LIMIT 200
           `,
           args: [String(tasksUserId)],
         });
         rows = result.rows;
       } catch (err) {
+        dropClientIfAuth(err);
         console.error(
           "[tasks-db-source] signals query failed — returning empty signals:",
-          { email: ctx.email, error: String(err) },
+          { userId: ctx.userId, error: String(err) },
         );
         return [];
       }
