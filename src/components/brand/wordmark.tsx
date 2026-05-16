@@ -9,8 +9,9 @@ interface WordmarkProps {
 /**
  * Signal Analytics wordmark — `analytics·` with the M·04 tick gesture
  * per the suite design system (v1, 2026-05-13). The dot is the canonical
- * middot (lifted), and its motion is a scope-style vertical pulse —
- * registering a signal — running every 2.4s on `spring-glide`.
+ * middot (lifted), and its motion is a discrete jump between sample
+ * positions — snapping instantly via steps(1,end), never gliding —
+ * once per 3.6s cycle. The dot is always between readings, not travelling.
  */
 export function Wordmark({
   className,

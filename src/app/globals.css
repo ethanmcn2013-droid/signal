@@ -278,10 +278,11 @@ body {
 /* ────────────────────────────────────────────────────────────
    Analytics wordmark dot — M·04 tick.
    Per suite design-system v1 (2026-05-13): analytics is a verb,
-   the gesture is tick — a scope-style vertical pulse. The dot
-   squeezes vertically then settles every 2.4s. Registering a
-   signal. Quieter than tasks' heartbeat, more active than
-   notes' settle.
+   the gesture is tick — the dot JUMPS between discrete sample
+   positions, never glides between them. steps(1,end) ensures
+   the transition is instantaneous; the dot snaps to a new Y
+   position once per 3.6s cycle, then holds. Discrete samples,
+   not a continuous signal.
    ──────────────────────────────────────────────────────────── */
 .analytics-dot {
   display: inline-block;
@@ -293,13 +294,14 @@ body {
   transform: translateY(-3px);
   transform-origin: center;
   flex-shrink: 0;
-  animation: analytics-dot-tick 2.4s var(--spring-glide) infinite;
+  animation: analytics-dot-tick 3.6s steps(1, end) infinite;
 }
 @keyframes analytics-dot-tick {
-  0%, 70%, 100% { transform: translateY(-3px) scaleY(1); }
-  78%           { transform: translateY(-3px) scaleY(1.45) scaleX(0.82); }
-  85%           { transform: translateY(-3px) scaleY(0.88) scaleX(1.1); }
-  92%           { transform: translateY(-3px) scaleY(1); }
+  0%   { transform: translateY(-3px); }
+  25%  { transform: translateY(-6px); }
+  50%  { transform: translateY(-1px); }
+  75%  { transform: translateY(-5px); }
+  100% { transform: translateY(-3px); }
 }
 
 /* ── Reduced motion ────────────────────────────────────────── */
