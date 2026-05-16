@@ -122,7 +122,13 @@ async function run(req: Request) {
     // E-5: gate email dispatch on workspace-tier. Free users can view
     // their briefing on /app; only paid tiers receive emails. Cron is
     // the only place email is dispatched, so the gate goes here.
-    const { tier } = await resolveEntitlement(row.userId);
+    //
+    // resolveEntitlement and fetchFirstName are independent network
+    // calls — run them in parallel to halve per-user latency.
+    const [{ tier }, firstName] = await Promise.all([
+      resolveEntitlement(row.userId),
+      fetchFirstName(clerk, row.userId),
+    ]);
     if (!tierAtLeast(tier, "workspace")) {
       return {
         userId: row.userId,
@@ -134,7 +140,6 @@ async function run(req: Request) {
         },
       };
     }
-    const firstName = await fetchFirstName(clerk, row.userId);
     const briefing = await buildBriefing(
       source,
       { userId: row.userId, email: row.email },

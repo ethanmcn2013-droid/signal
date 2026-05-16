@@ -38,15 +38,15 @@ export default async function UnsubscribePage({
     return <NotFoundState />;
   }
 
-  async function confirm(formData: FormData) {
+  async function confirm() {
     "use server";
-    const t = String(formData.get("token") ?? "");
-    if (!t) return;
-    const result = await unsubscribeByToken(t);
+    // Closes over `token` from params — ignores any form-submitted token
+    // to prevent a crafted form from unsubscribing a different token.
+    const result = await unsubscribeByToken(token);
     if (result.ok) {
-      redirect(`/u/${encodeURIComponent(t)}?confirmed=1`);
+      redirect(`/u/${encodeURIComponent(token)}?confirmed=1`);
     } else {
-      redirect(`/u/${encodeURIComponent(t)}`);
+      redirect(`/u/${encodeURIComponent(token)}`);
     }
   }
 
