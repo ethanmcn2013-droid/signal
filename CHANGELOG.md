@@ -3,6 +3,20 @@
 Convention: BRAND.md §6.5. Entries before 2026-05-14 keep their
 original shape; the new shape starts at the next cycle.
 
+## 2026-05-16 · A·12 · tightens · the footer links are finally thumb-sized
+
+**Every column link in the site footer was an 18-pixel target stacked
+eight pixels from the next — fine with a cursor, a coin-toss with a
+thumb.** The legal row beneath had a real touch height from the mobile
+pass; the column above it never got one. Same footer, two different
+reaches.
+
+The column links now carry the legal row's minimum touch height, with
+none of the horizontal padding that would skew the column. Desktop is
+unchanged; the phone footer is reliably tappable. Caught in a
+four-product parity sweep against the S·26 mobile discipline — Roadmap
+carried the identical gap and ships the same fix this pass.
+
 ## 2026-05-15 · A·9 · tightens · the briefing reads like a person wrote it
 
 **Pixel-verifying the actual signed-in briefing surface caught the
