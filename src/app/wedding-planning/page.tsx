@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { SiteNav } from "@/components/marketing/site-nav";
+import { SiteFooter } from "@/components/marketing/site-footer";
 
 export const metadata: Metadata = {
   title: "Wedding planning briefing — Signal Analytics",
@@ -68,6 +70,8 @@ function Eyebrow({ children }: { children: React.ReactNode }) {
 
 export default function WeddingPlanningBriefingPage() {
   return (
+    <>
+    <SiteNav />
     <div style={{ background: "var(--bg)", paddingBottom: 120 }}>
       {/* ── Hero ─────────────────────────────────────────────────── */}
       <section style={{ ...SECTION, paddingTop: 96 }}>
@@ -261,8 +265,10 @@ export default function WeddingPlanningBriefingPage() {
           </h2>
 
           <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-            <Link
+            <a
               href="https://notes.signalstudio.ie/wedding-planning/"
+              target="_blank"
+              rel="noopener noreferrer"
               style={{
                 display: "flex",
                 gap: 16,
@@ -305,10 +311,12 @@ export default function WeddingPlanningBriefingPage() {
                 </span>
               </span>
               <span style={{ color: "var(--ink-quiet)", fontSize: 14, alignSelf: "center" }}>↗</span>
-            </Link>
+            </a>
 
-            <Link
+            <a
               href="https://tasks.signalstudio.ie/templates/wedding-planning-workspace"
+              target="_blank"
+              rel="noopener noreferrer"
               style={{
                 display: "flex",
                 gap: 16,
@@ -351,10 +359,12 @@ export default function WeddingPlanningBriefingPage() {
                 </span>
               </span>
               <span style={{ color: "var(--ink-quiet)", fontSize: 14, alignSelf: "center" }}>↗</span>
-            </Link>
+            </a>
 
-            <Link
+            <a
               href="https://roadmap.signalstudio.ie/wedding-planning/update"
+              target="_blank"
+              rel="noopener noreferrer"
               style={{
                 display: "flex",
                 gap: 16,
@@ -397,10 +407,81 @@ export default function WeddingPlanningBriefingPage() {
                 </span>
               </span>
               <span style={{ color: "var(--ink-quiet)", fontSize: 14, alignSelf: "center" }}>↗</span>
-            </Link>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Sign-up CTA ───────────────────────────────────────────── */}
+      <section style={{ ...SECTION, paddingTop: 96 }}>
+        <div style={PROSE}>
+          <div
+            style={{
+              borderTop: "1px solid var(--border-soft)",
+              paddingTop: 48,
+              display: "flex",
+              flexDirection: "column",
+              gap: 16,
+            }}
+          >
+            <p
+              style={{
+                fontSize: 17,
+                fontWeight: 600,
+                color: "var(--ink)",
+                lineHeight: 1.4,
+              }}
+            >
+              Get this briefing every morning.
+            </p>
+            <p
+              style={{
+                fontSize: 15,
+                color: "var(--ink-soft)",
+                lineHeight: 1.6,
+                maxWidth: 480,
+              }}
+            >
+              Connect your Signal Tasks workspace and the briefing arrives in your
+              inbox each morning — plain sentences, no charts, no noise.
+            </p>
+            <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 8 }}>
+              <Link
+                href="/sign-in"
+                style={{
+                  display: "inline-block",
+                  padding: "10px 20px",
+                  background: "var(--ink)",
+                  color: "var(--bg)",
+                  borderRadius: "var(--r-2)",
+                  fontSize: 14,
+                  fontWeight: 600,
+                  textDecoration: "none",
+                  letterSpacing: "-0.01em",
+                }}
+              >
+                Get access
+              </Link>
+              <Link
+                href="/method"
+                style={{
+                  display: "inline-block",
+                  padding: "10px 20px",
+                  border: "1px solid var(--border-soft)",
+                  borderRadius: "var(--r-2)",
+                  fontSize: 14,
+                  color: "var(--ink-soft)",
+                  textDecoration: "none",
+                }}
+              >
+                How it works
+              </Link>
+            </div>
           </div>
         </div>
       </section>
     </div>
+    <SiteFooter />
+    </>
   );
 }

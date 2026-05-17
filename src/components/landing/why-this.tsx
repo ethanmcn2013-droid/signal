@@ -18,6 +18,7 @@ type Props = {
 export function WhyThis({ visible, reasons, revealChars }: Props) {
   return (
     <AnimatePresence initial={false}>
+      {/* --motion-moderate 320ms + --ease-out — accordion */}
       {visible ? (
         <motion.div
           key="why-this"
@@ -25,9 +26,9 @@ export function WhyThis({ visible, reasons, revealChars }: Props) {
           animate={{ opacity: 1, height: "auto", marginTop: 6 }}
           exit={{ opacity: 0, height: 0, marginTop: 0 }}
           transition={{
-            opacity: { duration: 0.32, ease: [0.16, 1, 0.3, 1] },
-            height: { duration: 0.42, ease: [0.16, 1, 0.3, 1] },
-            marginTop: { duration: 0.42, ease: [0.16, 1, 0.3, 1] },
+            opacity:   { duration: 0.22, ease: [0, 0, 0.2, 1] },
+            height:    { duration: 0.32, ease: [0, 0, 0.2, 1] },
+            marginTop: { duration: 0.32, ease: [0, 0, 0.2, 1] },
           }}
           style={{ overflow: "hidden" }}
         >
@@ -62,14 +63,15 @@ export function WhyThis({ visible, reasons, revealChars }: Props) {
                   ? reason.slice(0, revealChars)
                   : reason;
               return (
-                <motion.p
+                /* stagger: i × 0.05s ≤ --motion-fast between items */
+              <motion.p
                   key={i}
                   initial={{ opacity: 0, x: -3 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{
-                    duration: 0.28,
-                    ease: [0.16, 1, 0.3, 1],
-                    delay: i * 0.12,
+                    duration: 0.22,
+                    ease: [0, 0, 0.2, 1],
+                    delay: i * 0.05,
                   }}
                   style={{
                     fontSize: 12.5,

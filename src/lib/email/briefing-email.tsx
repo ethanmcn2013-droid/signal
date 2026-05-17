@@ -158,7 +158,7 @@ export function BriefingEmail({
                 letterSpacing: "-0.015em",
               }}
             >
-              {greeting(briefing.greetingHour, firstName)}
+              {greeting(briefing.greetingHour, firstName, true)}
             </Heading>
             <Text
               style={{

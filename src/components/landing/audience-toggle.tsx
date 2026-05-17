@@ -92,8 +92,9 @@ export function AudienceToggle({ domain, onChange }: Props) {
                     style={{
                       background:
                         "linear-gradient(135deg, var(--brand) 0%, var(--brand-deep) 100%)",
-                      boxShadow:
-                        "0 6px 16px -6px rgba(79,70,229,0.45), inset 0 1px 0 rgba(255,255,255,0.18)",
+                      /* Calm register: reduced glow from 0.45 → 0.28 */
+                    boxShadow:
+                        "0 4px 12px -4px rgba(79,70,229,0.28), inset 0 1px 0 rgba(255,255,255,0.14)",
                     }}
                     transition={{
                       type: "spring",

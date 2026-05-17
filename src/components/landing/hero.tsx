@@ -81,7 +81,7 @@ export function Hero() {
               color: "var(--ink-soft)",
             }}
           >
-            See the signal
+            What&apos;s in a briefing
           </Link>
         </div>
 
@@ -105,12 +105,13 @@ export function Hero() {
 
         <div className="mx-auto mt-6 max-w-[760px] md:mt-8">
           <AnimatePresence mode="wait" initial={false}>
+            {/* --motion-moderate 320ms + --ease-out: audience swap */}
             <motion.div
               key={domain}
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -4 }}
-              transition={{ duration: 0.36, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.32, ease: [0, 0, 0.2, 1] }}
             >
               <AnalyticsDemo domain={domain} />
             </motion.div>

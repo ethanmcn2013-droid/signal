@@ -63,11 +63,11 @@ export function SiteFooter() {
         className="mx-auto mt-4 flex w-full max-w-[1240px] flex-wrap items-center gap-x-1 gap-y-1 px-6 font-mono text-[12px] uppercase tracking-[0.08em] text-ink-quiet"
         style={{ paddingBottom: "max(0.5rem, env(safe-area-inset-bottom))" }}
       >
-        <a href="https://signalstudio.ie/privacy" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-[32px] items-center px-2 py-1 transition-colors hover:text-ink">Privacy</a>
+        <Link href="/privacy" className="inline-flex min-h-[32px] items-center px-2 py-1 transition-colors hover:text-ink">Privacy</Link>
         <span aria-hidden className="opacity-50">·</span>
-        <a href="https://signalstudio.ie/terms" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-[32px] items-center px-2 py-1 transition-colors hover:text-ink">Terms</a>
+        <Link href="/terms" className="inline-flex min-h-[32px] items-center px-2 py-1 transition-colors hover:text-ink">Terms</Link>
         <span aria-hidden className="opacity-50">·</span>
-        <a href="https://signalstudio.ie/security" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-[32px] items-center px-2 py-1 transition-colors hover:text-ink">Security</a>
+        <Link href="/security" className="inline-flex min-h-[32px] items-center px-2 py-1 transition-colors hover:text-ink">Security</Link>
         <span aria-hidden className="opacity-50">·</span>
         <a href="https://signalstudio.ie/accessibility" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-[32px] items-center px-2 py-1 transition-colors hover:text-ink">Accessibility</a>
       </div>

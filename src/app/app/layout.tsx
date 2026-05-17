@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Wordmark } from "@/components/brand/wordmark";
 import { SuiteLauncher } from "@/components/suite-launcher";
 import { UserButtonWithSuite } from "@/components/user-button-with-suite";
@@ -38,7 +39,9 @@ export default function AppLayout({
             >
               /
             </span>
-            <Wordmark size="1rem" />
+            <Link href="/app/brief" style={{ textDecoration: "none" }}>
+              <Wordmark size="1rem" />
+            </Link>
           </div>
           <UserButtonWithSuite current="analytics" />
         </div>

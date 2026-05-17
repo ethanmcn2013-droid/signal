@@ -38,14 +38,13 @@ export default async function BriefPage() {
             padding: "12px 18px",
             border: "1px solid var(--border-soft)",
             borderRadius: 10,
-            background: "var(--bg-deep)",
+            background: "var(--bg-deep, #f4f4f5)",
             color: "var(--ink-soft)",
             fontSize: 13,
             lineHeight: 1.55,
           }}
         >
-          Your briefing is here. To get it in your inbox each morning,
-          upgrade to{" "}
+          Your briefing is here.{" "}
           <a
             href="https://signalstudio.ie/pricing"
             target="_blank"
@@ -56,9 +55,9 @@ export default async function BriefPage() {
               textUnderlineOffset: 2,
             }}
           >
-            Workspace
-          </a>
-          .
+            Get it in your inbox each morning
+          </a>{" "}
+          — €12/month.
         </aside>
       ) : null}
     </>

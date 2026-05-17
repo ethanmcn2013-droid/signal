@@ -1,22 +1,21 @@
 import { Hero } from "@/components/landing/hero";
 import { BriefingAnatomy } from "@/components/marketing/briefing-anatomy";
-import { SiteFooter } from "@/components/marketing/site-footer";
 
 const PILLARS = [
   {
-    title: "Attention engine",
+    title: "Attention Engine",
     description:
-      "Flags stalled work, due and overdue dates, a crowded week ahead, long-held blockers, and too much in flight. No configuration.",
+      "Stuck work, approaching deadlines, overloaded queues, crowded weeks, persistent blockers, just-shipped wins. No configuration.",
   },
   {
     title: "Briefings, not dashboards",
     description:
-      "Never chart language. Always lines like \"this project is slowing down\" or \"too much work landed this week\".",
+      "Never \"sprint velocity\" or \"workflow throughput\". Always \"this project has gone quiet\" or \"you're carrying too much active work\".",
   },
   {
-    title: "Priority compression",
+    title: "Priority Compression",
     description:
-      "\"Three things need attention today\" instead of \"84 tasks\". The signal, not the noise.",
+      "Three items per block, hard cap. Items below the cap are dropped silently. The signal, not the noise.",
   },
 ] as const;
 
@@ -38,13 +37,13 @@ const ANTI_FEATURES = [
 
 export default function HomePage() {
   return (
-    <>
     <div style={{ background: "var(--bg)" }}>
       <Hero />
       <BriefingAnatomy />
 
       {/* ── Pillars ─────────────────────────────────────────────── */}
       <section
+        className="reveal"
         style={{
           maxWidth: 860,
           margin: "0 auto",
@@ -108,6 +107,7 @@ export default function HomePage() {
 
       {/* ── What this isn't ─────────────────────────────────────── */}
       <section
+        className="reveal"
         style={{
           maxWidth: 760,
           margin: "0 auto",
@@ -157,7 +157,5 @@ export default function HomePage() {
         </div>
       </section>
     </div>
-    <SiteFooter />
-    </>
   );
 }

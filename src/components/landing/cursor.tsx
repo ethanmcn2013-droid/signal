@@ -30,10 +30,12 @@ export function Cursor({ x, y, visible, color, label, reading }: Props) {
         scale: visible ? 1 : 0.6,
       }}
       transition={{
-        x: { duration: 1.1, ease: [0.4, 0, 0.2, 1] },
-        y: { duration: 1.1, ease: [0.4, 0, 0.2, 1] },
-        opacity: { duration: 0.32, ease: [0.16, 1, 0.3, 1] },
-        scale: { duration: 0.32, ease: [0.16, 1, 0.3, 1] },
+        /* Demo choreography — cursor drift timing is intentional */
+        x: { duration: 1.1, ease: [0.2, 0, 0, 1] },
+        y: { duration: 1.1, ease: [0.2, 0, 0, 1] },
+        /* --motion-moderate 320ms + --ease-out for appear/disappear */
+        opacity: { duration: 0.32, ease: [0, 0, 0.2, 1] },
+        scale: { duration: 0.32, ease: [0, 0, 0.2, 1] },
       }}
       style={{
         position: "absolute",
@@ -69,7 +71,8 @@ export function Cursor({ x, y, visible, color, label, reading }: Props) {
           opacity: reading && label ? 1 : 0,
           y: reading && label ? 0 : -3,
         }}
-        transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+        // --motion-base 220ms + --ease-out
+        transition={{ duration: 0.22, ease: [0, 0, 0.2, 1] }}
         className="font-mono"
         style={{
           position: "absolute",

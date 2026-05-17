@@ -44,12 +44,13 @@ export function TickCursor({ delivered }: Props) {
         }}
       />
 
+      {/* --motion-moderate 320ms + --ease-out */}
       {delivered ? (
         <motion.span
           initial={{ opacity: 0, x: -4 }}
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: 4 }}
-          transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.32, ease: [0, 0, 0.2, 1] }}
           className="font-mono text-[11px] font-semibold uppercase"
           style={{
             color: "var(--brand)",

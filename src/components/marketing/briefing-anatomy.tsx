@@ -39,7 +39,7 @@ const ANN = [
 
 export function BriefingAnatomy() {
   return (
-    <section style={{ paddingTop: 120, paddingBottom: 120 }}>
+    <section className="reveal" style={{ paddingTop: 120, paddingBottom: 120 }}>
       <div
         className="mx-auto w-full max-w-[1140px] px-6"
         style={{ display: "block" }}
@@ -235,6 +235,9 @@ function BucketItem({ children }: { children: React.ReactNode }) {
 }
 
 /* ── Annotations list ──────────────────────────────────────── */
+// Stagger: each item delays by 50ms. 6 items × 50ms = 300ms total,
+// within the --motion-moderate budget. Reveal class is additive —
+// visible without JS, neutralised under reduced-motion.
 function Annotations() {
   return (
     <ol
@@ -250,11 +253,14 @@ function Annotations() {
       {ANN.map((a, i) => (
         <li
           key={a.label}
+          className="reveal"
           style={{
             display: "grid",
             gridTemplateColumns: "auto 1fr",
             alignItems: "start",
             gap: 12,
+            // Stagger delay so the list reads top-to-bottom.
+            animationDelay: `${i * 50}ms`,
           }}
         >
           <span
@@ -270,7 +276,10 @@ function Annotations() {
               background: "#ffffff",
               fontSize: 11,
               fontWeight: 600,
-              color: "var(--ink-soft)",
+              // Items 5–6 reference content below the card excerpt.
+              // Dim them slightly to signal "see below" without a
+              // graphic connector (static layout, no JS needed).
+              color: i >= 4 ? "var(--ink-faint)" : "var(--ink-soft)",
             }}
           >
             {i + 1}
@@ -281,9 +290,27 @@ function Annotations() {
                 fontSize: 13.5,
                 fontWeight: 500,
                 color: "var(--ink)",
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
               }}
             >
               {a.label}
+              {/* Affordance: items 5–6 reference the "shown below" excerpt */}
+              {i >= 4 ? (
+                <span
+                  style={{
+                    fontSize: 10,
+                    fontFamily: "var(--font-mono-stack)",
+                    letterSpacing: "0.06em",
+                    color: "var(--ink-faint)",
+                    fontWeight: 400,
+                    textTransform: "uppercase",
+                  }}
+                >
+                  shown below
+                </span>
+              ) : null}
             </div>
             <div
               style={{

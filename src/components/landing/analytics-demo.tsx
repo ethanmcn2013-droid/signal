@@ -383,11 +383,12 @@ export function AnalyticsDemo({ domain = "wedding" }: Props = {}) {
         </div>
       </div>
 
-      {/* Briefing body */}
+      {/* Briefing body — settle entrance, not a feed pop.
+          --motion-moderate 320ms + --ease-out (JS mirror of contract). */}
       <motion.div
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.42, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.32, ease: [0, 0, 0.2, 1] }}
         style={{ padding: "32px 36px 36px" }}
       >
         <div className="mb-5">

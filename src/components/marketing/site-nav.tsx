@@ -7,6 +7,9 @@ import { SuiteLauncher } from "@/components/suite-launcher";
 
 const UMBRELLA_PRICING = "https://signalstudio.ie/pricing";
 
+const REQUEST_ACCESS_HREF =
+  "mailto:hello@signalstudio.ie?subject=Analytics%20access";
+
 const NAV: { href: string; label: string; external?: boolean }[] = [
   { href: "/signal",        label: "Signal"  },
   { href: "/method",        label: "Method"  },
@@ -46,7 +49,7 @@ export function SiteNav() {
               color: active ? "var(--ink)" : "var(--ink-soft)",
               fontWeight: active ? 600 : 400,
               textDecoration: "none",
-              transition: "color 200ms",
+              transition: "color var(--motion-fast)",
             };
             return item.external ? (
               <a
@@ -65,6 +68,34 @@ export function SiteNav() {
             );
           })}
 
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 3 }}>
+            <a
+              href={REQUEST_ACCESS_HREF}
+              title="Private beta — opens your mail client"
+              style={{
+                fontSize: 13,
+                color: "var(--ink)",
+                fontWeight: 500,
+                textDecoration: "none",
+                padding: "5px 13px",
+                border: "1px solid var(--border)",
+                borderRadius: 999,
+                transition: "border-color var(--motion-fast), background var(--motion-fast)",
+              }}
+            >
+              Request access
+            </a>
+            <span
+              style={{
+                fontSize: 10,
+                color: "var(--ink-faint)",
+                letterSpacing: "0.06em",
+                fontFamily: "var(--font-mono-stack)",
+              }}
+            >
+              private beta
+            </span>
+          </div>
         </nav>
 
         {/* Mobile nav — native <details> for restraint */}
@@ -95,7 +126,7 @@ export function SiteNav() {
                 color: active ? "var(--ink)" : "var(--ink-soft)",
                 fontWeight: active ? 600 : 400,
                 textDecoration: "none",
-                transition: "color 200ms",
+                transition: "color var(--motion-fast)",
               };
               return item.external ? (
                 <a
@@ -119,6 +150,19 @@ export function SiteNav() {
                 </Link>
               );
             })}
+            <a
+              href={REQUEST_ACCESS_HREF}
+              title="Private beta — opens your mail client"
+              className="block px-4 py-2"
+              style={{
+                fontSize: 13.5,
+                color: "var(--ink)",
+                fontWeight: 500,
+                textDecoration: "none",
+              }}
+            >
+              Request access
+            </a>
           </div>
         </details>
       </div>

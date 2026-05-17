@@ -10,9 +10,21 @@ import type { Briefing } from "./types";
  * greeting/summaryLine/graceNote — voice changes drifted between them.
  */
 
-export function greeting(hour: number, firstName?: string | null): string {
-  const base =
-    hour < 5
+/**
+ * `forEmail` — when true, always returns "Good morning." regardless of
+ * hour. The cron fires at 06:00 UTC; non-EU users would receive
+ * "Good evening" in their morning email until per-TZ cron exists.
+ * Time-of-day variants are reserved for the web view where the browser
+ * supplies the correct local time.
+ */
+export function greeting(
+  hour: number,
+  firstName?: string | null,
+  forEmail?: boolean,
+): string {
+  const base = forEmail
+    ? "Good morning"
+    : hour < 5
       ? "It's late"
       : hour < 12
         ? "Good morning"

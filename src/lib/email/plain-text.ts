@@ -29,7 +29,7 @@ export function renderBriefingText(
   );
   lines.push(date);
   lines.push("");
-  lines.push(greeting(b.greetingHour, firstName));
+  lines.push(greeting(b.greetingHour, firstName, true));
   lines.push("");
 
   if (b.needsAttention.length > 0) {

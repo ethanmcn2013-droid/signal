@@ -6,18 +6,28 @@ import type { BriefItem, Briefing, FocusItem } from "@/lib/briefing/types";
 import { graceNote, greeting, summaryLine } from "@/lib/briefing/voice";
 
 // ─────────────────────────────────────────────────────────────
-// Motion grammar — calm, purposeful. The brief is supposed to feel
-// like a page settling into view, not a slideshow.
+// Motion grammar — Signal Studio Motion Contract v1.
 //
-//   outExpo:    confident arrivals, "settled" feel. Default.
-//   inOut:      crossfades that aren't entering or leaving.
-//   spring:     hover affordance only (tactile).
+// These are JS-side mirrors of the CSS contract tokens. Motion/react
+// does not read CSS custom properties at runtime, so we keep named
+// constants here that exactly match the :root values in globals.css.
+//
+//   EASE_OUT    → --ease-out   cubic-bezier(0,0,0.2,1)  arrivals
+//   EASE_IN_OUT → --ease-standard cubic-bezier(0.2,0,0,1) crossfades
+//
+// Duration budget (UI ≤ --motion-moderate = 320ms):
+//   fadeUp: --motion-base   220ms  page-settle entrance
+//   dim:    --motion-base   220ms  hover cross-fade
+//   arrow:  --motion-fast   140ms  micro-affordance rotation
+//   expand: --motion-moderate 320ms accordion open/close
 //
 // Reduced motion: MotionConfig reducedMotion="user" collapses
 // every animation to zero — accessibility prefs win in one line.
 // ─────────────────────────────────────────────────────────────
-const EASE_OUT_EXPO = [0.16, 1, 0.3, 1] as const;
-const EASE_IN_OUT = [0.65, 0, 0.35, 1] as const;
+// --ease-out: cubic-bezier(0, 0, 0.2, 1)  — confident arrivals
+const EASE_OUT = [0, 0, 0.2, 1] as const;
+// --ease-standard: cubic-bezier(0.2, 0, 0, 1) — crossfades / dim
+const EASE_STANDARD = [0.2, 0, 0, 1] as const;
 
 const bucketAccents = {
   attention: "var(--brand, #4f46e5)",
@@ -48,12 +58,14 @@ export function BriefingView({
 
   return (
     <MotionConfig reducedMotion="user">
+      {/* Page-settle entrance: gentle stagger, not a feed pop.
+          staggerChildren 0.06s × ~5 children ≤ --motion-moderate. */}
       <motion.article
         className="mx-auto w-full max-w-[640px] px-6 py-12"
         initial="hidden"
         animate="shown"
         variants={{
-          shown: { transition: { staggerChildren: 0.08, delayChildren: 0.1 } },
+          shown: { transition: { staggerChildren: 0.06, delayChildren: 0.08 } },
         }}
       >
         <Header stamp={stamp} />
@@ -110,12 +122,14 @@ export function BriefingView({
   );
 }
 
+// fadeUp: page-settling entrance, not a feed pop. --motion-base (220ms).
 const fadeUp = {
   hidden: { opacity: 0, y: 8 },
   shown: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.55, ease: EASE_OUT_EXPO },
+    // --motion-base 220ms + --ease-out
+    transition: { duration: 0.22, ease: EASE_OUT },
   },
 };
 
@@ -131,19 +145,12 @@ function Header({ stamp }: { stamp: string }) {
       >
         Daily Signal · {stamp}
       </p>
-      <div
-        className="flex items-center gap-1.5 text-[10.5px] uppercase tracking-[0.12em]"
+      <p
+        className="text-[10.5px] uppercase tracking-[0.12em]"
         style={{ color: "var(--ink-quiet)" }}
       >
-        <motion.span
-          aria-hidden
-          className="block h-1.5 w-1.5 rounded-full"
-          style={{ background: "rgb(46, 160, 110)" }}
-          animate={{ opacity: [0.55, 1, 0.55], scale: [0.9, 1.1, 0.9] }}
-          transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
-        />
-        Live
-      </div>
+        Today
+      </p>
     </motion.div>
   );
 }
@@ -235,7 +242,8 @@ function BriefRow({
       animate={{
         opacity: isDim ? 0.45 : 1,
       }}
-      transition={{ duration: 0.22, ease: EASE_IN_OUT }}
+      // --motion-base 220ms + --ease-standard (crossfade)
+      transition={{ duration: 0.22, ease: EASE_STANDARD }}
       className="relative pl-3"
       style={{
         borderLeft: `2px solid ${isActive ? accent : "transparent"}`,
@@ -285,7 +293,7 @@ function WhyThisAccordion({
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="text-[12px] outline-none transition-colors"
+        className="text-[12px] transition-colors"
         style={{
           color: open ? "var(--ink)" : "var(--ink-soft)",
         }}
@@ -294,7 +302,8 @@ function WhyThisAccordion({
         <motion.span
           className="inline-block"
           animate={{ rotate: open ? 90 : 0 }}
-          transition={{ duration: 0.24, ease: EASE_OUT_EXPO }}
+          // --motion-fast 140ms + --ease-out — micro-affordance
+          transition={{ duration: 0.14, ease: EASE_OUT }}
         >
           →
         </motion.span>{" "}
@@ -306,7 +315,8 @@ function WhyThisAccordion({
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.32, ease: EASE_OUT_EXPO }}
+            // --motion-moderate 320ms + --ease-out — accordion expand
+            transition={{ duration: 0.32, ease: EASE_OUT }}
             className="overflow-hidden"
           >
             <motion.div
@@ -329,7 +339,8 @@ function WhyThisAccordion({
                     shown: {
                       opacity: 1,
                       x: 0,
-                      transition: { duration: 0.3, ease: EASE_OUT_EXPO },
+                      // --motion-base 220ms + --ease-out
+                      transition: { duration: 0.22, ease: EASE_OUT },
                     },
                   }}
                 >
@@ -348,22 +359,13 @@ function FocusBlock({ items }: { items: FocusItem[] }) {
   if (items.length === 0) return null;
   return (
     <motion.section
-      className="relative mt-10 rounded-2xl border p-6"
+      className="mt-10 rounded-2xl border p-6"
       variants={fadeUp}
       style={{
         borderColor: "color-mix(in srgb, var(--brand) 22%, transparent)",
         background: "color-mix(in srgb, var(--brand) 4%, transparent)",
       }}
     >
-      {/* Ambient pulse mark — a subtle "live" sentinel */}
-      <motion.span
-        aria-hidden
-        className="absolute -top-1 -right-1 block h-2 w-2 rounded-full"
-        style={{ background: "var(--brand, #4f46e5)" }}
-        animate={{ opacity: [0.6, 1, 0.6], scale: [0.85, 1.05, 0.85] }}
-        transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut" }}
-      />
-
       <div className="mb-4 flex items-center gap-2.5">
         <span
           aria-hidden

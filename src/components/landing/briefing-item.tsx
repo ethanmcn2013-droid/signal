@@ -46,7 +46,8 @@ export function BriefingItem({
         background: highlight
           ? "color-mix(in srgb, var(--brand) 6%, transparent)"
           : "transparent",
-        transition: "background 220ms cubic-bezier(.16,1,.3,1)",
+        /* --motion-base 220ms + --ease-out */
+        transition: "background var(--motion-base) var(--ease-out)",
       }}
     >
       <div className="flex items-baseline gap-2">
@@ -64,12 +65,13 @@ export function BriefingItem({
         />
         <div className="flex-1 min-w-0">
           <AnimatePresence mode="wait">
+            {/* Phrasing swap — fast crossfade. --motion-fast 140ms + --ease-standard */}
             <motion.p
               key={variantKey}
               initial={swapping ? { opacity: 0, y: -2 } : false}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 2 }}
-              transition={{ duration: 0.18, ease: [0.6, 0, 0.4, 1] }}
+              transition={{ duration: 0.14, ease: [0.2, 0, 0, 1] }}
               style={{
                 fontSize: 14.5,
                 color: "var(--ink-soft)",

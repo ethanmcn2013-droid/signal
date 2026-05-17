@@ -45,7 +45,8 @@ export function DemoToast({ variant }: Props) {
             initial={{ opacity: 0, y: 8, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 6, scale: 0.95 }}
-            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            // --motion-moderate 320ms + --ease-out
+            transition={{ duration: 0.32, ease: [0, 0, 0.2, 1] }}
             className="flex items-center gap-2 rounded-full border px-3 py-1.5 text-[11.5px] font-medium"
             style={{
               borderColor: "var(--border)",

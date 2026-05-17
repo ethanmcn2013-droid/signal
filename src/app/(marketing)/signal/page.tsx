@@ -378,7 +378,7 @@ export default function SignalPage() {
             <p style={{ fontSize: 16, color: "var(--ink-soft)", lineHeight: 1.6 }}>
               Signal Analytics is in private beta.{" "}
               <a
-                href="mailto:hello@signalstudio.ie"
+                href="mailto:hello@signalstudio.ie?subject=Analytics%20access%20request"
                 style={{ color: "var(--ink)", textDecoration: "underline" }}
               >
                 Request access

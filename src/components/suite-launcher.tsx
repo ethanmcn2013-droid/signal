@@ -137,7 +137,7 @@ export function SuiteLauncher({ current }: { current: ProductSlug }) {
           fontWeight: 400,
           textDecoration: "none",
           letterSpacing: "-0.01em",
-          transition: "color 200ms",
+          transition: "color var(--motion-fast)",
           background: "transparent",
           border: "none",
           padding: 0,
@@ -195,9 +195,12 @@ export function SuiteLauncher({ current }: { current: ProductSlug }) {
                 <li key={p.slug}>
                   <a
                     href={p.url}
-                    onMouseEnter={
-                      isCurrent ? undefined : () => prefetchProduct(p.url)
-                    }
+                    onMouseEnter={(e) => {
+                      if (isCurrent) return;
+                      prefetchProduct(p.url);
+                      e.currentTarget.style.background =
+                        "color-mix(in srgb, var(--ink) 5%, transparent)";
+                    }}
                     onFocus={
                       isCurrent ? undefined : () => prefetchProduct(p.url)
                     }
@@ -230,12 +233,7 @@ export function SuiteLauncher({ current }: { current: ProductSlug }) {
                       background: isCurrent
                         ? "color-mix(in srgb, var(--ink) 4%, transparent)"
                         : "transparent",
-                      transition: "background 120ms",
-                    }}
-                    onMouseEnter={(e) => {
-                      if (!isCurrent)
-                        e.currentTarget.style.background =
-                          "color-mix(in srgb, var(--ink) 5%, transparent)";
+                      transition: "background var(--motion-instant)",
                     }}
                     onMouseLeave={(e) => {
                       if (!isCurrent)
@@ -293,7 +291,7 @@ export function SuiteLauncher({ current }: { current: ProductSlug }) {
               fontSize: 11,
               color: "var(--ink-quiet)",
               textDecoration: "none",
-              transition: "background 120ms, color 120ms",
+              transition: "background var(--motion-instant), color var(--motion-instant)",
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.background =

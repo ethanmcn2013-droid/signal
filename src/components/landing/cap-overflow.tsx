@@ -25,8 +25,8 @@ export function CapOverflow({ overflow, phase }: Props) {
           animate={{ opacity: 1, height: "auto" }}
           exit={{ opacity: 0, height: 0 }}
           transition={{
-            opacity: { duration: 0.22, ease: [0.6, 0, 0.4, 1] },
-            height: { duration: 0.34, ease: [0.16, 1, 0.3, 1] },
+            opacity: { duration: 0.22, ease: [0, 0, 0.2, 1] },
+            height: { duration: 0.32, ease: [0, 0, 0.2, 1] },
           }}
           style={{ overflow: "hidden" }}
         >
@@ -47,10 +47,11 @@ export function CapOverflow({ overflow, phase }: Props) {
                   opacity: [0, 0.62, 0.62, 0],
                   x: 0,
                 }}
+                // Demo choreography — 1.8s is intentional cap-drop timing
                 transition={{
                   duration: 1.8,
                   times: [0, 0.18, 0.7, 1],
-                  ease: [0.6, 0, 0.4, 1],
+                  ease: [0.2, 0, 0, 1],
                   delay: i * 0.14,
                 }}
                 className="flex items-baseline gap-2"

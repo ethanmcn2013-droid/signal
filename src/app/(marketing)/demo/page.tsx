@@ -90,7 +90,6 @@ export default function DemoPage() {
               loop
               playsInline
               controls
-              poster=""
               style={{
                 width: "100%",
                 height: "100%",
