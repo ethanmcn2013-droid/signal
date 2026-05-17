@@ -324,8 +324,13 @@ body {
    ──────────────────────────────────────────────────────────── */
 .analytics-dot {
   display: inline-block;
+  /* R3-mount: hard px ceiling — prevents the dot from inheriting
+     an unhydrated font-size and ballooning before layout settles.
+     width/height are the source of truth; max-width/height are the guard. */
   width: 5px;
   height: 5px;
+  max-width: 8px;
+  max-height: 8px;
   border-radius: 50%;
   background: var(--indigo);
   margin-left: 3px;
