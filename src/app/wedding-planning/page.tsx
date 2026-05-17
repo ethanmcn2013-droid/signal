@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { SiteNav } from "@/components/marketing/site-nav";
 import { SiteFooter } from "@/components/marketing/site-footer";
 
 export const metadata: Metadata = {
@@ -71,7 +70,6 @@ function Eyebrow({ children }: { children: React.ReactNode }) {
 export default function WeddingPlanningBriefingPage() {
   return (
     <>
-    <SiteNav />
     <div style={{ background: "var(--bg)", paddingBottom: 120 }}>
       {/* ── Hero ─────────────────────────────────────────────────── */}
       <section style={{ ...SECTION, paddingTop: 96 }}>
