@@ -445,30 +445,33 @@ export default function WeddingPlanningBriefingPage() {
               Connect your Signal Tasks workspace and the briefing arrives in your
               inbox each morning — plain sentences, no charts, no noise.
             </p>
+            {/* R10: verb "Open the briefing" per DESIGN.md §6 locked CTA vocab.
+                Primary: indigo fill + pill radius per §6 primary button spec.
+                Secondary: pill border so it reads as an action, not plain text. */}
             <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 8 }}>
               <Link
                 href="/sign-in"
                 style={{
                   display: "inline-block",
                   padding: "10px 20px",
-                  background: "var(--ink)",
-                  color: "var(--bg)",
-                  borderRadius: "var(--r-2)",
+                  background: "var(--indigo)",
+                  color: "#ffffff",
+                  borderRadius: "var(--r-pill)",
                   fontSize: 14,
-                  fontWeight: 600,
+                  fontWeight: 500,
                   textDecoration: "none",
                   letterSpacing: "-0.01em",
                 }}
               >
-                Get access
+                Open the briefing
               </Link>
               <Link
                 href="/method"
                 style={{
                   display: "inline-block",
                   padding: "10px 20px",
-                  border: "1px solid var(--border-soft)",
-                  borderRadius: "var(--r-2)",
+                  border: "1px solid var(--border)",
+                  borderRadius: "var(--r-pill)",
                   fontSize: 14,
                   color: "var(--ink-soft)",
                   textDecoration: "none",
