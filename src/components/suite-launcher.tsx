@@ -25,6 +25,24 @@ const PRODUCTS: {
 
 const INDIGO = "#4f46e5";
 
+const PRODUCT_ORIGINS = [TASKS_URL, ROADMAP_URL, NOTES_URL, ANALYTICS_URL];
+
+/**
+ * Phase 3 (instant-jump): warm a sibling product on hover/focus so the
+ * same-tab jump lands already-resolved. One <link rel="prefetch"> per
+ * URL, deduped. Cross-origin prefetch warms DNS/TLS + the document.
+ */
+function prefetchProduct(url: string) {
+  if (typeof document === "undefined") return;
+  if (document.head.querySelector(`link[data-suite-prefetch="${url}"]`)) return;
+  const l = document.createElement("link");
+  l.rel = "prefetch";
+  l.href = url;
+  l.as = "document";
+  l.setAttribute("data-suite-prefetch", url);
+  document.head.appendChild(l);
+}
+
 /**
  * Analytics-flavoured suite launcher. Same chrome contract as the
  * Tasks/Roadmap/Notes versions — `signal studio.` text becomes a
@@ -52,6 +70,24 @@ export function SuiteLauncher({ current }: { current: ProductSlug }) {
       document.removeEventListener("mousedown", onDocClick);
       document.removeEventListener("keydown", onKey);
     };
+  }, [open]);
+
+  // Phase 3 (instant-jump): on open, preconnect every sibling origin so
+  // the first cross-product hop has a warm TLS connection ready.
+  useEffect(() => {
+    if (!open || typeof document === "undefined") return;
+    for (const origin of PRODUCT_ORIGINS) {
+      if (
+        document.head.querySelector(`link[data-suite-preconnect="${origin}"]`)
+      )
+        continue;
+      const l = document.createElement("link");
+      l.rel = "preconnect";
+      l.href = origin;
+      l.crossOrigin = "";
+      l.setAttribute("data-suite-preconnect", origin);
+      document.head.appendChild(l);
+    }
   }, [open]);
 
   return (
@@ -126,8 +162,12 @@ export function SuiteLauncher({ current }: { current: ProductSlug }) {
                 <li key={p.slug}>
                   <a
                     href={p.url}
-                    target={isCurrent ? undefined : "_blank"}
-                    rel={isCurrent ? undefined : "noopener noreferrer"}
+                    onMouseEnter={
+                      isCurrent ? undefined : () => prefetchProduct(p.url)
+                    }
+                    onFocus={
+                      isCurrent ? undefined : () => prefetchProduct(p.url)
+                    }
                     aria-current={isCurrent ? "true" : undefined}
                     role="menuitem"
                     onClick={() => setOpen(false)}
