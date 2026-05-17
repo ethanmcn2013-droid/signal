@@ -67,42 +67,71 @@ export default function HomePage() {
           Pillars
         </p>
 
-        <h2 className="h-title" style={{ marginBottom: 56 }}>
+        <h2 className="h-title" style={{ marginBottom: 48 }}>
           Three things, on repeat.
         </h2>
 
-        <div
+        {/* R13: collapsed from a 3-col feature-grid (banned, DESIGN.md §10)
+            to a numbered single-column typographic list — the atlas pattern.
+            Left-aligned, bold title + paragraph, hairline-separated rows. */}
+        <ol
           style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-            gap: 32,
+            listStyle: "none",
+            padding: 0,
+            margin: 0,
           }}
         >
-          {PILLARS.map((pillar) => (
-            <div key={pillar.title}>
-              <p
+          {PILLARS.map((pillar, i) => (
+            <li
+              key={pillar.title}
+              style={{
+                display: "flex",
+                gap: 24,
+                paddingTop: 28,
+                paddingBottom: 28,
+                borderTop: "1px solid var(--hairline)",
+              }}
+            >
+              <span
                 style={{
-                  fontSize: 18,
+                  fontSize: 11,
+                  fontFamily: "var(--font-mono-stack)",
                   fontWeight: 600,
-                  color: "var(--ink)",
-                  marginBottom: 10,
+                  color: "var(--ink-quiet)",
+                  letterSpacing: "0.06em",
+                  paddingTop: 3,
+                  flexShrink: 0,
+                  minWidth: 20,
                 }}
               >
-                {pillar.title}
-              </p>
-              <p
-                style={{
-                  fontSize: 15,
-                  color: "var(--ink-soft)",
-                  lineHeight: 1.55,
-                  margin: 0,
-                }}
-              >
-                {pillar.description}
-              </p>
-            </div>
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <div>
+                <p
+                  style={{
+                    fontSize: 17,
+                    fontWeight: 600,
+                    color: "var(--ink)",
+                    marginBottom: 8,
+                    marginTop: 0,
+                  }}
+                >
+                  {pillar.title}
+                </p>
+                <p
+                  style={{
+                    fontSize: 15,
+                    color: "var(--ink-soft)",
+                    lineHeight: 1.55,
+                    margin: 0,
+                  }}
+                >
+                  {pillar.description}
+                </p>
+              </div>
+            </li>
           ))}
-        </div>
+        </ol>
       </section>
 
       {/* ── What this isn't ─────────────────────────────────────── */}
