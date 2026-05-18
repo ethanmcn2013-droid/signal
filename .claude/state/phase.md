@@ -13,6 +13,10 @@ A·6 — demo audience truth             ✓ shipped 2026-05-15 — homepage dem
 Next frontier (deferred — additive depth, backend, not a voice/design gap):
 broader trigger range, more prose variety, per-timezone send. Per the goal's own framing, backend infra waits; the voice/content/design pass is complete and verified on phone + desktop, public + the real paid briefing code path.
 
+A·13 · UX remediation (R3/R4/R10/R13) prod-verified 2026-05-17; R4 /wedding-planning closed 2026-05-18
+
+Seamless ecosystem — analytics L2/3/4 (auth-aware entry + §14 shell, /wedding-planning stays C) prod-verified 2026-05-18
+
 Known accepted conventions (deliberately not chased):
 - "Honeymoon flights hasn't moved" — task-as-singular-subject; consistent, calm, not chased into brittle pluralization NLP.
 - /about and /demo omit the footer-suite — deliberately spare pages with ← Back; operator judgment, not a defect.
