@@ -44,6 +44,10 @@ export const users = sqliteTable("users", {
   id: text("id").primaryKey(),
   /** Clerk user id (`user_2abc…`). Nullable for legacy seeds. */
   clerkId: text("clerk_id"),
+  /** Login email, hydrated by the Clerk `user.created` webhook.
+   *  This is the canonical identity key used by Analytics to locate
+   *  a Tasks user when clerkId hasn't been written yet (webhook-race). */
+  email: text("email"),
 });
 
 export const workspaceMembers = sqliteTable("workspace_members", {

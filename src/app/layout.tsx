@@ -18,6 +18,10 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
+  // D4 Layer-0 instant canvas: tells the browser to paint white before
+  // any CSS resolves. Kills the browser-default grey void on cross-origin
+  // first load. LOADING_SYSTEM.md §2.
+  themeColor: "#ffffff",
 };
 
 export const metadata: Metadata = {
@@ -62,8 +66,28 @@ export default function RootLayout({
       <html
         lang="en"
         className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+        // D4 Layer-0 instant canvas: these inline attributes fire before any
+        // stylesheet resolves. background:#fff kills the browser-default grey
+        // on cross-origin first load. colorScheme:light prevents the UA from
+        // painting a dark-mode void even when the OS is in dark mode.
+        // LOADING_SYSTEM.md §2 — "Frame 1 of every cross-origin destination
+        // is paper white field, no content."
+        style={{ background: "#fff", colorScheme: "light" }}
       >
-        <body className="min-h-full flex flex-col">
+        <head>
+          {/* D4 — belt-and-braces inline style: fires synchronously before the
+              linked stylesheet resolves, preventing any grey flash on the
+              document body. One-liner; only background is set here. */}
+          {/* eslint-disable-next-line react/no-danger */}
+          <style dangerouslySetInnerHTML={{ __html: "html{background:#fff}" }} />
+        </head>
+        <body
+          className="min-h-full flex flex-col"
+          // D4 — inline style on body: same reason as html above.
+          // background:#fff fires before the stylesheet link resolves,
+          // removing the grey void on cross-origin first paint.
+          style={{ background: "#fff" }}
+        >
           <SiteNavConditional />
           {children}
         </body>

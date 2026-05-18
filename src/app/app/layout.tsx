@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Wordmark } from "@/components/brand/wordmark";
-import { SuiteLauncherAuthAware } from "@/components/suite-launcher-auth-aware";
+import { SuiteLauncher } from "@/components/suite-launcher";
 import { UserButtonWithSuite } from "@/components/user-button-with-suite";
 
 /**
@@ -48,8 +48,8 @@ export default function AppLayout({
 
           {/* Left slot — breadcrumb */}
           <div className="flex items-center" style={{ gap: 12 }}>
-            {/* §14: "signal studio." links to signalstudio.ie; switcher is "Products" */}
-            <SuiteLauncherAuthAware current="analytics" isAuthed={true} />
+            {/* §14: "signal studio." trigger opens suite switcher popover */}
+            <SuiteLauncher current="analytics" isAuthed={true} />
             <span
               aria-hidden
               className="hidden sm:inline"

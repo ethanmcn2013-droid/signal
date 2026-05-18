@@ -11,21 +11,37 @@ import {
 
 type ProductSlug = "tasks" | "roadmap" | "notes" | "analytics";
 
-const PRODUCTS: {
+// ── Unauthed: marketing taglines, marketing homepages ──────────────────────
+// Order: ratified hierarchy Roadmap → Tasks → Notes → Analytics (2026-05-16)
+const PRODUCTS_UNAUTHED: {
   slug: ProductSlug;
   word: string;
   tagline: string;
   url: string;
 }[] = [
-  { slug: "tasks", word: "tasks", tagline: "Execution clarity", url: TASKS_URL },
-  { slug: "roadmap", word: "roadmap", tagline: "Direction clarity", url: ROADMAP_URL },
-  { slug: "notes", word: "notes", tagline: "Capture clarity", url: NOTES_URL },
-  { slug: "analytics", word: "analytics", tagline: "Attention clarity", url: ANALYTICS_URL },
+  { slug: "roadmap",   word: "roadmap",   tagline: "Direction clarity",  url: ROADMAP_URL },
+  { slug: "tasks",     word: "tasks",     tagline: "Execution clarity",  url: TASKS_URL },
+  { slug: "notes",     word: "notes",     tagline: "Capture clarity",    url: NOTES_URL },
+  { slug: "analytics", word: "analytics", tagline: "Attention clarity",  url: ANALYTICS_URL },
+];
+
+// ── Authed: app-context labels, app entry deep-links ──────────────────────
+// Labels: §1C canon (lowercase product noun). Order: same ratified hierarchy.
+const PRODUCTS_AUTHED: {
+  slug: ProductSlug;
+  word: string;
+  label: string;
+  url: string;
+}[] = [
+  { slug: "roadmap",   word: "roadmap",   label: "Open roadmap",   url: `${ROADMAP_URL}/app` },
+  { slug: "tasks",     word: "tasks",     label: "Open tasks",     url: `${TASKS_URL}/app` },
+  { slug: "notes",     word: "notes",     label: "Open notes",     url: `${NOTES_URL}/app` },
+  { slug: "analytics", word: "analytics", label: "Open analytics", url: `${ANALYTICS_URL}/app` },
 ];
 
 const INDIGO = "#4f46e5";
 
-const PRODUCT_ORIGINS = [TASKS_URL, ROADMAP_URL, NOTES_URL, ANALYTICS_URL];
+const PRODUCT_ORIGINS = [ROADMAP_URL, TASKS_URL, NOTES_URL, ANALYTICS_URL];
 
 /**
  * Phase 3 (instant-jump): warm a sibling product on hover/focus so the
@@ -77,13 +93,26 @@ function suiteJump(url: string) {
 }
 
 /**
- * Analytics-flavoured suite launcher. Same chrome contract as the
- * Tasks/Roadmap/Notes versions — `signal studio.` text becomes a
- * click-to-open popover listing all four products with a HERE tag on
- * the current one. Inline-style approach matches Analytics's CSS-
- * variable design system (no Tailwind ink tokens here).
+ * Analytics suite launcher — canonical SuiteLauncher per IA_COHERENCE.md §2.
+ *
+ * Replaces SuiteLauncherAuthAware (retired). isAuthed prop switches:
+ *   - product list:  unauthed = taglines + marketing URLs
+ *                    authed   = "Open X" labels + /app deep-links
+ *   - footer link:   unauthed = "Visit signalstudio.ie →" (new tab)
+ *                    authed   = "Back to Signal Studio →" (same tab)
+ *
+ * Trigger always renders "signal studio." (no "Products ▾", no Unicode
+ * caret) — P2-5 conformance.
+ *
+ * Inline-style approach matches Analytics's CSS-variable design system.
  */
-export function SuiteLauncher({ current }: { current: ProductSlug }) {
+export function SuiteLauncher({
+  current,
+  isAuthed = false,
+}: {
+  current: ProductSlug;
+  isAuthed?: boolean;
+}) {
   const [open, setOpen] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
 
@@ -189,8 +218,11 @@ export function SuiteLauncher({ current }: { current: ProductSlug }) {
             </div>
           </div>
           <ul style={{ padding: 4, listStyle: "none", margin: 0 }}>
-            {PRODUCTS.map((p) => {
+            {(isAuthed ? PRODUCTS_AUTHED : PRODUCTS_UNAUTHED).map((p) => {
               const isCurrent = p.slug === current;
+              const label = isAuthed
+                ? (p as typeof PRODUCTS_AUTHED[number]).label
+                : (p as typeof PRODUCTS_UNAUTHED[number]).tagline;
               return (
                 <li key={p.slug}>
                   <a
@@ -258,7 +290,7 @@ export function SuiteLauncher({ current }: { current: ProductSlug }) {
                           color: "var(--ink-quiet)",
                         }}
                       >
-                        {p.tagline}
+                        {label}
                       </div>
                     </div>
                     {isCurrent ? (
@@ -279,32 +311,61 @@ export function SuiteLauncher({ current }: { current: ProductSlug }) {
               );
             })}
           </ul>
-          <a
-            href={STUDIO_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => setOpen(false)}
-            style={{
-              display: "block",
-              borderTop: "1px solid var(--border-soft)",
-              padding: "10px 14px",
-              fontSize: 11,
-              color: "var(--ink-quiet)",
-              textDecoration: "none",
-              transition: "background var(--motion-instant), color var(--motion-instant)",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background =
-                "color-mix(in srgb, var(--ink) 4%, transparent)";
-              e.currentTarget.style.color = "var(--ink)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = "transparent";
-              e.currentTarget.style.color = "var(--ink-quiet)";
-            }}
-          >
-            Visit signalstudio.ie →
-          </a>
+          {/* Footer — §1F: authed="Back to Signal Studio →" same-tab;
+              unauthed="Visit signalstudio.ie →" new tab */}
+          {isAuthed ? (
+            <a
+              href={STUDIO_URL}
+              onClick={() => setOpen(false)}
+              style={{
+                display: "block",
+                borderTop: "1px solid var(--border-soft)",
+                padding: "10px 14px",
+                fontSize: 11,
+                color: "var(--ink-quiet)",
+                textDecoration: "none",
+                transition: "background var(--motion-instant), color var(--motion-instant)",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background =
+                  "color-mix(in srgb, var(--ink) 4%, transparent)";
+                e.currentTarget.style.color = "var(--ink)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "transparent";
+                e.currentTarget.style.color = "var(--ink-quiet)";
+              }}
+            >
+              Back to Signal Studio →
+            </a>
+          ) : (
+            <a
+              href={STUDIO_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setOpen(false)}
+              style={{
+                display: "block",
+                borderTop: "1px solid var(--border-soft)",
+                padding: "10px 14px",
+                fontSize: 11,
+                color: "var(--ink-quiet)",
+                textDecoration: "none",
+                transition: "background var(--motion-instant), color var(--motion-instant)",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background =
+                  "color-mix(in srgb, var(--ink) 4%, transparent)";
+                e.currentTarget.style.color = "var(--ink)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "transparent";
+                e.currentTarget.style.color = "var(--ink-quiet)";
+              }}
+            >
+              Visit signalstudio.ie →
+            </a>
+          )}
         </div>
       ) : null}
     </div>
