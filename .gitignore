@@ -40,3 +40,4 @@ yarn-error.log*
 # local sqlite artifacts
 *.db
 analytics.db
+node_modules
