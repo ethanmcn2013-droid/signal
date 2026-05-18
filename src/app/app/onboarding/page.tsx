@@ -108,12 +108,12 @@ export default async function OnboardingPage() {
               lineHeight: 1.55,
             }}
           >
-            Once you have a workspace, return here.{" "}
+            Once you have a workspace,{" "}
             <a
               href="/app/onboarding"
               style={{ color: "var(--ink-soft)", textDecoration: "underline" }}
             >
-              Refresh this page
+              come back to this tab and try again
             </a>
             .
           </p>
