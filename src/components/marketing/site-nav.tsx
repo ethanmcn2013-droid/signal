@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Wordmark } from "@/components/brand/wordmark";
-import { SuiteLauncher } from "@/components/suite-launcher";
+import { SuiteLauncherAuthAware } from "@/components/suite-launcher-auth-aware";
+import { UserButton } from "@clerk/nextjs";
 
 const UMBRELLA_PRICING = "https://signalstudio.ie/pricing";
 
@@ -17,24 +18,53 @@ const NAV: { href: string; label: string; external?: boolean }[] = [
   { href: "/about",         label: "About"   },
 ];
 
-export function SiteNav() {
+/**
+ * Sets the signal_preview_public cookie and reloads to suppress the M→app
+ * redirect for this tab session. Owner-only escape hatch per §14.
+ */
+function activatePreviewMode() {
+  document.cookie =
+    "signal_preview_public=1; path=/; max-age=86400; SameSite=Strict";
+  sessionStorage.setItem("signal_preview_public", "1");
+  window.location.reload();
+}
+
+/**
+ * Clears the signal_preview_public cookie and reloads to re-enable the
+ * M→app redirect. Shown when the escape hatch is active.
+ */
+function exitPreviewMode() {
+  document.cookie =
+    "signal_preview_public=; path=/; max-age=0; SameSite=Strict";
+  sessionStorage.removeItem("signal_preview_public");
+  window.location.reload();
+}
+
+export function SiteNav({ isAuthed = false }: { isAuthed?: boolean }) {
   const pathname = usePathname();
+
+  // Check if the escape hatch cookie is currently active so we can show
+  // "Exit preview" instead of "View public site".
+  const isPreviewActive =
+    typeof document !== "undefined" &&
+    document.cookie.split(";").some((c) => c.trim() === "signal_preview_public=1");
 
   return (
     <header
-      className="sticky top-0 z-50 border-b"
+      className="sticky top-0 z-40 border-b"
       style={{
-        background: "color-mix(in srgb, var(--bg) 88%, transparent)",
-        backdropFilter: "saturate(160%) blur(10px)",
-        WebkitBackdropFilter: "saturate(160%) blur(10px)",
+        background: "color-mix(in srgb, var(--bg) 85%, transparent)",
+        backdropFilter: "saturate(160%) blur(12px)",
+        WebkitBackdropFilter: "saturate(160%) blur(12px)",
         borderBottomColor: "var(--border-soft)",
       }}
     >
-      <div className="mx-auto flex h-14 w-full max-w-[1140px] items-center justify-between px-6">
+      <div className="mx-auto flex h-14 w-full max-w-[80rem] items-center justify-between px-6">
 
         <div className="flex items-center" style={{ gap: 12 }}>
           <div className="hidden sm:inline-flex">
-            <SuiteLauncher current="analytics" />
+            {/* §14 L3: authed mode shows app deep-links; unauthed shows marketing taglines */}
+            <SuiteLauncherAuthAware current="analytics" isAuthed={isAuthed} />
           </div>
           <span aria-hidden className="hidden sm:inline" style={{ color: "var(--ink-faint)", fontSize: 12 }}>/</span>
           <Wordmark size="0.9375rem" />
@@ -68,34 +98,84 @@ export function SiteNav() {
             );
           })}
 
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 3 }}>
-            <a
-              href={REQUEST_ACCESS_HREF}
-              title="Private beta — opens your mail client"
-              style={{
-                fontSize: 13,
-                color: "var(--ink)",
-                fontWeight: 500,
-                textDecoration: "none",
-                padding: "5px 13px",
-                border: "1px solid var(--border)",
-                borderRadius: 999,
-                transition: "border-color var(--motion-fast), background var(--motion-fast)",
-              }}
-            >
-              Request access
-            </a>
-            <span
-              style={{
-                fontSize: 10,
-                color: "var(--ink-faint)",
-                letterSpacing: "0.06em",
-                fontFamily: "var(--font-mono-stack)",
-              }}
-            >
-              private beta
-            </span>
-          </div>
+          {/*
+           * §14 L3: Kill the false "Sign in".
+           * When authed: UserButton + optional preview escape hatch.
+           * When unauthed: "Request access" CTA as before.
+           */}
+          {isAuthed ? (
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              {isPreviewActive ? (
+                <button
+                  type="button"
+                  onClick={exitPreviewMode}
+                  style={{
+                    fontSize: 12,
+                    color: "var(--ink-soft)",
+                    fontWeight: 500,
+                    background: "transparent",
+                    border: "1px solid var(--border)",
+                    borderRadius: 999,
+                    padding: "4px 11px",
+                    cursor: "pointer",
+                    fontFamily: "inherit",
+                    transition: "border-color var(--motion-fast)",
+                  }}
+                >
+                  Exit preview
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={activatePreviewMode}
+                  style={{
+                    fontSize: 12,
+                    color: "var(--ink-faint)",
+                    fontWeight: 400,
+                    background: "transparent",
+                    border: "none",
+                    padding: 0,
+                    cursor: "pointer",
+                    fontFamily: "inherit",
+                    transition: "color var(--motion-fast)",
+                  }}
+                  title="View public site (owner escape hatch)"
+                >
+                  View public site
+                </button>
+              )}
+              <UserButton />
+            </div>
+          ) : (
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 3 }}>
+              <a
+                href={REQUEST_ACCESS_HREF}
+                title="Private beta — opens your mail client"
+                style={{
+                  fontSize: 13,
+                  color: "var(--ink)",
+                  fontWeight: 500,
+                  textDecoration: "none",
+                  padding: "5px 13px",
+                  border: "1px solid var(--border)",
+                  borderRadius: 999,
+                  transition: "border-color var(--motion-fast), background var(--motion-fast)",
+                }}
+              >
+                Request access
+              </a>
+              <span
+                style={{
+                  fontSize: 10,
+                  color: "var(--ink-faint)",
+                  letterSpacing: "0.06em",
+                  fontFamily: "var(--font-mono-stack)",
+                }}
+              >
+                private beta
+              </span>
+            </div>
+          )}
         </nav>
 
         {/* Mobile nav — native <details> for restraint */}
@@ -117,6 +197,7 @@ export function SiteNav() {
               border: "1px solid var(--border-soft)",
               boxShadow: "var(--shadow-2)",
               background: "var(--bg-elev)",
+              zIndex: 50,
             }}
           >
             {NAV.map((item) => {
@@ -150,19 +231,27 @@ export function SiteNav() {
                 </Link>
               );
             })}
-            <a
-              href={REQUEST_ACCESS_HREF}
-              title="Private beta — opens your mail client"
-              className="block px-4 py-2"
-              style={{
-                fontSize: 13.5,
-                color: "var(--ink)",
-                fontWeight: 500,
-                textDecoration: "none",
-              }}
-            >
-              Request access
-            </a>
+            {/* Mobile: only show Request access if unauthed */}
+            {!isAuthed && (
+              <a
+                href={REQUEST_ACCESS_HREF}
+                title="Private beta — opens your mail client"
+                className="block px-4 py-2"
+                style={{
+                  fontSize: 13.5,
+                  color: "var(--ink)",
+                  fontWeight: 500,
+                  textDecoration: "none",
+                }}
+              >
+                Request access
+              </a>
+            )}
+            {isAuthed && (
+              <div className="px-4 py-2">
+                <UserButton />
+              </div>
+            )}
           </div>
         </details>
       </div>

@@ -10,11 +10,12 @@ import {
 
 type ProductSlug = "tasks" | "roadmap" | "notes" | "analytics";
 
+// §14 app-context labels (locked verb for analytics: "Open the briefing")
 const PRODUCTS: { slug: ProductSlug; label: string; url: string }[] = [
-  { slug: "tasks", label: "Open Tasks", url: TASKS_URL },
-  { slug: "roadmap", label: "Open Roadmap", url: ROADMAP_URL },
-  { slug: "notes", label: "Open Notes", url: NOTES_URL },
-  { slug: "analytics", label: "Open Analytics", url: ANALYTICS_URL },
+  { slug: "tasks",     label: "Open the workspace",  url: `${TASKS_URL}/app` },
+  { slug: "roadmap",   label: "Open the roadmap",    url: `${ROADMAP_URL}/app` },
+  { slug: "notes",     label: "Open the notebook",   url: `${NOTES_URL}/app` },
+  { slug: "analytics", label: "Open the briefing",   url: `${ANALYTICS_URL}/app` },
 ];
 
 function ArrowIcon() {
@@ -34,11 +35,6 @@ function ArrowIcon() {
   );
 }
 
-/**
- * Analytics-flavoured Clerk UserButton with three "Open <Sibling>"
- * links added to the dropdown above the Manage account / Sign out
- * rows.
- */
 function GearIcon() {
   return (
     <svg
@@ -57,7 +53,39 @@ function GearIcon() {
   );
 }
 
+function EyeIcon() {
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+      <circle cx="12" cy="12" r="3" />
+    </svg>
+  );
+}
+
+/**
+ * Clerk UserButton with:
+ *   - Notification settings link
+ *   - §14 app-context labels for sibling products (deep-links to /app entries)
+ *   - "View public site" escape hatch — sets signal_preview_public cookie
+ *     and reloads, suppressing the M→app redirect for the tab session.
+ *   - When in preview mode: "Exit preview" replaces "View public site"
+ */
 export function UserButtonWithSuite({ current }: { current: ProductSlug }) {
+  // Detect preview mode at render time (cookie-based, not sessionStorage,
+  // so it's readable from JS even on server-rendered pages).
+  const isPreview =
+    typeof document !== "undefined" &&
+    document.cookie.split(";").some((c) => c.trim() === "signal_preview_public=1");
+
   return (
     <UserButton>
       <UserButton.MenuItems>
@@ -66,6 +94,24 @@ export function UserButtonWithSuite({ current }: { current: ProductSlug }) {
           href="/app/settings/notifications"
           labelIcon={<GearIcon />}
         />
+        {/* §14 L3 — escape hatch: owner can demo public marketing while logged in */}
+        <UserButton.Action
+          label={isPreview ? "Exit preview" : "View public site"}
+          labelIcon={<EyeIcon />}
+          onClick={() => {
+            if (isPreview) {
+              document.cookie =
+                "signal_preview_public=; path=/; max-age=0; SameSite=Strict";
+              sessionStorage.removeItem("signal_preview_public");
+            } else {
+              document.cookie =
+                "signal_preview_public=1; path=/; max-age=86400; SameSite=Strict";
+              sessionStorage.setItem("signal_preview_public", "1");
+            }
+            window.location.href = "/";
+          }}
+        />
+        {/* Sibling products (app entry deep-links, skip current) */}
         {PRODUCTS.filter((p) => p.slug !== current).map((p) => (
           <UserButton.Link
             key={p.slug}

@@ -1,15 +1,25 @@
 import Link from "next/link";
 import { Wordmark } from "@/components/brand/wordmark";
-import { SuiteLauncher } from "@/components/suite-launcher";
+import { SuiteLauncherAuthAware } from "@/components/suite-launcher-auth-aware";
 import { UserButtonWithSuite } from "@/components/user-button-with-suite";
 
 /**
- * Authenticated app chrome for Signal Analytics. Thin top bar:
- * `signal studio. /` launcher prefix + analytics wordmark on the
- * left, Clerk avatar (with suite-jump dropdown) on the right.
+ * Authenticated app chrome for Signal Analytics.
  *
- * Matches the parity established in the Tasks sidebar / Roadmap top
- * bar / Notes suitebar from the suite-coherence cycles.
+ * §14 persistent top chrome — pixel-identical across all five products:
+ *   Left:  signal studio. / analytics  (breadcrumb — umbrella wordmark + product mark)
+ *   Right: Products switcher (authed mode, app deep-links) + Clerk UserButton
+ *
+ * Height h-14 (56px), sticky top-0, z-40, backdrop-blur-md.
+ * Background: color-mix(in srgb, var(--bg) 85%, transparent).
+ * Max-width 80rem, px-6 padding.
+ *
+ * Perceived continuity: a cross-product jump swaps the body; the chrome
+ * appears not to move. This is NOT a true SPA — hard document navigation
+ * still occurs between subdomains (no-monorepo + no-DB-merge locked).
+ *
+ * Note: SiteNavConditional in root layout.tsx hides the marketing SiteNav
+ * when pathname starts with /app — so there is no double-nav here.
  */
 export default function AppLayout({
   children,
@@ -20,18 +30,26 @@ export default function AppLayout({
     <div
       style={{ minHeight: "100vh", background: "var(--bg)", display: "flex", flexDirection: "column" }}
     >
+      {/*
+        §14 persistent chrome.
+        z-40 (spec) — one level below Clerk modal overlays (z-50+).
+        backdrop-blur-md = saturate(160%) blur(12px) in this system.
+      */}
       <header
-        className="sticky top-0 z-50 border-b"
+        className="sticky top-0 z-40 border-b"
         style={{
-          background: "color-mix(in srgb, var(--bg) 88%, transparent)",
-          backdropFilter: "saturate(160%) blur(10px)",
-          WebkitBackdropFilter: "saturate(160%) blur(10px)",
+          background: "color-mix(in srgb, var(--bg) 85%, transparent)",
+          backdropFilter: "saturate(160%) blur(12px)",
+          WebkitBackdropFilter: "saturate(160%) blur(12px)",
           borderBottomColor: "var(--border-soft)",
         }}
       >
-        <div className="mx-auto flex h-12 w-full max-w-[1140px] items-center justify-between px-6">
+        <div className="mx-auto flex h-14 w-full max-w-[80rem] items-center justify-between px-6">
+
+          {/* Left slot — breadcrumb */}
           <div className="flex items-center" style={{ gap: 12 }}>
-            <SuiteLauncher current="analytics" />
+            {/* §14: "signal studio." links to signalstudio.ie; switcher is "Products" */}
+            <SuiteLauncherAuthAware current="analytics" isAuthed={true} />
             <span
               aria-hidden
               className="hidden sm:inline"
@@ -39,13 +57,17 @@ export default function AppLayout({
             >
               /
             </span>
+            {/* Product mark: "analytics" — lowercase, no period/middot in breadcrumb */}
             <Link href="/app/brief" style={{ textDecoration: "none" }}>
               <Wordmark size="1rem" />
             </Link>
           </div>
+
+          {/* Right slot — switcher (inside SuiteLauncher) + account menu */}
           <UserButtonWithSuite current="analytics" />
         </div>
       </header>
+
       <main style={{ flex: 1, display: "flex", flexDirection: "column" }}>
         {children}
       </main>

@@ -1,16 +1,19 @@
-"use client";
-
-import { usePathname } from "next/navigation";
-import { SiteNav } from "./site-nav";
+import { auth } from "@clerk/nextjs/server";
+import { SiteNavConditionalClient } from "./site-nav-conditional-client";
 
 /**
- * Render the marketing SiteNav everywhere EXCEPT inside the authenticated
- * /app shell, which provides its own chrome (SuiteLauncher + user button).
- * Mounting this in the root layout gives every public route a consistent
- * header without each page having to import SiteNav manually.
+ * Server component wrapper for the marketing SiteNav.
+ *
+ * Reads Clerk auth state server-side and passes isAuthed down to the
+ * client path-check component. This keeps the nav hidden inside /app/*
+ * while giving SiteNav the auth context it needs to kill the false
+ * "Request access" CTA and mount the account menu when the user is signed in.
+ *
+ * L3 compliance: when isAuthed, SiteNav renders no "Sign in" / "Request
+ * access" / "Start for free" strings — those strings make an authenticated
+ * user feel logged out (§14 Kill the false "Sign in").
  */
-export function SiteNavConditional() {
-  const pathname = usePathname() ?? "";
-  if (pathname === "/app" || pathname.startsWith("/app/")) return null;
-  return <SiteNav />;
+export async function SiteNavConditional() {
+  const { userId } = await auth();
+  return <SiteNavConditionalClient isAuthed={Boolean(userId)} />;
 }

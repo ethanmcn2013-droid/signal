@@ -1,4 +1,29 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
+
+// ─── Layer 2: M→app redirect ────────────────────────────────────────────────
+//
+// Category M — marketing routes. An authenticated user on any of these is
+// shown the app/briefing instead. Unauthed users get the marketing page as
+// normal. The set is an explicit allowlist per Layer 0 route spec (never a
+// "catch everything public" heuristic).
+//
+// Category C (/wedding-planning and future shared briefings) is intentionally
+// ABSENT from this set. A prospect or logged-in colleague opening a shared
+// briefing link MUST see the briefing — bouncing them is the single worst
+// failure mode. C routes are never redirected, never auth-gated.
+//
+// Category A (/app/*) is never redirected — it's already the destination.
+// Category X (/api/*, /og/*, cron, /sign-in, /sign-up) is never touched.
+const MARKETING_PATHS = new Set([
+  "/",
+  "/signal",
+  "/method",
+  "/pricing",
+  "/about",
+]);
+
+const APP_ENTRY = "/app";
 
 // Anything under /app/* requires sign-in.
 // /u/[token] and /api/unsubscribe/[token] are intentionally public —
@@ -6,6 +31,30 @@ import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 const isProtectedRoute = createRouteMatcher(["/app(.*)"]);
 
 export default clerkMiddleware(async (auth, req) => {
+  const { pathname } = req.nextUrl;
+
+  // ── L2: M→app redirect (runs before Clerk protect) ──────────────────────
+  // Only fire on explicit M routes. C, A, and X pass through untouched.
+  if (MARKETING_PATHS.has(pathname)) {
+    // §14 escape-hatch: owner sets signal_preview_public cookie or
+    // ?preview=public to demo public marketing while logged in.
+    const isPreview =
+      req.cookies.get("signal_preview_public")?.value === "1" ||
+      req.nextUrl.searchParams.get("preview") === "public";
+
+    // Use the Clerk __session cookie to detect auth at middleware level.
+    // This avoids calling auth() on every marketing request while keeping
+    // the escape hatch effective. Matches the §14 canonical middleware spec.
+    const isAuthed = Boolean(req.cookies.get("__session")?.value);
+
+    if (isAuthed && !isPreview) {
+      // 307 Temporary Redirect — preserves method, signals the client this
+      // URL is still canonical (not a permanent move).
+      return NextResponse.redirect(new URL(APP_ENTRY, req.url), 307);
+    }
+  }
+
+  // ── Clerk protect: /app/* requires sign-in ───────────────────────────────
   if (isProtectedRoute(req)) {
     // Redirect to sign-in rather than the Clerk default (404). The
     // pricing page advertises Analytics; sending unsigned-in clickers
