@@ -1,6 +1,6 @@
 "use client";
 
-import { UserButton } from "@clerk/nextjs";
+import { UserButton, useUser, useClerk } from "@clerk/nextjs";
 import {
   ANALYTICS_URL,
   NOTES_URL,
@@ -71,6 +71,24 @@ function EyeIcon() {
   );
 }
 
+function CameraIcon() {
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+      <circle cx="12" cy="13" r="4" />
+    </svg>
+  );
+}
+
 /**
  * Clerk UserButton with:
  *   - Notification settings link
@@ -86,9 +104,25 @@ export function UserButtonWithSuite({ current }: { current: ProductSlug }) {
     typeof document !== "undefined" &&
     document.cookie.split(";").some((c) => c.trim() === "signal_preview_public=1");
 
+  // Item 4: detect whether user has uploaded a custom avatar.
+  // Clerk API: useUser() → user.hasImage; useClerk() → openUserProfile().
+  const { user } = useUser();
+  const { openUserProfile } = useClerk();
+  const hasPhoto = user?.hasImage ?? true; // default true → no flicker on load
+
   return (
     <UserButton>
       <UserButton.MenuItems>
+        {/* Item 4: surface avatar upload when user hasn't added a photo yet.
+            Opens Clerk's built-in <UserProfile> modal (avatar on first tab). */}
+        {!hasPhoto ? (
+          <UserButton.Action
+            label="Add a photo"
+            labelIcon={<CameraIcon />}
+            onClick={() => openUserProfile()}
+          />
+        ) : null}
+        <UserButton.Action label="manageAccount" />
         <UserButton.Link
           label="Notification settings"
           href="/app/settings/notifications"
