@@ -519,7 +519,7 @@ export function AnalyticsDemo({ domain = "wedding" }: Props = {}) {
               letterSpacing: "0.12em",
             }}
           >
-            hello@signalstudio.ie
+            Daily briefing · 06:00
           </span>
         </div>
       </motion.div>

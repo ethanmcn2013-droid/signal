@@ -21,7 +21,7 @@ export function TickCursor({ delivered }: Props) {
           letterSpacing: "0.14em",
         }}
       >
-        Wednesday · 06:00
+        Daily briefing · 06:00
       </span>
 
       {/* Step-tick indicator */}

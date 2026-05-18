@@ -12,10 +12,10 @@ const REQUEST_ACCESS_HREF =
   "mailto:hello@signalstudio.ie?subject=Analytics%20access";
 
 const NAV: { href: string; label: string; external?: boolean }[] = [
-  { href: "/signal",        label: "Signal"  },
-  { href: "/method",        label: "Method"  },
-  { href: UMBRELLA_PRICING, label: "Pricing", external: true },
-  { href: "/about",         label: "About"   },
+  { href: "/signal",   label: "Signal"  },
+  { href: "/method",   label: "Method"  },
+  { href: "/pricing",  label: "Pricing" },
+  { href: "/about",    label: "About"   },
 ];
 
 /**

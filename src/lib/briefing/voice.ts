@@ -43,11 +43,11 @@ export function summaryLine(b: Briefing): string {
   const risks = b.quietRisks.length;
   const moving = b.movingWell.length;
   if (att === 0 && risks === 0) {
-    if (moving > 0) return "Light morning. The board is moving.";
-    return "Quiet morning. Nothing pulling.";
+    if (moving > 0) return "Light day. The board is moving.";
+    return "All quiet. Nothing pulling.";
   }
   if (att === 0 && risks > 0) {
-    return `A quiet morning, but ${risks} ${risks === 1 ? "risk" : "risks"} worth watching.`;
+    return `A quiet day, but ${risks} ${risks === 1 ? "risk" : "risks"} worth watching.`;
   }
   if (att === 1) return "One thing's calling.";
   if (att === 2) return "Two things calling — and a few quieter signals below.";

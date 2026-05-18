@@ -176,6 +176,44 @@ export default function DemoPage() {
                 How it works
               </Link>
             </div>
+
+            {/* Request access CTA — matches nav pill styling */}
+            <div
+              style={{
+                marginTop: 8,
+                paddingTop: 32,
+                borderTop: "1px solid var(--border-soft)",
+                display: "flex",
+                alignItems: "center",
+                gap: 14,
+                flexWrap: "wrap",
+              }}
+            >
+              <p
+                style={{
+                  fontSize: 15,
+                  color: "var(--ink-soft)",
+                  lineHeight: 1.5,
+                  margin: 0,
+                }}
+              >
+                Ready to try it?
+              </p>
+              <a
+                href="mailto:hello@signalstudio.ie?subject=Analytics%20access%20request"
+                style={{
+                  fontSize: 13,
+                  color: "var(--ink)",
+                  fontWeight: 500,
+                  textDecoration: "none",
+                  padding: "5px 13px",
+                  border: "1px solid var(--border)",
+                  borderRadius: 999,
+                }}
+              >
+                Request access
+              </a>
+            </div>
           </div>
         </div>
       </section>

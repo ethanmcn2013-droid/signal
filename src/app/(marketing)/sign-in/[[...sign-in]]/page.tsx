@@ -56,17 +56,57 @@ export default function SignInPage() {
         padding: "64px 24px",
       }}
     >
-      <SignIn
-        appearance={{
-          variables: {
-            colorPrimary: "#4f46e5",
-            colorBackground: "#fafaf7",
-            fontFamily: "var(--font-geist-sans), system-ui, sans-serif",
-          },
-        }}
-        signUpUrl="/sign-up"
-        forceRedirectUrl="/app"
-      />
+      {/*
+       * SSR shell rendered before Clerk hydrates. The outer div is
+       * position:relative so the Clerk widget paints over this text
+       * node once it mounts — zero layout shift, no blank void on
+       * slow connections.
+       */}
+      <div style={{ position: "relative" }}>
+        <div
+          aria-hidden
+          style={{
+            position: "absolute",
+            inset: 0,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 8,
+            pointerEvents: "none",
+          }}
+        >
+          <span
+            style={{
+              fontSize: 15,
+              fontWeight: 600,
+              color: "var(--ink)",
+              letterSpacing: "-0.01em",
+            }}
+          >
+            signal analytics.
+          </span>
+          <span
+            style={{
+              fontSize: 14,
+              color: "var(--ink-soft)",
+            }}
+          >
+            Sign in to Signal Analytics
+          </span>
+        </div>
+        <SignIn
+          appearance={{
+            variables: {
+              colorPrimary: "#4f46e5",
+              colorBackground: "#fafaf7",
+              fontFamily: "var(--font-geist-sans), system-ui, sans-serif",
+            },
+          }}
+          signUpUrl="/sign-up"
+          forceRedirectUrl="/app"
+        />
+      </div>
     </div>
   );
 }

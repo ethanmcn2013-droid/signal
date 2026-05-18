@@ -15,7 +15,7 @@ const PILLARS = [
   {
     title: "Priority Compression",
     description:
-      "Three items per block, hard cap. Items below the cap are dropped silently. The signal, not the noise.",
+      "Three items per block, hard cap. Items below the cap are dropped silently.",
   },
 ] as const;
 

@@ -95,7 +95,7 @@ export function Hero() {
             className="block h-1.5 w-1.5 animate-pulse rounded-full"
             style={{ background: "var(--status-shipped)" }}
           />
-          Demo is live · choose an audience to reseed
+          Demo is live · pick a scenario
         </p>
 
         {/* id="demo" anchors deep-links from the suite landing page. */}

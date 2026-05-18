@@ -10,7 +10,7 @@ const BLOCKS = [
   {
     label: "Needs attention",
     dot: "#f59e0b",
-    body: "The things that will slow you down if left alone. Held-up tasks, overdue work, missing decisions, projects that have gone quiet. Two or three items at most. If it is not actively costing you something, it does not appear here.",
+    body: "The things that will slow you down if left alone. Held-up tasks, overdue work, missing decisions, projects that have gone quiet. Up to three items. If it is not actively costing you something, it does not appear here.",
   },
   {
     label: "Moving well",
@@ -25,7 +25,7 @@ const BLOCKS = [
   {
     label: "Suggested focus",
     dot: "#4f46e5",
-    body: "One to three things worth doing today. Not a ranked list of all open tasks. A considered read of what is held up, what is late, and where effort would do the most before the day ends.",
+    body: "Up to three things worth doing today. Not a ranked list of all open tasks. A considered read of what is held up, what is late, and where effort would do the most before the day ends.",
   },
 ] as const;
 
