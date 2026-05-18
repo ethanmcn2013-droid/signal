@@ -10,11 +10,11 @@ import {
 
 type ProductSlug = "tasks" | "roadmap" | "notes" | "analytics";
 
-// §1G canonical labels (lowercase product noun). §1I order: roadmap→tasks→notes→analytics.
+// §1G canonical labels (lowercase product noun). §1I order: notes→tasks→roadmap→analytics.
 const PRODUCTS: { slug: ProductSlug; label: string; url: string }[] = [
-  { slug: "roadmap",   label: "Open roadmap",   url: `${ROADMAP_URL}/app` },
-  { slug: "tasks",     label: "Open tasks",     url: `${TASKS_URL}/app` },
   { slug: "notes",     label: "Open notes",     url: `${NOTES_URL}/app` },
+  { slug: "tasks",     label: "Open tasks",     url: `${TASKS_URL}/app` },
+  { slug: "roadmap",   label: "Open roadmap",   url: `${ROADMAP_URL}/app` },
   { slug: "analytics", label: "Open analytics", url: `${ANALYTICS_URL}/app` },
 ];
 

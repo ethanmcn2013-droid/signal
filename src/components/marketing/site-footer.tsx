@@ -49,9 +49,9 @@ export function SiteFooter() {
           heading="Suite"
           links={[
             { href: STUDIO_URL,  label: "Signal Studio",   external: true },
+            { href: NOTES_URL,   label: "Signal Notes",    external: true },
             { href: TASKS_URL,   label: "Signal Tasks",    external: true },
             { href: ROADMAP_URL, label: "Signal Roadmap",  external: true },
-            { href: NOTES_URL,   label: "Signal Notes",    external: true },
           ]}
         />
       </div>
