@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Wordmark } from "@/components/brand/wordmark";
-import { SuiteLauncherAuthAware } from "@/components/suite-launcher-auth-aware";
+import { SuiteLauncher } from "@/components/suite-launcher";
 import { UserButton } from "@clerk/nextjs";
 
 const UMBRELLA_PRICING = "https://signalstudio.ie/pricing";
@@ -64,7 +64,7 @@ export function SiteNav({ isAuthed = false }: { isAuthed?: boolean }) {
         <div className="flex items-center" style={{ gap: 12 }}>
           <div className="hidden sm:inline-flex">
             {/* §14 L3: authed mode shows app deep-links; unauthed shows marketing taglines */}
-            <SuiteLauncherAuthAware current="analytics" isAuthed={isAuthed} />
+            <SuiteLauncher current="analytics" isAuthed={isAuthed} />
           </div>
           <span aria-hidden className="hidden sm:inline" style={{ color: "var(--ink-faint)", fontSize: 12 }}>/</span>
           <Wordmark size="0.9375rem" />

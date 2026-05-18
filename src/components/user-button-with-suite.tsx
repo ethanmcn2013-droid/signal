@@ -10,12 +10,12 @@ import {
 
 type ProductSlug = "tasks" | "roadmap" | "notes" | "analytics";
 
-// §14 app-context labels (locked verb for analytics: "Open the briefing")
+// §1G canonical labels (lowercase product noun). §1I order: roadmap→tasks→notes→analytics.
 const PRODUCTS: { slug: ProductSlug; label: string; url: string }[] = [
-  { slug: "tasks",     label: "Open the workspace",  url: `${TASKS_URL}/app` },
-  { slug: "roadmap",   label: "Open the roadmap",    url: `${ROADMAP_URL}/app` },
-  { slug: "notes",     label: "Open the notebook",   url: `${NOTES_URL}/app` },
-  { slug: "analytics", label: "Open the briefing",   url: `${ANALYTICS_URL}/app` },
+  { slug: "roadmap",   label: "Open roadmap",   url: `${ROADMAP_URL}/app` },
+  { slug: "tasks",     label: "Open tasks",     url: `${TASKS_URL}/app` },
+  { slug: "notes",     label: "Open notes",     url: `${NOTES_URL}/app` },
+  { slug: "analytics", label: "Open analytics", url: `${ANALYTICS_URL}/app` },
 ];
 
 function ArrowIcon() {
