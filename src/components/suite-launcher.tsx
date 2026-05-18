@@ -41,7 +41,7 @@ const PRODUCTS_AUTHED: {
 
 const INDIGO = "#4f46e5";
 
-const PRODUCT_ORIGINS = [TASKS_URL, ROADMAP_URL, NOTES_URL, ANALYTICS_URL];
+const PRODUCT_ORIGINS = [ROADMAP_URL, TASKS_URL, NOTES_URL, ANALYTICS_URL];
 
 /**
  * Phase 3 (instant-jump): warm a sibling product on hover/focus so the
