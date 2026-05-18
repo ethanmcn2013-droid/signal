@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { auth } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { dataSource } from "@/lib/data/source";
 import { isOnboarded } from "@/server/onboarding/queries";
 import { TASKS_URL } from "@/lib/product-urls";
@@ -23,7 +23,13 @@ export default async function OnboardingPage() {
     redirect("/app");
   }
 
-  const candidates = await dataSource.listForUser(userId);
+  // Resolve email for the email-first identity fallback (D1).
+  // currentUser() is a separate Clerk call but runs server-side; the cost
+  // is acceptable here — onboarding is a one-time flow.
+  const me = await currentUser();
+  const email = me?.primaryEmailAddress?.emailAddress ?? null;
+
+  const candidates = await dataSource.listForUser({ clerkId: userId, email });
 
   return (
     <div

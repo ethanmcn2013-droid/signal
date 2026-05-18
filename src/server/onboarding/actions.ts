@@ -1,6 +1,6 @@
 "use server";
 
-import { auth } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { sql } from "drizzle-orm";
 import { db } from "@/server/db";
@@ -32,8 +32,12 @@ export async function completeOnboarding(formData: FormData): Promise<void> {
 
   // Verify the workspace is one the user can actually brief. Defends
   // against a tampered formData replaying a workspace id the user
-  // doesn't have access to.
-  const candidates = await dataSource.listForUser(userId);
+  // doesn't have access to. Pass email for the email-first identity
+  // fallback (D1) so the verification uses the same resolution chain
+  // as the picker that presented the candidates.
+  const me = await currentUser();
+  const email = me?.primaryEmailAddress?.emailAddress ?? null;
+  const candidates = await dataSource.listForUser({ clerkId: userId, email });
   const allowed = candidates.some((c) => c.workspaceId === workspaceId);
   if (!allowed) {
     throw new Error("That workspace isn't linked to your account.");

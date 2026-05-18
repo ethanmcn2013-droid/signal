@@ -151,20 +151,24 @@ export function SuiteLauncherAuthAware({
     }
   }, [open]);
 
-  const buttonLabel = isAuthed ? "Products" : "signal studio.";
-
   return (
     <div ref={wrapRef} style={{ position: "relative", display: "inline-flex" }}>
+      {/*
+       * P2-5 fix: button always renders "signal studio." regardless of auth
+       * state. The "Products ▾" label was the outlier — Notes and Roadmap both
+       * show the wordmark as the launcher trigger (canonical pattern per
+       * IA_COHERENCE.md). The popover content already switches on isAuthed.
+       */}
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
         aria-haspopup="menu"
         aria-expanded={open}
-        aria-label={isAuthed ? "Open product switcher" : "Open Signal Studio launcher"}
+        aria-label="Open Signal Studio launcher"
         style={{
           fontSize: 12,
           color: "var(--ink-quiet)",
-          fontWeight: isAuthed ? 500 : 400,
+          fontWeight: 400,
           textDecoration: "none",
           letterSpacing: "-0.01em",
           transition: "color var(--motion-fast)",
@@ -177,16 +181,7 @@ export function SuiteLauncherAuthAware({
         onMouseEnter={(e) => (e.currentTarget.style.color = "var(--ink)")}
         onMouseLeave={(e) => (e.currentTarget.style.color = "var(--ink-quiet)")}
       >
-        {isAuthed ? (
-          <>
-            {buttonLabel}
-            <span style={{ color: INDIGO, marginLeft: 3 }}>▾</span>
-          </>
-        ) : (
-          <>
-            signal studio<span style={{ color: INDIGO }}>.</span>
-          </>
-        )}
+        signal studio<span style={{ color: INDIGO }}>.</span>
       </button>
 
       {open ? (

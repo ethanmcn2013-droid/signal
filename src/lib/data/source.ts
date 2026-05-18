@@ -10,7 +10,7 @@
  *   runs offline.
  */
 
-import { eq } from "drizzle-orm";
+import { eq, or } from "drizzle-orm";
 import type { WorkRead, TaskRead, ProjectRead, Status } from "./types";
 import { tasksDb, tasksDbConfigured } from "@/server/tasks-db/client";
 import {
@@ -26,10 +26,31 @@ export interface WorkspaceCandidate {
   role: "owner" | "member";
 }
 
+export interface UserIdentity {
+  /** Clerk user id (`user_2abc…`). Always present from auth(). */
+  clerkId: string;
+  /**
+   * Primary email from Clerk. Used as the first-priority key to locate
+   * a Tasks user row — email is hydrated by the Clerk webhook, whereas
+   * clerk_id may not yet be written (webhook-race hole). Nullable when
+   * Clerk has no primary email on the account.
+   */
+  email: string | null;
+}
+
 export interface DataSource {
   read(workspaceId: string): Promise<WorkRead>;
-  /** Workspaces this Clerk user can brief (owner or member). */
-  listForUser(externalUserId: string): Promise<WorkspaceCandidate[]>;
+  /**
+   * Workspaces this user can brief (owner or member).
+   *
+   * Resolution order (D1 decision):
+   *   1. email match  (canonical — hydrated by webhook, most reliable)
+   *   2. clerk_id match (belt-and-braces)
+   *   3. id === clerkId (legacy seed rows with no clerk_id / email set)
+   * Returns [] only when all three miss. Never throws to the page —
+   * try/catch wraps DB reads.
+   */
+  listForUser(identity: UserIdentity): Promise<WorkspaceCandidate[]>;
 }
 
 // ── Mock source (dev fallback + tests) ─────────────────────────────
@@ -47,7 +68,7 @@ export function mockSourceWith(opts: {
         events: [],
       };
     },
-    async listForUser(_externalUserId: string): Promise<WorkspaceCandidate[]> {
+    async listForUser(_identity: UserIdentity): Promise<WorkspaceCandidate[]> {
       return opts.workspaces;
     },
   };
@@ -120,6 +141,77 @@ function titleCaseTag(tag: string): string {
   return tag
     .replace(/[-_]+/g, " ")
     .replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+// ── Testable DB-injected helper ───────────────────────────────────────────────
+//
+// Exported so unit tests can call it with an in-memory libSQL/Drizzle db
+// without mocking module-level state. `tasksDbSource.listForUser` delegates
+// here. This is the only export test code should import from this file.
+//
+// `db` type: the concrete drizzle-orm/libsql LibSQLDatabase (same schema
+// used by the mirror schema module). We use `Parameters<typeof tasksDb.select>`
+// trick would require tasksDb non-null; instead, accept `unknown` and cast —
+// Drizzle's API is identical regardless of the underlying client.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function _listForUserFromDb(db: any, identity: UserIdentity): Promise<WorkspaceCandidate[]> {
+  const { clerkId, email } = identity;
+  const candidates: Array<{ id: string; clerkId: string | null; email: string | null }> = await db
+    .select({ id: usersTable.id, clerkId: usersTable.clerkId, email: usersTable.email })
+    .from(usersTable)
+    .where(
+      or(
+        email ? eq(usersTable.email, email) : undefined,
+        eq(usersTable.clerkId, clerkId),
+        eq(usersTable.id, clerkId),
+      ),
+    );
+
+  if (candidates.length === 0) return [];
+
+  let userId: string | null = null;
+  for (const row of candidates) {
+    if (email && row.email === email) { userId = row.id; break; }
+  }
+  if (!userId) {
+    for (const row of candidates) {
+      if (row.clerkId === clerkId) { userId = row.id; break; }
+    }
+  }
+  if (!userId) {
+    for (const row of candidates) {
+      if (row.id === clerkId) { userId = row.id; break; }
+    }
+  }
+  if (!userId) return [];
+
+  const owned: Array<{ id: string; name: string }> = await db
+    .select({ id: workspacesTable.id, name: workspacesTable.name })
+    .from(workspacesTable)
+    .where(eq(workspacesTable.ownerUserId, userId));
+
+  const member: Array<{ id: string; name: string }> = await db
+    .select({ id: workspacesTable.id, name: workspacesTable.name })
+    .from(workspacesTable)
+    .innerJoin(
+      workspaceMembersTable,
+      eq(workspacesTable.id, workspaceMembersTable.workspaceId),
+    )
+    .where(eq(workspaceMembersTable.userId, userId));
+
+  const seen = new Set<string>();
+  const out: WorkspaceCandidate[] = [];
+  for (const w of owned) {
+    if (seen.has(w.id)) continue;
+    seen.add(w.id);
+    out.push({ workspaceId: w.id, name: w.name, role: "owner" });
+  }
+  for (const w of member) {
+    if (seen.has(w.id)) continue;
+    seen.add(w.id);
+    out.push({ workspaceId: w.id, name: w.name, role: "member" });
+  }
+  return out;
 }
 
 export const tasksDbSource: DataSource = {
@@ -204,56 +296,19 @@ export const tasksDbSource: DataSource = {
     };
   },
 
-  async listForUser(externalUserId: string): Promise<WorkspaceCandidate[]> {
+  async listForUser(identity: UserIdentity): Promise<WorkspaceCandidate[]> {
     if (!tasksDb) {
-      throw new Error(
-        "tasksDbSource called without TASKS_DATABASE_URL configured",
-      );
+      // tasksDb is null when TASKS_DATABASE_URL is unset (Preview / dev without env).
+      // Return [] rather than throwing — the onboarding page handles empty gracefully.
+      console.warn("[tasksDbSource] TASKS_DATABASE_URL not set — listForUser returning []");
+      return [];
     }
-
-    // 1. Resolve Clerk userId → Tasks users.id
-    const userRows = await tasksDb
-      .select({ id: usersTable.id })
-      .from(usersTable)
-      .where(eq(usersTable.clerkId, externalUserId))
-      .limit(1);
-    if (userRows.length === 0) return [];
-    const userId = userRows[0].id;
-
-    // 2. Owned workspaces
-    const owned = await tasksDb
-      .select({ id: workspacesTable.id, name: workspacesTable.name })
-      .from(workspacesTable)
-      .where(eq(workspacesTable.ownerUserId, userId));
-
-    // 3. Member workspaces (excluding owner — would be in #2 already
-    //    via the workspace_members row Tasks creates for the owner).
-    const member = await tasksDb
-      .select({
-        id: workspacesTable.id,
-        name: workspacesTable.name,
-      })
-      .from(workspacesTable)
-      .innerJoin(
-        workspaceMembersTable,
-        eq(workspacesTable.id, workspaceMembersTable.workspaceId),
-      )
-      .where(eq(workspaceMembersTable.userId, userId));
-
-    // 4. Dedupe with owner taking precedence on role.
-    const seen = new Set<string>();
-    const out: WorkspaceCandidate[] = [];
-    for (const w of owned) {
-      if (seen.has(w.id)) continue;
-      seen.add(w.id);
-      out.push({ workspaceId: w.id, name: w.name, role: "owner" });
+    try {
+      return await _listForUserFromDb(tasksDb, identity);
+    } catch (err) {
+      console.error("[tasksDbSource] listForUser error — returning []", err);
+      return [];
     }
-    for (const w of member) {
-      if (seen.has(w.id)) continue;
-      seen.add(w.id);
-      out.push({ workspaceId: w.id, name: w.name, role: "member" });
-    }
-    return out;
   },
 };
 
