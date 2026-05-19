@@ -1,6 +1,4 @@
-import Link from "next/link";
-import { Wordmark } from "@/components/brand/wordmark";
-import { SuiteLauncher } from "@/components/suite-launcher";
+import { SuiteSwitcher } from "@/components/suite-switcher-pills";
 import { UserButtonWithSuite } from "@/components/user-button-with-suite";
 
 /**
@@ -46,24 +44,14 @@ export default function AppLayout({
       >
         <div className="mx-auto flex h-14 w-full max-w-[80rem] items-center justify-between px-6">
 
-          {/* Left slot — breadcrumb */}
-          <div className="flex items-center" style={{ gap: 12 }}>
-            {/* §14: "signal studio." trigger opens suite switcher popover */}
-            <SuiteLauncher current="analytics" isAuthed={true} />
-            <span
-              aria-hidden
-              className="hidden sm:inline"
-              style={{ color: "var(--ink-faint)", fontSize: 12 }}
-            >
-              /
-            </span>
-            {/* Product mark: "analytics" — lowercase, no period/middot in breadcrumb */}
-            <Link href="/app/brief" style={{ textDecoration: "none" }}>
-              <Wordmark size="1rem" />
-            </Link>
+          {/* Left slot — §14 (amended 2026-05-19): umbrella anchor (once)
+              + always-visible 4-product pill switcher. The active pill is
+              the product-you-are-in indicator (no separate breadcrumb). */}
+          <div className="flex min-w-0 items-center">
+            <SuiteSwitcher current="analytics" />
           </div>
 
-          {/* Right slot — switcher (inside SuiteLauncher) + account menu */}
+          {/* Right slot — account menu */}
           <UserButtonWithSuite current="analytics" />
         </div>
       </header>
