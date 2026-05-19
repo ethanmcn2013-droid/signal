@@ -71,7 +71,7 @@ export function BriefingView({
         <Header stamp={stamp} />
 
         <motion.h1
-          className="mb-3 text-[32px] font-semibold leading-[1.15] tracking-[-0.015em]"
+          className="mb-3 text-[32px] font-semibold leading-[1.15] tracking-[-0.035em]"
           style={{ color: "var(--ink)" }}
           variants={fadeUp}
         >
@@ -111,7 +111,7 @@ export function BriefingView({
         )}
 
         <motion.p
-          className="mt-12 text-[11px] uppercase tracking-[0.14em]"
+          className="mt-12 text-[11px] tracking-[0.14em]"
           style={{ color: "var(--ink-quiet)" }}
           variants={fadeUp}
         >
@@ -362,8 +362,7 @@ function FocusBlock({ items }: { items: FocusItem[] }) {
       className="mt-10 rounded-2xl border p-6"
       variants={fadeUp}
       style={{
-        borderColor: "color-mix(in srgb, var(--brand) 22%, transparent)",
-        background: "color-mix(in srgb, var(--brand) 4%, transparent)",
+        borderColor: "var(--hairline)",
       }}
     >
       <div className="mb-4 flex items-center gap-2.5">
@@ -415,27 +414,45 @@ function FocusBlock({ items }: { items: FocusItem[] }) {
 
 function EmptyState() {
   return (
-    <motion.div
-      className="rounded-2xl border p-10 text-center"
-      variants={fadeUp}
-      style={{
-        borderColor: "var(--line-soft, rgba(20,21,26,0.08))",
-        background: "var(--bg-sunken, rgba(20,21,26,0.02))",
-      }}
-    >
-      <p
-        className="text-[18px] font-medium"
-        style={{ color: "var(--ink)" }}
+    <>
+      <motion.div
+        className="rounded-2xl border p-10 text-center"
+        variants={fadeUp}
+        style={{
+          borderColor: "var(--hairline)",
+          background: "var(--paper-soft)",
+        }}
       >
-        Nothing to flag today.
-      </p>
-      <p
-        className="mt-2 text-[14px]"
-        style={{ color: "var(--ink-soft)" }}
+        <p
+          className="text-[18px] font-medium"
+          style={{ color: "var(--ink)" }}
+        >
+          Nothing to flag today.
+        </p>
+        <p
+          className="mt-2 text-[14px]"
+          style={{ color: "var(--ink-soft)" }}
+        >
+          No briefing email is sent on quiet days. The board is clear.
+        </p>
+      </motion.div>
+
+      {/* Quiet escape hatch — calm, not a CTA. No marketing register. */}
+      <motion.p
+        className="mt-6 text-center text-[12px] tracking-[0.01em]"
+        style={{ color: "var(--ink-quiet)" }}
+        variants={fadeUp}
       >
-        No briefing email is sent on quiet days. The board is clear.
-      </p>
-    </motion.div>
+        Your next briefing builds tomorrow, 6am.{" "}
+        <a
+          href="https://tasks.signalstudio.ie/app"
+          className="underline underline-offset-2 outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--brand)]"
+          style={{ color: "var(--ink-quiet)" }}
+        >
+          Open the Tasks workspace
+        </a>
+      </motion.p>
+    </>
   );
 }
 
