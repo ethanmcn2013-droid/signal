@@ -3,6 +3,10 @@
 Convention: BRAND.md §6.5. Entries before 2026-05-14 keep their
 original shape; the new shape starts at the next cycle.
 
+## 2026-05-21 · A·14 · ships · close your account, install the briefing to your home screen
+
+**Settings · Account is reachable from the avatar dropdown beside Notifications, with an irreversible delete that closes your Signal identity in one step; the briefing installs to a phone or desktop home screen.** Typing your email confirms the delete; the server wipes both Analytics databases — the prefs database that holds your Tasks-workspace link and timezone, and the email subscription database that holds your cadence and unsubscribe token — then asks the identity layer to close the account in the same call. There is no grace period; the action is final and visible before you commit to it. Installable add-to-home-screen ships a manifest with the existing wordmark Apple touch icon and a new maskable Android tile. Required for Apple App Store submission later this summer.
+
 ## 2026-05-19 · A·13 · ships · the briefing chrome carries four visible pills
 
 **The authed `/app` chrome now shows all four products as always-visible

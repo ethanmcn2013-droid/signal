@@ -128,6 +128,11 @@ export function UserButtonWithSuite({ current }: { current: ProductSlug }) {
           href="/app/settings/notifications"
           labelIcon={<GearIcon />}
         />
+        <UserButton.Link
+          label="Account settings"
+          href="/app/settings/account"
+          labelIcon={<GearIcon />}
+        />
         {/* §14 L3 — escape hatch: owner can demo public marketing while logged in */}
         <UserButton.Action
           label={isPreview ? "Exit preview" : "View public site"}

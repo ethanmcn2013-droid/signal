@@ -31,6 +31,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://analytics.signalstudio.ie"
   ),
+  manifest: "/manifest.webmanifest",
   openGraph: {
     title: "Signal Analytics — Operational clarity.",
     description:
