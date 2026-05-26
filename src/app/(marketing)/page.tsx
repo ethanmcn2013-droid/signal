@@ -1,3 +1,4 @@
+import { AnalyticsHeroLoader } from "@/components/landing/analytics-hero-loader";
 import { Hero } from "@/components/landing/hero";
 import { BriefingAnatomy } from "@/components/marketing/briefing-anatomy";
 
@@ -35,9 +36,18 @@ const ANTI_FEATURES = [
   },
 ] as const;
 
+/**
+ * Analytics marketing homepage — structure:
+ *   1. AnalyticsHeroLoader — 8-tick discrete sample reveal animation
+ *   2. Hero                — product intro text + audience toggle + live briefing demo
+ *   3. BriefingAnatomy     — anatomy of a briefing item
+ *   4. Pillars             — three attention-engine pillars
+ *   5. Anti-features       — what this isn't
+ */
 export default function HomePage() {
   return (
     <div style={{ background: "var(--bg)" }}>
+      <AnalyticsHeroLoader />
       <Hero />
       <BriefingAnatomy />
 
