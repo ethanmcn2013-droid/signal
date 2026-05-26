@@ -360,7 +360,7 @@ export default function WeddingPlanningBriefingPage() {
             </a>
 
             <a
-              href="https://roadmap.signalstudio.ie/wedding-planning/update"
+              href="https://roadmap.signalstudio.ie/the-wedding"
               target="_blank"
               rel="noopener noreferrer"
               style={{
@@ -463,8 +463,10 @@ export default function WeddingPlanningBriefingPage() {
               >
                 Open the briefing
               </Link>
-              <Link
-                href="/method"
+              <a
+                href="https://signalstudio.ie/venues/demo"
+                target="_blank"
+                rel="noopener noreferrer"
                 style={{
                   display: "inline-block",
                   padding: "10px 20px",
@@ -475,8 +477,8 @@ export default function WeddingPlanningBriefingPage() {
                   textDecoration: "none",
                 }}
               >
-                How it works
-              </Link>
+                See the venue demo
+              </a>
             </div>
           </div>
         </div>
