@@ -38,7 +38,7 @@ const ANTI_FEATURES = [
 
 /**
  * Analytics marketing homepage — structure:
- *   1. AnalyticsHeroLoader — 8-tick discrete sample reveal animation
+ *   1. AnalyticsHeroLoader — "the bar appears" hero-card animation
  *   2. Hero                — product intro text + audience toggle + live briefing demo
  *   3. BriefingAnatomy     — anatomy of a briefing item
  *   4. Pillars             — three attention-engine pillars

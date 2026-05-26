@@ -1,25 +1,17 @@
 "use client";
 
 /**
- * Analytics hero loader — "8 samples · 0 lies."
+ * Analytics hero loader — "the bar appears."
  *
- * The dot teleports across the screen in 8 discrete steps (steps(8,end))
- * rather than interpolating. At each tick: an axis hairline lights up below
- * the baseline, a mono sample number flashes above, and the letter at that
- * position snaps into place. When the dot arrives at the period, it freezes.
- * Facts don't move.
- *
- * SAFETY CONTRACT:
- *   · Fully scoped — every class and @keyframes prefixed `anl-`.
- *   · In-flow only — no position:fixed, no inset:0, no high z-index.
- *   · rAF loop cancels after all 8 ticks fire + a short settling moment.
- *   · prefers-reduced-motion → full assembled state, no animation.
+ * Scoped React port of the standalone Signal Studio · Analytics hero card.
+ * The dot rolls once across "analytics", revealing each letter; as it reaches
+ * the period position, seven bars rise down from the baseline and settle with
+ * the dot capping the rightmost bar.
  */
 
 import { useEffect, useRef } from "react";
 
-const TICKS = 8;
-const TICK_MS = 300; // 8 × 300ms = 2400ms total — matches CSS steps(8,end)
+const LETTERS = "analytics".split("");
 
 export function AnalyticsHeroLoader() {
   const rootRef = useRef<HTMLDivElement>(null);
@@ -29,163 +21,150 @@ export function AnalyticsHeroLoader() {
     if (!root) return;
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    const wordEl = root.querySelector<HTMLElement>(".anl-word");
+    const letterEls = [...root.querySelectorAll<HTMLElement>(".anl-letter")];
+    const barEls = [...root.querySelectorAll<HTMLElement>(".anl-bar")];
     const dotEl = root.querySelector<HTMLElement>(".anl-dot");
     const composerEl = root.querySelector<HTMLElement>(".anl-composer");
-    const axisEl = root.querySelector<HTMLElement>(".anl-axis");
-    const readoutsEl = root.querySelector<HTMLElement>(".anl-readouts");
 
-    if (!wordEl || !dotEl || !composerEl || !axisEl || !readoutsEl) return;
-
-    const letterEls = [...wordEl.querySelectorAll<HTMLElement>(".anl-letter")];
+    if (!dotEl || !composerEl) return;
 
     if (reduced) {
       letterEls.forEach((el) => {
         el.style.opacity = "1";
         el.style.transform = "translateY(0)";
       });
+      barEls.forEach((el) => el.classList.add("anl-risen"));
       return;
     }
 
-    const samples = ["0001", "0002", "0003", "0004", "0005", "0006", "0007", "0008"];
-    let tickPositions: number[] = [];
+    const INTRO = 2600;
+    const RISE_DURATION = 280;
+    const RISE_LEAD = 80;
+
+    const start = performance.now();
+    const risenAt = new Array(letterEls.length).fill(null) as Array<number | null>;
+    const barRisen = new Array(barEls.length).fill(false);
     let letterCenters: number[] = [];
+    let barCenters: number[] = [];
+    let rafId = 0;
 
     const measure = () => {
       const composerLeft = composerEl.getBoundingClientRect().left;
-      // dot's natural final position (ignores the running transform)
-      const finalX = dotEl.offsetLeft + dotEl.offsetWidth / 2;
-      const cs = getComputedStyle(composerEl);
-      const wmSize = parseFloat(cs.fontSize);
-      const tickDistance = wmSize * 8;
-
-      tickPositions = [];
-      for (let i = 1; i <= TICKS; i++) {
-        const offset = tickDistance * (TICKS - i) / TICKS;
-        tickPositions.push(finalX - offset);
-      }
-
       letterCenters = letterEls.map((el) => {
-        const r = el.getBoundingClientRect();
-        return r.left + r.width / 2 - composerLeft;
+        const rect = el.getBoundingClientRect();
+        return rect.left + rect.width / 2 - composerLeft;
       });
-
-      // populate axis ticks
-      axisEl.innerHTML = "";
-      tickPositions.forEach((x) => {
-        const t = document.createElement("span");
-        t.className = "anl-axis-tick";
-        t.style.left = x + "px";
-        axisEl.appendChild(t);
-      });
-
-      // pre-create readout slots
-      readoutsEl.innerHTML = "";
-      tickPositions.forEach((x, i) => {
-        const r = document.createElement("span");
-        r.className = "anl-readout";
-        r.style.left = x + "px";
-        r.textContent = samples[i];
-        readoutsEl.appendChild(r);
+      barCenters = barEls.map((el) => {
+        const rect = el.getBoundingClientRect();
+        return rect.left + rect.width / 2 - composerLeft;
       });
     };
 
-    const TOTAL_MS = TICKS * TICK_MS;
-    const start = performance.now();
-    const firedTicks = new Set<number>();
-    let raf = 0;
+    const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
 
     const frame = () => {
       const elapsed = performance.now() - start;
-      if (elapsed > TOTAL_MS + 800) return; // all done
+      if (elapsed > INTRO + 700) return;
 
-      const currentStep = Math.min(TICKS, Math.floor(elapsed / TICK_MS));
-      for (let i = 1; i <= currentStep; i++) {
-        if (firedTicks.has(i)) continue;
-        firedTicks.add(i);
-        const idx = i - 1;
+      const composerLeft = composerEl.getBoundingClientRect().left;
+      const dotRect = dotEl.getBoundingClientRect();
+      const dotX = dotRect.left + dotRect.width / 2 - composerLeft;
+      const dotOpacity = parseFloat(getComputedStyle(dotEl).opacity);
 
-        // light up axis tick
-        const ax = axisEl.children[idx] as HTMLElement | undefined;
-        if (ax) {
-          ax.classList.add("anl-lit");
-          setTimeout(() => {
-            ax.classList.remove("anl-lit");
-            ax.classList.add("anl-dim");
-          }, 240);
+      letterEls.forEach((el, index) => {
+        const letterX = letterCenters[index];
+        if (letterX === undefined) return;
+
+        const distance = letterX - dotX;
+        if (risenAt[index] === null && dotOpacity > 0.2 && distance < RISE_LEAD) {
+          risenAt[index] = elapsed;
         }
 
-        // flash readout
-        const ro = readoutsEl.children[idx] as HTMLElement | undefined;
-        if (ro) {
-          ro.style.transition = "opacity 60ms ease";
-          ro.style.opacity = "1";
-          ro.style.transform = "translateX(-50%) translateY(0)";
-          setTimeout(() => {
-            ro.style.transition = "opacity 320ms ease, transform 320ms ease";
-            ro.style.opacity = "0";
-            ro.style.transform = "translateX(-50%) translateY(-6px)";
-          }, 200);
+        if (risenAt[index] === null) {
+          el.style.opacity = "0";
+          el.style.transform = "translateY(115%)";
+          return;
         }
 
-        // reveal letters whose center is at or behind this tick
-        const tickX = tickPositions[idx];
-        if (tickX === undefined) continue;
-        letterEls.forEach((el, li) => {
-          const lx = letterCenters[li];
-          if (lx === undefined) return;
-          if (lx <= tickX + 8 && el.style.opacity !== "1") {
-            el.style.opacity = "1";
-            el.style.transform = "translateY(0)";
-          }
-        });
-      }
+        const timeSinceRise = elapsed - risenAt[index];
+        const progress = easeOutCubic(
+          Math.min(1, Math.max(0, timeSinceRise / RISE_DURATION)),
+        );
+        el.style.opacity = progress.toString();
+        el.style.transform = `translateY(${(1 - progress) * 115}%)`;
+      });
 
-      raf = requestAnimationFrame(frame);
+      barEls.forEach((el, index) => {
+        const barX = barCenters[index];
+        if (barX === undefined) return;
+        if (!barRisen[index] && dotOpacity > 0.2 && dotX >= barX - 4) {
+          el.classList.add("anl-risen");
+          barRisen[index] = true;
+        }
+      });
+
+      rafId = requestAnimationFrame(frame);
     };
 
-    raf = requestAnimationFrame(() => {
+    rafId = requestAnimationFrame(() => {
       measure();
-      raf = requestAnimationFrame(frame);
+      rafId = requestAnimationFrame(frame);
     });
     window.addEventListener("resize", measure);
+
     return () => {
-      cancelAnimationFrame(raf);
+      cancelAnimationFrame(rafId);
       window.removeEventListener("resize", measure);
     };
   }, []);
 
   return (
     <section className="anl-hero-section" aria-label="Signal Analytics">
-      {/* Corner chrome */}
       <div className="anl-chrome anl-chrome-tl">
         <span className="anl-wm">
-          signal studio<span className="anl-dot-static" />
-          <span className="anl-sep">/</span>analytics
+          <span>signal studio</span>
+          <span className="anl-dot-static" />
+          <span className="anl-sep">/</span>
+          <span>analytics</span>
         </span>
       </div>
+
       <div className="anl-chrome anl-chrome-tr">
         <span className="anl-pip" aria-hidden />
-        sampled · 8 reads
+        <span>samples · 7</span>
       </div>
 
-      {/* Stage */}
-      <div ref={rootRef} aria-hidden>
-        <div className="anl-composer">
-          <span className="anl-axis" id="anl-axis" />
-          <span className="anl-readouts" id="anl-readouts" />
-          <span className="anl-word">
-            {"analytics".split("").map((ch, i) => (
-              <span key={i} className="anl-letter">{ch}</span>
-            ))}
-          </span>
-          <span className="anl-dot" />
+      <div ref={rootRef} className="anl-stage" aria-hidden>
+        <div className="anl-composer-with-bars">
+          <div className="anl-composer">
+            <span className="anl-word">
+              {LETTERS.map((letter, index) => (
+                <span key={`${letter}-${index}`} className="anl-letter">
+                  {letter}
+                </span>
+              ))}
+            </span>
+            <span className="anl-trail anl-trail-1" />
+            <span className="anl-trail anl-trail-2" />
+            <span className="anl-trail anl-trail-3" />
+            <span className="anl-intro-ripple-slow" />
+            <span className="anl-intro-ripple" />
+            <span className="anl-dot" />
+          </div>
+
+          <div className="anl-bars-row">
+            <span className="anl-bar anl-tall" />
+            <span className="anl-bar anl-short" />
+            <span className="anl-bar anl-medium" />
+            <span className="anl-bar anl-short" />
+            <span className="anl-bar anl-short" />
+            <span className="anl-bar anl-medium" />
+            <span className="anl-bar anl-short" />
+          </div>
         </div>
-      </div>
 
-      {/* Caption */}
-      <p className="anl-caption">8 samples · 0 lies</p>
+        <p className="anl-caption">the bar appears</p>
+      </div>
 
       <style>{CSS}</style>
     </section>
@@ -194,135 +173,283 @@ export function AnalyticsHeroLoader() {
 
 const CSS = `
 .anl-hero-section{
-  position:relative;overflow:hidden;background:#fafaf7;
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  min-height:min(88vh,900px);
-  padding:clamp(80px,12vh,160px) 24px clamp(64px,10vh,128px);
-}
-.anl-hero-section{
+  --anl-bg:#fafaf7;
   --anl-ink:#111111;
   --anl-stone-300:#d8d3c6;
   --anl-stone-500:#8c887e;
   --anl-indigo:#4f46e5;
   --anl-indigo-300:#a5b4fc;
-  --anl-hairline:rgba(17,17,17,0.06);
+  --anl-hairline:rgba(17,17,17,.06);
   --anl-wm-size:clamp(56px,12vw,168px);
-  --anl-tick-dist:calc(var(--anl-wm-size) * 8);
+  --anl-roll-distance:calc(var(--anl-wm-size) * 8);
+  --anl-intro-duration:2.6s;
   --anl-font:var(--font-geist-sans,'Geist',system-ui,sans-serif);
   --anl-mono:var(--font-geist-mono,'Geist Mono',ui-monospace,monospace);
+  position:relative;
+  overflow:hidden;
+  min-height:min(88svh,900px);
+  background:var(--anl-bg);
+  color:var(--anl-ink);
+  font-family:var(--anl-font);
 }
 
-/* ─── Chrome ───────────────────────────────── */
 .anl-chrome{
-  position:absolute;font-family:var(--anl-mono);font-size:11px;
-  letter-spacing:.08em;text-transform:uppercase;color:var(--anl-stone-500);
-  display:inline-flex;align-items:center;gap:10px;
+  position:absolute;
+  z-index:2;
+  display:inline-flex;
+  align-items:center;
+  gap:12px;
+  color:var(--anl-stone-500);
+  font-family:var(--anl-mono);
+  font-size:11px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
 }
-.anl-chrome-tl{top:28px;left:32px}
-.anl-chrome-tr{top:28px;right:32px}
+.anl-chrome-tl{top:32px;left:32px}
+.anl-chrome-tr{top:32px;right:32px}
+.anl-pip{
+  display:inline-block;
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:var(--anl-indigo);
+  animation:anl-chrome-pip 1.6s cubic-bezier(.45,.05,.55,.95) infinite;
+}
+@keyframes anl-chrome-pip{0%,100%{opacity:1}50%{opacity:.35}}
+
 .anl-wm{
-  display:inline-flex;align-items:baseline;
-  font-family:var(--anl-font);font-weight:500;
-  font-size:14px;letter-spacing:-.025em;line-height:.95;
-  color:var(--anl-ink);text-transform:none;
+  display:inline-flex;
+  align-items:baseline;
+  color:var(--anl-ink);
+  font-family:var(--anl-font);
+  font-size:14px;
+  font-weight:500;
+  letter-spacing:-.025em;
+  line-height:.95;
+  text-transform:none;
 }
 .anl-dot-static{
-  width:.16em;height:.16em;border-radius:50%;
-  background:var(--anl-indigo);margin-left:.06em;
-  align-self:flex-end;margin-bottom:.06em;flex:0 0 auto;
+  width:.16em;
+  height:.16em;
+  margin-bottom:.06em;
+  margin-left:.06em;
+  align-self:flex-end;
+  border-radius:50%;
+  background:var(--anl-indigo);
 }
-.anl-sep{color:var(--anl-stone-500);margin:0 .4em;font-weight:300}
-.anl-pip{
-  width:6px;height:6px;border-radius:50%;
-  background:var(--anl-indigo);display:inline-block;
-  animation:anl-pip-blink 1.6s cubic-bezier(.45,.05,.55,.95) infinite;
+.anl-sep{
+  margin:0 .4em;
+  color:var(--anl-stone-500);
+  font-weight:300;
 }
-@keyframes anl-pip-blink{0%,100%{opacity:1}50%{opacity:.35}}
 
-/* ─── Composer ─────────────────────────────── */
+.anl-stage{
+  min-height:inherit;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:64px;
+  padding:88px 24px 72px;
+}
+.anl-composer-with-bars{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  gap:0;
+}
 .anl-composer{
-  position:relative;display:inline-flex;align-items:baseline;
-  font-family:var(--anl-font);font-weight:500;
-  font-size:var(--anl-wm-size);line-height:.95;
-  letter-spacing:-.03em;color:var(--anl-ink);
+  position:relative;
+  display:inline-flex;
+  align-items:baseline;
   padding-bottom:calc(var(--anl-wm-size) * .25);
+  color:var(--anl-ink);
+  font-family:var(--anl-font);
+  font-size:var(--anl-wm-size);
+  font-weight:500;
+  letter-spacing:-.03em;
+  line-height:.95;
 }
 .anl-composer::before{
-  content:'';position:absolute;
+  content:"";
+  position:absolute;
   left:calc(-1 * var(--anl-wm-size) * 3.2);
   right:calc(-1 * var(--anl-wm-size) * 1.2);
   bottom:calc(var(--anl-wm-size) * .15);
-  height:1px;background:var(--anl-hairline);
+  height:1px;
+  background:var(--anl-hairline);
 }
-.anl-word{display:inline-flex;gap:0;position:relative;z-index:1}
+.anl-word{
+  position:relative;
+  z-index:1;
+  display:inline-flex;
+  gap:0;
+}
 .anl-letter{
-  display:inline-block;opacity:0;transform:translateY(115%);
-  color:var(--anl-ink);will-change:opacity,transform;
-  /* instant reveal — no eased transition, analytics snaps */
-  transition:none;
+  display:inline-block;
+  color:var(--anl-ink);
+  opacity:0;
+  transform:translateY(115%);
+  will-change:opacity,transform;
 }
 
-/* ─── The dot — teleports in 8 steps, then freezes ─ */
+.anl-bars-row{
+  z-index:0;
+  display:flex;
+  flex-direction:row-reverse;
+  align-items:flex-start;
+  gap:.55em;
+  height:.9em;
+  margin-top:calc(var(--anl-wm-size) * -.1);
+  font-size:var(--anl-wm-size);
+}
+.anl-bar{
+  width:.16em;
+  height:0;
+  flex:0 0 auto;
+  background:var(--anl-indigo);
+  opacity:.4;
+  transition:height 360ms cubic-bezier(.22,.7,.2,1),opacity 280ms ease;
+  will-change:height,opacity;
+}
+.anl-bar.anl-short.anl-risen{height:.22em;opacity:.38}
+.anl-bar.anl-medium.anl-risen{height:.5em;opacity:.5}
+.anl-bar.anl-tall.anl-risen{height:.85em;opacity:.65}
+
 .anl-dot{
-  position:relative;width:.16em;height:.16em;border-radius:50%;
-  background:var(--anl-indigo);margin-left:.06em;align-self:flex-end;
-  margin-bottom:.06em;z-index:3;
-  animation:anl-dot-tick 2.4s steps(8,end) 0s 1 forwards;
+  position:relative;
+  z-index:4;
+  width:.16em;
+  height:.16em;
+  margin-bottom:.06em;
+  margin-left:.06em;
+  align-self:flex-end;
+  border-radius:50%;
+  background:var(--anl-indigo);
+  transform-origin:center bottom;
+  animation:anl-dot-roll var(--anl-intro-duration) cubic-bezier(.34,1.56,.64,1) 0s 1 forwards;
 }
-@keyframes anl-dot-tick{
-  0%  {transform:translateX(calc(-1 * var(--anl-tick-dist)));opacity:1}
-  100%{transform:translateX(0);opacity:1}
+@keyframes anl-dot-roll{
+  0%{transform:translate(calc(-1 * var(--anl-roll-distance)),0) scale(1,1);opacity:0}
+  8%{transform:translate(calc(-1 * var(--anl-roll-distance)),0) scale(1,1);opacity:1}
+  63%{transform:translate(calc(-.03 * var(--anl-wm-size)),0) scale(1,1);opacity:1}
+  67%{transform:translate(0,0) scale(1,1);opacity:1}
+  73%{transform:translate(0,0) scale(1.55,.55);opacity:1}
+  78%{transform:translate(0,0) scale(1.96,.4);opacity:1}
+  82%{transform:translate(0,0) scale(1.88,.43);opacity:1}
+  88%{transform:translate(0,calc(-.075 * var(--anl-wm-size))) scale(.74,1.34);opacity:1}
+  93%{transform:translate(0,0) scale(1.24,.82);opacity:1}
+  96%{transform:translate(0,0) scale(.96,1.05);opacity:1}
+  100%{transform:translate(0,0) scale(1,1);opacity:1}
 }
 
-/* ─── Axis tick marks ──────────────────────── */
-.anl-axis{
-  position:absolute;left:0;right:0;
-  bottom:calc(var(--anl-wm-size) * .15 - 4px);
-  height:8px;pointer-events:none;
-}
-.anl-axis-tick{
-  position:absolute;width:1px;height:8px;
-  background:var(--anl-stone-300);transform:translateX(-50%);
-  opacity:0;transition:opacity 200ms ease;
-}
-.anl-axis-tick.anl-lit{background:var(--anl-indigo);opacity:1}
-.anl-axis-tick.anl-dim{background:var(--anl-stone-300);opacity:.5}
-
-/* ─── Sample readouts ──────────────────────── */
-.anl-readouts{
-  position:absolute;left:0;right:0;
-  bottom:calc(var(--anl-wm-size) * 1.05);
-  pointer-events:none;
-}
-.anl-readout{
+.anl-trail{
   position:absolute;
-  font-family:var(--anl-mono);
-  font-size:calc(var(--anl-wm-size) * .13);
-  color:var(--anl-indigo);letter-spacing:.05em;
-  opacity:0;transform:translateX(-50%);white-space:nowrap;
+  z-index:2;
+  width:.16em;
+  height:.16em;
+  margin-bottom:.06em;
+  margin-left:.06em;
+  align-self:flex-end;
+  border-radius:50%;
+  background:var(--anl-indigo);
+  opacity:0;
+}
+.anl-trail-1{animation:anl-ghost-1 var(--anl-intro-duration) cubic-bezier(.34,1.56,.64,1) 0s 1 forwards}
+.anl-trail-2{animation:anl-ghost-2 var(--anl-intro-duration) cubic-bezier(.34,1.56,.64,1) 0s 1 forwards}
+.anl-trail-3{animation:anl-ghost-3 var(--anl-intro-duration) cubic-bezier(.34,1.56,.64,1) 0s 1 forwards}
+@keyframes anl-ghost-1{
+  0%,10%{transform:translate(calc(-1 * var(--anl-roll-distance)),0);opacity:0}
+  27%{transform:translate(calc(-.85 * var(--anl-roll-distance)),0);opacity:.5}
+  50%{transform:translate(calc(-.2 * var(--anl-roll-distance)),0);opacity:.26}
+  63%,100%{transform:translate(calc(-.1 * var(--anl-roll-distance)),0);opacity:0}
+}
+@keyframes anl-ghost-2{
+  0%,13%{transform:translate(calc(-1 * var(--anl-roll-distance)),0);opacity:0}
+  30%{transform:translate(calc(-.78 * var(--anl-roll-distance)),0);opacity:.36}
+  50%{transform:translate(calc(-.28 * var(--anl-roll-distance)),0);opacity:.18}
+  63%,100%{transform:translate(calc(-.16 * var(--anl-roll-distance)),0);opacity:0}
+}
+@keyframes anl-ghost-3{
+  0%,17%{transform:translate(calc(-1 * var(--anl-roll-distance)),0);opacity:0}
+  34%{transform:translate(calc(-.7 * var(--anl-roll-distance)),0);opacity:.24}
+  50%{transform:translate(calc(-.35 * var(--anl-roll-distance)),0);opacity:.11}
+  63%,100%{transform:translate(calc(-.24 * var(--anl-roll-distance)),0);opacity:0}
 }
 
-/* ─── Caption ──────────────────────────────── */
+.anl-intro-ripple,.anl-intro-ripple-slow{
+  position:absolute;
+  z-index:1;
+  width:.16em;
+  height:.16em;
+  margin-bottom:.06em;
+  margin-left:.06em;
+  align-self:flex-end;
+  border-radius:50%;
+  background:transparent;
+  opacity:0;
+  transform:scale(1);
+}
+.anl-intro-ripple{
+  border:1px solid var(--anl-indigo);
+  animation:anl-ripple-fast var(--anl-intro-duration) cubic-bezier(.22,.7,.2,1) 0s 1 forwards;
+}
+.anl-intro-ripple-slow{
+  border:1px solid var(--anl-indigo-300);
+  animation:anl-ripple-slow var(--anl-intro-duration) cubic-bezier(.22,.7,.2,1) 0s 1 forwards;
+}
+@keyframes anl-ripple-fast{
+  0%,75%{transform:scale(1);opacity:0}
+  78%{transform:scale(1);opacity:.55}
+  100%{transform:scale(8);opacity:0}
+}
+@keyframes anl-ripple-slow{
+  0%,75%{transform:scale(1);opacity:0}
+  78%{transform:scale(1);opacity:.35}
+  100%{transform:scale(16);opacity:0}
+}
+
 .anl-caption{
-  font-family:var(--anl-mono);font-size:11px;letter-spacing:.12em;
-  text-transform:uppercase;color:var(--anl-stone-500);
-  opacity:0;margin-top:48px;
-  animation:anl-caption-in .7s cubic-bezier(.22,.7,.2,1) 2.6s 1 forwards;
+  z-index:2;
+  margin:0;
+  color:var(--anl-stone-500);
+  font-family:var(--anl-mono);
+  font-size:11px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  opacity:0;
+  animation:anl-caption-in .7s cubic-bezier(.22,.7,.2,1) calc(var(--anl-intro-duration) + .1s) 1 forwards;
 }
 @keyframes anl-caption-in{
-  0%{opacity:0;transform:translateY(4px)}100%{opacity:1;transform:translateY(0)}
+  0%{opacity:0;transform:translateY(4px)}
+  100%{opacity:1;transform:translateY(0)}
 }
 
-/* ─── Reduced motion ───────────────────────── */
 @media(prefers-reduced-motion:reduce){
-  .anl-dot,.anl-pip{animation:none!important}
-  .anl-dot{transform:translateX(0);opacity:1}
-  .anl-letter{opacity:1;transform:none}
-  .anl-caption{animation:none;opacity:1}
+  .anl-dot,
+  .anl-trail,
+  .anl-intro-ripple,
+  .anl-intro-ripple-slow,
+  .anl-caption,
+  .anl-pip{animation:none!important}
+  .anl-dot{opacity:1;transform:none}
+  .anl-trail,
+  .anl-intro-ripple,
+  .anl-intro-ripple-slow{display:none}
+  .anl-caption{opacity:1}
+  .anl-bar{transition:none}
+  .anl-bar.anl-short{height:.22em;opacity:.38}
+  .anl-bar.anl-medium{height:.5em;opacity:.5}
+  .anl-bar.anl-tall{height:.85em;opacity:.65}
+  .anl-letter{opacity:1;transform:translateY(0)}
 }
 
-/* ─── Responsive chrome ────────────────────── */
-@media(max-width:600px){.anl-chrome-tl{top:18px;left:20px}.anl-chrome-tr{top:18px;right:20px;font-size:10px}}
-@media(max-width:420px){.anl-chrome-tr{display:none}}
+@media(max-width:600px){
+  .anl-chrome-tl{top:20px;left:20px}
+  .anl-chrome-tr{top:20px;right:20px;font-size:10px}
+  .anl-stage{gap:48px}
+}
+@media(max-width:420px){
+  .anl-chrome-tr{display:none}
+}
 `;
