@@ -173,7 +173,7 @@ export function AnalyticsHeroLoader() {
 
 const CSS = `
 .anl-hero-section{
-  --anl-bg:#fafaf7;
+  --anl-bg:var(--bg, #ffffff);
   --anl-ink:#111111;
   --anl-stone-300:#d8d3c6;
   --anl-stone-500:#8c887e;

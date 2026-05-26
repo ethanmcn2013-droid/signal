@@ -1,16 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
 import { AudienceToggle } from "./audience-toggle";
 import { AnalyticsDemo } from "./analytics-demo";
 import { type DomainId } from "@/lib/domains";
 
 /**
- * Analytics homepage hero — modelled on Tasks's hero pattern.
- * Eyebrow + H1 + body + CTAs + status pip + audience toggle, with the
- * briefing demo as a full-width artifact below.
+ * Analytics homepage live-demo section.
+ * Eyebrow + H1 + body + status pip + audience toggle, with the briefing demo
+ * as a full-width artifact below. Conversion lives in the closing CTA.
  */
 export function Hero() {
   const [domain, setDomain] = useState<DomainId>("wedding");
@@ -52,41 +51,8 @@ export function Hero() {
           Three things per block, hard cap. The signal, not the noise.
         </p>
 
-        <div className="mt-8 flex flex-wrap items-center gap-3">
-          <Link
-            href="/wedding-planning"
-            className="group inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-[14px] font-medium text-white shadow-[0_8px_24px_-8px_rgba(20,21,26,0.4)] transition-transform hover:-translate-y-px"
-            style={{ background: "var(--ink)" }}
-          >
-            See a sample briefing
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.4"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="transition-transform group-hover:translate-x-0.5"
-            >
-              <path d="M5 12h14M13 5l7 7-7 7" />
-            </svg>
-          </Link>
-          <Link
-            href="/signal"
-            className="inline-flex items-center gap-1.5 rounded-full border bg-white px-5 py-2.5 text-[14px] font-medium transition-colors"
-            style={{
-              borderColor: "var(--border)",
-              color: "var(--ink-soft)",
-            }}
-          >
-            What&apos;s in a briefing
-          </Link>
-        </div>
-
         <p
-          className="mt-3 inline-flex items-center gap-2 text-[12.5px]"
+          className="mt-7 inline-flex items-center gap-2 text-[12.5px]"
           style={{
             color: "var(--ink-faint, var(--ink-quiet))",
           }}

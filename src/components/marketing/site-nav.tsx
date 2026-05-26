@@ -6,11 +6,6 @@ import { Wordmark } from "@/components/brand/wordmark";
 import { SuiteLauncher } from "@/components/suite-launcher";
 import { UserButton } from "@clerk/nextjs";
 
-const UMBRELLA_PRICING = "https://signalstudio.ie/pricing";
-
-const REQUEST_ACCESS_HREF =
-  "mailto:hello@signalstudio.ie?subject=Analytics%20access";
-
 const NAV: { href: string; label: string; external?: boolean }[] = [
   { href: "/signal",   label: "Signal"  },
   { href: "/method",   label: "Method"  },
@@ -98,12 +93,8 @@ export function SiteNav({ isAuthed = false }: { isAuthed?: boolean }) {
             );
           })}
 
-          {/*
-           * §14 L3: Kill the false "Sign in".
-           * When authed: UserButton + optional preview escape hatch.
-           * When unauthed: "Request access" CTA as before.
-           */}
-          {isAuthed ? (
+          {/* §14 L3: authed users get account + preview controls; no upper CTA. */}
+          {isAuthed && (
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
               {isPreviewActive ? (
                 <button
@@ -145,35 +136,6 @@ export function SiteNav({ isAuthed = false }: { isAuthed?: boolean }) {
                 </button>
               )}
               <UserButton />
-            </div>
-          ) : (
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 3 }}>
-              <a
-                href={REQUEST_ACCESS_HREF}
-                title="Private beta — opens your mail client"
-                style={{
-                  fontSize: 13,
-                  color: "var(--ink)",
-                  fontWeight: 500,
-                  textDecoration: "none",
-                  padding: "5px 13px",
-                  border: "1px solid var(--border)",
-                  borderRadius: 999,
-                  transition: "border-color var(--motion-fast), background var(--motion-fast)",
-                }}
-              >
-                Request access
-              </a>
-              <span
-                style={{
-                  fontSize: 10,
-                  color: "var(--ink-faint)",
-                  letterSpacing: "0.06em",
-                  fontFamily: "var(--font-mono-stack)",
-                }}
-              >
-                private beta
-              </span>
             </div>
           )}
         </nav>
@@ -231,22 +193,6 @@ export function SiteNav({ isAuthed = false }: { isAuthed?: boolean }) {
                 </Link>
               );
             })}
-            {/* Mobile: only show Request access if unauthed */}
-            {!isAuthed && (
-              <a
-                href={REQUEST_ACCESS_HREF}
-                title="Private beta — opens your mail client"
-                className="block px-4 py-2"
-                style={{
-                  fontSize: 13.5,
-                  color: "var(--ink)",
-                  fontWeight: 500,
-                  textDecoration: "none",
-                }}
-              >
-                Request access
-              </a>
-            )}
             {isAuthed && (
               <div className="px-4 py-2">
                 <UserButton />

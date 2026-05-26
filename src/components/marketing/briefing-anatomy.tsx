@@ -218,8 +218,9 @@ export function BriefingAnatomy() {
   return (
     <MotionConfig reducedMotion="user">
       <section
+        id="anatomy"
         className="reveal"
-        style={{ paddingTop: 120, paddingBottom: 120 }}
+        style={{ paddingTop: 120, paddingBottom: 120, scrollMarginTop: 96 }}
         aria-label="Anatomy of a briefing"
       >
         <div className="mx-auto w-full max-w-[1140px] px-6">
