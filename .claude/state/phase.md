@@ -2,6 +2,8 @@ Analytics · truth pass A·6–A·9 · COMPLETE 2026-05-15
 
 Vocabulary: cycles are `A·NN`. Verbs follow BRAND.md §6.5 (ships / tightens / cuts / holds / reads).
 
+A·13 — UX remediation (R3/R4/R10/R13) ✓ prod-verified 2026-05-17; ff-merged to main 2026-05-18. R4 single-nav incl. the out-of-group /wedding-planning residual CLOSED 2026-05-18 (81a32fa) — no residual owed.
+
 A·9 — briefing prose hardened          ✓ shipped 2026-05-15 (7e877df) — pixel-verified the real signed-in /app/brief via the actual buildBriefing + BriefingView pipeline behind the Clerk gate at 390px and 1440px. focusText stopped stacking an imperative verb onto verb-led titles ("Catch up on send invitations" → names the task; block header + due chip carry the directive; also resolves a §3 over-step). just-shipped "is done" → "— done" (no double-state). mock-source titles → realistic user phrasings. 154/154 tests. Populated AND empty briefings now hold the bar.
 
 A·8 — public surface voice            ✓ shipped 2026-05-15 — full pixel audit at 390/1440 across /, /demo, /method, /signal, /pricing, /wedding-planning, /about. One §3 defect: "no LLM in the path" ×3 (jargon as positive self-description) → plain English. "Not an AI workspace" refusal block left intact (anti-feature pattern).
