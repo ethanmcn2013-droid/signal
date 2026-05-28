@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { AnalyticsHeroLoader } from "@/components/landing/analytics-hero-loader";
+import { AnalyticsHeroSignal } from "@/components/landing/analytics-hero-signal";
 import { Hero } from "@/components/landing/hero";
 import { BriefingAnatomy } from "@/components/marketing/briefing-anatomy";
 
@@ -8,7 +8,7 @@ const REQUEST_ACCESS_HREF =
 
 /**
  * Analytics marketing homepage — structure:
- *   1. AnalyticsHeroLoader — "the bar appears" hero-card animation
+ *   1. AnalyticsHeroSignal — "The Signal" scan-line hero (A·1, 2026-05-28)
  *   2. Hero                — product intro text + audience toggle + live briefing demo
  *   3. BriefingAnatomy     — anatomy of a briefing item
  *   4. CTA                 — access/sample close
@@ -16,7 +16,7 @@ const REQUEST_ACCESS_HREF =
 export default function HomePage() {
   return (
     <div style={{ background: "var(--bg)" }}>
-      <AnalyticsHeroLoader />
+      <AnalyticsHeroSignal />
       <Hero />
       <BriefingAnatomy />
 
