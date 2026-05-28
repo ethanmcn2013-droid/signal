@@ -3,6 +3,10 @@
 Convention: BRAND.md §6.5. Entries before 2026-05-14 keep their
 original shape; the new shape starts at the next cycle.
 
+## 2026-05-28 · A·1 · ships · the homepage reads the room before you ask it to
+
+**The marketing hero is now "The Signal" — a scan line reads the bar chart, the tallest bar blooms on pass, and the caption resolves to "the signal, not the noise."** The entry sequence is unchanged (dot rolls in from the left, letters rise as it passes, the mark settles with its bounce). The second act is entirely new: a 1px electromagnetic line sweeps the chart from left to right, each bar flashes briefly as the line crosses it (reading as genuine data scanning), and the tall bar snaps to attention — spring-height, dimmed context bars, a label that rises into position above it. Caption cross-fades once on the first cycle then holds. Three cycles then the whole sequence replays from the beginning. Three bugs from the prior loader are fixed in the same pass: hairline rule is now genuinely full-bleed (was stopping 310px short), trailing ghost dots anchor correctly to the mark's resting position (were firing at the composer's left edge), and bars-row correctly contains its absolutely-positioned children.
+
 ## 2026-05-21 · A·14 · ships · close your account, install the briefing to your home screen
 
 **Settings · Account is reachable from the avatar dropdown beside Notifications, with an irreversible delete that closes your Signal identity in one step; the briefing installs to a phone or desktop home screen.** Typing your email confirms the delete; the server wipes both Analytics databases — the prefs database that holds your Tasks-workspace link and timezone, and the email subscription database that holds your cadence and unsubscribe token — then asks the identity layer to close the account in the same call. There is no grace period; the action is final and visible before you commit to it. Installable add-to-home-screen ships a manifest with the existing wordmark Apple touch icon and a new maskable Android tile. Required for Apple App Store submission later this summer.
