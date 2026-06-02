@@ -2,6 +2,7 @@ import Link from "next/link";
 import { AnalyticsHeroSignal } from "@/components/landing/analytics-hero-signal";
 import { Hero } from "@/components/landing/hero";
 import { BriefingAnatomy } from "@/components/marketing/briefing-anatomy";
+import { SuiteArrows } from "@/components/suite-arrows";
 
 const REQUEST_ACCESS_HREF =
   "mailto:hello@signalstudio.ie?subject=Analytics%20access";
@@ -16,6 +17,7 @@ const REQUEST_ACCESS_HREF =
 export default function HomePage() {
   return (
     <div style={{ background: "var(--bg)" }}>
+      <SuiteArrows current="analytics" />
       <AnalyticsHeroSignal />
       <Hero />
       <BriefingAnatomy />

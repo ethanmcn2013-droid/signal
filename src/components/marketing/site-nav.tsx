@@ -54,7 +54,7 @@ export function SiteNav({ isAuthed = false }: { isAuthed?: boolean }) {
         borderBottomColor: "var(--border-soft)",
       }}
     >
-      <div className="mx-auto flex h-14 w-full max-w-[80rem] items-center justify-between px-6">
+      <div className="mx-auto flex h-14 w-full max-w-[1240px] items-center justify-between px-6">
 
         <div className="flex items-center" style={{ gap: 12 }}>
           <div className="hidden sm:inline-flex">
@@ -62,7 +62,7 @@ export function SiteNav({ isAuthed = false }: { isAuthed?: boolean }) {
             <SuiteLauncher current="analytics" isAuthed={isAuthed} />
           </div>
           <span aria-hidden className="hidden sm:inline" style={{ color: "var(--ink-faint)", fontSize: 12 }}>/</span>
-          <Wordmark size="0.9375rem" />
+          <Wordmark size="md" />
         </div>
 
         {/* Desktop nav — right cluster */}
@@ -92,6 +92,18 @@ export function SiteNav({ isAuthed = false }: { isAuthed?: boolean }) {
               </Link>
             );
           })}
+
+          {/* Unauthed: Sign in is a visible affordance, never a gate — public
+              scanning stays open (canonical product header, DESIGN.md §14). */}
+          {!isAuthed && (
+            <Link
+              href="/sign-in"
+              className="rounded-full px-3.5 py-1.5 text-[13px] font-medium hover:text-ink"
+              style={{ color: "var(--ink-soft)", transition: "color var(--motion-fast)" }}
+            >
+              Sign in
+            </Link>
+          )}
 
           {/* §14 L3: authed users get account + preview controls; no upper CTA. */}
           {isAuthed && (
@@ -193,10 +205,18 @@ export function SiteNav({ isAuthed = false }: { isAuthed?: boolean }) {
                 </Link>
               );
             })}
-            {isAuthed && (
+            {isAuthed ? (
               <div className="px-4 py-2">
                 <UserButton />
               </div>
+            ) : (
+              <Link
+                href="/sign-in"
+                className="block px-4 py-2"
+                style={{ fontSize: 13.5, color: "var(--ink-soft)", textDecoration: "none" }}
+              >
+                Sign in
+              </Link>
             )}
           </div>
         </details>

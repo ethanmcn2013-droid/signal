@@ -190,8 +190,8 @@ export function AnalyticsHeroSignal() {
       bloomLabelEl!.style.opacity    = "1";
       bloomLabelEl!.style.transform  = "translateX(-50%) translateY(-100%)";
 
-      // TR chrome snaps to "samples · 7" on bloom
-      statusTREl!.textContent = "samples · 7";
+      // TR chrome snaps to "the signal clears" on bloom
+      statusTREl!.textContent = "the signal clears";
     }
 
     // ── Unbloom ────────────────────────────────────────────────────────
@@ -459,7 +459,7 @@ export function AnalyticsHeroSignal() {
       captionEl!.style.animation  = CAPTION_ANIM;
 
       // Reset TR status
-      statusTREl!.textContent = "samples · 7";
+      statusTREl!.textContent = "the signal clears";
 
       // Restart CSS animations (none → reflow → restore)
       dotEl!.style.animation = "none";
@@ -524,7 +524,7 @@ export function AnalyticsHeroSignal() {
 
       <div className="anl-chrome anl-chrome-tr" aria-hidden>
         <span className="anl-pip" aria-hidden />
-        <span className="anl-status-tr">samples · 7</span>
+        <span className="anl-status-tr">the signal clears</span>
       </div>
 
       <div className="anl-stage" aria-hidden>
