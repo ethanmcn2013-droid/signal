@@ -42,10 +42,12 @@ export default clerkMiddleware(async (auth, req) => {
       req.cookies.get("signal_preview_public")?.value === "1" ||
       req.nextUrl.searchParams.get("preview") === "public";
 
-    // Use the Clerk __session cookie to detect auth at middleware level.
-    // This avoids calling auth() on every marketing request while keeping
-    // the escape hatch effective. Matches the §14 canonical middleware spec.
-    const isAuthed = Boolean(req.cookies.get("__session")?.value);
+    // Use the REAL Clerk session (userId), not raw __session cookie presence.
+    // A stale/expired cookie otherwise 307s a signed-out visitor to /app and
+    // walls them at /sign-in ("forced sign-in unless incognito"). Genuine
+    // sessions still redirect to the app.
+    const { userId } = await auth();
+    const isAuthed = Boolean(userId);
 
     if (isAuthed && !isPreview) {
       // 307 Temporary Redirect — preserves method, signals the client this
