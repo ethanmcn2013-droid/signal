@@ -323,7 +323,7 @@ describe("buildBriefing — name-the-blocker prose", () => {
     const b = await buildBriefing(source(signals), CTX, NOW);
     const item = b.quietRisks.find((i) => i.id === "orphaned-blocked");
     assert.ok(item, "still surfaces the task");
-    // Generic fallback either says "blocked for N days" or
+    // Generic fallback either says "waiting for N days" or
     // "waiting on something" or "hasn't cleared its blocker" —
     // none of which contain the unresolved id.
     assert.doesNotMatch(item!.text, /task-not-in-this-source/);

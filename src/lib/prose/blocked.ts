@@ -12,12 +12,12 @@ import type { ProseLibrary } from "./types";
 export const blockedProse: ProseLibrary = {
   triggerId: "blocked",
   phrasings: [
-    "${task} has been blocked for ${days} days.",
-    "${task} hasn't moved in ${days} days. Still blocked.",
+    "${task} has been waiting for ${days} days.",
+    "${task} hasn't moved in ${days} days. Still waiting.",
     "${task} is blocked by ${blocker}.",
     "${task} on ${project} has been stuck ${days} days.",
     "${task} is waiting on ${blocker}. ${days} days now.",
-    "Nothing has happened on ${task} in ${days} days. Still blocked.",
+    "Nothing has happened on ${task} in ${days} days. Still waiting.",
   ],
   focusPhrasings: [
     "Unblock ${task} today — it's been stuck ${days} days.",

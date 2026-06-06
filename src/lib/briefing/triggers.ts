@@ -160,7 +160,7 @@ export function detectBlockedTooLong(signals: TaskSignal[]): Triggered[] {
       task,
       trigger: "blocked-too-long" as const,
       reasons: [
-        `Blocked for ${task.idleDays} days — the blocker is outlasting reasonable waiting.`,
+        `Waiting for ${task.idleDays} days — the blocker is outlasting reasonable waiting.`,
         task.blockedBy.length === 1
           ? "One upstream dependency hasn't cleared."
           : `${task.blockedBy.length} upstream dependencies haven't cleared.`,

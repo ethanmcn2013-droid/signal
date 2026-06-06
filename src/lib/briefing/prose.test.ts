@@ -160,13 +160,13 @@ describe("phraseFor — blocked-too-long multi-blocker rendering", () => {
     assert.match(text, /A and 5 more/);
   });
 
-  test("falls back to 'has been blocked for N days' when no titles", () => {
+  test("falls back to 'has been waiting for N days' when no titles", () => {
     const t = task({ blockedBy: ["x"], idleDays: 7 });
     const text = phraseFor("blocked-too-long", t, 0, {
       idleDays: 7,
       blockedByTitles: [],
     });
-    assert.match(text, /blocked for 7 days/);
+    assert.match(text, /waiting for 7 days/);
     assert.doesNotMatch(text, /by /);
   });
 

@@ -83,7 +83,7 @@ const BLOCKED_TOO_LONG: Phrasing[] = [
     const subject = blockerSubject(byTitles);
     return subject
       ? `${t.title} has been blocked by ${subject} for ${plural(days, "day", "days")}`
-      : `${t.title} has been blocked for ${plural(days, "day", "days")}`;
+      : `${t.title} has been waiting for ${plural(days, "day", "days")}`;
   },
   (t, days = 0, byTitles = []) => {
     const subject = blockerSubject(byTitles);
