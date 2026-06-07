@@ -2,6 +2,7 @@ import Link from "next/link";
 import { AnalyticsHeroSignal } from "@/components/landing/analytics-hero-signal";
 import { Hero } from "@/components/landing/hero";
 import { BriefingAnatomy } from "@/components/marketing/briefing-anatomy";
+import { BriefingCompression } from "@/components/marketing/briefing-compression";
 import { SuiteArrows } from "@/components/suite-arrows";
 
 const REQUEST_ACCESS_HREF =
@@ -61,6 +62,8 @@ export default function HomePage() {
           </p>
         </div>
       </section>
+
+      <BriefingCompression />
 
       <BriefingAnatomy />
 
