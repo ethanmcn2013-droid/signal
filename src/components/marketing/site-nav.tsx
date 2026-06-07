@@ -11,6 +11,7 @@ import { UserButton } from "@clerk/nextjs";
 const NAV: { href: string; label: string; external?: boolean }[] = [
   { href: "/signal",   label: "Signal"     },
   { href: "/method",   label: "Ten rules"  },
+  { href: "/refusals", label: "Refusals"   },
   { href: "/pricing",  label: "Pricing"    },
   { href: "/about",    label: "About"      },
 ];
