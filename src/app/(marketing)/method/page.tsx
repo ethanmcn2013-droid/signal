@@ -42,6 +42,24 @@ const STEPS = [
   },
 ] as const;
 
+/**
+ * The ten triggers — from PRODUCT.md §5.1. Rendered as a mono-spaced
+ * table (row 13). Threshold column. No prose around numbers — the table
+ * is the prose.
+ */
+const TRIGGERS: { id: string; threshold: string; block: string }[] = [
+  { id: "blocked",                     threshold: "≥ 2 days",                 block: "Needs attention" },
+  { id: "overdue",                     threshold: "past due, not done",       block: "Needs attention" },
+  { id: "overload",                    threshold: "> 8 tasks / one person",   block: "Needs attention" },
+  { id: "dependency-stall",            threshold: "≥ 5 days, no activity",    block: "Needs attention" },
+  { id: "momentum-positive",           threshold: "≥ 3 closes / 7 days",      block: "Moving well"     },
+  { id: "streak",                      threshold: "≥ 5 closes / 7 days",      block: "Moving well"     },
+  { id: "inactive-project",            threshold: "≥ 8 days",                 block: "Quiet risks"     },
+  { id: "single-point-of-failure",     threshold: "> 70% on one person",      block: "Quiet risks"     },
+  { id: "slow-burn-deadline",          threshold: "≤ 7 days, < 30% closed",   block: "Quiet risks"     },
+  { id: "unresolved-recurring-block",  threshold: "≥ 3 recurrences",          block: "Quiet risks"     },
+];
+
 const REFUSALS = [
   {
     label: "Not a dashboard.",
@@ -186,6 +204,90 @@ export default function MethodPage() {
               </li>
             ))}
           </ul>
+        </div>
+      </section>
+
+      {/* Row 13 — the ten triggers as a mono-spaced table. PRODUCT.md §5.1.
+          Threshold column. No prose around the numbers. */}
+      <section style={{ paddingTop: 96, paddingBottom: 0 }}>
+        <div style={PROSE_MAX}>
+          <Eyebrow>The ten rules</Eyebrow>
+          <h2
+            style={{
+              fontSize: 32,
+              fontWeight: 600,
+              letterSpacing: "-0.025em",
+              color: "var(--ink)",
+              marginBottom: 12,
+              lineHeight: 1.15,
+            }}
+          >
+            Ten rules. Every threshold published.
+          </h2>
+          <p
+            style={{
+              fontSize: 14,
+              lineHeight: 1.6,
+              color: "var(--ink-quiet)",
+              marginBottom: 28,
+            }}
+          >
+            Each rule has a name, a number, and a block it fires into. Nothing
+            fuzzy. Nothing learned.
+          </p>
+          <div
+            role="table"
+            aria-label="Ten triggers and their thresholds"
+            style={{
+              borderTop: "1px solid var(--border-soft)",
+              borderBottom: "1px solid var(--border-soft)",
+              fontFamily: "var(--font-mono-stack)",
+              fontSize: 12.5,
+              lineHeight: 1.5,
+              fontVariantNumeric: "tabular-nums",
+            }}
+          >
+            <div
+              role="row"
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1.6fr 1.2fr 1fr",
+                padding: "10px 0",
+                borderBottom: "1px solid var(--border-soft)",
+                fontSize: 10.5,
+                letterSpacing: "0.12em",
+                textTransform: "uppercase",
+                color: "var(--ink-quiet)",
+                fontWeight: 600,
+              }}
+            >
+              <span role="columnheader">Rule</span>
+              <span role="columnheader">Threshold</span>
+              <span role="columnheader">Block</span>
+            </div>
+            {TRIGGERS.map((t, i) => (
+              <div
+                key={t.id}
+                role="row"
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1.6fr 1.2fr 1fr",
+                  padding: "10px 0",
+                  borderBottom:
+                    i === TRIGGERS.length - 1
+                      ? "none"
+                      : "1px solid var(--border-soft)",
+                  color: "var(--ink-soft)",
+                }}
+              >
+                <span role="cell" style={{ color: "var(--ink)" }}>{t.id}</span>
+                <span role="cell">{t.threshold}</span>
+                <span role="cell" style={{ color: "var(--ink-quiet)" }}>
+                  {t.block}
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
