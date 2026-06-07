@@ -6,11 +6,13 @@ import { Wordmark } from "@/components/brand/wordmark";
 import { SuiteLauncher } from "@/components/suite-launcher";
 import { UserButton } from "@clerk/nextjs";
 
+// Nav labels: the noun IS the navigation. "Ten rules" (not "Method")
+// puts the no-LLM stance in the primary nav (row 8, Einstein's walkover).
 const NAV: { href: string; label: string; external?: boolean }[] = [
-  { href: "/signal",   label: "Signal"  },
-  { href: "/method",   label: "Method"  },
-  { href: "/pricing",  label: "Pricing" },
-  { href: "/about",    label: "About"   },
+  { href: "/signal",   label: "Signal"     },
+  { href: "/method",   label: "Ten rules"  },
+  { href: "/pricing",  label: "Pricing"    },
+  { href: "/about",    label: "About"      },
 ];
 
 /**
