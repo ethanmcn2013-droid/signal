@@ -19,6 +19,8 @@ type Props = {
   whyThisReasons?: string[];
   /** Character reveal for the typing line in why-this. */
   whyThisReveal?: number;
+  /** Trigger name + threshold for the why-this expansion (row 5). */
+  whyThisTrigger?: string;
 };
 
 export function BriefingItem({
@@ -32,6 +34,7 @@ export function BriefingItem({
   whyThisVisible,
   whyThisReasons,
   whyThisReveal,
+  whyThisTrigger,
 }: Props) {
   return (
     <div
@@ -122,6 +125,7 @@ export function BriefingItem({
           visible={!!whyThisVisible}
           reasons={whyThisReasons}
           revealChars={whyThisReveal}
+          triggerName={whyThisTrigger}
         />
       ) : null}
     </div>

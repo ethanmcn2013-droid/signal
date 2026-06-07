@@ -471,6 +471,7 @@ export function AnalyticsDemo({ domain = "wedding" }: Props = {}) {
                       whyThisVisible={state.whyThisItemId === item.id}
                       whyThisReasons={item.whyThis}
                       whyThisReveal={state.whyThisReveal}
+                      whyThisTrigger={item.triggerName}
                     />
                   );
                 })}

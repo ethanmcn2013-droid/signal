@@ -8,6 +8,12 @@ type Props = {
   reasons: string[];
   /** Character count revealed of the final reason line — drives type-on. */
   revealChars?: number;
+  /**
+   * The trigger name + threshold (e.g. `inactive-project · ≥ 8 days`).
+   * Shown as a mono caption above the eyebrow. Makes the determinism
+   * experienceable — there is a rule, it has a name, it has a threshold.
+   */
+  triggerName?: string;
 };
 
 /**
@@ -15,7 +21,7 @@ type Props = {
  * Reveals the engine's reasoning in plain English — no chart, no metric,
  * just the rules that fired.
  */
-export function WhyThis({ visible, reasons, revealChars }: Props) {
+export function WhyThis({ visible, reasons, revealChars, triggerName }: Props) {
   return (
     <AnimatePresence initial={false}>
       {/* --motion-moderate 320ms + --ease-out — accordion */}
@@ -51,11 +57,26 @@ export function WhyThis({ visible, reasons, revealChars }: Props) {
                 color: "var(--brand)",
                 letterSpacing: "0.14em",
                 textTransform: "uppercase",
-                marginBottom: 4,
+                marginBottom: triggerName ? 2 : 4,
               }}
             >
               Why this
             </div>
+            {triggerName ? (
+              <div
+                className="font-mono"
+                style={{
+                  fontSize: 10,
+                  fontWeight: 500,
+                  color: "var(--ink-faint)",
+                  letterSpacing: "0.02em",
+                  marginBottom: 6,
+                  textTransform: "lowercase",
+                }}
+              >
+                trigger · {triggerName}
+              </div>
+            ) : null}
             {reasons.map((reason, i) => {
               const isLast = i === reasons.length - 1;
               const text =

@@ -15,6 +15,12 @@ export type DemoItem = {
   provenance: string;
   /** Plain-English reason chain shown when "Why this?" expands. */
   whyThis?: string[];
+  /**
+   * The trigger that fired — surfaced inside the "Why this?" expansion to
+   * make the determinism experienceable. e.g. `inactive-project · ≥ 8 days`.
+   * One of the ten rules from PRODUCT.md §5.1.
+   */
+  triggerName?: string;
 };
 
 export type DemoBlock = {
@@ -81,6 +87,7 @@ const WEDDING_TODAY: DemoBlock[] = [
           "Held-up items normally resolve in 8 days at this stage.",
           "Threshold crossed → surfaced for attention.",
         ],
+        triggerName: "inactive-project · ≥ 8 days",
       },
       {
         id: "catering",
@@ -155,6 +162,7 @@ const CONSTRUCTION_TODAY: DemoBlock[] = [
           "Frame phase complete; windows now on the critical path.",
           "Risk of cascading delay → surfaced for attention.",
         ],
+        triggerName: "dependency-stall · ≥ 5 days",
       },
       {
         id: "electrical",
@@ -226,6 +234,7 @@ const FREELANCE_TODAY: DemoBlock[] = [
           "Largest of four invoices still owed to you.",
           "Threshold crossed → surfaced for attention.",
         ],
+        triggerName: "overdue · past due, no done status",
       },
       {
         id: "logo",
@@ -297,6 +306,7 @@ const STUDENT_TODAY: DemoBlock[] = [
           "Only the introduction is written.",
           "Threshold crossed → surfaced for attention.",
         ],
+        triggerName: "slow-burn-deadline · ≤ 7 days, < 30% closed",
       },
       {
         id: "feedback",
