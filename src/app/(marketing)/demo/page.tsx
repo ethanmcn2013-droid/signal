@@ -44,7 +44,7 @@ function Eyebrow({ children }: { children: React.ReactNode }) {
 export default function DemoPage() {
   return (
     <div style={{ background: "var(--bg)", paddingBottom: 120 }}>
-      <section style={{ paddingTop: 96, paddingBottom: 56 }}>
+      <section style={{ paddingTop: 96, paddingBottom: 40 }}>
         <div style={PROSE_MAX}>
           <Eyebrow>The demo</Eyebrow>
           <h1 className="h-display" style={{ marginBottom: 22 }}>
@@ -56,11 +56,26 @@ export default function DemoPage() {
               color: "var(--ink-soft)",
               lineHeight: 1.6,
               maxWidth: 540,
-              marginBottom: 4,
+              marginBottom: 20,
             }}
           >
             What arrives before your day starts. Plain sentences, four blocks,
             two minutes to read. Watch.
+          </p>
+          {/* Row 10 — lifted above the video so the subtitle frames the
+              watching, not concludes it. */}
+          <p
+            style={{
+              fontSize: 14.5,
+              color: "var(--ink-quiet)",
+              lineHeight: 1.6,
+              maxWidth: 560,
+              margin: 0,
+              fontStyle: "italic",
+            }}
+          >
+            Every sentence the engine actually fires. Drawn from a library
+            written by hand — every line, a person wrote it.
           </p>
         </div>
       </section>
@@ -125,18 +140,6 @@ export default function DemoPage() {
               gap: 18,
             }}
           >
-            <p
-              style={{
-                fontSize: 16,
-                color: "var(--ink-soft)",
-                lineHeight: 1.65,
-                margin: 0,
-                maxWidth: 540,
-              }}
-            >
-              Every sentence in the demo is one the engine actually fires.
-              Drawn from a library written by hand — every line, a person wrote it.
-            </p>
             <p
               style={{
                 fontSize: 16,

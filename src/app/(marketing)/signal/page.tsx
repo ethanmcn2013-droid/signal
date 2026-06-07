@@ -252,6 +252,23 @@ export default function SignalPage() {
               </div>
             ))}
           </div>
+
+          {/* Row 11 — cadence numerals. Numerals only. The discipline is
+              the cap, and the cap deserves a line of its own. */}
+          <p
+            className="font-mono"
+            style={{
+              marginTop: 40,
+              fontSize: 12,
+              letterSpacing: "0.14em",
+              fontWeight: 600,
+              color: "var(--ink-quiet)",
+              textTransform: "uppercase",
+              fontVariantNumeric: "tabular-nums",
+            }}
+          >
+            Daily 350. Weekly 900. Launch 1200.
+          </p>
         </div>
       </section>
 
