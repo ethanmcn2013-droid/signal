@@ -40,8 +40,31 @@ export function Hero() {
           A briefing, not a dashboard.
         </h1>
 
+        {/* Subheading — three clauses, one breath (row 14). */}
         <p
-          className="mt-6 max-w-[54ch] text-[17px]"
+          className="mt-6 max-w-[52ch] text-[17px]"
+          style={{
+            color: "var(--ink-soft)",
+            lineHeight: 1.55,
+          }}
+        >
+          Ten rules read your work. A person wrote every sentence. No model in
+          the path.
+        </p>
+
+        {/* Quiet eyebrow — three nouns, one negation (row 1). */}
+        <p
+          className="mt-5 font-mono text-[10.5px] font-semibold uppercase"
+          style={{
+            color: "var(--ink-quiet)",
+            letterSpacing: "0.16em",
+          }}
+        >
+          Ten rules. No model. Written by hand.
+        </p>
+
+        <p
+          className="mt-7 max-w-[54ch] text-[15.5px]"
           style={{
             color: "var(--ink-soft)",
             lineHeight: 1.55,

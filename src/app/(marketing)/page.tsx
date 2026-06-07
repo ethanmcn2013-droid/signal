@@ -20,6 +20,48 @@ export default function HomePage() {
       <SuiteArrows current="analytics" />
       <AnalyticsHeroSignal />
       <Hero />
+
+      {/* Row 2 — engine never generates language, it picks language.
+          Standalone interstitial between Hero and BriefingAnatomy. */}
+      <section
+        className="reveal px-6"
+        style={{ paddingTop: 96, paddingBottom: 96 }}
+        aria-label="The engine picks language"
+      >
+        <div className="mx-auto w-full max-w-[1140px]">
+          <p
+            style={{
+              fontSize: 11,
+              letterSpacing: "0.14em",
+              fontWeight: 600,
+              color: "var(--ink-quiet)",
+              fontFamily: "var(--font-mono-stack)",
+              textTransform: "uppercase",
+              marginBottom: 18,
+            }}
+          >
+            The mechanism, in one line
+          </p>
+          <p
+            className="text-balance"
+            style={{
+              maxWidth: "22ch",
+              fontSize: "clamp(1.6rem, 1rem + 2.4vw, 2.6rem)",
+              fontWeight: 500,
+              letterSpacing: "-0.025em",
+              lineHeight: 1.15,
+              color: "var(--ink)",
+              margin: 0,
+            }}
+          >
+            The engine never generates language.{" "}
+            <span style={{ color: "color-mix(in srgb, var(--ink) 55%, transparent)" }}>
+              It picks language.
+            </span>
+          </p>
+        </div>
+      </section>
+
       <BriefingAnatomy />
 
       <section
