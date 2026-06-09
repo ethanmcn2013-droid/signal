@@ -97,12 +97,12 @@ export function BriefingView({
               items={briefing.needsAttention}
               accent={bucketAccents.attention}
             />
-            <Bucket
-              title="Moving well"
-              items={briefing.movingWell}
-              accent={bucketAccents.moving}
-              muted
-            />
+            {/* "Moving well" is cut from the default morning brief.
+                The just-shipped trigger weight is the lowest of six
+                (100/1000); the engine had already decided this is
+                not the signal. The bucket data still lives on the
+                Briefing object — a future "what shipped" surface
+                may consume it — but the morning read does not. */}
             <Bucket
               title="Quiet risks"
               items={briefing.quietRisks}
