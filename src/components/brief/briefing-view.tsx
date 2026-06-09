@@ -78,13 +78,15 @@ export function BriefingView({
           {greeting(briefing.greetingHour, firstName)}
         </motion.h1>
 
-        <motion.p
-          className="mb-10 text-[15.5px] leading-[1.55]"
-          style={{ color: "var(--ink-soft)" }}
-          variants={fadeUp}
-        >
-          {summaryLine(briefing)}
-        </motion.p>
+        {summaryLine(briefing) ? (
+          <motion.p
+            className="mb-10 text-[15.5px] leading-[1.55]"
+            style={{ color: "var(--ink-soft)" }}
+            variants={fadeUp}
+          >
+            {summaryLine(briefing)}
+          </motion.p>
+        ) : null}
 
         {briefing.isEmpty ? (
           <EmptyState />

@@ -160,17 +160,19 @@ export function BriefingEmail({
             >
               {greeting(briefing.greetingHour, firstName, true)}
             </Heading>
-            <Text
-              style={{
-                fontSize: 15.5,
-                color: inkSoft,
-                margin: 0,
-                marginBottom: 28,
-                lineHeight: 1.5,
-              }}
-            >
-              {summary}
-            </Text>
+            {summary ? (
+              <Text
+                style={{
+                  fontSize: 15.5,
+                  color: inkSoft,
+                  margin: 0,
+                  marginBottom: 28,
+                  lineHeight: 1.5,
+                }}
+              >
+                {summary}
+              </Text>
+            ) : null}
 
             {briefing.needsAttention.length > 0 && (
               <Bucket
@@ -451,8 +453,10 @@ function FocusBlock({ items }: { items: FocusItem[] }) {
 
 function previewText(b: Briefing): string {
   // Inbox-snippet copy. Calmer than the subject — names the *shape*
-  // of the day, not the alarming first item.
+  // of the day, not the alarming first item. Falls back to a quiet
+  // line when summaryLine has nothing to say (quiet-but-not-empty
+  // days — e.g. only moving-well items survived).
   if (b.isEmpty) return "Nothing to flag today.";
-  return summaryLine(b);
+  return summaryLine(b) || "Nothing pulling today.";
 }
 

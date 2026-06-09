@@ -37,14 +37,19 @@ export function greeting(
 /**
  * Calm one-line summary under the greeting. Shape of the day in
  * plain English — no numbers without a "so what".
+ *
+ * Silence is the signal. On a brief with nothing to flag,
+ * `summaryLine` returns the empty string and lets the EmptyState
+ * frame the page. The function speaks only when there is something
+ * to summarise.
  */
 export function summaryLine(b: Briefing): string {
   const att = b.needsAttention.length;
   const risks = b.quietRisks.length;
-  const moving = b.movingWell.length;
   if (att === 0 && risks === 0) {
-    if (moving > 0) return "Light day. The board is moving.";
-    return "All quiet. Nothing pulling.";
+    // Nothing pulling. The summary line says nothing. EmptyState
+    // (briefing-view) carries the frame on these days.
+    return "";
   }
   if (att === 0 && risks > 0) {
     return `A quiet day, but ${risks} ${risks === 1 ? "risk" : "risks"} worth watching.`;

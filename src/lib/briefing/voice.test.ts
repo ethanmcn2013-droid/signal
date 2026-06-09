@@ -42,25 +42,25 @@ describe("greeting", () => {
 });
 
 describe("summaryLine", () => {
-  test("quiet morning when nothing pulling and nothing moving", () => {
-    assert.equal(summaryLine(brief()), "Quiet morning. Nothing pulling.");
+  test("silent on a quiet day — nothing pulling, no filler", () => {
+    // Silence is the signal. Empty string lets EmptyState carry the frame.
+    assert.equal(summaryLine(brief()), "");
   });
 
-  test("light morning when only moving-well has items", () => {
-    assert.equal(
-      summaryLine(brief({ movingWell: [{} as never] })),
-      "Light morning. The board is moving.",
-    );
+  test("still silent when only moving-well has items", () => {
+    // moving-well items no longer rescue the line; the morning that
+    // has nothing pulling has nothing to summarise.
+    assert.equal(summaryLine(brief({ movingWell: [{} as never] })), "");
   });
 
-  test("risk-only morning singular vs plural", () => {
+  test("risk-only day singular vs plural", () => {
     assert.equal(
       summaryLine(brief({ quietRisks: [{} as never] })),
-      "A quiet morning, but 1 risk worth watching.",
+      "A quiet day, but 1 risk worth watching.",
     );
     assert.equal(
       summaryLine(brief({ quietRisks: [{}, {}] as never[] })),
-      "A quiet morning, but 2 risks worth watching.",
+      "A quiet day, but 2 risks worth watching.",
     );
   });
 
