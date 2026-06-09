@@ -3,6 +3,10 @@
 Convention: BRAND.md §6.5. Entries before 2026-05-14 keep their
 original shape; the new shape starts at the next cycle.
 
+## 2026-06-09 · A·3 · cuts · the morning brief stops talking when there is nothing to say
+
+**The briefing reads closer to three things in plain English, and silence reads as silence.** Five cuts on the engine and the marketing surface, closing the product-excellence pass. The `Today` chip in the briefing header is gone (`briefing-view.tsx`) — orphaned dashboard furniture left over from the cut Yesterday toggle. The "Moving well" bucket no longer renders in the default morning brief — the engine already weighted `just-shipped` at 100/1000 (lowest of six triggers), the math said it wasn't signal, the render layer was shipping it anyway. "Suggested focus" is out of the brief — it was a sorted re-projection of items the reader had already seen above; three buckets, not four. `summaryLine()` returns the empty string on a quiet day instead of firing filler like "Light day. The board is moving." — `EmptyState` carries the frame on the silent path. Marketing homepage cuts: the `BriefingCompression` SVG component and the "engine never generates language" interstitial are out — they were teaching the engine, not the brief; quiet inline links to `/law` and `/method` replace them at the close CTA for readers who came for the mechanism on purpose. Deferred (founder-gate): the in-product paywall card that signs off the briefing surface with a `€12/month` line.
+
 ## 2026-06-06 · A·2 · tightens · the attention cards stop dramatizing and start naming
 
 **The briefing's headline phrasings now lead with "waiting" instead of "blocked" when a task is sitting open, matching the suite-wide calm vocabulary — `To do · Moving · Waiting · Needs Attention · Done`.** A wedding planner reading "Florist deposit has been blocked for 9 days" feels alarm; reading "Florist deposit has been waiting for 9 days" reads as the fact it is. The status didn't change, the tone did. The relational chain stays — "blocked by Music supplier" keeps the named blocker, because that is the data, not a label.
