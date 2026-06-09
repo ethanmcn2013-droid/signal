@@ -2,7 +2,7 @@
 
 import { AnimatePresence, MotionConfig, motion } from "motion/react";
 import { useState } from "react";
-import type { BriefItem, Briefing, FocusItem } from "@/lib/briefing/types";
+import type { BriefItem, Briefing } from "@/lib/briefing/types";
 import { graceNote, greeting, summaryLine } from "@/lib/briefing/voice";
 
 // ─────────────────────────────────────────────────────────────
@@ -31,9 +31,7 @@ const EASE_STANDARD = [0.2, 0, 0, 1] as const;
 
 const bucketAccents = {
   attention: "var(--brand, #4f46e5)",
-  moving: "rgb(46, 160, 110)",
   risks: "var(--brand, #4f46e5)",
-  focus: "var(--brand, #4f46e5)",
 } as const;
 
 /**
@@ -108,7 +106,13 @@ export function BriefingView({
               items={briefing.quietRisks}
               accent={bucketAccents.risks}
             />
-            <FocusBlock items={briefing.suggestedFocus} />
+            {/* "Suggested focus" is cut. The block was a sorted
+                re-projection of attention + risks already on the
+                page — the same items, second time on screen, under
+                a different header. The Needs-attention items are
+                already the focus. The suggestedFocus array stays on
+                the Briefing object for the email render and future
+                surfaces; the web brief does not double up. */}
           </>
         )}
 
@@ -345,63 +349,6 @@ function WhyThisAccordion({
         )}
       </AnimatePresence>
     </div>
-  );
-}
-
-function FocusBlock({ items }: { items: FocusItem[] }) {
-  if (items.length === 0) return null;
-  return (
-    <motion.section
-      className="mt-10 rounded-2xl border p-6"
-      variants={fadeUp}
-      style={{
-        borderColor: "var(--hairline)",
-      }}
-    >
-      <div className="mb-4 flex items-center gap-2.5">
-        <span
-          aria-hidden
-          className="inline-block h-1.5 w-1.5 rounded-full"
-          style={{ background: "var(--brand, #4f46e5)" }}
-        />
-        <h2
-          className="text-[13px] font-semibold uppercase tracking-[0.06em]"
-          style={{ color: "var(--ink)" }}
-        >
-          Suggested focus
-        </h2>
-      </div>
-
-      <motion.ul
-        className="space-y-3"
-        initial="hidden"
-        animate="shown"
-        variants={{
-          shown: { transition: { staggerChildren: 0.07 } },
-        }}
-      >
-        {items.map((item) => (
-          <motion.li
-            key={item.id}
-            variants={fadeUp}
-            className="flex items-baseline justify-between gap-4"
-          >
-            <span
-              className="text-[15.5px] leading-[1.45]"
-              style={{ color: "var(--ink)" }}
-            >
-              {item.text}
-            </span>
-            <span
-              className="shrink-0 text-[11px] uppercase tracking-[0.12em]"
-              style={{ color: "var(--ink-quiet)" }}
-            >
-              {item.due}
-            </span>
-          </motion.li>
-        ))}
-      </motion.ul>
-    </motion.section>
   );
 }
 
