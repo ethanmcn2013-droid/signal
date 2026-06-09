@@ -135,21 +135,12 @@ const fadeUp = {
 
 function Header({ stamp }: { stamp: string }) {
   return (
-    <motion.div
-      className="mb-6 flex items-center justify-between"
-      variants={fadeUp}
-    >
+    <motion.div className="mb-6" variants={fadeUp}>
       <p
         className="text-[11px] font-semibold uppercase tracking-[0.14em]"
         style={{ color: "var(--ink-quiet)" }}
       >
         Daily Signal · {stamp}
-      </p>
-      <p
-        className="text-[10.5px] uppercase tracking-[0.12em]"
-        style={{ color: "var(--ink-quiet)" }}
-      >
-        Today
       </p>
     </motion.div>
   );
