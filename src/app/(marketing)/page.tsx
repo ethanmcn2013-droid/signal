@@ -2,7 +2,6 @@ import Link from "next/link";
 import { AnalyticsHeroSignal } from "@/components/landing/analytics-hero-signal";
 import { Hero } from "@/components/landing/hero";
 import { BriefingAnatomy } from "@/components/marketing/briefing-anatomy";
-import { BriefingCompression } from "@/components/marketing/briefing-compression";
 import { SuiteArrows } from "@/components/suite-arrows";
 
 const REQUEST_ACCESS_HREF =
@@ -12,8 +11,15 @@ const REQUEST_ACCESS_HREF =
  * Analytics marketing homepage — structure:
  *   1. AnalyticsHeroSignal — "The Signal" scan-line hero (A·1, 2026-05-28)
  *   2. Hero                — product intro text + audience toggle + live briefing demo
- *   3. BriefingAnatomy     — anatomy of a briefing item
+ *   3. BriefingAnatomy     — anatomy of a briefing item (the diagram
+ *                            that earns its pixels — shows the artifact
+ *                            the customer will receive, in their words)
  *   4. CTA                 — access/sample close
+ *
+ * The BriefingCompression SVG and the "engine never generates
+ * language" interstitial were cut on 2026-06-09. They taught the
+ * engine, not the brief; their home is /law and /method, where the
+ * readers who care about mechanism go on purpose.
  */
 export default function HomePage() {
   return (
@@ -21,49 +27,6 @@ export default function HomePage() {
       <SuiteArrows current="analytics" />
       <AnalyticsHeroSignal />
       <Hero />
-
-      {/* Row 2 — engine never generates language, it picks language.
-          Standalone interstitial between Hero and BriefingAnatomy. */}
-      <section
-        className="reveal px-6"
-        style={{ paddingTop: 96, paddingBottom: 96 }}
-        aria-label="The engine picks language"
-      >
-        <div className="mx-auto w-full max-w-[1140px]">
-          <p
-            style={{
-              fontSize: 11,
-              letterSpacing: "0.14em",
-              fontWeight: 600,
-              color: "var(--ink-quiet)",
-              fontFamily: "var(--font-mono-stack)",
-              textTransform: "uppercase",
-              marginBottom: 18,
-            }}
-          >
-            The mechanism, in one line
-          </p>
-          <p
-            className="text-balance"
-            style={{
-              maxWidth: "22ch",
-              fontSize: "clamp(1.6rem, 1rem + 2.4vw, 2.6rem)",
-              fontWeight: 500,
-              letterSpacing: "-0.025em",
-              lineHeight: 1.15,
-              color: "var(--ink)",
-              margin: 0,
-            }}
-          >
-            The engine never generates language.{" "}
-            <span style={{ color: "color-mix(in srgb, var(--ink) 55%, transparent)" }}>
-              It picks language.
-            </span>
-          </p>
-        </div>
-      </section>
-
-      <BriefingCompression />
 
       <BriefingAnatomy />
 
@@ -132,6 +95,31 @@ export default function HomePage() {
               Read a sample briefing
             </Link>
           </div>
+          {/* Quiet entry points to the mechanism pages, for readers
+              who came for the engine, not the briefing. */}
+          <p
+            style={{
+              marginTop: 28,
+              fontSize: 13,
+              color: "var(--ink-quiet)",
+            }}
+          >
+            How the briefing is picked:{" "}
+            <Link
+              href="/law"
+              style={{ color: "var(--ink-quiet)", textDecoration: "underline", textUnderlineOffset: 2 }}
+            >
+              the law
+            </Link>{" "}
+            ·{" "}
+            <Link
+              href="/method"
+              style={{ color: "var(--ink-quiet)", textDecoration: "underline", textUnderlineOffset: 2 }}
+            >
+              the method
+            </Link>
+            .
+          </p>
         </div>
       </section>
     </div>
