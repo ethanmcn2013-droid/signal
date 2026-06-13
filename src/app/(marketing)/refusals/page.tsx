@@ -11,9 +11,9 @@ import Link from "next/link";
  */
 
 export const metadata: Metadata = {
-  title: "Refusals — Signal Analytics",
+  title: "Refusals — Signal",
   description:
-    "What Signal Analytics will never ship. Seven sentences. Each is a decision we point at when the request comes up.",
+    "What Signal will never ship. Seven sentences. Each is a decision we point at when the request comes up.",
 };
 
 const REFUSALS = [
@@ -43,7 +43,7 @@ const REFUSALS = [
   },
   {
     head: "Not real-time.",
-    body: "Daily Signal is daily. Weekly Signal is weekly. Launch Signal is on demand. If a user wants a live view, they want Tasks, not Analytics.",
+    body: "Daily Signal is daily. Weekly Signal is weekly. Launch Signal is on demand. If a user wants a live view, they want Tasks, not Signal.",
   },
 ] as const;
 

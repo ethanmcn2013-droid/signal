@@ -5,7 +5,7 @@ import { getOrCreatePreferences } from "@/lib/preferences";
 import { BriefingEmail } from "@/lib/email/briefing-email";
 
 export const metadata = {
-  title: "Email preview — Signal Analytics",
+  title: "Email preview — Signal",
 };
 
 /**
@@ -28,7 +28,7 @@ export default async function PreviewEmailPage() {
     email: prefs.email,
   });
   const base =
-    process.env.NEXT_PUBLIC_SITE_URL ?? "https://analytics.signalstudio.ie";
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://signal.signalstudio.ie";
 
   const html = await render(
     BriefingEmail({

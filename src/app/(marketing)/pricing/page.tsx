@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Pricing — Signal Analytics",
+  title: "Pricing — Signal",
   description:
-    "Currently in private beta. Pricing lands when Signal Analytics is generally available.",
+    "Currently in private beta. Pricing lands when Signal is generally available.",
 };
 
 const PROSE_MAX = { maxWidth: 640, margin: "0 auto", paddingLeft: 24, paddingRight: 24 };
@@ -40,7 +40,7 @@ export default function PricingPage() {
               marginBottom: 48,
             }}
           >
-            Pricing lands when Signal Analytics is generally available. Until
+            Pricing lands when Signal is generally available. Until
             then, request access by email.
           </p>
 
@@ -63,7 +63,7 @@ export default function PricingPage() {
               Request access
             </p>
             <a
-              href="mailto:hello@signalstudio.ie?subject=Analytics%20access%20request"
+              href="mailto:hello@signalstudio.ie?subject=Signal%20access%20request"
               style={{
                 fontSize: 20,
                 fontWeight: 500,

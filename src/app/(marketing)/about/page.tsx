@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { TASKS_URL, ROADMAP_URL } from "@/lib/product-urls";
+import { TASKS_URL, TIMELINE_URL } from "@/lib/product-urls";
 
 export const metadata: Metadata = {
-  title: "About — Signal Analytics",
+  title: "About — Signal",
   description:
-    "A briefing, not a dashboard. What Signal Analytics is, why it exists, and where it sits in the Signal Studio suite.",
+    "A briefing, not a dashboard. What Signal is, why it exists, and where it sits in the Signal Studio suite.",
 };
 
 const PROSE_MAX = { maxWidth: 640, margin: "0 auto", paddingLeft: 24, paddingRight: 24 };
@@ -68,16 +68,16 @@ export default function AboutPage() {
               write if they had read everything and knew what mattered.
             </p>
             <p>
-              Signal Analytics is not a dashboard tool. It is a system that
+              Signal is not a dashboard tool. It is a system that
               reads your work and writes the briefing. No configuration, no
               widgets, no report templates. You open it, and it has already done
               the reading.
             </p>
             <p>
-              Signal Analytics is one of three products from Signal Studio.
+              Signal is one of three products from Signal Studio.
               Signal Tasks handles execution — the list, the board, the daily
               flow. Signal Roadmap handles direction — where you are going and
-              why. Signal Analytics handles attention. The one thing that
+              why. Signal handles attention. The one thing that
               determines whether any of it gets done.
             </p>
           </div>
@@ -118,7 +118,7 @@ export default function AboutPage() {
               <ProductCard
                 name="Signal Roadmap"
                 description="Direction clarity. Your roadmap in plain English."
-                href={ROADMAP_URL}
+                href={TIMELINE_URL}
               />
             </div>
           </div>

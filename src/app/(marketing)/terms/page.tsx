@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Terms — Signal Analytics",
+  title: "Terms — Signal",
   description:
-    "Terms of use for Signal Analytics. Plain English, no legalese.",
+    "Terms of use for Signal. Plain English, no legalese.",
 };
 
 const SECTIONS = [
   {
     title: "What this is",
-    body: "Signal Analytics is a private beta product operated by Signal Studio. By requesting access and using the service, you agree to use it for legitimate work purposes. That's the main point.",
+    body: "Signal is a private beta product operated by Signal Studio. By requesting access and using the service, you agree to use it for legitimate work purposes. That's the main point.",
   },
   {
     title: "What we provide",
@@ -78,7 +78,7 @@ export default function TermsPage() {
             }}
           >
             This page is a placeholder while the product is in private beta.
-            The formal terms land when Signal Analytics is generally available.
+            The formal terms land when Signal is generally available.
           </p>
         </div>
       </section>

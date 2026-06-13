@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { DangerZone } from "@/components/account/danger-zone";
 
 export const metadata: Metadata = {
-  title: "Account — Signal Analytics",
+  title: "Account — Signal",
   description: "Account management.",
 };
 
@@ -44,7 +44,7 @@ export default async function AccountPage() {
         Signed in as{" "}
         <span style={{ color: "var(--ink)" }}>{email}</span>. Profile,
         password, and sign-in methods live in your Clerk account — the
-        destructive action below is the only thing Analytics controls
+        destructive action below is the only thing Signal controls
         directly.
       </p>
 

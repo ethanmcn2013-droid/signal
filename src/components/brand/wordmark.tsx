@@ -7,7 +7,7 @@ interface WordmarkProps {
 }
 
 /**
- * Signal Analytics wordmark — `analytics·` with the M·04 tick gesture
+ * Signal wordmark — `analytics·` with the M·04 tick gesture
  * per the suite design system (v1, 2026-05-13). The dot is the canonical
  * middot (lifted), and its motion is a discrete jump between sample
  * positions — snapping instantly via steps(1,end), never gliding —
@@ -21,7 +21,7 @@ export function Wordmark({
   return (
     <Link
       href={href}
-      aria-label="Signal Analytics"
+      aria-label="Signal"
       style={{ textDecoration: "none" }}
       className={className}
     >
@@ -35,7 +35,7 @@ export function Wordmark({
           color: "var(--ink)",
         }}
       >
-        analytics
+        signal
         <span className="analytics-dot" aria-hidden />
       </span>
     </Link>

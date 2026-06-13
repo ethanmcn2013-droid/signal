@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "nodejs";
-export const alt = "Signal Analytics — Your day, before you read it.";
+export const alt = "Signal — Your day, before you read it.";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -37,7 +37,7 @@ export default async function OG() {
               color: "#18181b",
             }}
           >
-            analytics
+            signal
           </span>
           <span
             style={{

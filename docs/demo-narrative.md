@@ -1,4 +1,4 @@
-# Signal Analytics · 30-Second Demo · Narrative + Storyboard
+# Signal · 30-Second Demo · Narrative + Storyboard
 
 **Cycle 7.1 · Plan 7 (Demo videos) · Drafted 2026-05-10**
 

@@ -63,7 +63,7 @@ export default function NotFound() {
           textUnderlineOffset: 3,
         }}
       >
-        Back to Signal Analytics
+        Back to Signal
       </Link>
     </div>
   );

@@ -15,10 +15,10 @@ import { generateUnsubscribeToken } from "./tokens";
 
 const REPLY_TO = process.env.RESEND_REPLY_TO ?? "hello@signalstudio.ie";
 
-const FROM = process.env.RESEND_FROM ?? "Signal Analytics <hello@signalstudio.ie>";
+const FROM = process.env.RESEND_FROM ?? "Signal <hello@signalstudio.ie>";
 
 function siteBaseUrl(): string {
-  return process.env.NEXT_PUBLIC_SITE_URL ?? "https://analytics.signalstudio.ie";
+  return process.env.NEXT_PUBLIC_SITE_URL ?? "https://signal.signalstudio.ie";
 }
 
 // Memoised Resend client, keyed on the API key so a key rotation
@@ -156,7 +156,7 @@ export async function dispatchBriefing({
       // unsubscribe button at the TOP of the message.
       "List-Unsubscribe": `<${unsubscribePostUrl}>, <${unsubscribeUrl}>`,
       "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
-      "List-Id": "Signal Analytics Briefings <briefings.signalstudio.ie>",
+      "List-Id": "Signal Briefings <briefings.signalstudio.ie>",
     },
   });
 

@@ -60,7 +60,7 @@ export function Hero() {
             letterSpacing: "0.14em",
           }}
         >
-          Signal Analytics &middot; Attention clarity
+          Signal &middot; Attention clarity
         </p>
 
         <h1

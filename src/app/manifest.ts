@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 
 /**
- * PWA manifest — Signal Analytics.
+ * PWA manifest — Signal.
  *
  * Operational clarity. start_url goes to /app — the daily briefing
  * surface — because that's the value moment. Marketing home isn't
@@ -18,8 +18,8 @@ import type { MetadataRoute } from "next";
 export default function manifest(): MetadataRoute.Manifest {
   return {
     id: "/signal-analytics",
-    name: "Signal Analytics",
-    short_name: "Analytics",
+    name: "Signal",
+    short_name: "Signal",
     description:
       "Reads the state of your work and writes a short briefing. What needs you. What's moving. What's quiet.",
     start_url: "/app",

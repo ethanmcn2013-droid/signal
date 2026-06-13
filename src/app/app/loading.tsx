@@ -19,7 +19,7 @@
  * tick animation stops.
  */
 export default function AnalyticsLoading() {
-  const word = "analytics";
+  const word = "signal";
   return (
     <div
       aria-hidden

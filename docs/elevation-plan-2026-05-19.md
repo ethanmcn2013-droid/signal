@@ -1,4 +1,4 @@
-# Product Elevation Plan — Signal Analytics
+# Product Elevation Plan — Signal
 
 **Date:** 2026-05-19
 **Method:** 4-director panel (Creative Director, Product Director, UX Director, Senior Engineer)
@@ -9,7 +9,7 @@
 
 ## Origin
 
-A 25.5s screen-recording walkthrough of `analytics.signalstudio.ie/app` surfaced exactly two screens:
+A 25.5s screen-recording walkthrough of `signal.signalstudio.ie/app` surfaced exactly two screens:
 
 1. **Loading state that reads as broken** — a naked indigo circle on full white for ~3.5s.
    Root cause: no `loading.tsx` existed anywhere under `src/app/`, so the route blocked

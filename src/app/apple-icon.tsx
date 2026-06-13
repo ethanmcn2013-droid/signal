@@ -37,7 +37,7 @@ export default function AppleIcon() {
             letterSpacing: "-0.05em",
           }}
         >
-          <span style={{ display: "flex" }}>analytics</span>
+          <span style={{ display: "flex" }}>signal</span>
           <span
             style={{
               display: "flex",

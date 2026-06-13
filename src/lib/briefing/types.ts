@@ -68,4 +68,7 @@ export type Briefing = {
   // The brief is "empty" when no bucket has anything. Renderer
   // shows a quiet "Nothing to flag today" state, no email is sent.
   isEmpty: boolean;
+  /** Segment-aware copy when isEmpty — from Tasks primary_use_case. */
+  emptyStateHeadline?: string;
+  emptyStateBody?: string;
 };

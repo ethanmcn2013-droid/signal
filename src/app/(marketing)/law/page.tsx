@@ -14,7 +14,7 @@ import Link from "next/link";
  */
 
 export const metadata: Metadata = {
-  title: "The Law — Signal Analytics",
+  title: "The Law — Signal",
   description:
     "One page. One diagram. The shape of attention — and where the briefing draws the line.",
 };

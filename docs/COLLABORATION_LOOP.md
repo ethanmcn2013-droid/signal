@@ -1,6 +1,6 @@
-# Signal Analytics Collaboration Loop
+# Signal Collaboration Loop
 
-Signal Analytics owns the attention layer of the Signal Studio collaboration loop.
+Signal owns the attention layer of the Signal Studio collaboration loop.
 
 Core question:
 

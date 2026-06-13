@@ -1,4 +1,4 @@
-# Claude Code Instructions — Signal Analytics
+# Claude Code Instructions — Signal
 
 Read `AGENTS.md` first.
 

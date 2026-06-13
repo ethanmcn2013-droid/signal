@@ -8,7 +8,7 @@ import { resolveEntitlement } from "@/lib/entitlements-shared/reads";
 import { tierAtLeast } from "@/lib/entitlements-shared/tiers";
 
 export const metadata: Metadata = {
-  title: "Daily Signal — Signal Analytics",
+  title: "Daily Signal — Signal",
   description: "One short morning read on what needs attention today.",
 };
 

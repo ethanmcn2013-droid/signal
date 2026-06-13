@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "The Daily Signal — Signal Analytics",
+  title: "The Daily Signal — Signal",
   description:
     "Not a report. Not a feed. A briefing written for the person who needs to make decisions today.",
 };
@@ -110,7 +110,7 @@ export default function SignalPage() {
             Your day, before you read it.
           </h1>
           <p style={{ fontSize: 17, color: "var(--ink-soft)", lineHeight: 1.6, maxWidth: 520 }}>
-            The Daily Signal is the briefing format for Signal Analytics. Two minutes.
+            The Daily Signal is the briefing format for Signal. Two minutes.
             Plain sentences. Everything that matters, nothing that doesn&apos;t.
           </p>
         </div>
@@ -393,9 +393,9 @@ export default function SignalPage() {
               Private beta
             </p>
             <p style={{ fontSize: 16, color: "var(--ink-soft)", lineHeight: 1.6 }}>
-              Signal Analytics is in private beta.{" "}
+              Signal is in private beta.{" "}
               <a
-                href="mailto:hello@signalstudio.ie?subject=Analytics%20access%20request"
+                href="mailto:hello@signalstudio.ie?subject=Signal%20access%20request"
                 style={{ color: "var(--ink)", textDecoration: "underline" }}
               >
                 Request access

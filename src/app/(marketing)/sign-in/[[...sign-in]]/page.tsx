@@ -3,7 +3,7 @@ import Link from "next/link";
 import { SignIn } from "@clerk/nextjs";
 
 export const metadata: Metadata = {
-  title: "Sign in — Signal Analytics",
+  title: "Sign in — Signal",
 };
 
 export default function SignInPage() {
@@ -84,7 +84,7 @@ export default function SignInPage() {
               letterSpacing: "-0.01em",
             }}
           >
-            signal analytics.
+            signal.
           </span>
           <span
             style={{
@@ -92,7 +92,7 @@ export default function SignInPage() {
               color: "var(--ink-soft)",
             }}
           >
-            Sign in to Signal Analytics
+            Sign in to Signal
           </span>
         </div>
         <SignIn

@@ -1,6 +1,6 @@
-# Signal Analytics · PRODUCT.md
+# Signal · PRODUCT.md
 
-**Locked product definition.** This document defines what Signal Analytics *is*, who it's for, what it ships, and — critically — *how the briefing is generated* without crossing into AI-marketing territory. It is the single source of truth for product decisions in this repo. When this document and the live site disagree, fix this document first if the document is wrong; otherwise fix the site.
+**Locked product definition.** This document defines what Signal *is*, who it's for, what it ships, and — critically — *how the briefing is generated* without crossing into AI-marketing territory. It is the single source of truth for product decisions in this repo. When this document and the live site disagree, fix this document first if the document is wrong; otherwise fix the site.
 
 Drafted in Plan 1 · Cycle 1.1 (Strategic Foundation). Companion to BRAND.md.
 
@@ -8,7 +8,7 @@ Drafted in Plan 1 · Cycle 1.1 (Strategic Foundation). Companion to BRAND.md.
 
 ## 1 · Position
 
-Signal Analytics is **attention clarity**. Where Tasks runs the work and Roadmap explains the work, Analytics tells you *what to do about the work today*. It is one product in the Signal Studio suite. Its job is to read the state of work and write a short briefing that says what needs attention, what is moving well, what is quietly at risk, and what to do next.
+Signal is **attention clarity**. Where Tasks runs the work and Roadmap explains the work, Analytics tells you *what to do about the work today*. It is one product in the Signal Studio suite. Its job is to read the state of work and write a short briefing that says what needs attention, what is moving well, what is quietly at risk, and what to do next.
 
 It is not a dashboard. It is not productivity tracking. It is not enterprise software. The briefing replaces the dashboard.
 
@@ -40,7 +40,7 @@ The promise has three parts and they are non-negotiable:
 2. **Compressed, not complete.** A list of every open task is not a briefing. The briefing surfaces the small set that matters today and *explicitly suppresses* the rest.
 3. **No configuration.** The user does not write rules, set thresholds, build dashboards, or pick widgets. They sign in and the briefing is there.
 
-If any of these three drift, the product is no longer Signal Analytics — it has become a different category of product (a dashboard tool, a metrics platform, an alerting system) and is no longer brand-coherent.
+If any of these three drift, the product is no longer Signal — it has become a different category of product (a dashboard tool, a metrics platform, an alerting system) and is no longer brand-coherent.
 
 ---
 
@@ -126,7 +126,7 @@ The deliberate act of *not* surfacing things. After triggers fire and insights a
 
 ## 6 · What it reads
 
-In v1, Signal Analytics reads from **Signal Tasks** (the suite-internal data source). This is a deliberate scoping decision:
+In v1, Signal reads from **Signal Tasks** (the suite-internal data source). This is a deliberate scoping decision:
 
 - It avoids needing to integrate with Asana / Linear / Jira / Trello / Notion at v1, which would multiply surface area.
 - It strengthens the suite — Tasks becomes the data layer, Analytics becomes the read layer.

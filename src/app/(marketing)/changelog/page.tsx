@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Changelog — Signal Analytics",
+  title: "Changelog — Signal",
   description:
     "What shipped, when it shipped, and nothing else.",
 };
@@ -35,7 +35,7 @@ const ENTRIES: {
     date: "9 May 2026",
     items: [
       {
-        line: "Signal Analytics is live.",
+        line: "Signal is live.",
         sub: "11 public routes. Sticky nav, four-column footer, cross-product chrome.",
       },
       {

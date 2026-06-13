@@ -5,7 +5,7 @@ import { BriefingAnatomy } from "@/components/marketing/briefing-anatomy";
 import { SuiteArrows } from "@/components/suite-arrows";
 
 const REQUEST_ACCESS_HREF =
-  "mailto:hello@signalstudio.ie?subject=Analytics%20access";
+  "mailto:hello@signalstudio.ie?subject=Signal%20access";
 
 /**
  * Analytics marketing homepage — structure:

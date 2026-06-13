@@ -38,8 +38,14 @@ export interface UserIdentity {
   email: string | null;
 }
 
+export type WorkspaceOnboarding = {
+  primaryUseCase: string | null;
+  activeDomain: string | null;
+};
+
 export interface DataSource {
   read(workspaceId: string): Promise<WorkRead>;
+  getWorkspaceOnboarding?(workspaceId: string): Promise<WorkspaceOnboarding | null>;
   /**
    * Workspaces this user can brief (owner or member).
    *
@@ -57,6 +63,7 @@ export interface DataSource {
 
 export function mockSourceWith(opts: {
   workspaces: WorkspaceCandidate[];
+  onboarding?: WorkspaceOnboarding;
 }): DataSource {
   return {
     async read(workspaceId: string): Promise<WorkRead> {
@@ -70,6 +77,9 @@ export function mockSourceWith(opts: {
     },
     async listForUser(_identity: UserIdentity): Promise<WorkspaceCandidate[]> {
       return opts.workspaces;
+    },
+    async getWorkspaceOnboarding(): Promise<WorkspaceOnboarding | null> {
+      return opts.onboarding ?? null;
     },
   };
 }
@@ -308,6 +318,30 @@ export const tasksDbSource: DataSource = {
     } catch (err) {
       console.error("[tasksDbSource] listForUser error — returning []", err);
       return [];
+    }
+  },
+
+  async getWorkspaceOnboarding(
+    workspaceId: string,
+  ): Promise<WorkspaceOnboarding | null> {
+    if (!tasksDb) return null;
+    try {
+      const [row] = await tasksDb
+        .select({
+          primaryUseCase: workspacesTable.primaryUseCase,
+          activeDomain: workspacesTable.activeDomain,
+        })
+        .from(workspacesTable)
+        .where(eq(workspacesTable.id, workspaceId))
+        .limit(1);
+      if (!row) return null;
+      return {
+        primaryUseCase: row.primaryUseCase ?? null,
+        activeDomain: row.activeDomain ?? null,
+      };
+    } catch (err) {
+      console.error("[tasksDbSource] getWorkspaceOnboarding error", err);
+      return null;
     }
   },
 };

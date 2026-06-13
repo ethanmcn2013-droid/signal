@@ -38,6 +38,8 @@ export const workspaces = sqliteTable("workspaces", {
   slug: text("slug").notNull(),
   name: text("name").notNull(),
   ownerUserId: text("owner_user_id"),
+  activeDomain: text("active_domain"),
+  primaryUseCase: text("primary_use_case"),
 });
 
 export const users = sqliteTable("users", {

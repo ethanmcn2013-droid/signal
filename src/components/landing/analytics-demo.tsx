@@ -368,7 +368,7 @@ export function AnalyticsDemo({ domain = "wedding" }: Props = {}) {
               letterSpacing: "-0.005em",
             }}
           >
-            Signal Analytics
+            Signal
           </span>
           <span
             className="font-mono text-[10.5px]"

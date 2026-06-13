@@ -25,15 +25,15 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Signal Analytics — Operational clarity. Know what needs your attention.",
+  title: "Signal — Operational clarity. Know what needs your attention.",
   description:
-    "Signal Analytics reads the state of your work and writes a short briefing. What needs you. What's moving. What's quiet. What to do next.",
+    "Signal reads the state of your work and writes a short briefing. What needs you. What's moving. What's quiet. What to do next.",
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL ?? "https://analytics.signalstudio.ie"
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://signal.signalstudio.ie"
   ),
   manifest: "/manifest.webmanifest",
   openGraph: {
-    title: "Signal Analytics — Operational clarity.",
+    title: "Signal — Operational clarity.",
     description:
       "Not a dashboard. A briefing. Know what needs your attention.",
     type: "website",

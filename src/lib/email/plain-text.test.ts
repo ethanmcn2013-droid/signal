@@ -4,9 +4,9 @@ import type { BriefItem, Briefing, FocusItem } from "@/lib/briefing/types";
 import { renderBriefingText } from "./plain-text";
 
 const LINKS = {
-  unsubscribeUrl: "https://analytics.signalstudio.ie/u/tok",
-  preferencesUrl: "https://analytics.signalstudio.ie/app/settings/notifications",
-  viewInBrowserUrl: "https://analytics.signalstudio.ie/app/brief",
+  unsubscribeUrl: "https://signal.signalstudio.ie/u/tok",
+  preferencesUrl: "https://signal.signalstudio.ie/app/settings/notifications",
+  viewInBrowserUrl: "https://signal.signalstudio.ie/app/brief",
 };
 
 function item(over: Partial<BriefItem> = {}): BriefItem {

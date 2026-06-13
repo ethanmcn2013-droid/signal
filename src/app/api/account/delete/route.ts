@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { deleteAccountForUser } from "@/server/account";
 
 /**
- * POST /api/account/delete — Signal Analytics.
+ * POST /api/account/delete — Signal.
  *
  * In-app account deletion per App Store 5.1.1(v). See
  * `~/Projects/personal/studio/docs/ios/data-flow.md` for the

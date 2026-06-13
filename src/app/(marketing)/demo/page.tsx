@@ -15,7 +15,7 @@ import Link from "next/link";
  */
 
 export const metadata: Metadata = {
-  title: "The Demo — Signal Analytics",
+  title: "The Demo — Signal",
   description:
     "Thirty seconds. The morning briefing, written in plain English. Everything important. Nothing distracting.",
 };
@@ -203,7 +203,7 @@ export default function DemoPage() {
                 Ready to try it?
               </p>
               <a
-                href="mailto:hello@signalstudio.ie?subject=Analytics%20access%20request"
+                href="mailto:hello@signalstudio.ie?subject=Signal%20access%20request"
                 style={{
                   fontSize: 13,
                   color: "var(--ink)",

@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Security — Signal Analytics",
+  title: "Security — Signal",
   description:
-    "How Signal Analytics will handle your operational data when the product ships. The posture we are building toward.",
+    "How Signal will handle your operational data when the product ships. The posture we are building toward.",
 };
 
 const LAST_UPDATED = "2026-05-09";
 
 /**
- * /security — plain-English statement of Signal Analytics's security
+ * /security — plain-English statement of Signal's security
  * posture as it is being built. Forward-looking — the product is in
  * private beta and does not yet collect operational data.
  * Static — no client-only code.
@@ -29,7 +29,7 @@ export default function SecurityPage() {
 
       {/* Sub */}
       <p className="mt-4 text-[17px] leading-[1.55] text-ink-soft">
-        Signal Analytics is in private beta. Here is the security posture
+        Signal is in private beta. Here is the security posture
         we are building toward.
       </p>
 
@@ -41,7 +41,7 @@ export default function SecurityPage() {
       <div className="mt-10 space-y-8 text-[15.5px] leading-[1.65] text-ink-soft">
         <Section title="What we will collect">
           <p>
-            When Signal Analytics ships, it will capture a snapshot of
+            When Signal ships, it will capture a snapshot of
             your work-in-progress signals — titles, statuses, and
             dates from the tools you connect. It will not capture the
             contents of documents or task descriptions. It will not
@@ -100,7 +100,7 @@ export default function SecurityPage() {
 
         <Section title="Beta-stage disclosure">
           <p>
-            Until Signal Analytics is generally available, this page
+            Until Signal is generally available, this page
             describes the posture we are building toward, not a current
             operational commitment. The formal security policy — with
             specific retention periods, subprocessor list, and legal

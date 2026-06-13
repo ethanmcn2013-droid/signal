@@ -1,6 +1,6 @@
-# AGENTS.md — Signal Analytics
+# AGENTS.md — Signal
 
-This repo is part of the Signal Studio suite. Signal Analytics is the attention-clarity product.
+This repo is part of the Signal Studio suite. Signal is the attention-clarity product.
 
 ## Signal HQ Sync
 

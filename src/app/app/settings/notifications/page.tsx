@@ -4,7 +4,7 @@ import { CadenceForm } from "./cadence-form";
 import { SendTestButton } from "./send-test-button";
 
 export const metadata: Metadata = {
-  title: "Notifications — Signal Analytics",
+  title: "Notifications — Signal",
   description: "Choose how often you want the briefing in your inbox.",
 };
 

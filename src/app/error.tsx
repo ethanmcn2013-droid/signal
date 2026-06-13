@@ -97,7 +97,7 @@ export default function RootError({
             alignItems: "center",
           }}
         >
-          Back to Signal Analytics
+          Back to Signal
         </Link>
       </div>
     </div>

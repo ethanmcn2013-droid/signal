@@ -2,7 +2,7 @@ import { SuiteSwitcher } from "@/components/suite-switcher-pills";
 import { UserButtonWithSuite } from "@/components/user-button-with-suite";
 
 /**
- * Authenticated app chrome for Signal Analytics.
+ * Authenticated app chrome for Signal.
  *
  * §14 persistent top chrome — pixel-identical across all five products:
  *   Left:  signal studio. / analytics  (breadcrumb — umbrella wordmark + product mark)

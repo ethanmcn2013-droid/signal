@@ -511,14 +511,14 @@ export function AnalyticsHeroSignal() {
     <section
       ref={rootRef as React.RefObject<HTMLElement>}
       className="anl-hero-section"
-      aria-label="Signal Analytics"
+      aria-label="Signal"
     >
       <div className="anl-chrome anl-chrome-tl">
         <span className="anl-wm">
           <span>signal studio</span>
           <span className="anl-dot-static" />
           <span className="anl-sep">·</span>
-          <span>analytics</span>
+          <span>signal</span>
         </span>
       </div>
 

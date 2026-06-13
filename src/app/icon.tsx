@@ -29,7 +29,7 @@ export default function Icon() {
           borderRadius: 6,
         }}
       >
-        <span style={{ display: "flex", marginLeft: 1 }}>a</span>
+        <span style={{ display: "flex", marginLeft: 1 }}>s</span>
         <span
           style={{
             display: "flex",

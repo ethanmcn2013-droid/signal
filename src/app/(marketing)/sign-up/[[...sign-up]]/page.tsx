@@ -3,7 +3,7 @@ import Link from "next/link";
 import { SignUp } from "@clerk/nextjs";
 
 export const metadata: Metadata = {
-  title: "Sign up — Signal Analytics",
+  title: "Sign up — Signal",
 };
 
 export default function SignUpPage() {

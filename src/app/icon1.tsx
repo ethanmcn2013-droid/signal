@@ -4,7 +4,7 @@ export const size = { width: 512, height: 512 };
 export const contentType = "image/png";
 
 /**
- * Android maskable icon — Signal Analytics.
+ * Android maskable icon — Signal.
  *
  * Solid indigo field, white "a." glyph inside the maskable safe
  * zone (80%-diameter circle ≈ 51px inset on each side).
@@ -34,7 +34,7 @@ export default function MaskableIcon() {
             letterSpacing: "-0.06em",
           }}
         >
-          <span style={{ display: "flex" }}>a</span>
+          <span style={{ display: "flex" }}>s</span>
           <span
             style={{
               display: "flex",

@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "nodejs";
-export const alt = "Signal Analytics — Currently in private beta.";
+export const alt = "Signal — Currently in private beta.";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -37,7 +37,7 @@ export default async function OG() {
               color: "#18181b",
             }}
           >
-            analytics
+            signal
           </span>
           <span
             style={{
@@ -94,7 +94,7 @@ export default async function OG() {
               marginTop: 8,
             }}
           >
-            Pricing lands when Analytics is generally available.
+            Pricing lands when Signal is generally available.
           </div>
         </div>
 

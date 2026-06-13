@@ -25,7 +25,7 @@ export async function GET(
   return NextResponse.redirect(
     new URL(
       `/u/${encodeURIComponent(token)}`,
-      process.env.NEXT_PUBLIC_SITE_URL ?? "https://analytics.signalstudio.ie",
+      process.env.NEXT_PUBLIC_SITE_URL ?? "https://signal.signalstudio.ie",
     ),
   );
 }

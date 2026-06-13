@@ -1,5 +1,5 @@
 /**
- * data/types.ts — Read-model types for Signal Analytics.
+ * data/types.ts — Read-model types for Signal.
  *
  * These types describe the shape of data the Attention Engine reads
  * to detect what matters. They mirror the Signal Tasks schema (the

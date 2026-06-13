@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { lookupByToken, unsubscribeByToken } from "@/lib/preferences";
 
 export const metadata: Metadata = {
-  title: "Unsubscribe — Signal Analytics",
+  title: "Unsubscribe — Signal",
   description: "Confirm you want to stop briefing emails.",
 };
 

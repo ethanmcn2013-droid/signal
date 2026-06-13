@@ -21,6 +21,7 @@ import type { Briefing } from "@/lib/briefing/types";
 import type { BriefingSource } from "@/lib/briefing/source";
 import type { TriggerId } from "@/lib/triggers/types";
 import { getRotations, bumpRotations } from "./rotation";
+import { getBriefingEmptyCopy } from "@/lib/onboarding/personalization";
 
 export type BriefingForUserResult =
   | { kind: "ok"; briefing: Briefing }
@@ -47,6 +48,12 @@ export async function buildBriefingForUser(opts: {
 
   const workspaceId = rows[0]?.workspaceId ?? null;
   if (!workspaceId) return { kind: "no-workspace" };
+
+  const onboarding =
+    (await dataSource.getWorkspaceOnboarding?.(workspaceId)) ?? null;
+  const emptyCopy = getBriefingEmptyCopy({
+    primaryUseCase: onboarding?.primaryUseCase,
+  });
 
   const rotationsBefore = await getRotations(clerkId);
 
@@ -108,5 +115,12 @@ export async function buildBriefingForUser(opts: {
   }
   await bumpRotations(clerkId, Array.from(fired));
 
-  return { kind: "ok", briefing };
+  return {
+    kind: "ok",
+    briefing: {
+      ...briefing,
+      emptyStateHeadline: emptyCopy.headline,
+      emptyStateBody: emptyCopy.body,
+    },
+  };
 }

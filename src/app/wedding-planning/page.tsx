@@ -3,7 +3,7 @@ import Link from "next/link";
 import { SiteFooter } from "@/components/marketing/site-footer";
 
 export const metadata: Metadata = {
-  title: "Wedding planning briefing — Signal Analytics",
+  title: "Wedding planning briefing — Signal",
   description:
     "What a daily briefing looks like for a wedding workspace, four weeks out. Plain sentences. What needs you, what's moving, what's quiet, what to do today.",
 };
@@ -74,7 +74,7 @@ export default function WeddingPlanningBriefingPage() {
       {/* ── Hero ─────────────────────────────────────────────────── */}
       <section style={{ ...SECTION, paddingTop: 96 }}>
         <div style={PROSE}>
-          <Eyebrow>Signal Analytics · Wedding planning briefing</Eyebrow>
+          <Eyebrow>Signal · Wedding planning briefing</Eyebrow>
           <h1 className="h-display" style={{ marginBottom: 24 }}>
             Today&apos;s briefing — for your wedding workspace.
           </h1>
@@ -360,7 +360,7 @@ export default function WeddingPlanningBriefingPage() {
             </a>
 
             <a
-              href="https://roadmap.signalstudio.ie/the-wedding"
+              href="https://timeline.signalstudio.ie/the-wedding"
               target="_blank"
               rel="noopener noreferrer"
               style={{

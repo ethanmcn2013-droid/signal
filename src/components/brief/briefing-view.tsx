@@ -87,7 +87,10 @@ export function BriefingView({
         ) : null}
 
         {briefing.isEmpty ? (
-          <EmptyState />
+          <EmptyState
+            headline={briefing.emptyStateHeadline}
+            body={briefing.emptyStateBody}
+          />
         ) : (
           <>
             <Bucket
@@ -352,7 +355,13 @@ function WhyThisAccordion({
   );
 }
 
-function EmptyState() {
+function EmptyState({
+  headline = "Nothing to flag today.",
+  body = "No briefing email is sent on quiet days. The board is clear.",
+}: {
+  headline?: string;
+  body?: string;
+}) {
   return (
     <>
       <motion.div
@@ -367,13 +376,13 @@ function EmptyState() {
           className="text-[18px] font-medium"
           style={{ color: "var(--ink)" }}
         >
-          Nothing to flag today.
+          {headline}
         </p>
         <p
           className="mt-2 text-[14px]"
           style={{ color: "var(--ink-soft)" }}
         >
-          No briefing email is sent on quiet days. The board is clear.
+          {body}
         </p>
       </motion.div>
 
