@@ -67,3 +67,38 @@ export const phrasingRotations = sqliteTable(
 );
 
 export type PhrasingRotation = typeof phrasingRotations.$inferSelect;
+
+/**
+ * Per-item briefing feedback — the one feedback signal the product
+ * collects (PRODUCT.md §2.4): a one-tap "useful / not useful" on each
+ * briefing item, so the trigger set can be tuned against real reads.
+ *
+ * Keyed on (clerkId, itemKey) so re-tapping updates the verdict rather
+ * than piling rows. `itemKey` is the item's stable id; `triggerId` is
+ * stored alongside so the operator can aggregate "which triggers read
+ * as noise" without re-deriving it. No briefing prose or task data is
+ * stored — only the verdict and which trigger produced the item.
+ *
+ * Read by the operator to tune triggers; the app never reads it back.
+ */
+export const briefingFeedback = sqliteTable(
+  "briefing_feedback",
+  {
+    clerkId: text("clerk_id").notNull(),
+    itemKey: text("item_key").notNull(),
+    /** "useful" | "not-useful". String-typed to keep the DB layer free
+     *  of the union; validated in the server action. */
+    verdict: text("verdict").notNull(),
+    /** The trigger that produced the item (e.g. "blocked"), for tuning. */
+    triggerId: text("trigger_id"),
+    createdAt: integer("created_at", { mode: "timestamp" })
+      .notNull()
+      .default(sql`(unixepoch())`),
+    updatedAt: integer("updated_at", { mode: "timestamp" })
+      .notNull()
+      .default(sql`(unixepoch())`),
+  },
+  (t) => [primaryKey({ columns: [t.clerkId, t.itemKey] })],
+);
+
+export type BriefingFeedback = typeof briefingFeedback.$inferSelect;

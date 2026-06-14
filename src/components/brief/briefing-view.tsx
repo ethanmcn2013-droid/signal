@@ -1,9 +1,13 @@
 "use client";
 
 import { AnimatePresence, MotionConfig, motion } from "motion/react";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import type { BriefItem, Briefing } from "@/lib/briefing/types";
 import { graceNote, greeting, summaryLine } from "@/lib/briefing/voice";
+import {
+  recordBriefingFeedback,
+  type FeedbackVerdict,
+} from "@/app/app/brief/feedback-actions";
 
 // ─────────────────────────────────────────────────────────────
 // Motion grammar — Signal Studio Motion Contract v1.
@@ -269,7 +273,69 @@ function BriefRow({
           reasons={item.reasons}
         />
       )}
+      {!muted && (
+        <FeedbackControl itemKey={item.id} triggerId={item.trigger} />
+      )}
     </motion.li>
+  );
+}
+
+/**
+ * Useful / not-useful — the one feedback signal the product collects
+ * (PRODUCT.md §2.4). One quiet tap per item; tuning happens off the
+ * aggregate. Optimistic: the tap is acknowledged immediately and the
+ * write is fire-and-forget through a fail-safe server action, so the
+ * reader never waits and never sees an error if the store isn't ready.
+ */
+function FeedbackControl({
+  itemKey,
+  triggerId,
+}: {
+  itemKey: string;
+  triggerId: string;
+}) {
+  const [chosen, setChosen] = useState<FeedbackVerdict | null>(null);
+  const [, startTransition] = useTransition();
+
+  if (chosen) {
+    return (
+      <p className="mt-2 text-[11.5px]" style={{ color: "var(--ink-quiet)" }}>
+        {chosen === "useful" ? "Thanks — noted." : "Thanks — I'll show less of this."}
+      </p>
+    );
+  }
+
+  const tap = (verdict: FeedbackVerdict) => {
+    setChosen(verdict);
+    startTransition(() => {
+      void recordBriefingFeedback(itemKey, verdict, triggerId);
+    });
+  };
+
+  return (
+    <div className="mt-2 flex items-center gap-3">
+      <span className="text-[11.5px]" style={{ color: "var(--ink-quiet)" }}>
+        Useful?
+      </span>
+      <button
+        type="button"
+        onClick={() => tap("useful")}
+        className="text-[11.5px] transition-colors"
+        style={{ color: "var(--ink-soft)" }}
+        aria-label="This was useful"
+      >
+        Yes
+      </button>
+      <button
+        type="button"
+        onClick={() => tap("not-useful")}
+        className="text-[11.5px] transition-colors"
+        style={{ color: "var(--ink-soft)" }}
+        aria-label="This was not useful"
+      >
+        Not really
+      </button>
+    </div>
   );
 }
 
