@@ -22,6 +22,8 @@ import type { BriefingSource } from "@/lib/briefing/source";
 import type { TriggerId } from "@/lib/triggers/types";
 import { getRotations, bumpRotations } from "./rotation";
 import { getBriefingEmptyCopy } from "@/lib/onboarding/personalization";
+import { isDemoMode } from "@/lib/access-mode";
+import { mockBriefingSource } from "@/lib/briefing/mock-source";
 
 export type BriefingForUserResult =
   | { kind: "ok"; briefing: Briefing }
@@ -39,6 +41,26 @@ export async function buildBriefingForUser(opts: {
   cadence: Cadence;
 }): Promise<BriefingForUserResult> {
   const { clerkId } = opts;
+
+  // Demo/Review: build a real briefing from the in-memory Wedding 2026 mock
+  // signals via the pure buildBriefing engine. No DB: no workspace lookup, no
+  // rotation read/write. The product reads exactly as it will in production —
+  // only the data is synthetic.
+  if (isDemoMode()) {
+    const briefing = await buildBriefing(mockBriefingSource, {
+      userId: clerkId || "demo-user",
+      email: "",
+    });
+    const emptyCopy = getBriefingEmptyCopy({ primaryUseCase: "venue" });
+    return {
+      kind: "ok",
+      briefing: {
+        ...briefing,
+        emptyStateHeadline: emptyCopy.headline,
+        emptyStateBody: emptyCopy.body,
+      },
+    };
+  }
 
   const rows = await db
     .select({ workspaceId: analyticsUsers.linkedWorkspaceId })

@@ -3,6 +3,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SiteNavConditional } from "@/components/marketing/site-nav-conditional";
+import { DevBanner } from "@/components/dev-banner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -91,6 +92,7 @@ export default function RootLayout({
         >
           <SiteNavConditional />
           {children}
+          <DevBanner />
         </body>
       </html>
     </ClerkProvider>
