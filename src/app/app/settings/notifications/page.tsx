@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getOrCreatePreferences } from "@/lib/preferences";
+import { isDemoMode } from "@/lib/access-mode";
 import { CadenceForm } from "./cadence-form";
 import { SendTestButton } from "./send-test-button";
 
@@ -9,7 +10,10 @@ export const metadata: Metadata = {
 };
 
 export default async function NotificationsPage() {
-  const prefs = await getOrCreatePreferences();
+  // Demo/Review: synthetic prefs so the surface renders without a session.
+  const prefs = isDemoMode()
+    ? { email: "you@theorchard.example", cadence: "daily" }
+    : await getOrCreatePreferences();
 
   return (
     <main className="mx-auto w-full max-w-[640px] px-6 py-16">

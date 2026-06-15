@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { DangerZone } from "@/components/account/danger-zone";
+import { ManageIdentityButton } from "@/components/account/manage-identity-button";
+import { isDemoMode } from "@/lib/access-mode";
 
 export const metadata: Metadata = {
   title: "Account — Signal",
@@ -16,12 +18,18 @@ export const metadata: Metadata = {
  * deletion path.
  */
 export default async function AccountPage() {
-  const user = await currentUser();
-  if (!user) redirect("/sign-in");
-
-  const email =
-    user.emailAddresses.find((e) => e.id === user.primaryEmailAddressId)
-      ?.emailAddress ?? "";
+  // Demo/Review: render the settings surface with a synthetic identity so it
+  // is reviewable without a session. Never touches Clerk.
+  let email: string;
+  if (isDemoMode()) {
+    email = "you@theorchard.example";
+  } else {
+    const user = await currentUser();
+    if (!user) redirect("/sign-in");
+    email =
+      user.emailAddresses.find((e) => e.id === user.primaryEmailAddressId)
+        ?.emailAddress ?? "";
+  }
 
   return (
     <main className="mx-auto w-full max-w-[640px] px-6 py-16">
@@ -38,15 +46,16 @@ export default async function AccountPage() {
         Your Signal account
       </h1>
       <p
-        className="mb-8 max-w-[560px] text-[15px] leading-[1.6]"
+        className="mb-7 max-w-[560px] text-[15px] leading-[1.6]"
         style={{ color: "var(--ink-soft)" }}
       >
         Signed in as{" "}
-        <span style={{ color: "var(--ink)" }}>{email}</span>. Profile,
-        password, and sign-in methods live in your Clerk account — the
-        destructive action below is the only thing Signal controls
-        directly.
+        <span style={{ color: "var(--ink)" }}>{email}</span> — one account
+        across Notes, Tasks, Timeline, and Signal. Your password and sign-in
+        methods live in your Signal account.
       </p>
+
+      <ManageIdentityButton />
 
       <DangerZone email={email} />
     </main>
