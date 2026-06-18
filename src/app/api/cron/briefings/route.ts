@@ -83,6 +83,10 @@ async function run(req: Request) {
     lt(userPreferences.lastSentAt, idempotencyCutoff),
   );
 
+  // isolation-ok: daily fanout cron (CRON_SECRET-guarded, Vercel cron at
+  // 06:00 UTC) intentionally reads every user's preferences, filtered by
+  // cadence. Each recipient's briefing below is built per clerkId. Not a
+  // tenant-facing query.
   const targets = await Promise.all([
     db
       .select()
