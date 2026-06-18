@@ -1,0 +1,46 @@
+name: ci
+
+# Production safety gate for Signal (repo: analytics).
+# Required gates (block merge): typecheck + test — both verified green
+# (116 lib unit tests pass). This repo uses npm (package-lock.json).
+# Node 22 so the `node --test` glob discovers src/lib/**/*.test.ts.
+# Lint is informational until its existing errors are cleared.
+# Added 2026-06-18 (production-readiness audit, blocker #3).
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: typecheck · test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install
+        run: npm ci --no-audit --no-fund
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Test
+        run: npm test
+
+      - name: Lint (informational — does not block)
+        run: npm run lint
+        continue-on-error: true
