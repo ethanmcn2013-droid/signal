@@ -1,6 +1,7 @@
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { deleteAccountForUser } from "@/server/account";
+import { allow } from "@/lib/ratelimit";
 
 /**
  * POST /api/account/delete — Signal.
@@ -13,6 +14,12 @@ export async function POST() {
   const { userId } = await auth();
   if (!userId) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  }
+
+  // Throttle this destructive, irreversible action per user. No-ops until
+  // Upstash is provisioned (see lib/ratelimit.ts).
+  if (!(await allow("account-delete", userId, 5, "1 m"))) {
+    return NextResponse.json({ error: "rate_limited" }, { status: 429 });
   }
 
   try {
