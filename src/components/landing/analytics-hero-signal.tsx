@@ -19,7 +19,9 @@
 
 import { useEffect, useRef } from "react";
 
-const LETTERS = "analytics".split("");
+// The product rebranded analytics → Signal (2026-06-13). The hero wordmark
+// now reads "signal." — the bar-chart gesture below stays as the tick motif.
+const LETTERS = "signal".split("");
 
 export function AnalyticsHeroSignal() {
   const rootRef = useRef<HTMLElement>(null);
