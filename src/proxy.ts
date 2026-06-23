@@ -31,6 +31,11 @@ const APP_ENTRY = "/app";
 // the whole point of one-click unsubscribe is no auth wall.
 const isProtectedRoute = createRouteMatcher(["/app(.*)"]);
 
+const clerkConfigured = Boolean(
+  process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY &&
+    process.env.CLERK_SECRET_KEY,
+);
+
 export default clerkMiddleware(async (auth, req) => {
   // Demo/Review: /app/* is publicly reachable; the briefing renders from the
   // in-memory mock signals (no DB, no Clerk). Production path below unchanged.
@@ -64,6 +69,17 @@ export default clerkMiddleware(async (auth, req) => {
 
   // ── Clerk protect: /app/* requires sign-in ───────────────────────────────
   if (isProtectedRoute(req)) {
+    if (!clerkConfigured) {
+      // Fail CLOSED in production. A prod deploy missing Clerk keys must
+      // not serve /app unauthenticated. Locally we pass through so dev
+      // runs before keys are provisioned.
+      if (process.env.NODE_ENV === "production") {
+        return new NextResponse("Authentication is not configured.", {
+          status: 503,
+        });
+      }
+      return;
+    }
     // Redirect to sign-in rather than the Clerk default (404). The
     // pricing page advertises Analytics; sending unsigned-in clickers
     // to a 404 with no path forward is hostile. Matches Notes pattern.
