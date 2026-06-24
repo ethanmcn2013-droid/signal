@@ -19,7 +19,8 @@
  *      → listForUser must return [].
  */
 
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it } from "node:test";
+import assert from "node:assert/strict";
 import { createClient } from "@libsql/client";
 import { drizzle } from "drizzle-orm/libsql";
 import { _listForUserFromDb } from "./source";
@@ -111,12 +112,10 @@ describe("_listForUserFromDb", () => {
       email: USER_EMAIL,
     });
 
-    expect(result).toHaveLength(1);
-    expect(result[0]).toMatchObject({
-      workspaceId: WS_ID,
-      name: "Hartwell Wedding",
-      role: "owner",
-    });
+    assert.equal(result.length, 1);
+    assert.equal(result[0]?.workspaceId, WS_ID);
+    assert.equal(result[0]?.name, "Hartwell Wedding");
+    assert.equal(result[0]?.role, "owner");
   });
 
   /**
@@ -147,11 +146,9 @@ describe("_listForUserFromDb", () => {
       email: null, // no email from Clerk
     });
 
-    expect(result).toHaveLength(1);
-    expect(result[0]).toMatchObject({
-      workspaceId: WS_ID,
-      role: "owner",
-    });
+    assert.equal(result.length, 1);
+    assert.equal(result[0]?.workspaceId, WS_ID);
+    assert.equal(result[0]?.role, "owner");
   });
 
   /**
@@ -174,6 +171,6 @@ describe("_listForUserFromDb", () => {
       email: "nobody@example.com",
     });
 
-    expect(result).toEqual([]);
+    assert.deepEqual(result, []);
   });
 });
