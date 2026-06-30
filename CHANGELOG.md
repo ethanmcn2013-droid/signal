@@ -3,6 +3,10 @@
 Convention: BRAND.md §6.5. Entries before 2026-05-14 keep their
 original shape; the new shape starts at the next cycle.
 
+## 2026-06-30 · A·5 · tightens · Signal's footer joins the suite frame
+
+**The public footer now follows the same Product, Company, Resources, Suite structure as the rest of Signal Studio.** Signal keeps its method/demo/open-briefing paths, the company and legal links route to Studio-owned surfaces, and the Suite column links Signal Studio, Signal Notes, Signal Tasks, Signal Timeline, and Signal in a consistent order. The new `iOS app` resource points to Studio's `/ios` status page, naming the native app without claiming an App Store listing before it exists. Typecheck and production build are clean.
+
 ## 2026-06-14 · A·4 · ships · the briefing learns whether it was useful
 
 **Each item now carries one quiet tap — useful, or not — the single feedback signal the product collects, so the trigger set can be tuned against real reads.** A calm "Useful? Yes / Not really" sits under each attention item on the web brief (the email stays read-only by design); tapping acknowledges immediately and records the verdict + which trigger produced the item, with no briefing prose or task data stored. The write is fail-safe: it runs through a server action that no-ops gracefully until the `briefing_feedback` table is applied (operator step — `drizzle/0002_briefing_feedback.sql` against the Signal Turso DB), so the tap never blocks or errors for the reader. No dashboard, no settings, no model. Branch-pending via PR.
