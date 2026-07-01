@@ -3,7 +3,7 @@
  * right-to-erasure / App Store 5.1.1(v) guard.
  *
  * Analytics spans TWO Turso DBs (prefs + email-subscription). This runs the
- * REAL `eraseAccountData` against two in-memory libSQL DBs covering all four
+ * REAL `eraseAccountData` against two in-memory libSQL DBs covering all five
  * user-keyed tables, with a bystander user whose rows must survive. The
  * load-bearing assertion is that `briefing_feedback` — which a prior version
  * MISSED — is cleared. A regression that drops that delete fails here.
@@ -45,6 +45,15 @@ async function freshDbs() {
       updated_at integer NOT NULL DEFAULT (unixepoch()),
       PRIMARY KEY (clerk_id, item_key)
     );
+    CREATE TABLE surfaced_items (
+      clerk_id text NOT NULL,
+      item_key text NOT NULL,
+      trigger_id text NOT NULL,
+      first_day integer NOT NULL,
+      last_day integer NOT NULL,
+      run_days integer NOT NULL DEFAULT 1,
+      PRIMARY KEY (clerk_id, item_key, trigger_id)
+    );
   `);
 
   const libClient = createClient({ url: ":memory:" });
@@ -80,6 +89,9 @@ async function seed(prefsClient: Client, libClient: Client) {
       ('u-target','item-a','useful','blocked'),
       ('u-target','item-b','not-useful','overdue'),
       ('u-bystander','item-c','useful','blocked');
+    INSERT INTO surfaced_items (clerk_id, item_key, trigger_id, first_day, last_day, run_days) VALUES
+      ('u-target','item-a','due-soon',20000,20002,3),
+      ('u-bystander','item-c','stuck-work',20001,20001,1);
   `);
   await libClient.executeMultiple(`
     INSERT INTO user_preferences (user_id, email, unsubscribe_token) VALUES
@@ -88,7 +100,7 @@ async function seed(prefsClient: Client, libClient: Client) {
   `);
 }
 
-test("erasure clears all four tables across both DBs incl. briefing_feedback", async () => {
+test("erasure clears all five tables across both DBs incl. surfaced_items", async () => {
   const { prefsClient, libClient, prefsDb, libDb } = await freshDbs();
   try {
     await seed(prefsClient, libClient);
@@ -100,6 +112,7 @@ test("erasure clears all four tables across both DBs incl. briefing_feedback", a
       "analytics_users WHERE clerk_id='u-target'",
       "phrasing_rotations WHERE clerk_id='u-target'",
       "briefing_feedback WHERE clerk_id='u-target'",
+      "surfaced_items WHERE clerk_id='u-target'",
     ]) {
       assert.equal(await count(prefsClient, where), 0, `residual in ${where}`);
     }
@@ -113,6 +126,7 @@ test("erasure clears all four tables across both DBs incl. briefing_feedback", a
     assert.equal(await count(prefsClient, "analytics_users"), 1);
     assert.equal(await count(prefsClient, "phrasing_rotations"), 1);
     assert.equal(await count(prefsClient, "briefing_feedback"), 1);
+    assert.equal(await count(prefsClient, "surfaced_items"), 1);
     assert.equal(await count(libClient, "user_preferences"), 1);
 
     // Idempotent.

@@ -10,7 +10,7 @@ import {
   Text,
 } from "@react-email/components";
 import type { BriefItem, Briefing, FocusItem } from "@/lib/briefing/types";
-import { graceNote, greeting, summaryLine } from "@/lib/briefing/voice";
+import { ageNote, graceNote, greeting, summaryLine } from "@/lib/briefing/voice";
 
 // ─────────────────────────────────────────────────────────────
 // Brand tokens — kept inline because email clients don't have
@@ -350,6 +350,7 @@ function Bucket({
             }}
           >
             from {item.sourceLabel}
+            {item.ageDays ? ` · ${ageNote(item.trigger, item.ageDays)}` : null}
           </Text>
         </Section>
       ))}

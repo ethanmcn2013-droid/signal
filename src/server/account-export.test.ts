@@ -37,12 +37,21 @@ async function freshDbs() {
       updated_at integer NOT NULL DEFAULT (unixepoch()),
       PRIMARY KEY (clerk_id, item_key)
     );
+    CREATE TABLE surfaced_items (
+      clerk_id text NOT NULL, item_key text NOT NULL, trigger_id text NOT NULL,
+      first_day integer NOT NULL, last_day integer NOT NULL,
+      run_days integer NOT NULL DEFAULT 1,
+      PRIMARY KEY (clerk_id, item_key, trigger_id)
+    );
     INSERT INTO analytics_users (clerk_id, linked_workspace_id) VALUES
       ('u-target','ws-1'), ('u-bystander','ws-2');
     INSERT INTO phrasing_rotations (clerk_id, trigger_id, last_index) VALUES
       ('u-target','blocked',1), ('u-bystander','blocked',1);
     INSERT INTO briefing_feedback (clerk_id, item_key, verdict) VALUES
       ('u-target','item-a','useful'), ('u-bystander','item-c','useful');
+    INSERT INTO surfaced_items (clerk_id, item_key, trigger_id, first_day, last_day, run_days) VALUES
+      ('u-target','item-a','due-soon',20000,20002,3),
+      ('u-bystander','item-c','stuck-work',20001,20001,1);
   `);
 
   const libClient = createClient({ url: ":memory:" });
@@ -74,6 +83,8 @@ test("export is caller-scoped across both DBs and omits the unsubscribe token", 
     assert.equal(data.account?.clerkId, "u-target");
     assert.equal(data.phrasingRotations.length, 1);
     assert.equal(data.briefingFeedback.length, 1);
+    assert.equal(data.surfacedItems.length, 1);
+    assert.equal(data.surfacedItems[0]?.itemKey, "item-a");
     assert.equal(data.emailSubscription?.email, "t@x.com");
 
     assert.ok(

@@ -39,6 +39,11 @@ export type BriefItem = {
   sourceLabel: string;
   trigger: TriggerKind;
   reasons: string[]; // for /app/brief web view; emails skip these
+  /** Consecutive days (≥ 2) this item has surfaced for this reader.
+   *  Present only on carry-overs — renderers show an honest age note
+   *  ("still waiting — day 3") and the engine sorts carry-overs to
+   *  the bottom of their block (PRODUCT.md §5.3 de-emphasis). */
+  ageDays?: number;
 };
 
 export type TriggerKind =

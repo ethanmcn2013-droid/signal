@@ -15,6 +15,25 @@ const BUCKET_CAP = 3;
 const DAY = 86_400_000;
 
 /**
+ * Per-user read state the orchestrator threads into the pure engine.
+ *
+ * `suppressed` — keys the reader has dismissed ("Not really" tap).
+ *   Keys are `${trigger}:${taskId}`; a `*:${taskId}` key dismisses the
+ *   item under every trigger (feedback rows without a trigger id).
+ *   A dismissal sticks for that reason — the same task can still
+ *   surface under a *different* trigger if its situation changes.
+ *
+ * `ages` — consecutive-day surfacing counts keyed `${trigger}:${taskId}`,
+ *   including today. Items at day ≥ 2 are carry-overs: they keep their
+ *   place inside the block's cap but move to the bottom and carry an
+ *   honest age note (PRODUCT.md §5.3 de-emphasis).
+ */
+export type ReadState = {
+  suppressed?: ReadonlySet<string>;
+  ages?: ReadonlyMap<string, number>;
+};
+
+/**
  * The engine. Pure function over a BriefingSource. Same inputs →
  * same brief on the same day; rotation index advances per day so
  * prose phrasings don't repeat two days in a row.
@@ -23,16 +42,22 @@ export async function buildBriefing(
   source: BriefingSource,
   ctx: BriefingContext,
   now: number = Date.now(),
+  readState: ReadState = {},
 ): Promise<Briefing> {
   const signals = await source.getSignalsForUser(ctx);
   const userId = ctx.userId;
 
-  const stuck = detectStuckWork(signals);
-  const dueSoon = detectDueSoon(signals, now);
-  const shipped = detectJustShipped(signals, now);
-  const overload = detectOverload(signals);
-  const crowded = detectCrowdedWeek(signals, now);
-  const blocked = detectBlockedTooLong(signals);
+  const suppressed = readState.suppressed ?? new Set<string>();
+  const notDismissed = (t: Triggered) =>
+    !suppressed.has(`${t.trigger}:${t.task.id}`) &&
+    !suppressed.has(`*:${t.task.id}`);
+
+  const stuck = detectStuckWork(signals).filter(notDismissed);
+  const dueSoon = detectDueSoon(signals, now).filter(notDismissed);
+  const shipped = detectJustShipped(signals, now).filter(notDismissed);
+  const overload = detectOverload(signals).filter(notDismissed);
+  const crowded = detectCrowdedWeek(signals, now).filter(notDismissed);
+  const blocked = detectBlockedTooLong(signals).filter(notDismissed);
 
   // Build a {taskId → title} map once so blocked-too-long prose can
   // name the upstream blocker ("blocked by Music supplier") instead
@@ -84,14 +109,29 @@ export async function buildBriefing(
     .sort((a, b) => focusWeight(b) - focusWeight(a))
     .slice(0, BUCKET_CAP);
 
-  const needsAttention: BriefItem[] = attention.map((t) =>
-    toItem(t, rotationIndex, now, titlesById),
+  // Carry-over de-emphasis (PRODUCT.md §5.3): an item surfacing for a
+  // second-plus consecutive day keeps its slot but moves below fresh
+  // items and carries its age so the read stays honest about how long
+  // it has been asking. Applied after the cap — age demotes within the
+  // block, it never changes what qualifies.
+  const ages = readState.ages ?? new Map<string, number>();
+  const ageOf = (t: Triggered) => ages.get(`${t.trigger}:${t.task.id}`) ?? 1;
+  const freshFirst = (list: Triggered[]): Triggered[] => [
+    ...list.filter((t) => ageOf(t) < 2),
+    ...list.filter((t) => ageOf(t) >= 2),
+  ];
+
+  const withAge = (t: Triggered, item: BriefItem): BriefItem =>
+    ageOf(t) >= 2 ? { ...item, ageDays: ageOf(t) } : item;
+
+  const needsAttention: BriefItem[] = freshFirst(attention).map((t) =>
+    withAge(t, toItem(t, rotationIndex, now, titlesById)),
   );
   const movingWell: BriefItem[] = moving.map((t) =>
     toItem(t, rotationIndex, now, titlesById),
   );
-  const quietRisks: BriefItem[] = risks.map((t) =>
-    toItem(t, rotationIndex, now, titlesById),
+  const quietRisks: BriefItem[] = freshFirst(risks).map((t) =>
+    withAge(t, toItem(t, rotationIndex, now, titlesById)),
   );
   const suggestedFocus: FocusItem[] = focusSource.map((t) =>
     toFocus(t, rotationIndex, now),

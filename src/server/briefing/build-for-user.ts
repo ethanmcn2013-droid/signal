@@ -21,6 +21,11 @@ import type { Briefing } from "@/lib/briefing/types";
 import type { BriefingSource } from "@/lib/briefing/source";
 import type { TriggerId } from "@/lib/triggers/types";
 import { getRotations, bumpRotations } from "./rotation";
+import {
+  getDismissedKeys,
+  getSurfacedAges,
+  recordSurfaced,
+} from "./read-state";
 import { getBriefingEmptyCopy } from "@/lib/onboarding/personalization";
 import { isDemoMode } from "@/lib/access-mode";
 import { mockBriefingSource } from "@/lib/briefing/mock-source";
@@ -117,10 +122,22 @@ export async function buildBriefingForUser(opts: {
     },
   };
 
-  const briefing = await buildBriefing(source, {
-    userId: clerkId,
-    email: "",
-  });
+  // Per-user read state: dismissals stick ("Not really" → the item
+  // stays out under that trigger) and carry-overs age honestly
+  // ("still waiting — day 3"). Both reads are fail-safe — a missing
+  // table degrades to no suppression / no aging, never a failed brief.
+  const now = Date.now();
+  const [suppressed, ages] = await Promise.all([
+    getDismissedKeys(clerkId),
+    getSurfacedAges(clerkId, now),
+  ]);
+
+  const briefing = await buildBriefing(
+    source,
+    { userId: clerkId, email: "" },
+    now,
+    { suppressed, ages },
+  );
 
   // Advance rotation only for triggers that actually surfaced.
   const fired = new Set<TriggerId>();
@@ -136,6 +153,17 @@ export async function buildBriefingForUser(opts: {
     fired.add(item.trigger as unknown as TriggerId);
   }
   await bumpRotations(clerkId, Array.from(fired));
+
+  // Extend/reset surfacing runs for the aging blocks (attention +
+  // risks). Moving-well never ages — celebration doesn't carry over.
+  await recordSurfaced(
+    clerkId,
+    [...briefing.needsAttention, ...briefing.quietRisks].map((item) => ({
+      itemKey: item.id,
+      triggerId: item.trigger,
+    })),
+    now,
+  );
 
   return {
     kind: "ok",

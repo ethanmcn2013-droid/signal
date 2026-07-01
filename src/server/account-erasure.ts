@@ -4,6 +4,7 @@ import {
   analyticsUsers,
   briefingFeedback,
   phrasingRotations,
+  surfacedItems,
 } from "./db/schema";
 import * as prefsSchema from "./db/schema";
 import { userPreferences } from "../lib/db/schema";
@@ -18,7 +19,7 @@ export type LibDb = LibSQLDatabase<typeof libSchema>;
  * GDPR right-to-erasure / App Store 5.1.1(v). Analytics is the only suite
  * product spanning two databases:
  *   - prefs DB (`@/server/db`): `analytics_users`, `phrasing_rotations`,
- *     `briefing_feedback` — all keyed by `clerk_id`.
+ *     `briefing_feedback`, `surfaced_items` — all keyed by `clerk_id`.
  *   - email-subscription DB (`@/lib/db`): `user_preferences` (keyed by
  *     `user_id` = clerk id), the unsubscribe-token surface.
  *
@@ -26,7 +27,10 @@ export type LibDb = LibSQLDatabase<typeof libSchema>;
  * The previous erasure deleted `analytics_users`, `phrasing_rotations`,
  * and `user_preferences` but MISSED `briefing_feedback` (added later, same
  * `clerk_id` key). A deleted user's per-item feedback rows survived — a
- * GDPR residue. This function deletes all four tables across both DBs.
+ * GDPR residue. This function deletes every clerk-keyed table across both
+ * DBs; any new clerk-keyed table MUST be added here and in
+ * account-export.ts in the same change (`surfaced_items` followed this
+ * rule when carry-over aging shipped).
  *
  * db-injected so it runs against the production singletons OR in-memory
  * test DBs (see account-erasure.test.ts). Idempotent.
@@ -43,6 +47,9 @@ export async function eraseAccountData(
   await prefsDatabase
     .delete(briefingFeedback)
     .where(eq(briefingFeedback.clerkId, clerkId));
+  await prefsDatabase
+    .delete(surfacedItems)
+    .where(eq(surfacedItems.clerkId, clerkId));
   await prefsDatabase
     .delete(analyticsUsers)
     .where(eq(analyticsUsers.clerkId, clerkId));

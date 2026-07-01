@@ -366,3 +366,106 @@ describe("buildBriefing — full Wedding 2026 shape", () => {
     assert.ok(b.suggestedFocus.length >= 1);
   });
 });
+
+// ─────────────────────────────────────────────────────────────
+// Read state — dismissals stick, carry-overs age honestly
+// ─────────────────────────────────────────────────────────────
+describe("buildBriefing — dismissals (ReadState.suppressed)", () => {
+  test("a not-useful tap keeps the item out under that trigger", async () => {
+    const signals = [
+      task({ id: "florist", title: "Florist deposit", dueAt: NOW - DAY }),
+      task({ id: "catering", title: "Catering tasting", dueAt: NOW + DAY }),
+    ];
+    const b = await buildBriefing(source(signals), CTX, NOW, {
+      suppressed: new Set(["due-soon:florist"]),
+    });
+    const ids = b.needsAttention.map((i) => i.id);
+    assert.ok(!ids.includes("florist"), "dismissed item must not surface");
+    assert.ok(ids.includes("catering"), "other items are unaffected");
+  });
+
+  test("a dismissal is per-trigger — the item can surface for a new reason", async () => {
+    // Dismissed as stuck-work; later it gains a real deadline. The
+    // deadline read is new information and must still get through.
+    const signals = [
+      task({ id: "florist", title: "Florist deposit", idleDays: 9, dueAt: NOW + DAY }),
+    ];
+    const b = await buildBriefing(source(signals), CTX, NOW, {
+      suppressed: new Set(["stuck-work:florist"]),
+    });
+    assert.ok(
+      b.needsAttention.some((i) => i.id === "florist" && i.trigger === "due-soon"),
+      "due-soon must still surface after a stuck-work dismissal",
+    );
+    assert.ok(
+      !b.quietRisks.some((i) => i.id === "florist"),
+      "the dismissed stuck-work read stays out",
+    );
+  });
+
+  test("a wildcard key dismisses the item under every trigger", async () => {
+    const signals = [
+      task({ id: "florist", title: "Florist deposit", idleDays: 9, dueAt: NOW + DAY }),
+    ];
+    const b = await buildBriefing(source(signals), CTX, NOW, {
+      suppressed: new Set(["*:florist"]),
+    });
+    assert.equal(b.needsAttention.length, 0);
+    assert.equal(b.quietRisks.length, 0);
+  });
+
+  test("dismissing everything yields the all-clear, honestly", async () => {
+    const signals = [
+      task({ id: "florist", title: "Florist deposit", dueAt: NOW - DAY }),
+    ];
+    const b = await buildBriefing(source(signals), CTX, NOW, {
+      suppressed: new Set(["due-soon:florist"]),
+    });
+    assert.equal(b.isEmpty, true);
+  });
+});
+
+describe("buildBriefing — carry-over aging (ReadState.ages)", () => {
+  test("a day-3 carry-over gets ageDays and sorts below fresh items", async () => {
+    const signals = [
+      // Aged item is *more* severe (further overdue) so without the
+      // de-emphasis it would lead the block.
+      task({ id: "old", title: "Old ask", dueAt: NOW - 5 * DAY }),
+      task({ id: "fresh", title: "Fresh ask", dueAt: NOW - DAY }),
+    ];
+    const b = await buildBriefing(source(signals), CTX, NOW, {
+      ages: new Map([["due-soon:old", 3]]),
+    });
+    assert.equal(b.needsAttention.length, 2);
+    assert.equal(b.needsAttention[0].id, "fresh", "fresh item leads");
+    assert.equal(b.needsAttention[1].id, "old", "carry-over moves to the bottom");
+    assert.equal(b.needsAttention[1].ageDays, 3);
+    assert.equal(b.needsAttention[0].ageDays, undefined);
+  });
+
+  test("day-1 items never carry an age", async () => {
+    const signals = [task({ id: "t1", title: "Ask", dueAt: NOW - DAY })];
+    const b = await buildBriefing(source(signals), CTX, NOW, {
+      ages: new Map([["due-soon:t1", 1]]),
+    });
+    assert.equal(b.needsAttention[0].ageDays, undefined);
+  });
+
+  test("aging demotes within the block but never changes what qualifies", async () => {
+    // Four overdue items, cap is 3. The most severe is aged; it must
+    // still make the cut (age demotes, it does not evict).
+    const signals = [
+      task({ id: "a", title: "A", dueAt: NOW - 9 * DAY }),
+      task({ id: "b", title: "B", dueAt: NOW - 3 * DAY }),
+      task({ id: "c", title: "C", dueAt: NOW - 2 * DAY }),
+      task({ id: "d", title: "D", dueAt: NOW - DAY }),
+    ];
+    const b = await buildBriefing(source(signals), CTX, NOW, {
+      ages: new Map([["due-soon:a", 4]]),
+    });
+    assert.equal(b.needsAttention.length, 3);
+    const ids = b.needsAttention.map((i) => i.id);
+    assert.ok(ids.includes("a"), "aged item keeps its qualified slot");
+    assert.equal(ids[ids.length - 1], "a", "but reads last in the block");
+  });
+});

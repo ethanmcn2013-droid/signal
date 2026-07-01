@@ -1,5 +1,11 @@
-import type { Briefing } from "@/lib/briefing/types";
-import { greeting } from "@/lib/briefing/voice";
+import type { BriefItem, Briefing } from "@/lib/briefing/types";
+import { ageNote, greeting } from "@/lib/briefing/voice";
+
+/** "from Tasks · Wedding 2026 · still waiting — day 3" */
+function metaLine(item: BriefItem): string {
+  const age = item.ageDays ? ` · ${ageNote(item.trigger, item.ageDays)}` : "";
+  return `    from ${item.sourceLabel}${age}`;
+}
 
 /**
  * Plain-text alternative for the briefing email. Providing both
@@ -36,7 +42,7 @@ export function renderBriefingText(
     lines.push("NEEDS ATTENTION");
     for (const item of b.needsAttention) {
       lines.push(`  ${item.text}`);
-      lines.push(`    from ${item.sourceLabel}`);
+      lines.push(metaLine(item));
     }
     lines.push("");
   }
@@ -45,7 +51,7 @@ export function renderBriefingText(
     lines.push("MOVING WELL");
     for (const item of b.movingWell) {
       lines.push(`  ${item.text}`);
-      lines.push(`    from ${item.sourceLabel}`);
+      lines.push(metaLine(item));
     }
     lines.push("");
   }
@@ -54,7 +60,7 @@ export function renderBriefingText(
     lines.push("QUIET RISKS");
     for (const item of b.quietRisks) {
       lines.push(`  ${item.text}`);
-      lines.push(`    from ${item.sourceLabel}`);
+      lines.push(metaLine(item));
     }
     lines.push("");
   }
