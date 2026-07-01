@@ -1,4 +1,4 @@
-import type { Briefing } from "./types";
+import type { Briefing, TriggerKind } from "./types";
 
 /**
  * Single source of truth for the briefing's voice helpers. Used by:
@@ -57,6 +57,24 @@ export function summaryLine(b: Briefing): string {
   if (att === 1) return "One thing's calling.";
   if (att === 2) return "Two things calling — and a few quieter signals below.";
   return `Three things calling${risks > 0 ? ", more quietly behind them" : ""}.`;
+}
+
+/**
+ * Honest carry-over age, rendered in the item's quiet meta line
+ * ("from Tasks · Wedding 2026 · still waiting — day 3"). Only called
+ * for items at day ≥ 2. The wording bends to the trigger: waiting
+ * language for stalled work, open language for deadline pressure.
+ */
+export function ageNote(trigger: TriggerKind, days: number): string {
+  switch (trigger) {
+    case "stuck-work":
+    case "blocked-too-long":
+      return `still waiting — day ${days}`;
+    case "due-soon":
+      return `still open — day ${days}`;
+    default:
+      return `still here — day ${days}`;
+  }
 }
 
 /**

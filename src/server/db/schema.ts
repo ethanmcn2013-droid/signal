@@ -79,7 +79,10 @@ export type PhrasingRotation = typeof phrasingRotations.$inferSelect;
  * as noise" without re-deriving it. No briefing prose or task data is
  * stored — only the verdict and which trigger produced the item.
  *
- * Read by the operator to tune triggers; the app never reads it back.
+ * Read two ways: the operator aggregates it to tune triggers, and the
+ * briefing orchestrator reads "not-useful" verdicts back at build time
+ * so a dismissal sticks — the UI says "I'll show less of this" and the
+ * engine now keeps that promise (suppression per trigger + item).
  */
 export const briefingFeedback = sqliteTable(
   "briefing_feedback",
@@ -102,3 +105,33 @@ export const briefingFeedback = sqliteTable(
 );
 
 export type BriefingFeedback = typeof briefingFeedback.$inferSelect;
+
+/**
+ * Per-item surfacing history — powers honest carry-over aging
+ * (PRODUCT.md §5.3). One row per (user, item, trigger); `runDays`
+ * counts *consecutive* briefing days the item has surfaced. Day two
+ * onward the item renders with an age note ("still waiting — day 3")
+ * and sorts below fresh items in its block.
+ *
+ * `day` values are UTC day numbers (unix ms / 86_400_000, floored) —
+ * the same clock the engine's dayRotation uses. A gap of more than
+ * one day resets the run: the item reads as fresh again, which is the
+ * honest read (it left the brief and came back).
+ */
+export const surfacedItems = sqliteTable(
+  "surfaced_items",
+  {
+    clerkId: text("clerk_id").notNull(),
+    itemKey: text("item_key").notNull(),
+    triggerId: text("trigger_id").notNull(),
+    /** UTC day number the run started. */
+    firstDay: integer("first_day").notNull(),
+    /** UTC day number of the most recent surfacing. */
+    lastDay: integer("last_day").notNull(),
+    /** Consecutive days surfaced, ending at lastDay. */
+    runDays: integer("run_days").notNull().default(1),
+  },
+  (t) => [primaryKey({ columns: [t.clerkId, t.itemKey, t.triggerId] })],
+);
+
+export type SurfacedItem = typeof surfacedItems.$inferSelect;

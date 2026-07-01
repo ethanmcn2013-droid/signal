@@ -4,6 +4,7 @@ import {
   analyticsUsers,
   briefingFeedback,
   phrasingRotations,
+  surfacedItems,
 } from "./db/schema";
 import * as prefsSchema from "./db/schema";
 import { userPreferences } from "../lib/db/schema";
@@ -27,7 +28,7 @@ export async function exportAccountData(
   libDatabase: LibDb,
   clerkId: string,
 ) {
-  const [users, rotations, feedback, prefs] = await Promise.all([
+  const [users, rotations, feedback, surfaced, prefs] = await Promise.all([
     prefsDatabase
       .select()
       .from(analyticsUsers)
@@ -40,6 +41,10 @@ export async function exportAccountData(
       .select()
       .from(briefingFeedback)
       .where(eq(briefingFeedback.clerkId, clerkId)),
+    prefsDatabase
+      .select()
+      .from(surfacedItems)
+      .where(eq(surfacedItems.clerkId, clerkId)),
     libDatabase
       .select({
         userId: userPreferences.userId,
@@ -60,6 +65,7 @@ export async function exportAccountData(
     account: users[0] ?? null,
     phrasingRotations: rotations,
     briefingFeedback: feedback,
+    surfacedItems: surfaced,
     // Token-free by design — see the security note above.
     emailSubscription: prefs[0] ?? null,
   };

@@ -1,9 +1,14 @@
 "use client";
 
-import { AnimatePresence, MotionConfig, motion } from "motion/react";
+import {
+  AnimatePresence,
+  MotionConfig,
+  motion,
+  useReducedMotion,
+} from "motion/react";
 import { useState, useTransition } from "react";
 import type { BriefItem, Briefing } from "@/lib/briefing/types";
-import { graceNote, greeting, summaryLine } from "@/lib/briefing/voice";
+import { ageNote, graceNote, greeting, summaryLine } from "@/lib/briefing/voice";
 import {
   recordBriefingFeedback,
   type FeedbackVerdict,
@@ -72,31 +77,32 @@ export function BriefingView({
       >
         <Header stamp={stamp} />
 
-        <motion.h1
-          className="mb-3 text-[32px] font-semibold leading-[1.15] tracking-[-0.035em]"
-          style={{ color: "var(--ink)" }}
-          variants={fadeUp}
-        >
-          {greeting(briefing.greetingHour, firstName)}
-        </motion.h1>
-
-        {summaryLine(briefing) ? (
-          <motion.p
-            className="mb-10 text-[15.5px] leading-[1.55]"
-            style={{ color: "var(--ink-soft)" }}
-            variants={fadeUp}
-          >
-            {summaryLine(briefing)}
-          </motion.p>
-        ) : null}
-
         {briefing.isEmpty ? (
-          <EmptyState
+          <AllClear
+            greetingLine={greeting(briefing.greetingHour, firstName)}
             headline={briefing.emptyStateHeadline}
             body={briefing.emptyStateBody}
           />
         ) : (
           <>
+            <motion.h1
+              className="mb-3 text-[32px] font-semibold leading-[1.15] tracking-[-0.035em]"
+              style={{ color: "var(--ink)" }}
+              variants={fadeUp}
+            >
+              {greeting(briefing.greetingHour, firstName)}
+            </motion.h1>
+
+            {summaryLine(briefing) ? (
+              <motion.p
+                className="mb-10 text-[15.5px] leading-[1.55]"
+                style={{ color: "var(--ink-soft)" }}
+                variants={fadeUp}
+              >
+                {summaryLine(briefing)}
+              </motion.p>
+            ) : null}
+
             <Bucket
               title="Needs attention"
               items={briefing.needsAttention}
@@ -120,16 +126,16 @@ export function BriefingView({
                 already the focus. The suggestedFocus array stays on
                 the Briefing object for the email render and future
                 surfaces; the web brief does not double up. */}
+
+            <motion.p
+              className="mt-12 text-[11px] tracking-[0.14em]"
+              style={{ color: "var(--ink-quiet)" }}
+              variants={fadeUp}
+            >
+              {graceNote(briefing)}
+            </motion.p>
           </>
         )}
-
-        <motion.p
-          className="mt-12 text-[11px] tracking-[0.14em]"
-          style={{ color: "var(--ink-quiet)" }}
-          variants={fadeUp}
-        >
-          {graceNote(briefing)}
-        </motion.p>
       </motion.article>
     </MotionConfig>
   );
@@ -265,6 +271,7 @@ function BriefRow({
         style={{ color: "var(--ink-quiet)" }}
       >
         from {item.sourceLabel}
+        {item.ageDays ? ` · ${ageNote(item.trigger, item.ageDays)}` : null}
       </p>
       {item.reasons.length > 0 && !muted && (
         <WhyThisAccordion
@@ -421,40 +428,77 @@ function WhyThisAccordion({
   );
 }
 
-function EmptyState({
-  headline = "Nothing to flag today.",
-  body = "No briefing email is sent on quiet days. The board is clear.",
+/**
+ * The all-clear — a destination, not a fallback. Silence is the
+ * signal: on the days when nothing fires, the product's whole job is
+ * this one line, so it gets the display type, the vertical centre of
+ * the viewport, and the product's own quiet gesture (the sampled
+ * tick of the signal dot). No card. No border. No gray box.
+ */
+function AllClear({
+  greetingLine,
+  headline = "Nothing needs you today.",
+  body = "No briefing email is sent on quiet days. When something needs you, it lands here first.",
 }: {
+  greetingLine: string;
   headline?: string;
   body?: string;
 }) {
-  return (
-    <>
-      <motion.div
-        className="rounded-2xl border p-10 text-center"
-        variants={fadeUp}
-        style={{
-          borderColor: "var(--hairline)",
-          background: "var(--paper-soft)",
-        }}
-      >
-        <p
-          className="text-[18px] font-medium"
-          style={{ color: "var(--ink)" }}
-        >
-          {headline}
-        </p>
-        <p
-          className="mt-2 text-[14px]"
-          style={{ color: "var(--ink-soft)" }}
-        >
-          {body}
-        </p>
-      </motion.div>
+  const reducedMotion = useReducedMotion();
 
-      {/* Quiet escape hatch — calm, not a CTA. No marketing register. */}
+  return (
+    <section
+      aria-label="All clear"
+      className="flex min-h-[62dvh] flex-col items-center justify-center text-center"
+    >
+      {/* The signal dot — ticks once every ~3.6s (the wordmark's
+          sampled-cadence gesture). Static under reduced motion. */}
+      <motion.span
+        aria-hidden
+        className="mb-8 inline-block h-2 w-2 rounded-full"
+        style={{ background: "var(--brand, #4f46e5)" }}
+        variants={fadeUp}
+        {...(reducedMotion
+          ? {}
+          : {
+              animate: { opacity: [1, 0.3, 1] },
+              transition: {
+                duration: 0.32,
+                ease: EASE_STANDARD,
+                repeat: Infinity,
+                repeatDelay: 3.28,
+              },
+            })}
+      />
+
       <motion.p
-        className="mt-6 text-center text-[12px] tracking-[0.01em]"
+        className="text-[14px] leading-[1.5]"
+        style={{ color: "var(--ink-soft)" }}
+        variants={fadeUp}
+      >
+        {greetingLine}
+      </motion.p>
+
+      <motion.h1
+        className="mt-3 max-w-[16ch] text-[clamp(30px,7vw,42px)] font-semibold leading-[0.98] tracking-[-0.045em] text-balance"
+        style={{ color: "var(--ink)" }}
+        variants={fadeUp}
+      >
+        {headline}
+      </motion.h1>
+
+      <motion.p
+        className="mt-5 max-w-[44ch] text-[15.5px] leading-[1.55]"
+        style={{ color: "var(--ink-soft)" }}
+        variants={fadeUp}
+      >
+        {body}
+      </motion.p>
+
+      {/* The honest mechanics, in the quiet register. One escape
+          hatch, calm, not a CTA. */}
+      <motion.p
+        className="mt-14 font-mono text-[11px] tracking-[0.02em]"
         style={{ color: "var(--ink-quiet)" }}
         variants={fadeUp}
       >
@@ -467,7 +511,7 @@ function EmptyState({
           Open the Tasks workspace
         </a>
       </motion.p>
-    </>
+    </section>
   );
 }
 
