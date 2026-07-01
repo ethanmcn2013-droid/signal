@@ -10,7 +10,7 @@ import {
   Text,
 } from "@react-email/components";
 import type { BriefItem, Briefing, FocusItem } from "@/lib/briefing/types";
-import { graceNote, greeting, summaryLine } from "@/lib/briefing/voice";
+import { graceNote, greeting, loadLine, summaryLine } from "@/lib/briefing/voice";
 
 // ─────────────────────────────────────────────────────────────
 // Brand tokens — kept inline because email clients don't have
@@ -67,6 +67,7 @@ export function BriefingEmail({
   // but a glance at the body should confirm without backtracking).
   const cadenceLabel = cadence === "weekly" ? "Weekly Signal" : "Daily Signal";
   const dateLine = `${cadenceLabel.toUpperCase()} · ${dateOnly}`;
+  const load = loadLine(briefing);
   const summary = summaryLine(briefing);
 
   return (
@@ -145,7 +146,7 @@ export function BriefingEmail({
 
           {/* Body */}
           <Section style={{ padding: "28px 28px 24px" }}>
-            {/* Greeting + one-line summary */}
+            {/* Greeting + load receipt + one-line verdict */}
             <Heading
               as="h1"
               style={{
@@ -160,6 +161,20 @@ export function BriefingEmail({
             >
               {greeting(briefing.greetingHour, firstName, true)}
             </Heading>
+            {load ? (
+              <Text
+                style={{
+                  fontSize: 13.5,
+                  color: ink,
+                  fontWeight: 600,
+                  margin: 0,
+                  marginBottom: summary ? 6 : 28,
+                  lineHeight: 1.5,
+                }}
+              >
+                {load}
+              </Text>
+            ) : null}
             {summary ? (
               <Text
                 style={{
@@ -457,6 +472,6 @@ function previewText(b: Briefing): string {
   // line when summaryLine has nothing to say (quiet-but-not-empty
   // days — e.g. only moving-well items survived).
   if (b.isEmpty) return "Nothing to flag today.";
-  return summaryLine(b) || "Nothing pulling today.";
+  return loadLine(b) || summaryLine(b) || "Nothing pulling today.";
 }
 

@@ -1,4 +1,5 @@
 import { auth } from "@clerk/nextjs/server";
+import { isUxAssuranceMode } from "@/lib/access-mode";
 import { SiteNavConditionalClient } from "./site-nav-conditional-client";
 
 /**
@@ -14,6 +15,10 @@ import { SiteNavConditionalClient } from "./site-nav-conditional-client";
  * user feel logged out (§14 Kill the false "Sign in").
  */
 export async function SiteNavConditional() {
+  if (isUxAssuranceMode()) {
+    return <SiteNavConditionalClient isAuthed={false} />;
+  }
+
   const { userId } = await auth();
   return <SiteNavConditionalClient isAuthed={Boolean(userId)} />;
 }

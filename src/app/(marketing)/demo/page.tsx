@@ -6,7 +6,7 @@ import Link from "next/link";
  *
  * Plan 7 · Cycle 7.2.
  *
- * The MP4 lives at /demo-typography.mp4 (Analytics public dir). Source
+ * The MP4 lives at /demo-typography.mp4 (Signal public dir). Source
  * Remotion project at ~/Projects/personal/analytics-demo/.
  *
  * v1 (this cycle): typography only — no voice, no music. Cycle 7.3

@@ -10,8 +10,8 @@ import {
 import { useEffect, useRef, useState } from "react";
 
 /**
- * Anatomy of a briefing — Analytics' equivalent of Tasks' Anatomy of a
- * Card, Notes' Anatomy of a Note, and Roadmap's Anatomy of an item.
+ * Anatomy of a briefing — Signal' equivalent of Tasks' Anatomy of a
+ * Card, Notes' Anatomy of a Note, and Timeline's Anatomy of an item.
  *
  * Same structural pattern as the siblings: demo on the left, numbered
  * ol on the right, eyebrow + section heading above. Six honest slots.
@@ -23,6 +23,7 @@ import { useEffect, useRef, useState } from "react";
  * all see the full briefing at rest with every bucket populated.
  *
  * Two earned beats happen on the card itself:
+ *   - Load receipt resolves under the greeting
  *   - Cap bar (3/3 hard cap) ticks during the Needs-attention beat
  *   - Focus pip drops on Suggested-focus item 2, then "Why this?"
  *     expands inline — the only real product affordance the anatomy
@@ -32,6 +33,7 @@ import { useEffect, useRef, useState } from "react";
 type Slot =
   | "timestamp"
   | "greeting"
+  | "load"
   | "needs"
   | "moving"
   | "risks"
@@ -47,6 +49,11 @@ const ANN: { slot: Slot; label: string; note: string }[] = [
     slot: "greeting",
     label: "Greeting",
     note: "Plain-English opener. The briefing speaks like a person, not a dashboard.",
+  },
+  {
+    slot: "load",
+    label: "Load receipt",
+    note: "One count that proves the compression. Source and consequence, never a dashboard tile.",
   },
   {
     slot: "needs",
@@ -133,6 +140,10 @@ function useChoreography(active: boolean, reduced: boolean) {
         // Beat 3 — needs attention. On first iteration, cap reads 0 → 3
         // to demonstrate the hard-cap promise. On subsequent iterations,
         // cap stays at 3 (already proved) and we just highlight.
+        setStage((s) => ({ ...s, hi: "load" }));
+        await wait(900);
+        if (cancelled) return;
+
         if (firstLoop) {
           setStage((s) => ({ ...s, hi: "needs", capFill: 0 }));
           await wait(280);
@@ -241,14 +252,14 @@ export function BriefingAnatomy() {
 
           {/* Title */}
           <h2 className="h-title" style={{ marginBottom: 20, maxWidth: "18ch" }}>
-            Six things,{" "}
+            A receipt,{" "}
             <span
               style={{
                 color:
                   "color-mix(in srgb, var(--ink) 50%, transparent)",
               }}
             >
-              in one short read.
+              then the read.
             </span>
           </h2>
 
@@ -261,9 +272,9 @@ export function BriefingAnatomy() {
               marginBottom: 12,
             }}
           >
-            The Daily Signal carries six signals. Most are quiet — they only
-            surface when the moment calls for them. The buckets stay; the
-            contents change with the day.
+            The Daily Signal opens with one count that proves the compression.
+            Then the briefing speaks in plain English. Most sections stay quiet
+            until the moment calls for them.
           </p>
           <p
             style={{
@@ -274,8 +285,8 @@ export function BriefingAnatomy() {
               marginBottom: 48,
             }}
           >
-            Watch the briefing read itself, or pick a number — on the card or
-            in the list — to see them speak.
+            Watch the briefing read itself, or pick a line on the card or in
+            the list to see how each part earns its place.
           </p>
 
           {/* Demo + annotations grid */}
@@ -417,6 +428,29 @@ function DemoCard({
 
         {/* Slot 3 — Needs attention (with cap bar) */}
         <motion.div
+          {...hoverProps("load")}
+          animate={spotlightAnim("load", active, stage.hi)}
+          transition={SPRING_SNAP}
+          style={{
+            borderRadius: 8,
+            padding: "2px 6px",
+            margin: "-10px -6px 18px",
+          }}
+        >
+          <p
+            style={{
+              fontSize: 12,
+              lineHeight: 1.45,
+              fontWeight: 600,
+              color: "var(--ink)",
+              margin: 0,
+            }}
+          >
+            Moderate day. 3 signals surfaced from 18 active items.
+          </p>
+        </motion.div>
+
+        <motion.div
           {...hoverProps("needs")}
           animate={spotlightAnim("needs", active, stage.hi)}
           transition={SPRING_SNAP}
@@ -463,7 +497,7 @@ function DemoCard({
             label="Moving well"
           />
           <BucketItem>Client onboarding completed faster than usual</BucketItem>
-          <BucketItem>Roadmap is ahead of schedule</BucketItem>
+          <BucketItem>Timeline is ahead of schedule</BucketItem>
         </motion.div>
 
         <div style={{ height: 10 }} />

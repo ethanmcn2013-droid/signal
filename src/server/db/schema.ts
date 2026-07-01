@@ -2,14 +2,14 @@ import { sql } from "drizzle-orm";
 import { sqliteTable, text, integer, primaryKey } from "drizzle-orm/sqlite-core";
 
 /**
- * Analytics prefs DB schema.
+ * Signal prefs DB schema.
  *
  * Scope: per-user prefs. Owns the link from a Clerk user to a Signal
  * Tasks workspace, plus the IANA timezone captured at onboarding so
  * the daily briefing fires at the right local hour (PRODUCT.md §11
  * open question 1, resolved here as "browser TZ at onboarding").
  *
- * Analytics never writes to the Tasks DB it reads from. This is its
+ * Signal never writes to the Tasks DB it reads from. This is its
  * only persistence surface in v1; cadence/channel/etc preferences
  * land here in Cycle 6.5 when the briefing renderer ships.
  */

@@ -3,7 +3,7 @@
 import { AnimatePresence, MotionConfig, motion } from "motion/react";
 import { useState, useTransition } from "react";
 import type { BriefItem, Briefing } from "@/lib/briefing/types";
-import { graceNote, greeting, summaryLine } from "@/lib/briefing/voice";
+import { graceNote, greeting, loadLine, summaryLine } from "@/lib/briefing/voice";
 import {
   recordBriefingFeedback,
   type FeedbackVerdict,
@@ -57,6 +57,8 @@ export function BriefingView({
     minute: "2-digit",
     hour12: false,
   });
+  const load = loadLine(briefing);
+  const summary = summaryLine(briefing);
 
   return (
     <MotionConfig reducedMotion="user">
@@ -80,13 +82,23 @@ export function BriefingView({
           {greeting(briefing.greetingHour, firstName)}
         </motion.h1>
 
-        {summaryLine(briefing) ? (
+        {load ? (
+          <motion.p
+            className={`text-[13px] font-medium leading-[1.5] ${summary ? "mb-2" : "mb-10"}`}
+            style={{ color: "var(--ink)" }}
+            variants={fadeUp}
+          >
+            {load}
+          </motion.p>
+        ) : null}
+
+        {summary ? (
           <motion.p
             className="mb-10 text-[15.5px] leading-[1.55]"
             style={{ color: "var(--ink-soft)" }}
             variants={fadeUp}
           >
-            {summaryLine(briefing)}
+            {summary}
           </motion.p>
         ) : null}
 

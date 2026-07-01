@@ -2,7 +2,7 @@
 
 **Cycle 7.1 · Plan 7 (Demo videos) · Drafted 2026-05-10**
 
-This document locks the narrative and storyboard for the 30-second Analytics demo before any motion work begins. It exists so the Remotion build (Cycle 7.2) starts from a script, not from "let's see what looks good in After Effects."
+This document locks the narrative and storyboard for the 30-second Signal demo before any motion work begins. It exists so the Remotion build (Cycle 7.2) starts from a script, not from "let's see what looks good in After Effects."
 
 When this document and the live demo disagree, fix this document first if it's wrong; otherwise fix the demo.
 
@@ -36,7 +36,7 @@ Open on a phone on a bedside table. 7am. Notification arrives. She picks it up, 
 Black frame. Mono eyebrow types in: `SUNDAY, MAY 10 · DAILY BRIEFING`. Then the greeting. Then the briefing assembles itself, line by line. End on the full brief, then the wordmark.
 
 **Strength:** maximally brand-coherent. The typography IS the brand. Apple-Calendar reference register. Linear-launch energy.
-**Risk:** abstract — for someone who doesn't know what Analytics is yet, "typography assembling itself" is beautiful but doesn't always close.
+**Risk:** abstract — for someone who doesn't know what Signal is yet, "typography assembling itself" is beautiful but doesn't always close.
 
 ### Option C — "From dashboard to briefing" (before/after)
 Open on a busy dashboard with charts and gauges and sliders. Hold for two seconds. Cut to the briefing. Hold for the rest.

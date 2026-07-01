@@ -2,7 +2,7 @@ import type { TaskSignal } from "./types";
 
 /**
  * Identity passed into a BriefingSource. Both fields are needed
- * because cross-product joins are *email-keyed* — Analytics and
+ * because cross-product joins are *email-keyed* — Signal and
  * Tasks may live in separate Clerk apps with non-shared userIds.
  */
 export type BriefingContext = {

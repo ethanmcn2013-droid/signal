@@ -385,7 +385,7 @@ export default function WeddingPlanningBriefingPage() {
                   paddingTop: 4,
                 }}
               >
-                Roadmap
+                Timeline
               </span>
               <span style={{ flex: 1 }}>
                 <span

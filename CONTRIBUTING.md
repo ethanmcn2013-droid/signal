@@ -1,4 +1,4 @@
-# Contributing to Signal Analytics
+# Contributing to Signal
 
 Quick notes on how the codebase fits together and the few traps
 worth knowing before your first commit lands.

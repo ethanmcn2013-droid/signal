@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * Analytics hero — "The Signal" (A·1, 2026-05-28)
+ * Signal hero — "The Signal" (A·1, 2026-05-28)
  *
  * Approach C: scan line sweeps the bar chart; the tall bar blooms on pass,
  * the caption resolves to "the signal, not the noise." Three scan cycles
@@ -657,7 +657,7 @@ const CSS = `
 .anl-composer-with-bars {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: center;
   gap: 0;
 }
 

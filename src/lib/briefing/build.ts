@@ -26,6 +26,7 @@ export async function buildBriefing(
 ): Promise<Briefing> {
   const signals = await source.getSignalsForUser(ctx);
   const userId = ctx.userId;
+  const activeSourceCount = signals.filter((s) => s.lane !== "shipped").length;
 
   const stuck = detectStuckWork(signals);
   const dueSoon = detectDueSoon(signals, now);
@@ -106,6 +107,7 @@ export async function buildBriefing(
     userId,
     generatedAt: now,
     greetingHour: new Date(now).getUTCHours(),
+    activeSourceCount,
     needsAttention,
     movingWell,
     quietRisks,

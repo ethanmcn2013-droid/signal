@@ -4,11 +4,11 @@ import { db as libDb } from "@/lib/db";
 import { eraseAccountData } from "@/server/account-erasure";
 
 /**
- * Hard-delete the user's footprint in Analytics' Turso footprint.
+ * Hard-delete the user's footprint in Signal' Turso footprint.
  *
  * Called by `POST /api/account/delete` BEFORE the Clerk admin delete.
  *
- * Analytics is the ONLY suite product that talks to two distinct Turso
+ * Signal is the ONLY suite product that talks to two distinct Turso
  * databases:
  *   - `@/server/db` (env `TURSO_DATABASE_URL`) — the analytics-prefs DB
  *     owning `analyticsUsers`, `phrasingRotations`, and `briefingFeedback`.

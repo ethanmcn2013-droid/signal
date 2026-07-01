@@ -14,13 +14,13 @@ function humaniseError(message: string | undefined, status: number): string {
 /**
  * App Store 5.1.1(v) compliant account deletion for Signal.
  *
- * Same pattern as Roadmap / Tasks / Notes — typed-email confirm,
+ * Same pattern as Timeline/ Tasks / Notes — typed-email confirm,
  * inline-reveal, auto-focus on reveal, scroll-into-view. Server purges
- * Analytics' per-user prefs (rotation cursors, link to Tasks workspace,
+ * Signal' per-user prefs (rotation cursors, link to Tasks workspace,
  * IANA tz) AND the email subscription record in the separate
  * email-DB before calling Clerk admin delete.
  *
- * Uses CSS-variable colors to match Analytics' lib aesthetic. The
+ * Uses CSS-variable colors to match Signal' lib aesthetic. The
  * rose-band stays consistent across the suite so a reviewer flowing
  * through four products sees identical destructive semantics.
  */

@@ -2,12 +2,12 @@ import type { NextConfig } from "next";
 
 /**
  * ── Security headers ───────────────────────────────────────────────
- * Suite-wide baseline — matches Studio/Roadmap/Tasks pattern (Plan 4.1).
+ * Suite-wide baseline — matches Studio/Timeline/Tasks pattern (Plan 4.1).
  *   1. Standard headers (HSTS, X-Frame-Options, etc.) in enforce mode.
  *   2. Content-Security-Policy in Report-Only mode — promote to enforce
  *      once verified clean.
  *
- * Analytics-specific allowances vs Studio CSP:
+ * Signal-specific allowances vs Studio CSP:
  *   - Clerk (auth) hosts
  *
  * Server-side calls (Resend, Turso) don't need CSP entries — only
@@ -16,7 +16,7 @@ import type { NextConfig } from "next";
 
 const isDev = process.env.NODE_ENV === "development";
 
-// CSP allowlists mirrored from notes/next.config.ts (suite-locked enforce model). Report-Only until cross-suite verification — see audit/ISSUES.md suite-01.
+// CSP allowlists mirrored from notes/next.config.ts (suite-locked enforce model). Report-Only until cross-suite verification — see audit/FINDINGS.md suite-01.
 // Clerk's prod Frontend API is a CNAME under our own domain, so the
 // wildcard `https://*.signalstudio.ie` covers whatever label Clerk
 // uses without a deploy-time guess. *.clerk.com + clerk-telemetry.com
@@ -61,7 +61,7 @@ const nextConfig: NextConfig = {
   experimental: {
     // Tree-shake heavy barrel imports — Clerk is used in 20 files across
     // the briefing + onboarding + marketing; the full barrel ships ~6×
-    // what we call. Roadmap/Tasks/Notes carry the same shape (Phase 6.2).
+    // what we call. Timeline/Tasks/Notes carry the same shape (Phase 6.2).
     optimizePackageImports: ["@clerk/nextjs", "motion"],
   },
   async headers() {

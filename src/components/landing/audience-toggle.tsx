@@ -9,8 +9,8 @@ type Props = {
 };
 
 /**
- * Audience picker for the Analytics cinematic briefing.
- * Modelled on Tasks's DomainToggle + Roadmap's AudienceToggle —
+ * Audience picker for the Signal cinematic briefing.
+ * Modelled on Tasks's DomainToggle + Timeline's AudienceToggle —
  * pill tab list with a sliding active pill via motion's layoutId,
  * two-line "Built for" caption above.
  */

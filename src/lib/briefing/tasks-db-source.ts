@@ -10,11 +10,11 @@ import type { Lane, TaskSignal } from "./types";
 
 /**
  * Reads the signed-in user's Tasks workspaces and maps them to
- * TaskSignal[]. Joins on EMAIL (Tasks/Analytics may live in
+ * TaskSignal[]. Joins on EMAIL (Tasks/Signal may live in
  * different Clerk apps; clerk_id wouldn't match across them).
  *
  * Read-only by design — the token used here must be a Turso
- * read-only token. The data flow is Analytics ← Tasks; never the
+ * read-only token. The data flow is Signal ← Tasks; never the
  * other way.
  *
  * Engine fields produced from the real DB:

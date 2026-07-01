@@ -47,6 +47,19 @@ describe("buildBriefing — empty + base shape", () => {
     assert.equal(b.generatedAt, NOW);
     assert.ok(b.greetingHour >= 0 && b.greetingHour <= 23);
   });
+
+  test("counts active source items before compression", async () => {
+    const b = await buildBriefing(
+      source([
+        task({ id: "next", lane: "next" }),
+        task({ id: "doing", lane: "in-flight" }),
+        task({ id: "done", lane: "shipped" }),
+      ]),
+      CTX,
+      NOW,
+    );
+    assert.equal(b.activeSourceCount, 2);
+  });
 });
 
 describe("buildBriefing — bucket caps", () => {

@@ -8,7 +8,7 @@ import * as schema from "./schema";
  * The Turso auth token used here is scoped read-only on the Tasks DB
  * (created via `turso db tokens create ethanmcnamara-tasks --read-only`).
  * If a query tries to write, the token rejects it. Defense in depth on
- * top of the fact that Analytics has no write paths against this DB.
+ * top of the fact that Signal has no write paths against this DB.
  *
  * Lazy-initialized on first import so the marketing build still passes
  * when the env vars aren't set in dev.

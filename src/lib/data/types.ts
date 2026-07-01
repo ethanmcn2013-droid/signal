@@ -4,7 +4,7 @@
  * These types describe the shape of data the Attention Engine reads
  * to detect what matters. They mirror the Signal Tasks schema (the
  * v1 data source per analytics/docs/PRODUCT.md §6) without depending
- * on Tasks's own type module — Analytics owns its read contract.
+ * on Tasks's own type module — Signal owns its read contract.
  *
  * If the Tasks schema evolves, the bridge in `data/source.ts` is
  * where the translation happens. These types should stay stable.
@@ -24,7 +24,7 @@ export interface UserRef {
  * A project in the workspace.
  *
  * Per PRODUCT.md §6 "How Tasks data maps": Tasks has no `projects`
- * table — Analytics synthesizes one ProjectRead per unique tag in
+ * table — Signal synthesizes one ProjectRead per unique tag in
  * the workspace. The `slug` is the tag string verbatim; `name` is
  * a title-cased display version. Members are the union of assignees
  * across tasks bearing the tag.
@@ -45,7 +45,7 @@ export interface ProjectRead {
  * A task in the workspace.
  *
  * `projectSlugs` is plural by design — a task with multiple tags
- * belongs to multiple Analytics "projects". Project-scoped triggers
+ * belongs to multiple Signal "projects". Project-scoped triggers
  * iterate `tasks.filter(t => t.projectSlugs.includes(project.slug))`;
  * workspace-level triggers see each task exactly once. Tasks with
  * no tags have an empty `projectSlugs` array and are excluded from

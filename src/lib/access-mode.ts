@@ -67,6 +67,13 @@ export function isReviewMode(): boolean {
   return getAccessMode() === "review";
 }
 
+export function isUxAssuranceMode(): boolean {
+  return (
+    process.env.NEXT_PUBLIC_UX_ASSURANCE_MODE === "true" ||
+    (typeof window === "undefined" && process.env.UX_ASSURANCE_MODE === "true")
+  );
+}
+
 export function isProductionMode(): boolean {
   return getAccessMode() === "production";
 }

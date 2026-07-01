@@ -29,6 +29,7 @@ function brief(over: Partial<Briefing> = {}): Briefing {
     userId: "u1",
     generatedAt: 0,
     greetingHour: 9,
+    activeSourceCount: 0,
     needsAttention: [],
     movingWell: [],
     quietRisks: [],
@@ -49,6 +50,7 @@ describe("renderBriefingText", () => {
   test("bucket headers + items + provenance render", () => {
     const out = renderBriefingText(
       brief({
+        activeSourceCount: 18,
         needsAttention: [item({ text: "A overdue" })],
         movingWell: [item({ id: "m", text: "B shipped", sourceLabel: "Tasks · X" })],
         quietRisks: [item({ id: "q", text: "C stalled" })],
@@ -57,6 +59,7 @@ describe("renderBriefingText", () => {
       "daily",
     );
     assert.match(out, /NEEDS ATTENTION/);
+    assert.match(out, /Moderate day\. 2 signals surfaced from 18 active items\./);
     assert.match(out, /MOVING WELL/);
     assert.match(out, /QUIET RISKS/);
     assert.match(out, /A overdue/);

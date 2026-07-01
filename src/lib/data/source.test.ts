@@ -35,7 +35,7 @@ function makeDb() {
   return { client, db };
 }
 
-/** Run DDL to create the four tables Analytics reads from Tasks's DB. */
+/** Run DDL to create the four tables Signal reads from Tasks's DB. */
 async function createTables(client: ReturnType<typeof createClient>) {
   await client.executeMultiple(`
     CREATE TABLE IF NOT EXISTS users (

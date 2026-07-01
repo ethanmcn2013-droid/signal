@@ -14,9 +14,9 @@ type Props = {
 };
 
 /**
- * A single anonymous reader cursor over the briefing surface. Analytics
+ * A single anonymous reader cursor over the briefing surface. Signal
  * is a personal surface (one reader at a time), so only one cursor —
- * Roadmap's pattern but solo. The label carries no name (you don't
+ * Timeline's pattern but solo. The label carries no name (you don't
  * watch yourself), just a quiet "reading" pill when paused.
  */
 export function Cursor({ x, y, visible, color, label, reading }: Props) {

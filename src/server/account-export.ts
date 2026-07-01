@@ -13,7 +13,7 @@ export type PrefsDb = LibSQLDatabase<typeof prefsSchema>;
 export type LibDb = LibSQLDatabase<typeof libSchema>;
 
 /**
- * GDPR Art. 20 (data portability) — assemble everything Analytics holds for
+ * GDPR Art. 20 (data portability) — assemble everything Signal holds for
  * a user across its TWO Turso DBs (prefs + email-subscription), keyed by
  * Clerk userId. Counterpart to `account-erasure.ts`; same db-injection seam
  * so it's testable (see account-export.test.ts).

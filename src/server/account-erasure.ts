@@ -13,9 +13,9 @@ export type PrefsDb = LibSQLDatabase<typeof prefsSchema>;
 export type LibDb = LibSQLDatabase<typeof libSchema>;
 
 /**
- * Hard-delete a user's ENTIRE footprint across Analytics' TWO Turso DBs.
+ * Hard-delete a user's ENTIRE footprint across Signal' TWO Turso DBs.
  *
- * GDPR right-to-erasure / App Store 5.1.1(v). Analytics is the only suite
+ * GDPR right-to-erasure / App Store 5.1.1(v). Signal is the only suite
  * product spanning two databases:
  *   - prefs DB (`@/server/db`): `analytics_users`, `phrasing_rotations`,
  *     `briefing_feedback` — all keyed by `clerk_id`.

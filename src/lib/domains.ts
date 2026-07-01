@@ -1,5 +1,5 @@
 /**
- * Analytics audience packs — same shape as Roadmap's domains.
+ * Signal audience packs — same shape as Timeline's domains.
  * Drives the AudienceToggle and reseeds the cinematic briefing demo.
  */
 

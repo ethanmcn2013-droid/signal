@@ -1,5 +1,5 @@
 /**
- * Analytics /app loading boundary — wordmark identity loader.
+ * Signal /app loading boundary — wordmark identity loader.
  *
  * Replaces the prior bare 10px indigo dot. Pure Server Component:
  * zero JS, inlined keyframes so motion paints with the first HTML
@@ -11,7 +11,7 @@
  *      280ms cubic-bezier(0.16,1,0.3,1)).
  *   2. Indigo dot lands as the period with a soft overshoot bounce
  *      after the last letter starts.
- *   3. Once landed, the dot enters the canonical Analytics tick —
+ *   3. Once landed, the dot enters the canonical Signal tick —
  *      discrete Y samples, steps(1,end), 3.6s. Same gesture as the
  *      live product.
  *

@@ -89,7 +89,7 @@ export async function buildBriefingForUser(opts: {
     getSignalsForUser: async (_ctx) => {
       const work = await dataSource.read(workspaceId);
       // Flatten TaskReads into TaskSignals. The data/source layer
-      // maps Tasks lanes → Analytics Status; we translate back to
+      // maps Tasks lanes → Signal Status; we translate back to
       // the TaskSignal contract buildBriefing expects.
       return work.tasks.map((t) => ({
         id: t.id,

@@ -7,7 +7,7 @@ import { AnalyticsDemo } from "./analytics-demo";
 import { type DomainId } from "@/lib/domains";
 
 /**
- * Analytics homepage live-demo section.
+ * Signal homepage live-demo section.
  * Eyebrow + H1 + body + status pip + audience toggle, with the briefing demo
  * as a full-width artifact below. Conversion lives in the closing CTA.
  */
@@ -117,7 +117,8 @@ export function Hero() {
           }}
         >
           A short morning brief on the work that needs attention today.
-          Three things per block, hard cap. The signal, not the noise.
+          One receipt line, then the read. Three things per block, hard cap.
+          The signal, not the noise.
         </p>
 
         <p

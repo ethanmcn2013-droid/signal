@@ -7,6 +7,7 @@ import {
   TIMELINE_URL,
   TASKS_URL,
 } from "@/lib/product-urls";
+import { isUxAssuranceMode } from "@/lib/access-mode";
 
 type ProductSlug = "tasks" | "roadmap" | "notes" | "analytics";
 
@@ -98,6 +99,8 @@ function CameraIcon() {
  *   - When in preview mode: "Exit preview" replaces "View public site"
  */
 export function UserButtonWithSuite({ current }: { current: ProductSlug }) {
+  if (isUxAssuranceMode()) return <DemoAccountButton current={current} />;
+
   // Detect preview mode at render time (cookie-based, not sessionStorage,
   // so it's readable from JS even on server-rendered pages).
   const isPreview =
@@ -161,5 +164,27 @@ export function UserButtonWithSuite({ current }: { current: ProductSlug }) {
         ))}
       </UserButton.MenuItems>
     </UserButton>
+  );
+}
+
+function DemoAccountButton({ current }: { current: ProductSlug }) {
+  return (
+    <button
+      type="button"
+      aria-label={`Demo account for ${current}`}
+      title="Demo account"
+      style={{
+        minWidth: 32,
+        height: 32,
+        borderRadius: 999,
+        border: "1px solid var(--border, #e4e4e7)",
+        background: "var(--bg, #fff)",
+        color: "var(--ink-soft, #52525b)",
+        fontSize: 11,
+        fontWeight: 600,
+      }}
+    >
+      UX
+    </button>
   );
 }

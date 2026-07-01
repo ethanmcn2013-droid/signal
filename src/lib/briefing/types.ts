@@ -1,5 +1,5 @@
 /**
- * The briefing — Analytics' product surface.
+ * The briefing — Signal' product surface.
  *
  * One short read. Six sections. Hard cap of 3 items per bucket.
  * Plain language. Always "from {source}" provenance. Voice locked
@@ -60,6 +60,8 @@ export type Briefing = {
   userId: string;
   generatedAt: number;
   greetingHour: number; // 0–23 in user-local time (UTC for v1)
+  /** Active source items read before compression. Used only as receipt copy. */
+  activeSourceCount: number;
   // Three-cap per bucket is enforced by buildBriefing().
   needsAttention: BriefItem[];
   movingWell: BriefItem[];

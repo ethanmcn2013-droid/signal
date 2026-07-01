@@ -1,5 +1,5 @@
 import type { Briefing } from "@/lib/briefing/types";
-import { greeting } from "@/lib/briefing/voice";
+import { greeting, loadLine, summaryLine } from "@/lib/briefing/voice";
 
 /**
  * Plain-text alternative for the briefing email. Providing both
@@ -30,6 +30,10 @@ export function renderBriefingText(
   lines.push(date);
   lines.push("");
   lines.push(greeting(b.greetingHour, firstName, true));
+  const load = loadLine(b);
+  const summary = summaryLine(b);
+  if (load) lines.push(load);
+  if (summary) lines.push(summary);
   lines.push("");
 
   if (b.needsAttention.length > 0) {

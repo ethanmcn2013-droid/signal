@@ -93,7 +93,7 @@ function suiteJump(url: string) {
 }
 
 /**
- * Analytics suite launcher — canonical SuiteLauncher per IA_COHERENCE.md §2.
+ * Signal suite launcher — canonical SuiteLauncher per IA_COHERENCE.md §2.
  *
  * Replaces SuiteLauncherAuthAware (retired). isAuthed prop switches:
  *   - product list:  unauthed = taglines + marketing URLs
@@ -104,7 +104,7 @@ function suiteJump(url: string) {
  * Trigger always renders "signal studio." (no "Products ▾", no Unicode
  * caret) — P2-5 conformance.
  *
- * Inline-style approach matches Analytics's CSS-variable design system.
+ * Inline-style approach matches Signal's CSS-variable design system.
  */
 export function SuiteLauncher({
   current,

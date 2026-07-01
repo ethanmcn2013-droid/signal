@@ -35,7 +35,26 @@ export function greeting(
 }
 
 /**
- * Calm one-line summary under the greeting. Shape of the day in
+ * Calm one-line load receipt under the greeting. Numbers appear only
+ * with a sentence around them: source count as proof, not a dashboard.
+ */
+export function loadLine(b: Briefing): string {
+  const load = b.needsAttention.length + b.quietRisks.length;
+  if (load === 0) return "";
+
+  const label =
+    load <= 1 ? "Light day" : load <= 3 ? "Moderate day" : load <= 5 ? "Active day" : "Heavy day";
+  const signalWord = load === 1 ? "signal" : "signals";
+  const source =
+    b.activeSourceCount > 0
+      ? ` from ${b.activeSourceCount} active ${b.activeSourceCount === 1 ? "item" : "items"}`
+      : "";
+
+  return `${label}. ${load} ${signalWord} surfaced${source}.`;
+}
+
+/**
+ * Calm one-line verdict under the load receipt. Shape of the day in
  * plain English — no numbers without a "so what".
  *
  * Silence is the signal. On a brief with nothing to flag,
@@ -52,11 +71,24 @@ export function summaryLine(b: Briefing): string {
     return "";
   }
   if (att === 0 && risks > 0) {
-    return `A quiet day, but ${risks} ${risks === 1 ? "risk" : "risks"} worth watching.`;
+    return risks === 1
+      ? "No urgent pulls. One quiet risk is worth watching."
+      : `No urgent pulls. ${countWord(risks)} quiet risks are worth watching.`;
   }
-  if (att === 1) return "One thing's calling.";
-  if (att === 2) return "Two things calling — and a few quieter signals below.";
-  return `Three things calling${risks > 0 ? ", more quietly behind them" : ""}.`;
+  const attention =
+    att === 1
+      ? "One thing needs attention."
+      : `${countWord(att)} things need attention.`;
+  if (risks === 0) return attention;
+  return `${attention} ${
+    risks === 1
+      ? "One quiet risk is building."
+      : `${countWord(risks)} quiet risks are building.`
+  }`;
+}
+
+function countWord(n: number): string {
+  return n === 1 ? "One" : n === 2 ? "Two" : n === 3 ? "Three" : String(n);
 }
 
 /**

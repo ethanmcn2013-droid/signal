@@ -1,5 +1,5 @@
 /**
- * Analytics root /loading.tsx — wordmark identity loader.
+ * Signal root /loading.tsx — wordmark identity loader.
  *
  * Mirrors /app/loading.tsx so cross-origin first-paint on ANY analytics
  * route shows the wordmark instead of a bare indigo dot.

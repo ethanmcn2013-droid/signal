@@ -2,26 +2,26 @@ import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
 
 /**
  * Read-only mirror of the Signal Tasks Turso schema — only the
- * columns Analytics actually reads.
+ * columns Signal actually reads.
  *
  * IMPORTANT: this is a DERIVED mirror. Tasks owns the canonical
  * schema at ~/Projects/personal/tasks/src/server/db/schema.ts.
- * Analytics never writes to this DB (the Vercel env uses a
+ * Signal never writes to this DB (the Vercel env uses a
  * Turso token scoped read-only). If Tasks adds or renames
- * columns Analytics depends on, this mirror is what changes.
+ * columns Signal depends on, this mirror is what changes.
  */
 
 export const tasks = sqliteTable("tasks", {
   id: text("id").primaryKey(),
   workspaceId: text("workspace_id"),
   title: text("title").notNull(),
-  /** Tasks's lane field — Analytics maps to Status. */
+  /** Tasks's lane field — Signal maps to Status. */
   lane: text("lane").notNull(),
   /** JSON-encoded array of user ids. First entry treated as the
-   *  primary assignee in Analytics's TaskRead. */
+   *  primary assignee in Signal's TaskRead. */
   assignees: text("assignees", { mode: "json" }).$type<string[]>(),
   /** JSON-encoded array of tag strings. Each unique tag becomes
-   *  an Analytics "project" (PRODUCT.md §6 mapping note). */
+   *  an Signal "project" (PRODUCT.md §6 mapping note). */
   tags: text("tags", { mode: "json" }).$type<string[]>(),
   /** Free-text due label ("Friday", "next week", etc). */
   due: text("due"),
@@ -47,7 +47,7 @@ export const users = sqliteTable("users", {
   /** Clerk user id (`user_2abc…`). Nullable for legacy seeds. */
   clerkId: text("clerk_id"),
   /** Login email, hydrated by the Clerk `user.created` webhook.
-   *  This is the canonical identity key used by Analytics to locate
+   *  This is the canonical identity key used by Signal to locate
    *  a Tasks user when clerkId hasn't been written yet (webhook-race). */
   email: text("email"),
 });

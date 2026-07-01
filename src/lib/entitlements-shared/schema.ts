@@ -2,7 +2,7 @@ import { sql } from "drizzle-orm";
 import { index, integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 /**
- * Canonical schema for the cross-product Signal entitlements DB.
+ * Canonical schema for the cross-product Signal Studio entitlements DB.
  *
  * Lives on its own Turso DB (signal-entitlements) — readable by all
  * five product repos, writable by Tasks (via the Stripe webhook) and

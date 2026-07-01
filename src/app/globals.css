@@ -415,7 +415,7 @@ body::after { content: none; }
 }
 
 /* ────────────────────────────────────────────────────────────
-   Analytics wordmark dot — M·04 tick.
+   Signal wordmark dot — M·04 tick.
    Per suite design-system v1 (2026-05-13): analytics is a verb,
    the gesture is tick — the dot JUMPS between discrete sample
    positions, never glides between them. steps(1,end) ensures
@@ -438,9 +438,9 @@ body::after { content: none; }
   transform: translateY(-3px);
   transform-origin: center;
   flex-shrink: 0;
-  animation: analytics-dot-tick 3.6s steps(1, end) infinite;
+  animation: signal-dot-tick 3.6s steps(1, end) infinite;
 }
-@keyframes analytics-dot-tick {
+@keyframes signal-dot-tick {
   0%   { transform: translateY(-3px); }
   25%  { transform: translateY(-6px); }
   50%  { transform: translateY(-1px); }

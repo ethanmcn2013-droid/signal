@@ -10,6 +10,7 @@ function emptyBriefing(): Briefing {
     userId: "u-test",
     generatedAt: NOW,
     greetingHour: 8,
+    activeSourceCount: 0,
     needsAttention: [],
     movingWell: [],
     quietRisks: [],

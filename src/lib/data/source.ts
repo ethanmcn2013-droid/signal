@@ -93,11 +93,11 @@ export const mockSource: DataSource = mockSourceWith({
 // ── Real Tasks DB source (Cycle 6.3 + 6.4 lane canonicalization) ───
 
 /**
- * Tasks lane → Analytics Status mapping table. Locked in Cycle 6.4.
+ * Tasks lane → Signal Status mapping table. Locked in Cycle 6.4.
  *
  * Tasks's canonical lane vocabulary is `"todo" | "doing" | "review" | "done"`
- * (tasks/src/lib/data.ts). Analytics's Status enum is the trigger-facing
- * read contract Analytics owns. The translation is one-way and lives here
+ * (tasks/src/lib/data.ts). Signal's Status enum is the trigger-facing
+ * read contract Signal owns. The translation is one-way and lives here
  * — triggers never see Tasks's vocabulary.
  *
  * Derivation rules:

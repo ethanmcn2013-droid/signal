@@ -363,9 +363,10 @@ export default function SignalPage() {
         <div style={PROSE_MAX}>
           <Eyebrow>What it doesn&apos;t include</Eyebrow>
           <p style={{ fontSize: 16, color: "var(--ink-soft)", lineHeight: 1.7, maxWidth: 520 }}>
-            No raw metrics. No graphs. No counts. The briefing does not surface every
-            change since you last looked, does not say &ldquo;FYI&rdquo;, does not pad
-            its length with information you already have. If something is not worth your
+            No raw metrics. No graphs. Counts appear only as receipts for the
+            read. The briefing does not surface every change since you last
+            looked, does not say &ldquo;FYI&rdquo;, does not pad its length with
+            information you already have. If something is not worth your
             attention today, it is not in the briefing.
           </p>
         </div>

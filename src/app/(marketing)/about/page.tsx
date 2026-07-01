@@ -76,7 +76,7 @@ export default function AboutPage() {
             <p>
               Signal is one of three products from Signal Studio.
               Signal Tasks handles execution — the list, the board, the daily
-              flow. Signal Roadmap handles direction — where you are going and
+              flow. Signal Timeline handles direction — where you are going and
               why. Signal handles attention. The one thing that
               determines whether any of it gets done.
             </p>
@@ -116,7 +116,7 @@ export default function AboutPage() {
                 href={TASKS_URL}
               />
               <ProductCard
-                name="Signal Roadmap"
+                name="Signal Timeline"
                 description="Direction clarity. Your roadmap in plain English."
                 href={TIMELINE_URL}
               />

@@ -2,7 +2,7 @@
  * Account-erasure integration test — Signal (analytics). GDPR
  * right-to-erasure / App Store 5.1.1(v) guard.
  *
- * Analytics spans TWO Turso DBs (prefs + email-subscription). This runs the
+ * Signal spans TWO Turso DBs (prefs + email-subscription). This runs the
  * REAL `eraseAccountData` against two in-memory libSQL DBs covering all four
  * user-keyed tables, with a bystander user whose rows must survive. The
  * load-bearing assertion is that `briefing_feedback` — which a prior version

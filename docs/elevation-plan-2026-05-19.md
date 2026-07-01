@@ -1,7 +1,7 @@
 # Product Elevation Plan — Signal
 
 **Date:** 2026-05-19
-**Method:** 4-director panel (Creative Director, Product Director, UX Director, Senior Engineer)
+**Method:** 4-advisor panel (Creative Advisor, Product Advisor, UX Advisor, Senior Engineer)
 **Status:** APPROVED (plan gate cleared) → IMPLEMENTED → final holistic gate cleared
 **Constraint:** Product freeze active — L0–3 defect carve-out only. Not an 8th remediation wave.
 

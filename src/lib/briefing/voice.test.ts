@@ -1,13 +1,14 @@
 import { strict as assert } from "node:assert";
 import { describe, test } from "node:test";
 import type { Briefing } from "./types";
-import { graceNote, greeting, summaryLine } from "./voice";
+import { graceNote, greeting, loadLine, summaryLine } from "./voice";
 
 function brief(overrides: Partial<Briefing> = {}): Briefing {
   return {
     userId: "u_1",
     generatedAt: 0,
     greetingHour: 9,
+    activeSourceCount: 0,
     needsAttention: [],
     movingWell: [],
     quietRisks: [],
@@ -41,8 +42,34 @@ describe("greeting", () => {
   });
 });
 
+describe("loadLine", () => {
+  test("silent when nothing needs attention or watching", () => {
+    assert.equal(loadLine(brief({ activeSourceCount: 12 })), "");
+  });
+
+  test("summarises the surfaced load with source count", () => {
+    assert.equal(
+      loadLine(
+        brief({
+          activeSourceCount: 18,
+          needsAttention: [{}, {}] as never[],
+          quietRisks: [{}] as never[],
+        }),
+      ),
+      "Moderate day. 3 signals surfaced from 18 active items.",
+    );
+  });
+
+  test("keeps the receipt when source count is unavailable", () => {
+    assert.equal(
+      loadLine(brief({ needsAttention: [{}] as never[] })),
+      "Light day. 1 signal surfaced.",
+    );
+  });
+});
+
 describe("summaryLine", () => {
-  test("silent on a quiet day — nothing pulling, no filler", () => {
+  test("silent on a quiet day - nothing pulling, no filler", () => {
     // Silence is the signal. Empty string lets EmptyState carry the frame.
     assert.equal(summaryLine(brief()), "");
   });
@@ -56,26 +83,26 @@ describe("summaryLine", () => {
   test("risk-only day singular vs plural", () => {
     assert.equal(
       summaryLine(brief({ quietRisks: [{} as never] })),
-      "A quiet day, but 1 risk worth watching.",
+      "No urgent pulls. One quiet risk is worth watching.",
     );
     assert.equal(
       summaryLine(brief({ quietRisks: [{}, {}] as never[] })),
-      "A quiet day, but 2 risks worth watching.",
+      "No urgent pulls. Two quiet risks are worth watching.",
     );
   });
 
   test("attention count drives the line", () => {
     assert.equal(
       summaryLine(brief({ needsAttention: [{}] as never[] })),
-      "One thing's calling.",
+      "One thing needs attention.",
     );
     assert.equal(
       summaryLine(brief({ needsAttention: [{}, {}] as never[] })),
-      "Two things calling — and a few quieter signals below.",
+      "Two things need attention.",
     );
     assert.equal(
       summaryLine(brief({ needsAttention: [{}, {}, {}] as never[] })),
-      "Three things calling.",
+      "Three things need attention.",
     );
     assert.equal(
       summaryLine(
@@ -84,7 +111,7 @@ describe("summaryLine", () => {
           quietRisks: [{}] as never[],
         }),
       ),
-      "Three things calling, more quietly behind them.",
+      "Three things need attention. One quiet risk is building.",
     );
   });
 });

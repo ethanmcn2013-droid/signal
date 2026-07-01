@@ -15,7 +15,7 @@ const ENTRIES: {
     items: [
       {
         line: "Demo embed lands as a typography piece.",
-        sub: "30 seconds. Silence is the signal. Voice and score follow.",
+        sub: "30 seconds. Silence is the signal. Voice and receipt follow.",
       },
       {
         line: "Cadences are honest.",

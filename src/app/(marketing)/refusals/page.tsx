@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 const REFUSALS = [
   {
     head: "Not a dashboard.",
-    body: "No metric tiles. No graphs. No counters. No “score.” A briefing is sentences.",
+    body: "No metric tiles. No graphs. No scoreboards. Counts appear only as receipts inside the briefing.",
   },
   {
     head: "Not productivity tracking.",

@@ -8,7 +8,7 @@ const REQUEST_ACCESS_HREF =
   "mailto:hello@signalstudio.ie?subject=Signal%20access";
 
 /**
- * Analytics marketing homepage — structure:
+ * Signal marketing homepage — structure:
  *   1. AnalyticsHeroSignal — "The Signal" scan-line hero (A·1, 2026-05-28)
  *   2. Hero                — product intro text + audience toggle + live briefing demo
  *   3. BriefingAnatomy     — anatomy of a briefing item (the diagram
