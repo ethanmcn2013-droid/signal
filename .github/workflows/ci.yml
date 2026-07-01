@@ -32,6 +32,15 @@ jobs:
           node-version: 22
           cache: npm
 
+      # Pin npm to the version package.json declares (packageManager).
+      # Node 22 bundles npm 10, whose `npm ci` computes a different
+      # ideal tree for OR-ranges (tsx → esbuild ^0.27 || ^0.28) than
+      # the npm 11 that writes this repo's lockfile — npm 10 rejected
+      # a lock npm 11 considers in sync. CI must validate with the
+      # same npm that produces the artifact it validates.
+      - name: Pin npm to packageManager version
+        run: npm install -g npm@11.12.1
+
       - name: Install
         run: npm ci --no-audit --no-fund
 
