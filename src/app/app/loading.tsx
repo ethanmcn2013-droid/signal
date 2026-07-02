@@ -7,7 +7,7 @@
  * sibling-product jumps.
  *
  * Choreography:
- *   1. Letters of "analytics" rise into place with stagger (50ms apart,
+ *   1. Letters of "signal" rise into place with stagger (50ms apart,
  *      280ms cubic-bezier(0.16,1,0.3,1)).
  *   2. Indigo dot lands as the period with a soft overshoot bounce
  *      after the last letter starts.
@@ -17,16 +17,23 @@
  *
  * Reduced motion: letters appear fully, dot lands without scale-bounce,
  * tick animation stops.
+ *
+ * Long-wait escalation (loading canon, pitch 6): after a real 5s wait
+ * one calm line appears — "Opening the briefing" — with role="status"
+ * aria-live="polite". The decorative wordmark stays aria-hidden.
  */
+import { LongWaitStatus } from "@/components/system/long-wait-status";
+
 export default function AnalyticsLoading() {
   const word = "signal";
   return (
     <div
-      aria-hidden
       style={{
         position: "fixed",
         inset: 0,
         display: "flex",
+        flexDirection: "column",
+        gap: 18,
         alignItems: "center",
         justifyContent: "center",
         background: "var(--paper, #ffffff)",
@@ -34,6 +41,7 @@ export default function AnalyticsLoading() {
       }}
     >
       <span
+        aria-hidden
         style={{
           fontFamily:
             'var(--font-geist-sans), "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif',
@@ -60,11 +68,12 @@ export default function AnalyticsLoading() {
         ))}
         <span
           style={{
+            // 10px hard px — boundary-dot authority (DESIGN.md §13.3).
             display: "inline-block",
-            width: 11,
-            height: 11,
-            maxWidth: 11,
-            maxHeight: 11,
+            width: 10,
+            height: 10,
+            maxWidth: 10,
+            maxHeight: 10,
             borderRadius: "50%",
             background: "var(--indigo, #4f46e5)",
             marginLeft: 6,
@@ -74,6 +83,7 @@ export default function AnalyticsLoading() {
           }}
         />
       </span>
+      <LongWaitStatus line="Opening the briefing" />
       <style>{`
         @keyframes signal-letter-rise {
           from { opacity: 0; transform: translateY(6px); }
