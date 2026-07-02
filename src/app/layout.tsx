@@ -24,7 +24,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Signal - Operational clarity. Know what needs your attention.",
+  title: "Signal · Operational clarity. Know what needs your attention.",
   description:
     "Signal reads the state of your work and writes a short briefing. What needs you. What's moving. What's quiet. What to do next.",
   metadataBase: new URL(
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
   ),
   manifest: "/manifest.webmanifest",
   openGraph: {
-    title: "Signal - Operational clarity.",
+    title: "Signal · Operational clarity.",
     description: "Not a dashboard. A briefing. Know what needs your attention.",
     type: "website",
   },

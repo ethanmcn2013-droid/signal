@@ -1,0 +1,150 @@
+{
+  "src/app/(marketing)/about/opengraph-image.tsx": {
+    "hex": 8,
+    "ease": 0
+  },
+  "src/app/(marketing)/demo/page.tsx": {
+    "hex": 2,
+    "ease": 0
+  },
+  "src/app/(marketing)/method/opengraph-image.tsx": {
+    "hex": 8,
+    "ease": 0
+  },
+  "src/app/(marketing)/opengraph-image.tsx": {
+    "hex": 8,
+    "ease": 0
+  },
+  "src/app/(marketing)/pricing/opengraph-image.tsx": {
+    "hex": 8,
+    "ease": 0
+  },
+  "src/app/(marketing)/sign-in/[[...sign-in]]/page.tsx": {
+    "hex": 2,
+    "ease": 0
+  },
+  "src/app/(marketing)/sign-up/[[...sign-up]]/page.tsx": {
+    "hex": 2,
+    "ease": 0
+  },
+  "src/app/(marketing)/signal/opengraph-image.tsx": {
+    "hex": 8,
+    "ease": 0
+  },
+  "src/app/(marketing)/signal/page.tsx": {
+    "hex": 8,
+    "ease": 0
+  },
+  "src/app/app/brief/page.tsx": {
+    "hex": 1,
+    "ease": 0
+  },
+  "src/app/app/loading.tsx": {
+    "hex": 3,
+    "ease": 3
+  },
+  "src/app/app/preview-email/page.tsx": {
+    "hex": 1,
+    "ease": 0
+  },
+  "src/app/app/settings/notifications/cadence-form.tsx": {
+    "hex": 3,
+    "ease": 0
+  },
+  "src/app/app/settings/notifications/send-test-button.tsx": {
+    "hex": 2,
+    "ease": 0
+  },
+  "src/app/globals.css": {
+    "hex": 3,
+    "ease": 0
+  },
+  "src/app/layout.tsx": {
+    "hex": 5,
+    "ease": 0
+  },
+  "src/app/loading.tsx": {
+    "hex": 3,
+    "ease": 2
+  },
+  "src/app/manifest.ts": {
+    "hex": 2,
+    "ease": 0
+  },
+  "src/app/opengraph-image.tsx": {
+    "hex": 4,
+    "ease": 0
+  },
+  "src/app/wedding-planning/page.tsx": {
+    "hex": 5,
+    "ease": 0
+  },
+  "src/components/account/danger-zone.tsx": {
+    "hex": 7,
+    "ease": 0
+  },
+  "src/components/account/manage-identity-button.tsx": {
+    "hex": 1,
+    "ease": 0
+  },
+  "src/components/brief/briefing-view.tsx": {
+    "hex": 3,
+    "ease": 4
+  },
+  "src/components/dev-banner.tsx": {
+    "hex": 10,
+    "ease": 1
+  },
+  "src/components/landing/analytics-demo.tsx": {
+    "hex": 1,
+    "ease": 0
+  },
+  "src/components/landing/analytics-hero-loader.tsx": {
+    "hex": 6,
+    "ease": 9
+  },
+  "src/components/landing/analytics-hero-signal.tsx": {
+    "hex": 6,
+    "ease": 8
+  },
+  "src/components/marketing/briefing-anatomy.tsx": {
+    "hex": 9,
+    "ease": 0
+  },
+  "src/components/marketing/briefing-compression.tsx": {
+    "hex": 3,
+    "ease": 0
+  },
+  "src/components/suite-arrows.tsx": {
+    "hex": 6,
+    "ease": 3
+  },
+  "src/components/suite-launcher.tsx": {
+    "hex": 2,
+    "ease": 2
+  },
+  "src/components/suite-switcher-pills.tsx": {
+    "hex": 9,
+    "ease": 2
+  },
+  "src/components/system/SuiteLoader.tsx": {
+    "hex": 6,
+    "ease": 1
+  },
+  "src/lib/brand/suite-mark.tsx": {
+    "hex": 2,
+    "ease": 0
+  },
+  "src/lib/compression/types.ts": {
+    "hex": 4,
+    "ease": 0
+  },
+  "src/lib/domains.ts": {
+    "hex": 3,
+    "ease": 0
+  },
+  "src/lib/email/briefing-email.tsx": {
+    "hex": 10,
+    "ease": 0
+  }
+}
