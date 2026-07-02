@@ -53,6 +53,7 @@ export function AnalyticsHeroSignal() {
       <div className="anl-stage" aria-hidden="true">
         <div className="anl-raw-panel">
           <div className="anl-panel-label">Raw candidates</div>
+          <span className="anl-scan-line" aria-hidden="true" />
           <ul className="anl-candidate-list">
             {rawCandidates.map((candidate, index) => (
               <li
@@ -206,8 +207,39 @@ const CSS = `
 
 .anl-raw-panel {
   padding: 18px;
+  position: relative;
+  overflow: hidden;
   transform-origin: center right;
   animation: anl-raw-settle 720ms cubic-bezier(0.16, 1, 0.3, 1) 720ms 1 forwards;
+}
+
+.anl-scan-line {
+  position: absolute;
+  top: 54px;
+  bottom: 18px;
+  left: 18px;
+  width: calc(100% - 36px);
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 2;
+}
+
+.anl-scan-line::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 1px;
+  background: linear-gradient(
+    180deg,
+    rgba(79, 70, 229, 0),
+    rgba(79, 70, 229, 0.72) 20%,
+    rgba(79, 70, 229, 0.72) 78%,
+    rgba(79, 70, 229, 0)
+  );
+  opacity: 0;
+  animation: anl-scan-sample 1280ms cubic-bezier(0.22, 0.7, 0.2, 1) 460ms 1 both;
 }
 
 .anl-panel-label,
@@ -315,12 +347,26 @@ const CSS = `
 }
 
 .anl-wordmark-dot {
+  position: relative;
   width: 0.16em;
   height: 0.16em;
   margin-left: 0.06em;
   margin-bottom: 0.08em;
   border-radius: 999px;
   background: var(--anl-indigo);
+  transform-origin: center;
+  animation: anl-dot-samples 2200ms cubic-bezier(0.45, 0.05, 0.55, 0.95) 1.06s 1 both;
+}
+
+.anl-wordmark-dot::after {
+  content: "";
+  position: absolute;
+  inset: -0.22em;
+  border: 1px solid rgba(79, 70, 229, 0.26);
+  border-radius: 999px;
+  opacity: 0;
+  transform: scale(0.62);
+  animation: anl-dot-receipt 2200ms cubic-bezier(0.22, 0.7, 0.2, 1) 1.06s 1 both;
 }
 
 .anl-brief-kicker {
@@ -385,6 +431,69 @@ const CSS = `
   100% { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes anl-scan-sample {
+  0% {
+    left: 0;
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  84% {
+    left: 100%;
+    opacity: 1;
+  }
+  100% {
+    left: 100%;
+    opacity: 0;
+  }
+}
+
+@keyframes anl-dot-samples {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  12% {
+    transform: scale(1.48);
+  }
+  20% {
+    transform: scale(0.94);
+  }
+  36% {
+    transform: scale(1.32);
+  }
+  44% {
+    transform: scale(0.98);
+  }
+  60% {
+    transform: scale(1.2);
+  }
+  70% {
+    transform: scale(1);
+  }
+}
+
+@keyframes anl-dot-receipt {
+  0%,
+  8%,
+  24%,
+  32%,
+  48%,
+  56%,
+  100% {
+    opacity: 0;
+    transform: scale(0.62);
+  }
+  14%,
+  38%,
+  62% {
+    opacity: 1;
+    transform: scale(1.25);
+  }
+}
+
 @keyframes anl-candidate-suppress {
   0% { opacity: 1; transform: translateX(0); }
   100% { opacity: 0.2; transform: translateX(-4px); }
@@ -429,6 +538,10 @@ const CSS = `
     transform: scale(0.92);
   }
 
+  .anl-scan-line {
+    display: none;
+  }
+
   .anl-raw-panel {
     opacity: 0.72;
     transform: scale(0.985);
@@ -449,6 +562,15 @@ const CSS = `
   .anl-brief-lines li {
     opacity: 1;
     transform: none;
+  }
+
+  .anl-wordmark-dot {
+    opacity: 1;
+    transform: none;
+  }
+
+  .anl-wordmark-dot::after {
+    display: none;
   }
 }
 
