@@ -3,6 +3,10 @@
 Convention: BRAND.md §6.5. Entries before 2026-05-14 keep their
 original shape; the new shape starts at the next cycle.
 
+## 2026-07-02 · A·6 · tightens · Signal's chrome joins the source of truth
+
+**Signal's accepted footer and sticky product header are now applied to current main.** The footer uses the suite-wide frame, includes the Studio iOS status page, and restores the full suite list including Signal itself. The signed-in and public headers keep one shared Signal Studio shell so the briefing reads as part of the suite while the quiet-day surface remains the product's own.
+
 ## 2026-07-01 · A·5 · ships · the quiet day becomes the product's proudest page
 
 **The all-clear is now a designed destination — one calm line, set with the same care as a full brief — and the loop around each item finally closes: dismissals stick, and carry-overs age honestly.** On a day when nothing fires, the reader lands on a vertically centred composition: the signal dot ticking its sampled cadence (static under reduced motion), a small greeting, "Nothing needs you today." in display type, one soft line, and the honest mechanics in quiet mono. No card, no border, no gray box — silence rendered as the achievement it is. Behind the read, the "Not really" tap now does what it has promised since A·4: the engine reads not-useful verdicts back at build time and keeps that item out under that trigger (a new reason — say a real deadline — still gets through). Items that survive into a second-plus consecutive day move to the bottom of their block and carry their age in the meta line — "still waiting — day 3" — on web, HTML email, and plain text alike. New `surfaced_items` table powers the aging (fail-safe until the operator applies `drizzle/0003_surfaced_items.sql` against the Signal Turso DB); account erasure and export both cover it from day one. Honest edges: aging uses UTC day boundaries until the per-timezone cron exists, and PRODUCT.md §5.3's day-three suppression clause is deliberately not implemented yet — now that readers hold a real dismiss control, auto-hiding what they chose to keep needs its own considered pass. Branch-pending via PR.

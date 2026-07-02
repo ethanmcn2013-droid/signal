@@ -36,13 +36,13 @@ export default function AppLayout({
       <header
         className="sticky top-0 z-40 border-b"
         style={{
-          background: "color-mix(in srgb, var(--bg) 85%, transparent)",
-          backdropFilter: "saturate(160%) blur(12px)",
-          WebkitBackdropFilter: "saturate(160%) blur(12px)",
+          background: "color-mix(in srgb, var(--bg) 88%, transparent)",
+          backdropFilter: "saturate(150%) blur(12px)",
+          WebkitBackdropFilter: "saturate(150%) blur(12px)",
           borderBottomColor: "var(--border-soft)",
         }}
       >
-        <div className="mx-auto flex h-14 w-full max-w-[80rem] items-center justify-between px-6">
+        <div className="mx-auto flex h-14 w-full max-w-[1240px] items-center justify-between px-6">
 
           {/* Left slot — §14 (amended 2026-05-19): umbrella anchor (once)
               + always-visible 4-product pill switcher. The active pill is
