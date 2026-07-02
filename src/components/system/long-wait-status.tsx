@@ -45,10 +45,10 @@ export function LongWaitStatus({ line }: { line: string }) {
         fontSize: 14,
         fontWeight: 600,
         letterSpacing: "-0.01em",
-        color: "var(--ink-soft, #3f3f46)",
+        color: "var(--ink-soft, var(--ink-soft, #3f3f46))",
         textAlign: "center",
         opacity: escalated ? 1 : 0,
-        transition: "opacity 200ms cubic-bezier(.22,.61,.36,1)",
+        transition: "opacity 200ms var(--ease-out, cubic-bezier(.22,.61,.36,1)) // ds-allow loading escalation fade",
       }}
     >
       {escalated ? line : null}
