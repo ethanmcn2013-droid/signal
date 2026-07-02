@@ -72,13 +72,13 @@ export function AnalyticsHeroSignal() {
     const CAP_INIT   = "the bar appears";
     const CAP_SIGNAL = "the signal, not the noise.";
 
-    const DOT_ANIM      = "anl-dot-roll var(--anl-intro-duration) cubic-bezier(.34,1.56,.64,1) 0s 1 forwards";
-    const TRAIL_1_ANIM  = "anl-ghost-1 var(--anl-intro-duration) cubic-bezier(.34,1.56,.64,1) 0s 1 forwards";
-    const TRAIL_2_ANIM  = "anl-ghost-2 var(--anl-intro-duration) cubic-bezier(.34,1.56,.64,1) 0s 1 forwards";
-    const TRAIL_3_ANIM  = "anl-ghost-3 var(--anl-intro-duration) cubic-bezier(.34,1.56,.64,1) 0s 1 forwards";
-    const RIPPLE_ANIM   = "anl-ripple-fast var(--anl-intro-duration) cubic-bezier(.22,.7,.2,1) 0s 1 forwards";
-    const RIPPLE_S_ANIM = "anl-ripple-slow var(--anl-intro-duration) cubic-bezier(.22,.7,.2,1) 0s 1 forwards";
-    const CAPTION_ANIM  = "anl-caption-in .7s cubic-bezier(.22,.7,.2,1) calc(var(--anl-intro-duration) + .1s) 1 forwards";
+    const DOT_ANIM      = "anl-dot-roll var(--anl-intro-duration) cubic-bezier(.34,1.56,.64,1) 0s 1 forwards"; // ds-allow: signal hero choreography
+    const TRAIL_1_ANIM  = "anl-ghost-1 var(--anl-intro-duration) cubic-bezier(.34,1.56,.64,1) 0s 1 forwards"; // ds-allow: signal hero choreography
+    const TRAIL_2_ANIM  = "anl-ghost-2 var(--anl-intro-duration) cubic-bezier(.34,1.56,.64,1) 0s 1 forwards"; // ds-allow: signal hero choreography
+    const TRAIL_3_ANIM  = "anl-ghost-3 var(--anl-intro-duration) cubic-bezier(.34,1.56,.64,1) 0s 1 forwards"; // ds-allow: signal hero choreography
+    const RIPPLE_ANIM   = "anl-ripple-fast var(--anl-intro-duration) cubic-bezier(.22,.7,.2,1) 0s 1 forwards"; // ds-allow: signal hero choreography
+    const RIPPLE_S_ANIM = "anl-ripple-slow var(--anl-intro-duration) cubic-bezier(.22,.7,.2,1) 0s 1 forwards"; // ds-allow: signal hero choreography
+    const CAPTION_ANIM  = "anl-caption-in .7s cubic-bezier(.22,.7,.2,1) calc(var(--anl-intro-duration) + .1s) 1 forwards"; // ds-allow: signal hero choreography
 
     // ── Reduced motion: bloomed final state ────────────────────────────
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -165,7 +165,7 @@ export function AnalyticsHeroSignal() {
       if (cancelled) return;
 
       // Spring height — bar snaps to attention
-      tallBarEl!.style.transition = "opacity 280ms ease, height 300ms cubic-bezier(.34,1.4,.64,1)";
+      tallBarEl!.style.transition = "opacity 280ms ease, height 300ms cubic-bezier(.34,1.4,.64,1)"; // ds-allow: signal hero choreography
       tallBarEl!.style.opacity    = "1";
       tallBarEl!.style.height     = "calc(.85em * 1.2)";
 
@@ -187,7 +187,7 @@ export function AnalyticsHeroSignal() {
       bloomLabelEl!.style.transform  = "translateX(-50%) translateY(-118%)";
       bloomLabelEl!.style.opacity    = "0";
       bloomLabelEl!.offsetHeight;    // flush
-      bloomLabelEl!.style.transition = "opacity 320ms cubic-bezier(0,0,.2,1), transform 320ms cubic-bezier(0,0,.2,1)";
+      bloomLabelEl!.style.transition = "opacity 320ms cubic-bezier(0,0,.2,1), transform 320ms cubic-bezier(0,0,.2,1)"; // ds-allow: signal hero choreography
       bloomLabelEl!.style.opacity    = "1";
       bloomLabelEl!.style.transform  = "translateX(-50%) translateY(-100%)";
 
@@ -205,7 +205,7 @@ export function AnalyticsHeroSignal() {
       if (cancelled) return;
 
       // Tall bar springs back
-      tallBarEl!.style.transition = `opacity ${UNBLOOM_MS}ms ease-out, height ${UNBLOOM_MS}ms cubic-bezier(.22,.7,.2,1)`;
+      tallBarEl!.style.transition = `opacity ${UNBLOOM_MS}ms ease-out, height ${UNBLOOM_MS}ms cubic-bezier(.22,.7,.2,1)`; // ds-allow: signal hero choreography
       tallBarEl!.style.opacity    = "";
       tallBarEl!.style.height     = "";
 
@@ -439,7 +439,7 @@ export function AnalyticsHeroSignal() {
         el.style.opacity = "";
         el.style.height  = "";
         el.offsetHeight; // flush
-        el.style.transition = "height 360ms cubic-bezier(.22,.7,.2,1), opacity 300ms ease";
+        el.style.transition = "height 360ms cubic-bezier(.22,.7,.2,1), opacity 300ms ease"; // ds-allow: signal hero choreography
       });
 
       // Reset scan + label
@@ -613,7 +613,7 @@ const CSS = `
   width: 6px; height: 6px;
   border-radius: 50%;
   background: var(--anl-indigo);
-  animation: anl-pip-blink 1.6s cubic-bezier(.45,.05,.55,.95) infinite;
+  animation: anl-pip-blink 1.6s cubic-bezier(.45,.05,.55,.95) infinite; /* ds-allow: signal hero choreography */
 }
 @keyframes anl-pip-blink { 0%,100% { opacity: 1 } 50% { opacity: .35 } }
 
@@ -707,7 +707,7 @@ const CSS = `
   border-radius: 50%;
   background: var(--anl-indigo);
   transform-origin: center bottom;
-  animation: anl-dot-roll var(--anl-intro-duration) cubic-bezier(.34,1.56,.64,1) 0s 1 forwards;
+  animation: anl-dot-roll var(--anl-intro-duration) cubic-bezier(.34,1.56,.64,1) 0s 1 forwards; /* ds-allow: signal hero choreography */
 }
 @keyframes anl-dot-roll {
   0%   { transform: translate(calc(-1 * var(--anl-roll-distance)), 0) scale(1,1);    opacity: 0 }
@@ -736,9 +736,9 @@ const CSS = `
   background: var(--anl-indigo);
   opacity: 0;
 }
-.anl-trail-1 { animation: anl-ghost-1 var(--anl-intro-duration) cubic-bezier(.34,1.56,.64,1) 0s 1 forwards }
-.anl-trail-2 { animation: anl-ghost-2 var(--anl-intro-duration) cubic-bezier(.34,1.56,.64,1) 0s 1 forwards }
-.anl-trail-3 { animation: anl-ghost-3 var(--anl-intro-duration) cubic-bezier(.34,1.56,.64,1) 0s 1 forwards }
+.anl-trail-1 { animation: anl-ghost-1 var(--anl-intro-duration) cubic-bezier(.34,1.56,.64,1) 0s 1 forwards /* ds-allow: signal hero choreography */ }
+.anl-trail-2 { animation: anl-ghost-2 var(--anl-intro-duration) cubic-bezier(.34,1.56,.64,1) 0s 1 forwards /* ds-allow: signal hero choreography */ }
+.anl-trail-3 { animation: anl-ghost-3 var(--anl-intro-duration) cubic-bezier(.34,1.56,.64,1) 0s 1 forwards /* ds-allow: signal hero choreography */ }
 @keyframes anl-ghost-1 {
   0%,10% { transform: translate(calc(-1 * var(--anl-roll-distance)), 0); opacity: 0 }
   27%    { transform: translate(calc(-.85 * var(--anl-roll-distance)), 0); opacity: .5 }
@@ -772,11 +772,11 @@ const CSS = `
 }
 .anl-intro-ripple {
   border: 1px solid var(--anl-indigo);
-  animation: anl-ripple-fast var(--anl-intro-duration) cubic-bezier(.22,.7,.2,1) 0s 1 forwards;
+  animation: anl-ripple-fast var(--anl-intro-duration) cubic-bezier(.22,.7,.2,1) 0s 1 forwards; /* ds-allow: signal hero choreography */
 }
 .anl-intro-ripple-slow {
   border: 1px solid var(--anl-indigo-300);
-  animation: anl-ripple-slow var(--anl-intro-duration) cubic-bezier(.22,.7,.2,1) 0s 1 forwards;
+  animation: anl-ripple-slow var(--anl-intro-duration) cubic-bezier(.22,.7,.2,1) 0s 1 forwards; /* ds-allow: signal hero choreography */
 }
 @keyframes anl-ripple-fast {
   0%,75% { transform: scale(1); opacity: 0 }
@@ -807,7 +807,7 @@ const CSS = `
   flex: 0 0 auto;
   background: var(--anl-indigo);
   opacity: .4;
-  transition: height 360ms cubic-bezier(.22,.7,.2,1), opacity 300ms ease;
+  transition: height 360ms cubic-bezier(.22,.7,.2,1), opacity 300ms ease; /* ds-allow: signal hero choreography */
   will-change: height, opacity;
 }
 .anl-bar.anl-short.anl-risen  { height: .22em; opacity: .38 }
@@ -858,7 +858,7 @@ const CSS = `
   letter-spacing: .12em;
   text-transform: uppercase;
   opacity: 0;
-  animation: anl-caption-in .7s cubic-bezier(.22,.7,.2,1) calc(var(--anl-intro-duration) + .1s) 1 forwards;
+  animation: anl-caption-in .7s cubic-bezier(.22,.7,.2,1) calc(var(--anl-intro-duration) + .1s) 1 forwards; /* ds-allow: signal hero choreography */
 }
 @keyframes anl-caption-in {
   0%   { opacity: 0; transform: translateY(4px) }

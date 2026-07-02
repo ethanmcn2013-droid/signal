@@ -3,6 +3,10 @@
 Convention: BRAND.md §6.5. Entries before 2026-05-14 keep their
 original shape; the new shape starts at the next cycle.
 
+## 2026-07-02 · A·7 · tightens · the product switcher contract is guarded
+
+**Signal keeps the suite switcher in its newer shape: visible pills for signed-in app chrome, rich gesture dropdown only where the marketing/public surface earns it.** The local contract check now runs before tests and fails if `/app` chrome drifts back to the hidden dropdown or if the dropdown loses the rich product-gesture refactor.
+
 ## 2026-07-02 · A·6 · tightens · Signal's chrome joins the source of truth
 
 **Signal's accepted footer and sticky product header are now applied to current main.** The footer uses the suite-wide frame, includes the Studio iOS status page, and restores the full suite list including Signal itself. The signed-in and public headers keep one shared Signal Studio shell so the briefing reads as part of the suite while the quiet-day surface remains the product's own.
