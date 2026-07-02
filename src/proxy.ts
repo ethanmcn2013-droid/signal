@@ -1,5 +1,6 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
+import type { NextFetchEvent, NextRequest } from "next/server";
 import { isDemoMode } from "@/lib/access-mode";
 
 // ─── Layer 2: M→app redirect ────────────────────────────────────────────────
@@ -36,7 +37,7 @@ const clerkConfigured = Boolean(
     process.env.CLERK_SECRET_KEY,
 );
 
-export default clerkMiddleware(async (auth, req) => {
+const productionProxy = clerkMiddleware(async (auth, req) => {
   // Demo/Review: /app/* is publicly reachable; the briefing renders from the
   // in-memory mock signals (no DB, no Clerk). Production path below unchanged.
   // Flip SIGNAL_ACCESS_MODE back to production to restore the gate.
@@ -88,6 +89,11 @@ export default clerkMiddleware(async (auth, req) => {
     });
   }
 });
+
+export default function proxy(req: NextRequest, event: NextFetchEvent) {
+  if (isDemoMode()) return NextResponse.next();
+  return productionProxy(req, event);
+}
 
 export const config = {
   matcher: [

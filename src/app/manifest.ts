@@ -17,7 +17,7 @@ import type { MetadataRoute } from "next";
  */
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    id: "/signal-analytics",
+    id: "/signal",
     name: "Signal",
     short_name: "Signal",
     description:
