@@ -2,16 +2,16 @@
 @import "../ds/tokens.css";
 @import "../ds/tailwind.css";
 
-/* ิ๖วิ๖ว Signal Design System 2.0 (Wave 1 pilot, 2026-07-02) ิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖ว
-   System tokens live in the vendored src/ds/tokens.css ิว๖ never here.
+/* ------ Signal Design System 2.0 (Wave 1 pilot, 2026-07-02) ---------------------------
+   System tokens live in the vendored src/ds/tokens.css --- never here.
    Everything in this :root is repo-local: legacy aliases on the
    burn-down path, or app-specific values. ds-check enforces the split. */
 :root {
-  /* App accent alias ิว๖ marker highlight, charts. */
+  /* App accent alias --- marker highlight, charts. */
   --highlight:   var(--accent);
   --brand-glow:  var(--accent-glow);
 
-  /* Legacy ink numeric ramp ิๅฦ zinc primitives (burn-down: rename usages). */
+  /* Legacy ink numeric ramp --- zinc primitives (burn-down: rename usages). */
   --ink-0:   #ffffff;
   --ink-50:  var(--zinc-50);
   --ink-100: var(--zinc-100);
@@ -25,7 +25,7 @@
   --ink-900: var(--zinc-900);
   --ink-950: var(--zinc-950);
 
-  /* Legacy status names ิๅฦ system states. Queued is neutral now (SDS 2.0):
+  /* Legacy status names --- system states. Queued is neutral now (SDS 2.0):
      the accent is never ambiguous between "brand" and "todo". */
   --status-shipped:    var(--status-done);
   --status-shipped-bg: var(--status-done-bg);
@@ -37,18 +37,18 @@
   --bg-elev:    var(--paper);
   --bg-deep:    var(--paper-deep);
 
-  /* Legacy motion ิว๖ v1 contract had five steps; 2.0 has four.
+  /* Legacy motion --- v1 contract had five steps; 2.0 has four.
      moderate maps per-case to base/slow on the burn-down. */
   --motion-moderate: 320ms;
-  --ease-in: cubic-bezier(0.4, 0, 1, 1); /* ds-allow ิว๖ legacy exit easing, burn-down */
+  --ease-in: cubic-bezier(0.4, 0, 1, 1); /* ds-allow --- legacy exit easing, burn-down */
 
-  /* Demo choreography springs ิว๖ licensed for the landing demo only;
+  /* Demo choreography springs --- licensed for the landing demo only;
      UI transitions use the contract easings. */
-  --spring-snap:  cubic-bezier(.2, .9, .2, 1.2);  /* ds-allow ิว๖ demo choreography */
-  --spring-soft:  cubic-bezier(.32, .72, 0, 1);   /* ds-allow ิว๖ demo choreography */
-  --spring-glide: cubic-bezier(.16, 1, .3, 1);    /* ds-allow ิว๖ demo choreography */
+  --spring-snap:  cubic-bezier(.2, .9, .2, 1.2);  /* ds-allow --- demo choreography */
+  --spring-soft:  cubic-bezier(.32, .72, 0, 1);   /* ds-allow --- demo choreography */
+  --spring-glide: cubic-bezier(.16, 1, .3, 1);    /* ds-allow --- demo choreography */
 
-  /* Legacy type + radii + shadow names ิๅฦ system equivalents. */
+  /* Legacy type + radii + shadow names --- system equivalents. */
   --font-sans-stack: var(--font-sans);
   --font-mono-stack: var(--font-mono);
   --fs-display: var(--text-display);
@@ -57,43 +57,43 @@
   --r-1:    var(--radius-sm);
   --r-2:    var(--radius-md);
   --r-3:    var(--radius-lg);
-  --r-4:    14px;  /* off-system ิว๖ burn-down to radius-lg */
-  --r-5:    20px;  /* off-system ิว๖ burn-down to radius-lg */
+  --r-4:    14px;  /* off-system --- burn-down to radius-lg */
+  --r-5:    20px;  /* off-system --- burn-down to radius-lg */
   --r-pill: var(--radius-pill);
   --shadow-1: var(--shadow-float);
   --shadow-2: var(--shadow-float);
   --shadow-3: var(--shadow-modal);
 }
 
-/* ิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖ว
-   Loading system tokens ิว๖ LOADING_SYSTEM.md -บ1 + -บ4
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+   Loading system tokens --- LOADING_SYSTEM.md --1 + --4
    Canonical values. Copy verbatim to all 5 repos.
-   These names and values are frozen ิว๖ no divergence across suite.
-   ิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖ว */
+   These names and values are frozen --- no divergence across suite.
+   ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
 :root {
   /* Loading field */
   --load-bg:               var(--paper, #ffffff);
   --load-dot-color:        var(--indigo, #4f46e5);
-  --load-dot-size:         10px;   /* Hard px ิว๖ immune to font-size inheritance pre-hydration. D8: 10pxิๅฦ12px */
+  --load-dot-size:         10px;   /* Hard px --- immune to font-size inheritance pre-hydration. D8: 10px---12px */
   --load-dot-radius:       50%;    /* Circle */
   --load-pulse-scale-min:  0.72;
   --load-pulse-scale-max:  1.0;
   --load-pulse-duration:   1.8s;   /* Calmer than tasks-dot (2.6s). Loading is suspended. */
-  --load-pulse-easing:     cubic-bezier(.4, 0, .6, 1); /* ds-allow ิว๖ LOADING_SYSTEM.md frozen value */
+  --load-pulse-easing:     cubic-bezier(.4, 0, .6, 1); /* ds-allow --- LOADING_SYSTEM.md frozen value */
   --load-z:                9999;
   --load-fade-out:         120ms;
   --load-fade-easing:      ease-out;
 
-  /* Shell + content reveal timing ิว๖ LOADING_SYSTEM.md -บ4 */
+  /* Shell + content reveal timing --- LOADING_SYSTEM.md --4 */
   --shell-fade-in:         160ms;
   --shell-fade-easing:     ease-out;
   --content-fade-in:       200ms;
-  --content-fade-easing:   cubic-bezier(.22, .61, .36, 1); /* ds-allow ิว๖ LOADING_SYSTEM.md frozen value */
+  --content-fade-easing:   cubic-bezier(.22, .61, .36, 1); /* ds-allow --- LOADING_SYSTEM.md frozen value */
   --skeleton-max:          200ms;
   --stagger-content-item:  40ms;
 }
 
-/* ิ๖วิ๖ว Loading dot pulse animation ิว๖ LOADING_SYSTEM.md -บ1 ิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖ว
+/* ------ Loading dot pulse animation --- LOADING_SYSTEM.md --1 ------------------------------
    Copy-exact into each repo's globals.css. Class name is frozen:
    signal-loading-dot. Never use loading-dot, tasks-dot, etc. here. */
 @keyframes signal-load-pulse {
@@ -104,7 +104,7 @@
 @media (prefers-reduced-motion: no-preference) {
   .signal-loading-dot {
     animation: signal-load-pulse var(--load-pulse-duration, 1.8s)
-               var(--load-pulse-easing, cubic-bezier(.4, 0, .6, 1)) infinite; /* ds-allow ิว๖ LOADING_SYSTEM.md frozen value */
+               var(--load-pulse-easing, cubic-bezier(.4, 0, .6, 1)) infinite; /* ds-allow --- LOADING_SYSTEM.md frozen value */
   }
 }
 
@@ -116,46 +116,46 @@
   }
 }
 
-/* ิ๖วิ๖ว Content well arrive animation (SuiteLoader) ิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖ว*/
+/* ------ Content well arrive animation (SuiteLoader) ---------------------------------------------------*/
 @keyframes suite-content-arrive {
   from { opacity: 0; transform: translateY(4px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ิ๖วิ๖ว RW-5 Dot-morph ิว๖ cross-origin pre-paint primitive ิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖ว
-   CREATIVE_SPEC -บ3 -ภ ARCH_SPEC -บ3
+/* ------ RW-5 Dot-morph --- cross-origin pre-paint primitive ---------------------------------
+   CREATIVE_SPEC --3 -- ARCH_SPEC --3
    Canonical block. Copy byte-identical into each repo's globals.css.
-   Never modify individually ิว๖ any change must propagate to all 5.
+   Never modify individually --- any change must propagate to all 5.
 
    Source-side: word collapses toward its period, dot lifts.
    Destination-side: dot-land fires if data-dot-landing="1" on <html>.
    Reduced-motion: no animation (rules below are no-preference only).
-   ิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖ว */
+   ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
 
-/* Source-side ิว๖ word collapses toward its period */
+/* Source-side --- word collapses toward its period */
 @keyframes word-collapse {
   0%   { opacity: 1; letter-spacing: -0.025em; }
   100% { opacity: 0; letter-spacing: -0.15em; }
 }
 
-/* Source-side ิว๖ dot lifts after word collapses */
+/* Source-side --- dot lifts after word collapses */
 @keyframes dot-lift {
   0%   { transform: scale(1);    opacity: 1; }
   100% { transform: scale(1.25); opacity: 0.7; }
 }
 
-/* Destination-side ิว๖ dot settles into the wordmark period */
+/* Destination-side --- dot settles into the wordmark period */
 @keyframes dot-land {
   0%   { transform: scale(1.5); opacity: 0.6; }
   100% { transform: scale(1);   opacity: 1; }
 }
 
 /* Apply destination animation only when sessionStorage flag was detected.
-   Scoped to no-preference ิว๖ reduced-motion gets static dot, no jump. */
+   Scoped to no-preference --- reduced-motion gets static dot, no jump. */
 @media (prefers-reduced-motion: no-preference) {
   [data-dot-landing="1"] .brand-mark .md,
   [data-dot-landing="1"] .brand-mark .pd {
-    animation: dot-land 320ms cubic-bezier(.2, .9, .2, 1.2) forwards; /* ds-allow ิว๖ RW-5 dot-morph canonical block */
+    animation: dot-land 320ms cubic-bezier(.2, .9, .2, 1.2) forwards; /* ds-allow --- RW-5 dot-morph canonical block */
   }
 }
 
@@ -207,7 +207,7 @@
   --shadow-3:    var(--shadow-3);
 }
 
-/* ิ๖วิ๖ว Base ิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖ว */
+/* ------ Base ------------------------------------------------------------------------------------------------------------------------------------------------------------ */
 html,
 body {
   background: var(--bg);
@@ -218,8 +218,8 @@ body {
   text-rendering: optimizeLegibility;
   /* Belt-and-braces guard against horizontal scroll on mobile.
      overflow-x: clip preserves position: sticky on descendants.
-     Mirrors studio S-ภ26 and tasks T-ภ47. Also masks the 4px overflow
-     observed at 390w on the live home page pre-A-ภ1. */
+     Mirrors studio S--26 and tasks T--47. Also masks the 4px overflow
+     observed at 390w on the live home page pre-A--1. */
   overflow-x: clip;
 }
 
@@ -235,7 +235,7 @@ body::after { content: none; }
   color: var(--ink-900);
 }
 
-/* ิ๖วิ๖ว Typography scales ิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖ว */
+/* ------ Typography scales --------------------------------------------------------------------------------------------------------------------- */
 .h-display {
   font-size: var(--fs-display);
   line-height: 0.96;
@@ -255,12 +255,12 @@ body::after { content: none; }
   font-weight: 600;
 }
 
-/* Mobile leading correction ิว๖ display-tight desktop leading (0.96ิว๔1.10)
+/* Mobile leading correction --- display-tight desktop leading (0.96---1.10)
    lets descenders touch the next line's cap-height once clamp() shrinks
    the font on phones. Loosen below 640px so wrapped headlines breathe.
-   Mirrors studio S-ภ26 and tasks T-ภ47. */
+   Mirrors studio S--26 and tasks T--47. */
 @media (max-width: 640px) {
-  /* !important required ิว๖ hero h1 elements carry inline
+  /* !important required --- hero h1 elements carry inline
      style={{ lineHeight: '0.96' }} that beats external rules. */
   .h-display { line-height: 1.04 !important; }
   .h-title   { line-height: 1.1  !important; }
@@ -268,7 +268,7 @@ body::after { content: none; }
   h1         { line-height: 1.08 !important; }
 }
 
-/* ิ๖วิ๖ว Marker accent ิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖ว */
+/* ------ Marker accent --------------------------------------------------------------------------------------------------------------------------------- */
 .marker {
   background: linear-gradient(
     120deg,
@@ -282,7 +282,7 @@ body::after { content: none; }
   padding: 0 0.05em;
 }
 
-/* ิ๖วิ๖ว Grain texture ิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖ว */
+/* ------ Grain texture --------------------------------------------------------------------------------------------------------------------------------- */
 .grain::after {
   content: "";
   position: absolute;
@@ -293,7 +293,7 @@ body::after { content: none; }
   background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.92' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
 }
 
-/* ิ๖วิ๖ว Focus ิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖ว */
+/* ------ Focus --------------------------------------------------------------------------------------------------------------------------------------------------------- */
 :focus:not(:focus-visible) {
   outline: none;
 }
@@ -302,11 +302,11 @@ body::after { content: none; }
   outline-offset: 3px;
   border-radius: 6px;
   /* WCAG 2.4.11: scroll-margin-top keeps focus target clear of the
-     sticky 48ิว๔56px header on both marketing and app routes. */
+     sticky 48---56px header on both marketing and app routes. */
   scroll-margin-top: 72px;
 }
 
-/* ิ๖วิ๖ว Rise animation ิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖ว */
+/* ------ Rise animation ------------------------------------------------------------------------------------------------------------------------------ */
 /* Hero-only entrance. Uses --motion-slow (480ms) + spring-glide */
 /* for the opening feel. Not for repeated UI interactions.       */
 @keyframes rise {
@@ -317,9 +317,9 @@ body::after { content: none; }
   animation: rise var(--motion-slow) var(--spring-glide) both;
 }
 
-/* ิ๖วิ๖ว Scroll-driven reveal ิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖ว */
+/* ------ Scroll-driven reveal --------------------------------------------------------------------------------------------------------------- */
 /* Baseline: content is visible without JS (opacity:1 default).  */
-/* Scroll-driven layer is additive ิว๖ only fires when the browser  */
+/* Scroll-driven layer is additive --- only fires when the browser  */
 /* supports animation-timeline: view() AND the user has not       */
 /* requested reduced motion. Reduced-motion block below          */
 /* explicitly neutralises any residual state.                    */
@@ -338,18 +338,18 @@ body::after { content: none; }
   }
 }
 
-/* ิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖ว
-   Analytics wordmark dot ิว๖ M-ภ04 tick.
+/* ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+   Analytics wordmark dot --- M--04 tick.
    Per suite design-system v1 (2026-05-13): analytics is a verb,
-   the gesture is tick ิว๖ the dot JUMPS between discrete sample
+   the gesture is tick --- the dot JUMPS between discrete sample
    positions, never glides between them. steps(1,end) ensures
    the transition is instantaneous; the dot snaps to a new Y
    position once per 3.6s cycle, then holds. Discrete samples,
    not a continuous signal.
-   ิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖ว */
+   ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ */
 .signal-dot {
   display: inline-block;
-  /* R3-mount: hard px ceiling ิว๖ prevents the dot from inheriting
+  /* R3-mount: hard px ceiling --- prevents the dot from inheriting
      an unhydrated font-size and ballooning before layout settles.
      width/height are the source of truth; max-width/height are the guard. */
   width: 5px;
@@ -372,7 +372,7 @@ body::after { content: none; }
   100% { transform: translateY(-3px); }
 }
 
-/* ิ๖วิ๖ว Reduced motion ิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖วิ๖ว */
+/* ------ Reduced motion ------------------------------------------------------------------------------------------------------------------------------ */
 /* Contract: collapse motion tokens to ~0. The .reveal class     */
 /* is forced to its final visible state so content never hides.  */
 @media (prefers-reduced-motion: reduce) {
@@ -382,7 +382,7 @@ body::after { content: none; }
     --motion-moderate: 0.01ms;
   }
 
-  /* Neutralise scroll-driven reveals ิว๖ content must be visible. */
+  /* Neutralise scroll-driven reveals --- content must be visible. */
   .reveal {
     opacity: 1 !important;
     transform: none !important;
