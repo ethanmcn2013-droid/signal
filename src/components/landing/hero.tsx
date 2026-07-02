@@ -51,7 +51,7 @@ export function Hero() {
   }, [reducedMotion]);
 
   return (
-    <section className="relative isolate overflow-hidden pt-8 md:pt-14">
+    <section className="relative isolate overflow-hidden pt-2 md:pt-6">
       <div className="mx-auto w-full max-w-[1240px] px-5 md:px-6">
         <p
           className="font-mono text-[11px] font-semibold uppercase"

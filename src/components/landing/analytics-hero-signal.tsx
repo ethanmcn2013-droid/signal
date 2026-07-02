@@ -576,14 +576,15 @@ const CSS = `
   --anl-indigo: #4f46e5;
   --anl-indigo-300: #a5b4fc;
   --anl-hairline: rgba(17,17,17,.06);
-  --anl-wm-size: clamp(56px, 12vw, 168px);
+  --anl-wm-size: clamp(56px, 10.8vw, 148px);
   --anl-roll-distance: calc(var(--anl-wm-size) * 8);
   --anl-intro-duration: 2.6s;
   --anl-font: var(--font-geist-sans, 'Inter', system-ui, sans-serif);
   --anl-mono: var(--font-geist-mono, 'JetBrains Mono', 'Courier New', monospace);
   position: relative;
   overflow: hidden;
-  min-height: min(88svh, 900px);
+  min-height: clamp(520px, 62svh, 720px);
+  border-bottom: 1px solid var(--anl-hairline);
   background: var(--anl-bg);
   color: var(--anl-ink);
   font-family: var(--anl-font);
@@ -650,8 +651,9 @@ const CSS = `
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 56px;
-  padding: 88px 24px 72px;
+  gap: 42px;
+  padding: 72px 24px 52px;
+  transform: translateY(-8px);
 }
 .anl-composer-with-bars {
   display: flex;
@@ -886,7 +888,15 @@ const CSS = `
 @media (max-width: 600px) {
   .anl-chrome-tl { top: 20px; left: 20px }
   .anl-chrome-tr { top: 20px; right: 20px; font-size: 10px }
-  .anl-stage { gap: 48px }
+  .anl-hero-section {
+    min-height: 58svh;
+    --anl-wm-size: clamp(52px, 15vw, 82px);
+  }
+  .anl-stage {
+    gap: 32px;
+    padding: 62px 20px 46px;
+    transform: none;
+  }
 }
 @media (max-width: 420px) {
   .anl-chrome-tr { display: none }
