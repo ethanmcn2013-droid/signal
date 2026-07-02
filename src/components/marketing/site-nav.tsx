@@ -51,20 +51,20 @@ export function SiteNav({ isAuthed = false }: { isAuthed?: boolean }) {
     <header
       className="sticky top-0 z-40 border-b"
       style={{
-        background: "color-mix(in srgb, var(--bg) 85%, transparent)",
-        backdropFilter: "saturate(160%) blur(12px)",
-        WebkitBackdropFilter: "saturate(160%) blur(12px)",
+        background: "color-mix(in srgb, var(--bg) 88%, transparent)",
+        backdropFilter: "saturate(150%) blur(12px)",
+        WebkitBackdropFilter: "saturate(150%) blur(12px)",
         borderBottomColor: "var(--border-soft)",
       }}
     >
       <div className="mx-auto flex h-14 w-full max-w-[1240px] items-center justify-between px-6">
 
-        <div className="flex items-center" style={{ gap: 12 }}>
-          <div className="hidden sm:inline-flex">
+        <div className="flex min-w-0 items-center whitespace-nowrap" style={{ gap: 12 }}>
+          <div className="inline-flex">
             {/* §14 L3: authed mode shows app deep-links; unauthed shows marketing taglines */}
             <SuiteLauncher current="analytics" isAuthed={isAuthed} />
           </div>
-          <span aria-hidden className="hidden sm:inline" style={{ color: "var(--ink-faint)", fontSize: 12 }}>/</span>
+          <span aria-hidden style={{ color: "var(--ink-faint)", fontSize: 12 }}>/</span>
           <Wordmark size="md" />
         </div>
 
@@ -156,19 +156,32 @@ export function SiteNav({ isAuthed = false }: { isAuthed?: boolean }) {
         </nav>
 
         {/* Mobile nav — native <details> for restraint */}
+        {!isAuthed && (
+          <Link
+            href="/sign-in"
+            className="ml-auto inline-flex min-h-8 items-center rounded-full px-3.5 text-[13px] font-medium md:hidden"
+            style={{ color: "var(--ink-soft)", transition: "color var(--motion-fast)" }}
+          >
+            Sign in
+          </Link>
+        )}
+
         <details className="relative md:hidden">
           <summary
-            className="cursor-pointer list-none transition-colors"
+            className="flex h-9 w-9 cursor-pointer list-none items-center justify-center rounded-full transition-colors"
             style={{
-              fontSize: 13,
+              border: "1px solid var(--border-soft)",
               color: "var(--ink-soft)",
               userSelect: "none",
             }}
+            aria-label="Open menu"
           >
-            Menu
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
+              <path d="M4 7h16M4 12h16M4 17h16" />
+            </svg>
           </summary>
           <div
-            className="absolute right-0 top-8 min-w-[160px] py-2"
+            className="absolute right-0 top-11 min-w-[160px] py-2"
             style={{
               borderRadius: "var(--r-3)",
               border: "1px solid var(--border-soft)",
@@ -212,15 +225,7 @@ export function SiteNav({ isAuthed = false }: { isAuthed?: boolean }) {
               <div className="px-4 py-2">
                 <UserButton />
               </div>
-            ) : (
-              <Link
-                href="/sign-in"
-                className="block px-4 py-2"
-                style={{ fontSize: 13.5, color: "var(--ink-soft)", textDecoration: "none" }}
-              >
-                Sign in
-              </Link>
-            )}
+            ) : null}
           </div>
         </details>
       </div>
