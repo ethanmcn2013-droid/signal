@@ -62,7 +62,7 @@ export function SiteFooter() {
             { href: STUDIO_URL,  label: "Signal Studio",   external: true },
             { href: NOTES_URL,   label: "Signal Notes",    external: true },
             { href: TASKS_URL,   label: "Signal Tasks",    external: true },
-            { href: TIMELINE_URL, label: "Signal Roadmap",  external: true },
+            { href: TIMELINE_URL, label: "Signal Timeline",  external: true },
           ]}
         />
       </div>

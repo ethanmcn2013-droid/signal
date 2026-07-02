@@ -7,7 +7,7 @@
  * Server Component, zero JS, inlined keyframes.
  */
 export default function RootLoading() {
-  const word = "analytics";
+  const word = "signal";
   return (
     <div
       aria-hidden
@@ -58,7 +58,7 @@ export default function RootLoading() {
             marginLeft: 6,
             transform: "translateY(-2px)",
             flexShrink: 0,
-            animation: `signal-dot-land 360ms cubic-bezier(0.34,1.56,0.64,1) ${word.length * 50 + 80}ms both, signal-analytics-tick 3.6s steps(1,end) ${word.length * 50 + 600}ms infinite`,
+            animation: `signal-dot-land 360ms cubic-bezier(0.34,1.56,0.64,1) ${word.length * 50 + 80}ms both, signal-dot-tick 3.6s steps(1,end) ${word.length * 50 + 600}ms infinite`,
           }}
         />
       </span>
@@ -72,7 +72,7 @@ export default function RootLoading() {
           60%  { opacity: 1; transform: translateY(-2px) scale(1.18); }
           100% { opacity: 1; transform: translateY(-2px) scale(1); }
         }
-        @keyframes signal-analytics-tick {
+        @keyframes signal-dot-tick {
           0%   { transform: translateY(-2px); }
           25%  { transform: translateY(-7px); }
           50%  { transform: translateY(1px); }
@@ -87,7 +87,7 @@ export default function RootLoading() {
           @keyframes signal-dot-land {
             from, to { opacity: 1; transform: translateY(-2px) scale(1); }
           }
-          @keyframes signal-analytics-tick {
+          @keyframes signal-dot-tick {
             from, to { transform: translateY(-2px); }
           }
         }

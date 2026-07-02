@@ -423,7 +423,7 @@ body::after { content: none; }
    position once per 3.6s cycle, then holds. Discrete samples,
    not a continuous signal.
    ──────────────────────────────────────────────────────────── */
-.analytics-dot {
+.signal-dot {
   display: inline-block;
   /* R3-mount: hard px ceiling — prevents the dot from inheriting
      an unhydrated font-size and ballooning before layout settles.
@@ -438,9 +438,9 @@ body::after { content: none; }
   transform: translateY(-3px);
   transform-origin: center;
   flex-shrink: 0;
-  animation: analytics-dot-tick 3.6s steps(1, end) infinite;
+  animation: signal-dot-tick 3.6s steps(1, end) infinite;
 }
-@keyframes analytics-dot-tick {
+@keyframes signal-dot-tick {
   0%   { transform: translateY(-3px); }
   25%  { transform: translateY(-6px); }
   50%  { transform: translateY(-1px); }

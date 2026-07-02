@@ -8,7 +8,7 @@ Drafted in Plan 1 · Cycle 1.1 (Strategic Foundation). Companion to BRAND.md.
 
 ## 1 · Position
 
-Signal is **attention clarity**. Where Tasks runs the work and Roadmap explains the work, Analytics tells you *what to do about the work today*. It is one product in the Signal Studio suite. Its job is to read the state of work and write a short briefing that says what needs attention, what is moving well, what is quietly at risk, and what to do next.
+Signal is **attention clarity**. Where Tasks runs the work and Timeline explains the work, Signal tells you *what to do about the work today*. It is one product in the Signal Studio suite. Its job is to read the state of work and write a short briefing that says what needs attention, what is moving well, what is quietly at risk, and what to do next.
 
 It is not a dashboard. It is not productivity tracking. It is not enterprise software. The briefing replaces the dashboard.
 
@@ -16,7 +16,7 @@ It is not a dashboard. It is not productivity tracking. It is not enterprise sof
 
 ## 2 · Audience
 
-The same 80% the suite serves: people running real work who do not work in tech and do not have a project manager. In Analytics specifically:
+The same 80% the suite serves: people running real work who do not work in tech and do not have a project manager. In Signal specifically:
 
 - The freelance designer with eleven concurrent client projects who needs a Monday morning read.
 - The wedding planner running six weddings in different stages who needs to know which one needs her today.
@@ -122,6 +122,8 @@ The deliberate act of *not* surfacing things. After triggers fire and insights a
 
 **The discipline:** a briefing that lists "and 14 more items" is no longer a briefing. The compression is the product.
 
+**Marketing hero contract:** Three Things Only. The hero may show many raw candidate items, but the motion must visibly suppress most of them and resolve into a readable Daily Signal block with one receipt sentence and three briefing lines. The final state is the briefing, not a chart. Reduced motion renders the briefing directly.
+
 ---
 
 ## 6 · What it reads
@@ -129,7 +131,7 @@ The deliberate act of *not* surfacing things. After triggers fire and insights a
 In v1, Signal reads from **Signal Tasks** (the suite-internal data source). This is a deliberate scoping decision:
 
 - It avoids needing to integrate with Asana / Linear / Jira / Trello / Notion at v1, which would multiply surface area.
-- It strengthens the suite — Tasks becomes the data layer, Analytics becomes the read layer.
+- It strengthens the suite — Tasks becomes the data layer, Signal becomes the read layer.
 - It validates the model end-to-end before opening to external sources.
 
 **Read model** (locked for v1):
@@ -137,25 +139,25 @@ In v1, Signal reads from **Signal Tasks** (the suite-internal data source). This
 - Projects: id, name, members, deadline, status, activity timestamps.
 - Activity events: created, updated, status-changed, assigned, blocked, unblocked, commented (event timestamps only — no comment text in v1).
 
-**How Tasks data maps to Analytics's read model** (locked Cycle 6.3):
+**How Tasks data maps to Signal's read model** (locked Cycle 6.3):
 
-Tasks's actual schema has no `projects` table — work segmentation lives in the free-form `tags` array on each task. Analytics translates this into its own `ProjectRead` shape using the rule: **each unique tag in a workspace = one Analytics "project"**. Specifically:
+Tasks's actual schema has no `projects` table — work segmentation lives in the free-form `tags` array on each task. Signal translates this into its own `ProjectRead` shape using the rule: **each unique tag in a workspace = one Signal "project"**. Specifically:
 
 - `ProjectRead.slug` = the tag string verbatim (e.g. `"claire-wedding"`).
 - `ProjectRead.name` = title-cased display version (e.g. `"Claire's wedding"`).
 - `ProjectRead.members` = union of assignees across all tasks bearing that tag.
 - `ProjectRead.lastActivityAt` = max `updatedAt` across tasks bearing the tag.
-- `ProjectRead.deadline` = `null` (Tasks doesn't model project-level deadlines; Analytics doesn't infer them).
+- `ProjectRead.deadline` = `null` (Tasks doesn't model project-level deadlines; Signal doesn't infer them).
 - A task with multiple tags belongs to multiple projects (`TaskRead.projectSlugs: string[]`). Project-scoped triggers iterate `tasks.filter(t => t.projectSlugs.includes(project.slug))`. Workspace-level triggers see each task once.
 - Tasks with no tags are excluded from project-scoped triggers but still feed workspace-level signals (overload, streak, momentum-positive at workspace level).
 
-**Why tag-as-project, not adding `projects` to Tasks:** adding a Projects table would force a configuration step (create the Project for Claire's wedding) before users can capture work — directly contradicting Tasks's anti-configuration positioning per BRAND.md §2.2 ("Configuration tax"). Tags already do the job, the user already understands them, and they get added inline at three-second-capture speed. Analytics is the layer that flexes to read what's there, not Tasks.
+**Why tag-as-project, not adding `projects` to Tasks:** adding a Projects table would force a configuration step (create the Project for Claire's wedding) before users can capture work — directly contradicting Tasks's anti-configuration positioning per BRAND.md §2.2 ("Configuration tax"). Tags already do the job, the user already understands them, and they get added inline at three-second-capture speed. Signal is the layer that flexes to read what's there, not Tasks.
 
 **Lane → Status canonicalization** (locked Cycle 6.4):
 
-Tasks's canonical lane vocabulary is `"todo" | "doing" | "review" | "done"`. Analytics's `Status` enum is `"next" | "in-flight" | "blocked" | "shipped" | "refused"`. The mapping is one-way and lives in `tasksDbSource`:
+Tasks's canonical lane vocabulary is `"todo" | "doing" | "review" | "done"`. Signal's `Status` enum is `"next" | "in-flight" | "blocked" | "shipped" | "refused"`. The mapping is one-way and lives in `tasksDbSource`:
 
-| Tasks lane | Analytics status |
+| Tasks lane | Signal status |
 |---|---|
 | `todo` | `next` |
 | `doing` | `in-flight` |
@@ -174,7 +176,7 @@ Unknown lanes (if Tasks adds vocabulary) log once and map to `next` defensively.
 - Email reads.
 - Slack / Teams reads.
 - Document edit reads.
-- Roadmap reads. (The Roadmap product is *direction* clarity; mixing its data into the daily briefing would conflate the two.)
+- Timeline reads. (The Timeline product is *direction* clarity; mixing its data into the daily briefing would conflate the two.)
 
 ---
 
@@ -188,7 +190,7 @@ These are not "future considerations". These are decisions to *never* build. Eac
 - **Not a notification stream.** Briefings fire on a fixed cadence. The product does not interrupt during the day. It does not push. It does not ping.
 - **Not enterprise software.** No roles, permissions, audit logs, or SSO at v1. (Defer to demand.)
 - **Not AI-marketed.** Even if a future cycle introduces an LLM somewhere in the pipeline, the marketing surface never says "AI", "intelligent", "smart", "agent", "copilot". The voice rules in BRAND.md govern.
-- **Not real-time.** Daily Signal is daily. Weekly Signal is weekly. Launch Signal is on demand. If a user wants a live view, they want Tasks, not Analytics.
+- **Not real-time.** Daily Signal is daily. Weekly Signal is weekly. Launch Signal is on demand. If a user wants a live view, they want Tasks, not Signal.
 
 ---
 

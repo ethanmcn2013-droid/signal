@@ -36,7 +36,7 @@ export function Wordmark({
         }}
       >
         signal
-        <span className="analytics-dot" aria-hidden />
+        <span className="signal-dot" aria-hidden />
       </span>
     </Link>
   );
