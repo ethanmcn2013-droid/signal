@@ -11,7 +11,7 @@ type Props = {
   itemId?: string;
   /** When set, the row registers its DOM element under its id. */
   onRegister?: (id: string, el: HTMLDivElement | null) => void;
-  /** When true, cursor is reading this item — outline highlight. */
+  /** When true, cursor is reading this item, outline highlight. */
   highlight?: boolean;
   /** When true, render the "Why this?" expansion underneath. */
   whyThisVisible?: boolean;
@@ -68,7 +68,7 @@ export function BriefingItem({
         />
         <div className="flex-1 min-w-0">
           <AnimatePresence mode="wait">
-            {/* Phrasing swap — fast crossfade. --motion-fast 140ms + --ease-standard */}
+            {/* Phrasing swap, fast crossfade. --motion-fast 140ms + --ease-standard */}
             <motion.p
               key={variantKey}
               initial={swapping ? { opacity: 0, y: -2 } : false}

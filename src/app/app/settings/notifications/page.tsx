@@ -5,7 +5,7 @@ import { CadenceForm } from "./cadence-form";
 import { SendTestButton } from "./send-test-button";
 
 export const metadata: Metadata = {
-  title: "Notifications — Signal",
+  title: "Notifications, Signal",
   description: "Choose how often you want the briefing in your inbox.",
 };
 
@@ -35,7 +35,7 @@ export default async function NotificationsPage() {
       >
         Signal sends a short morning briefing to{" "}
         <span style={{ color: "var(--ink)" }}>{prefs.email}</span>. You can
-        change this any time. The briefing is always one short read — never
+        change this any time. The briefing is always one short read, never
         a feed, never a dashboard. If a day has no real signal, no email is
         sent.
       </p>
@@ -64,7 +64,7 @@ export default async function NotificationsPage() {
           Every email has a one-click off button in the footer, and a native
           unsubscribe link in the email header (Gmail and Apple Mail surface
           this at the top of the message). We never send anything else from
-          this address — no announcements, no upsells. Just the briefing.
+          this address, no announcements, no upsells. Just the briefing.
         </p>
       </div>
     </main>

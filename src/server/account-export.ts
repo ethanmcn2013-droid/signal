@@ -14,12 +14,12 @@ export type PrefsDb = LibSQLDatabase<typeof prefsSchema>;
 export type LibDb = LibSQLDatabase<typeof libSchema>;
 
 /**
- * GDPR Art. 20 (data portability) — assemble everything Analytics holds for
+ * GDPR Art. 20 (data portability), assemble everything Analytics holds for
  * a user across its TWO Turso DBs (prefs + email-subscription), keyed by
  * Clerk userId. Counterpart to `account-erasure.ts`; same db-injection seam
  * so it's testable (see account-export.test.ts).
  *
- * SECURITY: `user_preferences.unsubscribe_token` is OMITTED — it's an opaque
+ * SECURITY: `user_preferences.unsubscribe_token` is OMITTED, it's an opaque
  * action credential (one-click unsubscribe, no auth), not user content.
  * Email + cadence are exported; the token is not.
  */
@@ -66,7 +66,7 @@ export async function exportAccountData(
     phrasingRotations: rotations,
     briefingFeedback: feedback,
     surfacedItems: surfaced,
-    // Token-free by design — see the security note above.
+    // Token-free by design, see the security note above.
     emailSubscription: prefs[0] ?? null,
   };
 }

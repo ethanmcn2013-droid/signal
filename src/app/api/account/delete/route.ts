@@ -4,7 +4,7 @@ import { deleteAccountForUser } from "@/server/account";
 import { allow } from "@/lib/ratelimit";
 
 /**
- * POST /api/account/delete — Signal.
+ * POST /api/account/delete, Signal.
  *
  * In-app account deletion per App Store 5.1.1(v). See
  * `~/Projects/personal/studio/docs/ios/data-flow.md` for the

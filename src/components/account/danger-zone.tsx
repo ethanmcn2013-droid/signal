@@ -14,7 +14,7 @@ function humaniseError(message: string | undefined, status: number): string {
 /**
  * App Store 5.1.1(v) compliant account deletion for Signal.
  *
- * Same pattern as Roadmap / Tasks / Notes — typed-email confirm,
+ * Same pattern as Roadmap / Tasks / Notes, typed-email confirm,
  * inline-reveal, auto-focus on reveal, scroll-into-view. Server purges
  * Analytics' per-user prefs (rotation cursors, link to Tasks workspace,
  * IANA tz) AND the email subscription record in the separate
@@ -77,7 +77,7 @@ export function DangerZone({ email }: { email: string }) {
         className="mt-1.5 max-w-[560px] text-[12.5px] leading-[1.6]"
         style={{ color: "var(--ink-soft)" }}
       >
-        Closes your Signal account across every product — Tasks, Notes,
+        Closes your Signal account across every product, Tasks, Notes,
         Timeline, Signal. Your briefings stop immediately. Workspaces you
         own are removed, along with everyone you've invited. There's no undo.
       </p>

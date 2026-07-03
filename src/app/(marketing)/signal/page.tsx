@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "The Daily Signal — Signal",
+  title: "The Daily Signal, Signal",
   description:
     "Not a report. Not a feed. A briefing written for the person who needs to make decisions today.",
 };
@@ -20,7 +20,7 @@ const BLOCKS = [
   {
     label: "Quiet risks",
     dot: "#71717a",
-    body: "Nothing is on fire. But something might be. Work that hasn't moved in three or more days, sitting open without a blocker to explain it. These are the items dashboards miss because they're neither overdue nor blocked — just stuck.",
+    body: "Nothing is on fire. But something might be. Work that hasn't moved in three or more days, sitting open without a blocker to explain it. These are the items dashboards miss because they're neither overdue nor blocked, just stuck.",
   },
   {
     label: "Suggested focus",
@@ -48,7 +48,7 @@ const BRIEFING_EXAMPLE = [
     items: [
       "Send save-the-dates is 5 days overdue.",
       "Confirm venue deposit comes due today.",
-      "8 items in flight at once — that's heavy for one person.",
+      "8 items in flight at once, that's heavy for one person.",
     ],
   },
   {
@@ -64,14 +64,14 @@ const BRIEFING_EXAMPLE = [
     dot: "#71717a",
     items: [
       "Vendor quote signoff hasn't moved in 8 days.",
-      "Print menus is sitting open — 5 days ago.",
+      "Print menus is sitting open, 5 days ago.",
     ],
   },
   {
     label: "Suggested focus",
     dot: "#4f46e5",
     items: [
-      "Catch up on Send save-the-dates — 5 days past due.",
+      "Catch up on Send save-the-dates, 5 days past due.",
       "Close out Confirm venue deposit today.",
       "Move Vendor quote signoff forward.",
     ],
@@ -169,7 +169,7 @@ export default function SignalPage() {
             Daily is the first format. Weekly and Launch are designed, not yet live.
           </p>
 
-          {/* Daily — fully shipping */}
+          {/* Daily, fully shipping */}
           <div
             style={{
               border: "1px solid var(--border-soft)",
@@ -211,7 +211,7 @@ export default function SignalPage() {
             </p>
           </div>
 
-          {/* Weekly + Launch — coming, muted */}
+          {/* Weekly + Launch, coming, muted */}
           <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
             {COMING_CADENCES.map((c) => (
               <div
@@ -253,7 +253,7 @@ export default function SignalPage() {
             ))}
           </div>
 
-          {/* Row 11 — cadence numerals. Numerals only. The discipline is
+          {/* Row 11, cadence numerals. Numerals only. The discipline is
               the cap, and the cap deserves a line of its own. */}
           <p
             className="font-mono"

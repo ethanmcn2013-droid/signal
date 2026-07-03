@@ -1,5 +1,5 @@
 /**
- * Account-export integration test — Signal (analytics). GDPR Art. 20.
+ * Account-export integration test, Signal (analytics). GDPR Art. 20.
  *
  * Two in-memory libSQL DBs (prefs + lib) with a bystander user; asserts the
  * export is caller-scoped across both DBs and never includes the unsubscribe

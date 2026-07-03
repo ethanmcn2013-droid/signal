@@ -8,7 +8,7 @@ import { allow, clientIp } from "@/lib/ratelimit";
 //
 // Per RFC 8058: must succeed without auth, must be idempotent.
 //
-// Rate limited by IP, but generously (60/min) — legitimate mail providers
+// Rate limited by IP, but generously (60/min), legitimate mail providers
 // batch from a small set of IPs, while token enumeration is throttled.
 // No-ops until Upstash is provisioned (see lib/ratelimit.ts).
 export async function POST(

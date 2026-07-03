@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * Analytics hero — "The Signal" (A·1, 2026-05-28)
+ * Analytics hero, "The Signal" (A·1, 2026-05-28)
  *
  * Approach C: scan line sweeps the bar chart; the tall bar blooms on pass,
  * the caption resolves to "the signal, not the noise." Three scan cycles
@@ -9,7 +9,7 @@
  *
  * §13 safety contract
  * ─────────────────────────────────────────────────────────────────────
- * 1. All CSS is scoped under `.anl-` prefix — no globals bleed.
+ * 1. All CSS is scoped under `.anl-` prefix, no globals bleed.
  * 2. All timers tracked in `timers[]`, cleared on unmount + loop reset.
  * 3. `rafId` cancelled on unmount + loop reset.
  * 4. `cancelled` flag gates every async branch + timer callback.
@@ -143,7 +143,7 @@ export function AnalyticsHeroSignal() {
       captionEl!.style.opacity = "1";
       await wait(half);
 
-      // near-ink pulse on "the signal" — authoritative, not UI-state
+      // near-ink pulse on "the signal", authoritative, not UI-state
       if (text === CAP_SIGNAL) {
         await wait(80);
         if (cancelled) return;
@@ -163,12 +163,12 @@ export function AnalyticsHeroSignal() {
     function triggerBloom() {
       if (cancelled) return;
 
-      // Spring height — bar snaps to attention
+      // Spring height, bar snaps to attention
       tallBarEl!.style.transition = "opacity 280ms ease, height 300ms cubic-bezier(.34,1.4,.64,1)"; // ds-allow: signal hero choreography
       tallBarEl!.style.opacity    = "1";
       tallBarEl!.style.height     = "calc(.85em * 1.2)";
 
-      // Dim floor to 0.20 — present, subordinate, not invisible
+      // Dim floor to 0.20, present, subordinate, not invisible
       barEls.forEach(el => {
         if (el === tallBarEl || !el.classList.contains("anl-risen")) return;
         el.style.transition = "opacity 320ms ease";
@@ -250,7 +250,7 @@ export function AnalyticsHeroSignal() {
 
           scanLineEl!.style.transform = `translateX(${x}px)`;
 
-          // Flash each bar as scan crosses its center (not tall bar — that blooms)
+          // Flash each bar as scan crosses its center (not tall bar, that blooms)
           barEls.forEach((el, i) => {
             if (barFlashed[i] || el === tallBarEl) return;
             if (!el.classList.contains("anl-risen")) return;
@@ -278,7 +278,7 @@ export function AnalyticsHeroSignal() {
           if (t < 1) {
             rafId = requestAnimationFrame(scanFrame);
           } else {
-            // Overshoot exit — scan leaves with velocity
+            // Overshoot exit, scan leaves with velocity
             const overshoot = scanWidth * 0.04;
             scanLineEl!.style.transition = "transform 100ms ease-in, opacity 260ms ease";
             scanLineEl!.style.transform  = `translateX(${scanWidth + overshoot}px)`;
@@ -324,7 +324,7 @@ export function AnalyticsHeroSignal() {
           return;
         }
 
-        // No caption reset — "this is always happening, not starting over"
+        // No caption reset, "this is always happening, not starting over"
         await wait(INTER_SCAN_GAP_MS);
       }
     }
@@ -494,7 +494,7 @@ export function AnalyticsHeroSignal() {
       cancelAnimationFrame(rafId);
       window.removeEventListener("resize", onResize);
     };
-    // INTRO_MS deliberately excluded — it's a constant that doesn't change between renders
+    // INTRO_MS deliberately excluded, it's a constant that doesn't change between renders
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -505,7 +505,7 @@ export function AnalyticsHeroSignal() {
       aria-label="Signal"
     >
       {/* Corner chrome removed (review 08/09): the site header already carries
-          the signal studio · signal breadcrumb — the hero stays uncluttered. */}
+          the signal studio · signal breadcrumb, the hero stays uncluttered. */}
 
       <div className="anl-stage" aria-hidden>
         <div className="anl-composer-with-bars">
@@ -526,7 +526,7 @@ export function AnalyticsHeroSignal() {
           </div>
 
           <div className="anl-bars-row">
-            {/* row-reverse: DOM[0] = rightmost (tall bar) — directly below dot/period */}
+            {/* row-reverse: DOM[0] = rightmost (tall bar), directly below dot/period */}
             <span className="anl-bar anl-tall" />
             <span className="anl-bar anl-short" />
             <span className="anl-bar anl-medium" />
@@ -610,7 +610,7 @@ const CSS = `
   letter-spacing: -.03em;
   line-height: .95;
 }
-/* Full-bleed hairline fix — -100vw covers any viewport width */
+/* Full-bleed hairline fix, -100vw covers any viewport width */
 .anl-composer::before {
   content: "";
   position: absolute;
@@ -660,7 +660,7 @@ const CSS = `
   100% { transform: translate(0, 0) scale(1,1);                                      opacity: 1 }
 }
 
-/* ── Ghost trails — right:0; bottom:.06em anchor fix ────────────── */
+/* ── Ghost trails, right:0; bottom:.06em anchor fix ────────────── */
 /* position:absolute children in flex container: align-self/margin have no effect.
    Anchoring to right:0/bottom:.06em correctly positions all three at the mark's
    resting spot instead of firing at the composer's left edge. */
@@ -695,7 +695,7 @@ const CSS = `
   63%,100% { transform: translate(calc(-.24 * var(--anl-roll-distance)), 0); opacity: 0 }
 }
 
-/* ── Impact ripples — same anchor fix as trails ─────────────────── */
+/* ── Impact ripples, same anchor fix as trails ─────────────────── */
 .anl-intro-ripple,
 .anl-intro-ripple-slow {
   position: absolute;
@@ -770,7 +770,7 @@ const CSS = `
 }
 
 /* ── Bloom label ────────────────────────────────────────────────── */
-/* "↑ now" — rises into position above the tall bar on bloom.
+/* "↑ now", rises into position above the tall bar on bloom.
    Spatial entrance: translateY(-118%) → translateY(-100%) + opacity. */
 .anl-bloom-label {
   position: absolute;

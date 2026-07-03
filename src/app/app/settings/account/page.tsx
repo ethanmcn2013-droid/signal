@@ -6,7 +6,7 @@ import { ManageIdentityButton } from "@/components/account/manage-identity-butto
 import { isDemoMode } from "@/lib/access-mode";
 
 export const metadata: Metadata = {
-  title: "Account — Signal",
+  title: "Account, Signal",
   description: "Account management.",
 };
 
@@ -50,7 +50,7 @@ export default async function AccountPage() {
         style={{ color: "var(--ink-soft)" }}
       >
         Signed in as{" "}
-        <span style={{ color: "var(--ink)" }}>{email}</span> — one account
+        <span style={{ color: "var(--ink)" }}>{email}</span>, one account
         across Notes, Tasks, Timeline, and Signal. Your password and sign-in
         methods live in your Signal account.
       </p>

@@ -6,7 +6,7 @@ import { SiteFooter } from "@/components/marketing/site-footer";
  * briefing) lives outside this group and uses its own chrome —
  * see src/app/app/layout.tsx.
  *
- * R4 (ux-remediation-2026-05-17): SiteNav removed here — the root
+ * R4 (ux-remediation-2026-05-17): SiteNav removed here, the root
  * layout mounts SiteNavConditional which already renders SiteNav on
  * every non-/app route. Having both produced two stacked navbars on
  * all marketing and sample-briefing pages.

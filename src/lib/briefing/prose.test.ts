@@ -20,7 +20,7 @@ function task(overrides: Partial<TaskSignal> = {}): TaskSignal {
 }
 
 // All six trigger kinds, each with three phrasings. The library is
-// the user-facing voice — voice regressions are subtle and worth a
+// the user-facing voice, voice regressions are subtle and worth a
 // per-variant assertion.
 const ALL_TRIGGERS: TriggerKind[] = [
   "stuck-work",
@@ -31,7 +31,7 @@ const ALL_TRIGGERS: TriggerKind[] = [
   "blocked-too-long",
 ];
 
-describe("phraseFor — every trigger × every rotation produces non-empty prose", () => {
+describe("phraseFor, every trigger × every rotation produces non-empty prose", () => {
   for (const trigger of ALL_TRIGGERS) {
     for (let rot = 0; rot < 3; rot++) {
       test(`${trigger} @ rotation ${rot}`, () => {
@@ -44,7 +44,7 @@ describe("phraseFor — every trigger × every rotation produces non-empty prose
   }
 });
 
-describe("phraseFor — context propagation", () => {
+describe("phraseFor, context propagation", () => {
   test("stuck-work uses idleDays from context, not task field", () => {
     const t = task({ idleDays: 1 });
     const text = phraseFor("stuck-work", t, 0, { idleDays: 5 });
@@ -72,7 +72,7 @@ describe("phraseFor — context propagation", () => {
   });
 });
 
-describe("phraseFor — rotation produces distinct phrasings across the library", () => {
+describe("phraseFor, rotation produces distinct phrasings across the library", () => {
   test("stuck-work has three distinct phrasings", () => {
     const variants = new Set<string>();
     for (let r = 0; r < 3; r++) {
@@ -122,7 +122,7 @@ describe("phraseFor — rotation produces distinct phrasings across the library"
   });
 });
 
-describe("phraseFor — blocked-too-long multi-blocker rendering", () => {
+describe("phraseFor, blocked-too-long multi-blocker rendering", () => {
   test("single blocker is named without 'and N more'", () => {
     const t = task({ blockedBy: ["x"], idleDays: 7 });
     const text = phraseFor("blocked-too-long", t, 0, {
@@ -133,7 +133,7 @@ describe("phraseFor — blocked-too-long multi-blocker rendering", () => {
     assert.doesNotMatch(text, /and \d+ more/);
   });
 
-  test("two blockers names both — 'X and Y'", () => {
+  test("two blockers names both, 'X and Y'", () => {
     const t = task({ blockedBy: ["x", "y"], idleDays: 7 });
     const text = phraseFor("blocked-too-long", t, 0, {
       idleDays: 7,
@@ -197,7 +197,7 @@ describe("phraseFor — blocked-too-long multi-blocker rendering", () => {
   });
 });
 
-describe("phraseFor — voice rules from BRAND.md / COLLABORATION_LOOP.md", () => {
+describe("phraseFor, voice rules from BRAND.md / COLLABORATION_LOOP.md", () => {
   test("no chart-language artifacts (%, =, count:, kpi)", () => {
     for (const trigger of ALL_TRIGGERS) {
       for (let r = 0; r < 3; r++) {

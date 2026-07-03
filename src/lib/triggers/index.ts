@@ -1,8 +1,8 @@
 /**
- * triggers/index.ts — Registry of all triggers.
+ * triggers/index.ts, Registry of all triggers.
  *
  * Cycle 6.4 populated this with the 10 v1 triggers. Order doesn't
- * matter — the orchestrator runs all of them and compression handles
+ * matter, the orchestrator runs all of them and compression handles
  * ranking + capping. Adding a trigger is a code change with a code
  * review (PRODUCT.md §5.1).
  */

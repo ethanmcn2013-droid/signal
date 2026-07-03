@@ -1,20 +1,20 @@
 /**
- * /app/brief loading boundary — Signal Briefing Assembly skeleton.
+ * /app/brief loading boundary, Signal Briefing Assembly skeleton.
  *
  * Loading canon (2026-07-01 review, pitch 10): once chrome exists,
- * loading stays inside the content region — no full-screen takeover
+ * loading stays inside the content region, no full-screen takeover
  * (law 1). This renders in normal document flow beneath the persistent
  * app header while buildBriefing() resolves its reads.
  *
  * Honesty contract (law 2): only sections this surface actually
  * renders are reserved. The default web brief renders "Needs attention"
- * and "Quiet risks" — those real headings appear; everything else is
+ * and "Quiet risks", those real headings appear; everything else is
  * abstract structure. No fake items, no fake counts, no shimmer
  * (shimmer is Timeline-canonical only, DESIGN.md §13).
  *
  * Container mirrors BriefingView: mx-auto max-w-[640px] px-6 py-12.
  *
- * Server Component — zero JS. Static blocks satisfy reduced motion
+ * Server Component, zero JS. Static blocks satisfy reduced motion
  * without a media query.
  */
 export default function BriefLoading() {

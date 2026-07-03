@@ -100,7 +100,7 @@ export async function unsubscribeByToken(
 }
 
 /**
- * Read-only token lookup — used by the human-facing /u/[token] page
+ * Read-only token lookup, used by the human-facing /u/[token] page
  * to show a confirmation step BEFORE mutating. Side-effect-free so
  * Slack link unfurls, AV scanners, and image preloaders can't silently
  * unsubscribe a user just by following the URL.

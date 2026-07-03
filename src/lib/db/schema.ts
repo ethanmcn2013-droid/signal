@@ -7,7 +7,7 @@ export type Cadence = (typeof CADENCES)[number];
 export const userPreferences = sqliteTable(
   "user_preferences",
   {
-    // Clerk user id — the source of truth for who this is.
+    // Clerk user id, the source of truth for who this is.
     userId: text("user_id").primaryKey(),
     // Email of record. We store it because Clerk may rotate primary email
     // and we want a stable destination for the briefing.

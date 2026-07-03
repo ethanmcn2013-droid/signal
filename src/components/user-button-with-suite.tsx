@@ -93,7 +93,7 @@ function CameraIcon() {
  * Clerk UserButton with:
  *   - Notification settings link
  *   - §14 app-context labels for sibling products (deep-links to /app entries)
- *   - "View public site" escape hatch — sets signal_preview_public cookie
+ *   - "View public site" escape hatch, sets signal_preview_public cookie
  *     and reloads, suppressing the M→app redirect for the tab session.
  *   - When in preview mode: "Exit preview" replaces "View public site"
  */
@@ -133,7 +133,7 @@ export function UserButtonWithSuite({ current }: { current: ProductSlug }) {
           href="/app/settings/account"
           labelIcon={<GearIcon />}
         />
-        {/* §14 L3 — escape hatch: owner can demo public marketing while logged in */}
+        {/* §14 L3, escape hatch: owner can demo public marketing while logged in */}
         <UserButton.Action
           label={isPreview ? "Exit preview" : "View public site"}
           labelIcon={<EyeIcon />}

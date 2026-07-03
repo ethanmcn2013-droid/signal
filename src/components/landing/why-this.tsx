@@ -4,27 +4,27 @@ import { AnimatePresence, motion } from "motion/react";
 
 type Props = {
   visible: boolean;
-  /** Reason chain — each line appears with a slight stagger. */
+  /** Reason chain, each line appears with a slight stagger. */
   reasons: string[];
-  /** Character count revealed of the final reason line — drives type-on. */
+  /** Character count revealed of the final reason line, drives type-on. */
   revealChars?: number;
   /**
    * The trigger name + threshold (e.g. `inactive-project · ≥ 8 days`).
    * Shown as a mono caption above the eyebrow. Makes the determinism
-   * experienceable — there is a rule, it has a name, it has a threshold.
+   * experienceable, there is a rule, it has a name, it has a threshold.
    */
   triggerName?: string;
 };
 
 /**
  * "Why this?" rule chain expansion that opens beneath an inspected item.
- * Reveals the engine's reasoning in plain English — no chart, no metric,
+ * Reveals the engine's reasoning in plain English, no chart, no metric,
  * just the rules that fired.
  */
 export function WhyThis({ visible, reasons, revealChars, triggerName }: Props) {
   return (
     <AnimatePresence initial={false}>
-      {/* --motion-moderate 320ms + --ease-out — accordion */}
+      {/* --motion-moderate 320ms + --ease-out, accordion */}
       {visible ? (
         <motion.div
           key="why-this"

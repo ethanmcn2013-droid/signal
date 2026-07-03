@@ -3,7 +3,7 @@ import { createClient } from "@libsql/client";
 import * as schema from "./schema";
 
 /**
- * libSQL client for the Signal Tasks Turso DB — READ-ONLY.
+ * libSQL client for the Signal Tasks Turso DB, READ-ONLY.
  *
  * The Turso auth token used here is scoped read-only on the Tasks DB
  * (created via `turso db tokens create ethanmcnamara-tasks --read-only`).

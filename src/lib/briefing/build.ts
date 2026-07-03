@@ -17,13 +17,13 @@ const DAY = 86_400_000;
 /**
  * Per-user read state the orchestrator threads into the pure engine.
  *
- * `suppressed` — keys the reader has dismissed ("Not really" tap).
+ * `suppressed`, keys the reader has dismissed ("Not really" tap).
  *   Keys are `${trigger}:${taskId}`; a `*:${taskId}` key dismisses the
  *   item under every trigger (feedback rows without a trigger id).
- *   A dismissal sticks for that reason — the same task can still
+ *   A dismissal sticks for that reason, the same task can still
  *   surface under a *different* trigger if its situation changes.
  *
- * `ages` — consecutive-day surfacing counts keyed `${trigger}:${taskId}`,
+ * `ages`, consecutive-day surfacing counts keyed `${trigger}:${taskId}`,
  *   including today. Items at day ≥ 2 are carry-overs: they keep their
  *   place inside the block's cap but move to the bottom and carry an
  *   honest age note (PRODUCT.md §5.3 de-emphasis).
@@ -112,7 +112,7 @@ export async function buildBriefing(
   // Carry-over de-emphasis (PRODUCT.md §5.3): an item surfacing for a
   // second-plus consecutive day keeps its slot but moves below fresh
   // items and carries its age so the read stays honest about how long
-  // it has been asking. Applied after the cap — age demotes within the
+  // it has been asking. Applied after the cap, age demotes within the
   // block, it never changes what qualifies.
   const ages = readState.ages ?? new Map<string, number>();
   const ageOf = (t: Triggered) => ages.get(`${t.trigger}:${t.task.id}`) ?? 1;
@@ -199,7 +199,7 @@ function sentenceCase(s: string): string {
 
 function focusText(t: Triggered): string {
   // BRAND.md §3: "'Suggested focus' is the strongest verb the
-  // briefing uses." So the focus line names the task — it does not
+  // briefing uses." So the focus line names the task, it does not
   // stack an imperative verb onto a title that may already start
   // with one ("Catch up on send invitations" was the failure). The
   // block header and the due chip carry the directive; the engine
@@ -208,7 +208,7 @@ function focusText(t: Triggered): string {
     case "overload":
       return `Drop two in-flight items by end of day`;
     case "crowded-week":
-      return `Plan the week — pull two items earlier`;
+      return `Plan the week, pull two items earlier`;
     default:
       return sentenceCase(t.task.title);
   }
@@ -233,13 +233,13 @@ function weekday(ts: number): string {
   return new Date(ts).toLocaleDateString("en-IE", { weekday: "long" });
 }
 
-/** Focus ranking — locked weights for the six v1 triggers.
+/** Focus ranking, locked weights for the six v1 triggers.
  *  due-soon outranks everything (real deadline pressure).
- *  crowded-week sits between due-soon and stuck-work — it's a
+ *  crowded-week sits between due-soon and stuck-work, it's a
  *  cluster signal but not yet a per-task deadline.
  *  blocked-too-long ranks below stuck-work because the action
  *  ("chase the blocker") is upstream, not the user's own work.
- *  just-shipped is celebration-only — never the lead of focus. */
+ *  just-shipped is celebration-only, never the lead of focus. */
 function focusWeight(t: Triggered): number {
   const base: Record<TriggerKind, number> = {
     "due-soon": 1000,

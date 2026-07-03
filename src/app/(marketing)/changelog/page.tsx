@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Changelog — Signal",
+  title: "Changelog, Signal",
   description:
     "What shipped, when it shipped, and nothing else.",
 };
@@ -19,7 +19,7 @@ const ENTRIES: {
       },
       {
         line: "Cadences are honest.",
-        sub: "Daily ships. Weekly and Launch are designed — not yet live. /signal says so.",
+        sub: "Daily ships. Weekly and Launch are designed, not yet live. /signal says so.",
       },
       {
         line: "Briefing arrives before your day starts.",
@@ -40,7 +40,7 @@ const ENTRIES: {
       },
       {
         line: "The engine reads from your Tasks.",
-        sub: "Tag-as-project. One task can carry multiple. Read-only — the engine cannot write.",
+        sub: "Tag-as-project. One task can carry multiple. Read-only, the engine cannot write.",
       },
       {
         line: "Briefings arrive by email.",

@@ -1,5 +1,5 @@
 /**
- * prose/slow-burn-deadline.ts — Phrasings for the `slow-burn-deadline` trigger.
+ * prose/slow-burn-deadline.ts, Phrasings for the `slow-burn-deadline` trigger.
  *
  * Locked Cycle 6.4 (signoff 2026-05-10).
  * Cycle 6.5a.1 added focusPhrasings.
@@ -23,8 +23,8 @@ export const slowBurnDeadlineProse: ProseLibrary = {
     "${days} days left on ${project}, and only ${done}% is done.",
   ],
   focusPhrasings: [
-    "Push on ${project} today — only ${days} days left.",
+    "Push on ${project} today, only ${days} days left.",
     "Close something on ${project} today. ${days} days to go.",
-    "Spend today on ${project} — ${days} days, and ${done}% done.",
+    "Spend today on ${project}, ${days} days, and ${done}% done.",
   ],
 };

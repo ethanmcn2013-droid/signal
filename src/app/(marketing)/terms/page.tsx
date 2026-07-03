@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Terms — Signal",
+  title: "Terms, Signal",
   description:
     "Terms of use for Signal. Plain English, no legalese.",
 };

@@ -1,5 +1,5 @@
 /**
- * prose/dependency-stall.ts — Phrasings for the `dependency-stall` trigger.
+ * prose/dependency-stall.ts, Phrasings for the `dependency-stall` trigger.
  *
  * Locked Cycle 6.4 (signoff 2026-05-10).
  * Cycle 6.5a.1 added focusPhrasings.
@@ -19,8 +19,8 @@ export const dependencyStallProse: ProseLibrary = {
     "${blocker} is stalled (${days} days), and ${task} is sitting behind it.",
   ],
   focusPhrasings: [
-    "Chase ${blocker} today — ${task} is waiting on it.",
+    "Chase ${blocker} today, ${task} is waiting on it.",
     "Nudge ${blocker} today. ${task} can't move until it does.",
-    "Push on ${blocker} today — it's been quiet ${days} days.",
+    "Push on ${blocker} today, it's been quiet ${days} days.",
   ],
 };

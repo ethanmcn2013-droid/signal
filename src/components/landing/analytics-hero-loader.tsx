@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * Analytics hero loader — "the bar appears."
+ * Analytics hero loader, "the bar appears."
  *
  * Scoped React port of the standalone Signal Studio · Analytics hero card.
  * The dot rolls once across "analytics", revealing each letter; as it reaches

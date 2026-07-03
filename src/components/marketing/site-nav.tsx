@@ -71,7 +71,7 @@ export function SiteNav({ isAuthed = false }: { isAuthed?: boolean }) {
           <Wordmark size="md" />
         </div>
 
-        {/* Desktop nav — right cluster */}
+        {/* Desktop nav, right cluster */}
         <nav className="hidden items-center md:flex" style={{ gap: 28 }}>
           {NAV.map((item) => {
             const active = !item.external && pathname === item.href;
@@ -99,7 +99,7 @@ export function SiteNav({ isAuthed = false }: { isAuthed?: boolean }) {
             );
           })}
 
-          {/* Unauthed: Sign in is a visible affordance, never a gate — public
+          {/* Unauthed: Sign in is a visible affordance, never a gate, public
               scanning stays open (canonical product header, DESIGN.md §14). */}
           {!isAuthed && (
             <Link
@@ -158,7 +158,7 @@ export function SiteNav({ isAuthed = false }: { isAuthed?: boolean }) {
           )}
         </nav>
 
-        {/* Mobile nav — native <details> for restraint */}
+        {/* Mobile nav, native <details> for restraint */}
         {!isAuthed && (
           <Link
             href="/sign-in"

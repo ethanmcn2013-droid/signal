@@ -1,9 +1,9 @@
 /**
- * triggers/inactive-project.ts — A live project that's gone quiet.
+ * triggers/inactive-project.ts, A live project that's gone quiet.
  *
  * PRODUCT.md §5.1: "An active project with no activity for ≥ 8 days."
  * "Active" here means "has at least one task that isn't shipped or
- * refused" — a project where every task is done isn't inactive, it's
+ * refused", a project where every task is done isn't inactive, it's
  * complete, and shouldn't surface as a quiet risk.
  */
 

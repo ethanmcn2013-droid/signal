@@ -37,7 +37,7 @@ describe("parsePriority", () => {
     assert.equal(parsePriority("P9"), 2);
   });
 
-  test("empty string coerces to 0 via Number('') — documented quirk", () => {
+  test("empty string coerces to 0 via Number(''), documented quirk", () => {
     // Number("") === 0, which is in [0,3], so an empty priority maps
     // to P0. Pre-existing behavior; asserted here so a future change
     // to parsePriority is a conscious one.

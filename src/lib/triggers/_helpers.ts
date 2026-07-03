@@ -1,5 +1,5 @@
 /**
- * triggers/_helpers.ts — Shared utilities for the trigger detectors.
+ * triggers/_helpers.ts, Shared utilities for the trigger detectors.
  *
  * Snapshot-time math (now is `work.snapshotAt`, not real-time clock —
  * triggers must be deterministic given a WorkRead).
@@ -28,7 +28,7 @@ export function daysSince(work: WorkRead, isoTimestamp: string): number {
 
 /** Whole days from snapshot's "now" until an ISO date (yyyy-mm-dd). */
 export function daysUntilDate(work: WorkRead, isoDate: string): number {
-  // Treat date as end-of-day local-ish — date-only comparison.
+  // Treat date as end-of-day local-ish, date-only comparison.
   const dueMs = Date.parse(`${isoDate}T23:59:59Z`);
   return Math.floor((dueMs - snapshotNow(work)) / DAY_MS);
 }
@@ -52,7 +52,7 @@ export function projectBySlug(work: WorkRead, slug: string): ProjectRead | undef
  * Display name for a task's primary project. Picks the first projectSlug;
  * falls back to the slug verbatim if no synthesized ProjectRead exists,
  * and "an untagged item" if the task has no tags. Triggers that need the
- * project name in prose use this — workspace-level triggers don't.
+ * project name in prose use this, workspace-level triggers don't.
  */
 export function primaryProjectName(work: WorkRead, task: TaskRead): string {
   const slug = task.projectSlugs[0];

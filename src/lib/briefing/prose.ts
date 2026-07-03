@@ -1,7 +1,7 @@
 import type { TaskSignal, TriggerKind } from "./types";
 
 /**
- * Prose phrasings — three per trigger for v1. Rotation by index is
+ * Prose phrasings, three per trigger for v1. Rotation by index is
  * applied per (user, day) via a stable hash in build.ts so users
  * don't get the same phrasing two days running.
  *
@@ -25,7 +25,7 @@ type Phrasing = (
 const STUCK: Phrasing[] = [
   (t, days = 0) => `${t.title} has been held up since ${ago(days)}`,
   (t, days = 0) => `${t.title} hasn't moved in ${plural(days, "day", "days")}`,
-  (t, days = 0) => `${t.title} is sitting open — ${ago(days)}`,
+  (t, days = 0) => `${t.title} is sitting open, ${ago(days)}`,
 ];
 
 const DUE_SOON: Phrasing[] = [
@@ -49,27 +49,27 @@ const DUE_SOON: Phrasing[] = [
 
 const JUST_SHIPPED: Phrasing[] = [
   (t) => `${t.title} landed`,
-  (t) => `${t.title} — done`,
+  (t) => `${t.title}, done`,
   (t) => `${t.title} closed out`,
 ];
 
 const OVERLOAD: Phrasing[] = [
-  (t) => `Too much in flight — ${t.title.toLowerCase()}`,
-  (t) => `${t.title.toLowerCase()} — that's heavy for one person`,
-  (t) => `Cognitive load is high — ${t.title.toLowerCase()}`,
+  (t) => `Too much in flight, ${t.title.toLowerCase()}`,
+  (t) => `${t.title.toLowerCase()}, that's heavy for one person`,
+  (t) => `Cognitive load is high, ${t.title.toLowerCase()}`,
 ];
 
 const CROWDED_WEEK: Phrasing[] = [
-  (t) => `Heavy week — ${t.title.toLowerCase()}`,
-  (t) => `${t.title.toLowerCase()} — plan the week early`,
-  (t) => `A pile-up is forming — ${t.title.toLowerCase()}`,
+  (t) => `Heavy week, ${t.title.toLowerCase()}`,
+  (t) => `${t.title.toLowerCase()}, plan the week early`,
+  (t) => `A pile-up is forming, ${t.title.toLowerCase()}`,
 ];
 
 // Build the blocker subject string. Centralised so all three
 // phrasings produce consistent multi-blocker form.
 //   0 titles  → null (generic fallback)
 //   1 title   → "X"
-//   2 titles  → "X and Y"            (both named — conversational)
+//   2 titles  → "X and Y"            (both named, conversational)
 //   3+ titles → "X and 2 more"       (lead + count)
 function blockerSubject(titles: string[]): string | null {
   if (titles.length === 0) return null;
@@ -88,8 +88,8 @@ const BLOCKED_TOO_LONG: Phrasing[] = [
   (t, days = 0, byTitles = []) => {
     const subject = blockerSubject(byTitles);
     return subject
-      ? `${t.title} is waiting on ${subject} — ${plural(days, "day", "days")} now`
-      : `${t.title} is waiting on something — ${plural(days, "day", "days")} now`;
+      ? `${t.title} is waiting on ${subject}, ${plural(days, "day", "days")} now`
+      : `${t.title} is waiting on something, ${plural(days, "day", "days")} now`;
   },
   (t, days = 0, byTitles = []) => {
     const subject = blockerSubject(byTitles);
@@ -136,7 +136,7 @@ export function phraseFor(
 }
 
 // ─────────────────────────────────────────────────────────────
-// helpers — kept terse, prose lives in the phrasings themselves
+// helpers, kept terse, prose lives in the phrasings themselves
 // ─────────────────────────────────────────────────────────────
 
 function plural(n: number, single: string, many: string): string {

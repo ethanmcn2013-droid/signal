@@ -8,13 +8,13 @@ const REQUEST_ACCESS_HREF =
   "mailto:hello@signalstudio.ie?subject=Signal%20access";
 
 /**
- * Analytics marketing homepage — structure:
- *   1. AnalyticsHeroSignal — "The Signal" scan-line hero (A·1, 2026-05-28)
- *   2. Hero                — product intro text + audience toggle + live briefing demo
- *   3. BriefingAnatomy     — anatomy of a briefing item (the diagram
- *                            that earns its pixels — shows the artifact
+ * Analytics marketing homepage, structure:
+ *   1. AnalyticsHeroSignal, "The Signal" scan-line hero (A·1, 2026-05-28)
+ *   2. Hero               , product intro text + audience toggle + live briefing demo
+ *   3. BriefingAnatomy    , anatomy of a briefing item (the diagram
+ *                            that earns its pixels, shows the artifact
  *                            the customer will receive, in their words)
- *   4. CTA                 — access/sample close
+ *   4. CTA                , access/sample close
  *
  * The BriefingCompression SVG and the "engine never generates
  * language" interstitial were cut on 2026-06-09. They taught the

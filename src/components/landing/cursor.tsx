@@ -30,7 +30,7 @@ export function Cursor({ x, y, visible, color, label, reading }: Props) {
         scale: visible ? 1 : 0.6,
       }}
       transition={{
-        /* Demo choreography — cursor drift timing is intentional */
+        /* Demo choreography, cursor drift timing is intentional */
         x: { duration: 1.1, ease: [0.2, 0, 0, 1] },
         y: { duration: 1.1, ease: [0.2, 0, 0, 1] },
         /* --motion-moderate 320ms + --ease-out for appear/disappear */

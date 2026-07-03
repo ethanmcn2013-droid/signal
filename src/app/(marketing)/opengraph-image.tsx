@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "nodejs";
-export const alt = "Signal — A briefing, not a dashboard. Know what needs your attention today.";
+export const alt = "Signal, A briefing, not a dashboard. Know what needs your attention today.";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -21,7 +21,7 @@ export default async function OG() {
           position: "relative",
         }}
       >
-        {/* Top row — wordmark + dot */}
+        {/* Top row, wordmark + dot */}
         <div
           style={{
             display: "flex",
@@ -98,7 +98,7 @@ export default async function OG() {
           </div>
         </div>
 
-        {/* Bottom strip — domain attribution */}
+        {/* Bottom strip, domain attribution */}
         <div
           style={{
             display: "flex",

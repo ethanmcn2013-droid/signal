@@ -1,5 +1,5 @@
 /**
- * triggers/momentum-positive.ts — Project shipping faster than its norm.
+ * triggers/momentum-positive.ts, Project shipping faster than its norm.
  *
  * PRODUCT.md §5.1: "≥ 3 completions in the last 7 days *and* completion
  * rate above its 28-day average."

@@ -1,6 +1,6 @@
 /**
  * Briefing empty-state copy keyed by Tasks `primary_use_case`.
- * Sister to tasks/src/lib/onboarding/segments.ts — analytics voice only.
+ * Sister to tasks/src/lib/onboarding/segments.ts, analytics voice only.
  */
 
 export type PrimaryUseCase =
@@ -33,7 +33,7 @@ type BriefingEmptyCopy = { headline: string; body: string };
 // The all-clear is a designed destination (briefing-view AllClear),
 // so every line here is a headline in display type. Rules: plain
 // English, no "board" (banned vocabulary), no repeating the "next
-// briefing builds tomorrow" mechanics — the footnote under the
+// briefing builds tomorrow" mechanics, the footnote under the
 // headline already carries that, once.
 const BY_SEGMENT: Record<PrimaryUseCase, BriefingEmptyCopy> = {
   venue: {
@@ -50,7 +50,7 @@ const BY_SEGMENT: Record<PrimaryUseCase, BriefingEmptyCopy> = {
   },
   "small-business": {
     headline: "Nothing urgent today.",
-    body: "Quiet days are good. When a follow-up or a deadline slips, you see it here — not in a spreadsheet.",
+    body: "Quiet days are good. When a follow-up or a deadline slips, you see it here, not in a spreadsheet.",
   },
   "event-management": {
     headline: "No flags across your events.",

@@ -1,9 +1,9 @@
 /**
- * triggers/single-point-of-failure.ts — One person carrying a project.
+ * triggers/single-point-of-failure.ts, One person carrying a project.
  *
  * PRODUCT.md §5.1: "> 70% of a project's open work assigned to one
  * person." Open work = active (not shipped, not refused). A project
- * with only 1–2 open tasks isn't a SPOF signal — set a floor of 4
+ * with only 1–2 open tasks isn't a SPOF signal, set a floor of 4
  * open tasks before this trigger fires, otherwise every two-task
  * project with one assignee becomes a "quiet risk" and the block
  * gets noisy.

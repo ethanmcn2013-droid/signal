@@ -1,5 +1,5 @@
 /**
- * triggers/blocked.ts — Tasks blocked for ≥ 2 days.
+ * triggers/blocked.ts, Tasks blocked for ≥ 2 days.
  *
  * PRODUCT.md §5.1: "A task with status `blocked` for ≥ 2 days, or a
  * task with an unresolved blocker referenced from another item."

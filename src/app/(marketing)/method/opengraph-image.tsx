@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "nodejs";
-export const alt = "Signal — How Signal sees the work.";
+export const alt = "Signal, How Signal sees the work.";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -21,7 +21,7 @@ export default async function OG() {
           position: "relative",
         }}
       >
-        {/* Top row — wordmark + dot */}
+        {/* Top row, wordmark + dot */}
         <div
           style={{
             display: "flex",
@@ -116,7 +116,7 @@ export default async function OG() {
           >
             signalstudio.ie/method
           </span>
-          {/* Indigo accent bar — bottom-right */}
+          {/* Indigo accent bar, bottom-right */}
           <span
             style={{
               display: "block",

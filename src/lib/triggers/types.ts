@@ -1,5 +1,5 @@
 /**
- * triggers/types.ts — The Trigger contract.
+ * triggers/types.ts, The Trigger contract.
  *
  * Per analytics/docs/PRODUCT.md §5.1: 10 deterministic detectors
  * scan a WorkRead and emit Insights. Each Trigger is one file.
@@ -24,7 +24,7 @@
 
 import type { WorkRead } from "../data/types";
 
-/** Stable identifier for a trigger — used by prose library lookup. */
+/** Stable identifier for a trigger, used by prose library lookup. */
 export type TriggerId =
   | "blocked"
   | "overdue"
@@ -74,18 +74,18 @@ export interface Insight {
    * to pick top-N when more insights qualify than the cap allows.
    */
   rank: {
-    /** 0..1 — how likely is this to fan out and block other work? */
+    /** 0..1, how likely is this to fan out and block other work? */
     cascade: number;
-    /** 0..1 — how irreversible is the consequence if missed? */
+    /** 0..1, how irreversible is the consequence if missed? */
     irreversibility: number;
-    /** 0..1 — how soon does this matter? (today=1, this week=0.5) */
+    /** 0..1, how soon does this matter? (today=1, this week=0.5) */
     proximity: number;
   };
 }
 
 /**
  * A Trigger detects candidate Insights from a WorkRead snapshot.
- * Synchronous — no I/O — pure function of the data.
+ * Synchronous, no I/O, pure function of the data.
  */
 export interface Trigger {
   id: TriggerId;

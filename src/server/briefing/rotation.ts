@@ -1,5 +1,5 @@
 /**
- * server/briefing/rotation.ts — Per-user phrasing rotation persistence.
+ * server/briefing/rotation.ts, Per-user phrasing rotation persistence.
  *
  * The attention engine renders insights through a hand-curated prose
  * library (4–8 phrasings per trigger, PRODUCT.md §5.2). This module
@@ -8,7 +8,7 @@
  * revisit-trigger (b) defines.
  *
  * Strategy: round-robin. With a 4–8 entry library, advancing one slot
- * per fire wraps in 4–8 days for daily cadence — well inside 14d.
+ * per fire wraps in 4–8 days for daily cadence, well inside 14d.
  *
  * Plan 6 · Cycle 6.4.
  */
@@ -45,7 +45,7 @@ export async function getRotations(
  *
  * For each trigger, increment lastIndex by 1 (modulo handled by the
  * picker at render time) and stamp lastFiredAt. New rows are upserted
- * — first-fire users get a row with lastIndex=1 (since 0 was rendered).
+ *, first-fire users get a row with lastIndex=1 (since 0 was rendered).
  */
 export async function bumpRotations(
   clerkId: string,
@@ -70,7 +70,7 @@ export async function bumpRotations(
   const existingMap = new Map(existing.map((r) => [r.triggerId, r.lastIndex]));
 
   // libsql doesn't support multi-row ON CONFLICT updates ergonomically
-  // through drizzle's batch helpers — issue per-row upserts. The set
+  // through drizzle's batch helpers, issue per-row upserts. The set
   // is bounded by the trigger count (≤10), so this is fine.
   for (const triggerId of firedTriggerIds) {
     const current = existingMap.get(triggerId);
@@ -109,5 +109,5 @@ export function rotationLookupFromMap(
   return (triggerId) => map[triggerId as TriggerId] ?? 0;
 }
 
-/** Re-export for convenience — used by tests / dev scripts. */
+/** Re-export for convenience, used by tests / dev scripts. */
 export { sql };

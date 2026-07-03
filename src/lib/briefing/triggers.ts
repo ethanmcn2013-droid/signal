@@ -31,7 +31,7 @@ export function detectStuckWork(signals: TaskSignal[]): Triggered[] {
       reasons: [
         `No status update in ${task.idleDays} days.`,
         task.priority <= 1
-          ? "High-priority item — threshold crossed for attention."
+          ? "High-priority item, threshold crossed for attention."
           : "Threshold crossed → surfaced for attention.",
       ],
       severity: Math.min(100, task.idleDays * 4 + (3 - task.priority) * 6),
@@ -98,7 +98,7 @@ export function detectJustShipped(
 
 /** Crowded week: ≥ 3 open tasks due within the same 7-day window.
  *  Emits a single synthetic trigger representing the week, not one
- *  per task — the signal is the cluster, not the items.
+ *  per task, the signal is the cluster, not the items.
  *
  *  This pairs with due-soon (which fires per-task on ≤2-day items)
  *  by surfacing the broader 7-day pressure earlier in the planning
@@ -160,7 +160,7 @@ export function detectBlockedTooLong(signals: TaskSignal[]): Triggered[] {
       task,
       trigger: "blocked-too-long" as const,
       reasons: [
-        `Waiting for ${task.idleDays} days — the blocker is outlasting reasonable waiting.`,
+        `Waiting for ${task.idleDays} days, the blocker is outlasting reasonable waiting.`,
         task.blockedBy.length === 1
           ? "One upstream dependency hasn't cleared."
           : `${task.blockedBy.length} upstream dependencies haven't cleared.`,
@@ -170,7 +170,7 @@ export function detectBlockedTooLong(signals: TaskSignal[]): Triggered[] {
 }
 
 /** Overload: > 5 in-flight tasks for the user. The triggered
- *  signal isn't a task — it's the situation itself. We return a
+ *  signal isn't a task, it's the situation itself. We return a
  *  pseudo-task representing the overload state. */
 export function detectOverload(signals: TaskSignal[]): Triggered[] {
   const inFlight = signals.filter(

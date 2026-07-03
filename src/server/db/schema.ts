@@ -41,7 +41,7 @@ export type AnalyticsUser = typeof analyticsUsers.$inferSelect;
  * repeating: each time a trigger fires for a user, we advance
  * `lastIndex` so the next fire picks the next phrasing. PRODUCT.md
  * §9 revisit-trigger b: "no phrasing twice in 14 days for the same
- * user/trigger" — round-robin rotation across a 4–8 entry library
+ * user/trigger", round-robin rotation across a 4–8 entry library
  * cycles in 4–8 fires, well inside 14 days for daily cadence.
  *
  * `lastFiredAt` is recorded so a future cycle can detect cold
@@ -69,7 +69,7 @@ export const phrasingRotations = sqliteTable(
 export type PhrasingRotation = typeof phrasingRotations.$inferSelect;
 
 /**
- * Per-item briefing feedback — the one feedback signal the product
+ * Per-item briefing feedback, the one feedback signal the product
  * collects (PRODUCT.md §2.4): a one-tap "useful / not useful" on each
  * briefing item, so the trigger set can be tuned against real reads.
  *
@@ -77,11 +77,11 @@ export type PhrasingRotation = typeof phrasingRotations.$inferSelect;
  * than piling rows. `itemKey` is the item's stable id; `triggerId` is
  * stored alongside so the operator can aggregate "which triggers read
  * as noise" without re-deriving it. No briefing prose or task data is
- * stored — only the verdict and which trigger produced the item.
+ * stored, only the verdict and which trigger produced the item.
  *
  * Read two ways: the operator aggregates it to tune triggers, and the
  * briefing orchestrator reads "not-useful" verdicts back at build time
- * so a dismissal sticks — the UI says "I'll show less of this" and the
+ * so a dismissal sticks, the UI says "I'll show less of this" and the
  * engine now keeps that promise (suppression per trigger + item).
  */
 export const briefingFeedback = sqliteTable(
@@ -107,10 +107,10 @@ export const briefingFeedback = sqliteTable(
 export type BriefingFeedback = typeof briefingFeedback.$inferSelect;
 
 /**
- * Per-item surfacing history — powers honest carry-over aging
+ * Per-item surfacing history, powers honest carry-over aging
  * (PRODUCT.md §5.3). One row per (user, item, trigger); `runDays`
  * counts *consecutive* briefing days the item has surfaced. Day two
- * onward the item renders with an age note ("still waiting — day 3")
+ * onward the item renders with an age note ("still waiting, day 3")
  * and sorts below fresh items in its block.
  *
  * `day` values are UTC day numbers (unix ms / 86_400_000, floored) —

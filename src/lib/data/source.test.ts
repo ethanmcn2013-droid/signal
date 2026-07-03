@@ -1,5 +1,5 @@
 /**
- * source.test.ts — Unit tests for _listForUserFromDb identity resolution.
+ * source.test.ts, Unit tests for _listForUserFromDb identity resolution.
  *
  * Uses an in-memory libSQL database (file::memory:) seeded with Tasks-mirror
  * schema rows. Tests are designed to be:
@@ -76,7 +76,7 @@ describe("_listForUserFromDb", () => {
   // Each test gets its own isolated in-memory DB so state doesn't bleed.
 
   /**
-   * Scenario 1 — email branch.
+   * Scenario 1, email branch.
    *
    * The Tasks user row was created before the Clerk webhook fired:
    *   - email is set (Tasks writes this at signup)
@@ -119,7 +119,7 @@ describe("_listForUserFromDb", () => {
   });
 
   /**
-   * Scenario 2 — clerkId-branch.
+   * Scenario 2, clerkId-branch.
    *
    * The Tasks user row has clerk_id set but email is NULL (reverse-race).
    * Should still resolve via the clerk_id fallback.
@@ -152,7 +152,7 @@ describe("_listForUserFromDb", () => {
   });
 
   /**
-   * Scenario 3 — all-miss.
+   * Scenario 3, all-miss.
    *
    * No row matches email, clerk_id, or id=clerkId. Must return [].
    */
@@ -160,7 +160,7 @@ describe("_listForUserFromDb", () => {
     const { client, db } = makeDb();
     await createTables(client);
 
-    // Seed an unrelated user — should not be returned
+    // Seed an unrelated user, should not be returned
     await client.execute({
       sql: "INSERT INTO users (id, clerk_id, email) VALUES (?, ?, ?)",
       args: ["usr_other", "user_other_clerk", "other@example.com"],

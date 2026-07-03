@@ -1,5 +1,5 @@
 /**
- * prose/overdue.ts — Phrasings for the `overdue` trigger.
+ * prose/overdue.ts, Phrasings for the `overdue` trigger.
  *
  * Locked Cycle 6.4 (signoff 2026-05-10).
  * Cycle 6.5a.1 added focusPhrasings.
@@ -20,7 +20,7 @@ export const overdueProse: ProseLibrary = {
     "${task} missed its date. ${days} days now.",
   ],
   focusPhrasings: [
-    "Close out ${task} today — it was due ${days} days ago.",
+    "Close out ${task} today, it was due ${days} days ago.",
     "Finish ${task} today. It was due ${days} days back.",
     "Get ${task} closed today. It's ${days} days late.",
   ],

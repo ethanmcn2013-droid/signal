@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { TASKS_URL, TIMELINE_URL } from "@/lib/product-urls";
 
 export const metadata: Metadata = {
-  title: "About — Signal",
+  title: "About, Signal",
   description:
     "A briefing, not a dashboard. What Signal is, why it exists, and where it sits in the Signal Studio suite.",
 };
@@ -58,7 +58,7 @@ export default function AboutPage() {
               Everyone has dashboards. No one reads them. Not because the data
               is wrong, but because the form is wrong. A dashboard is a library.
               You still have to decide which book to open, which page to turn to,
-              which number to care about. That work — the interpretation — lands
+              which number to care about. That work, the interpretation, lands
               on the person who already has too much to do.
             </p>
             <p>
@@ -75,8 +75,8 @@ export default function AboutPage() {
             </p>
             <p>
               Signal is one of three products from Signal Studio.
-              Signal Tasks handles execution — the list, the board, the daily
-              flow. Signal Timeline handles direction — where you are going and
+              Signal Tasks handles execution, the list, the board, the daily
+              flow. Signal Timeline handles direction, where you are going and
               why. Signal handles attention. The one thing that
               determines whether any of it gets done.
             </p>

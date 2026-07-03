@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Method — Signal",
+  title: "Method, Signal",
   description:
     "How the briefing gets made. A rule engine, a library of phrasings written by hand, and one job: surface what matters today. No machine writes the words.",
 };
@@ -12,7 +12,7 @@ const STEPS = [
     label: "1 · Read",
     title: "Read the state of your work.",
     body:
-      "The engine reads your Signal Tasks workspace. Tags become projects. Lanes become status. Assignees stay assignees. Nothing is invented, nothing is interpreted — the briefing only knows what your workspace already says.",
+      "The engine reads your Signal Tasks workspace. Tags become projects. Lanes become status. Assignees stay assignees. Nothing is invented, nothing is interpreted, the briefing only knows what your workspace already says.",
     detail:
       "Today the only source is Signal Tasks. Other sources will be added when they earn it.",
   },
@@ -28,7 +28,7 @@ const STEPS = [
     label: "3 · Compress",
     title: "Keep three. Drop the rest.",
     body:
-      "Insights are ranked by cascade (does this slow other things?), irreversibility (can it be fixed in five minutes?), and proximity (does it matter today?). Each block is capped at three items. Anything below the cap is dropped silently — the briefing doesn't apologise for what it left out.",
+      "Insights are ranked by cascade (does this slow other things?), irreversibility (can it be fixed in five minutes?), and proximity (does it matter today?). Each block is capped at three items. Anything below the cap is dropped silently, the briefing doesn't apologise for what it left out.",
     detail:
       "Silence is also signal. A short briefing means a calm day.",
   },
@@ -36,15 +36,15 @@ const STEPS = [
     label: "4 · Write",
     title: "Pick a phrasing. From a library written by hand.",
     body:
-      "Every sentence in the briefing comes from a curated prose library — dozens of phrasings, each written by a person, slot-filled with the names and numbers from the rule that fired. The engine never generates language. It picks language.",
+      "Every sentence in the briefing comes from a curated prose library, dozens of phrasings, each written by a person, slot-filled with the names and numbers from the rule that fired. The engine never generates language. It picks language.",
     detail:
       "No machine writes these lines. Not today, not in v1. The brand is in the writing.",
   },
 ] as const;
 
 /**
- * The ten triggers — from PRODUCT.md §5.1. Rendered as a mono-spaced
- * table (row 13). Threshold column. No prose around numbers — the table
+ * The ten triggers, from PRODUCT.md §5.1. Rendered as a mono-spaced
+ * table (row 13). Threshold column. No prose around numbers, the table
  * is the prose.
  */
 const TRIGGERS: { id: string; threshold: string; block: string }[] = [
@@ -79,7 +79,7 @@ const REFUSALS = [
   {
     label: "Not exhaustive.",
     body:
-      "Three items per block. Always three. If five things need attention, the engine ranks by cascade, then irreversibility, then proximity — keeps the top three, and trusts you to find the rest yourself.",
+      "Three items per block. Always three. If five things need attention, the engine ranks by cascade, then irreversibility, then proximity, keeps the top three, and trusts you to find the rest yourself.",
   },
 ] as const;
 
@@ -207,7 +207,7 @@ export default function MethodPage() {
         </div>
       </section>
 
-      {/* Row 13 — the ten triggers as a mono-spaced table. PRODUCT.md §5.1.
+      {/* Row 13, the ten triggers as a mono-spaced table. PRODUCT.md §5.1.
           Threshold column. No prose around the numbers. */}
       <section style={{ paddingTop: 96, paddingBottom: 0 }}>
         <div style={PROSE_MAX}>

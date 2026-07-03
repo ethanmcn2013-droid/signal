@@ -29,7 +29,7 @@ function brief(overrides: Partial<Briefing> = {}): Briefing {
 
 // ─────────────────────────────────────────────────────────────
 // Smoke tests on the email + plain-text render paths. We don't
-// validate every layout pixel — just that the integrations don't
+// validate every layout pixel, just that the integrations don't
 // silently throw and produce non-empty output. Real visual QA
 // happens in /app/preview-email.
 // ─────────────────────────────────────────────────────────────

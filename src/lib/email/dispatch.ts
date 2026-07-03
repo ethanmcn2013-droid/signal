@@ -115,7 +115,7 @@ export async function dispatchBriefing({
   }
 
   // Generate the new token but don't write it to the DB yet. We rotate
-  // only on confirmed Resend success — if Resend errors, the token
+  // only on confirmed Resend success, if Resend errors, the token
   // already in the user's inbox (from a prior email) stays valid.
   const newToken = generateUnsubscribeToken();
 
@@ -152,7 +152,7 @@ export async function dispatchBriefing({
     html,
     text,
     headers: {
-      // RFC 2369 + RFC 8058 — surfaces Gmail/Apple Mail's native
+      // RFC 2369 + RFC 8058, surfaces Gmail/Apple Mail's native
       // unsubscribe button at the TOP of the message.
       "List-Unsubscribe": `<${unsubscribePostUrl}>, <${unsubscribeUrl}>`,
       "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
@@ -164,13 +164,13 @@ export async function dispatchBriefing({
     return { ok: false, error: error.message ?? String(error) };
   }
 
-  // Resend confirmed delivery — now safe to rotate the token and record lastSentAt.
+  // Resend confirmed delivery, now safe to rotate the token and record lastSentAt.
   // The email in the user's inbox carries the new token; the old one is now dead.
   //
   // If the DB write fails after a successful send, the inbox has the new
   // token but the DB still references the old one. The user's unsubscribe
   // link in this specific email would 404. We log loudly but still return
-  // ok: true — the send succeeded, idempotency-cutoff still holds, and the
+  // ok: true, the send succeeded, idempotency-cutoff still holds, and the
   // next dispatch will rotate cleanly.
   if (persist) {
     try {
@@ -180,7 +180,7 @@ export async function dispatchBriefing({
         .where(eq(userPreferences.userId, userId));
     } catch (err) {
       console.error(
-        "[dispatch] post-send DB write failed — unsubscribe in this email may 404 until next rotation:",
+        "[dispatch] post-send DB write failed, unsubscribe in this email may 404 until next rotation:",
         { userId, error: String(err) },
       );
     }
@@ -191,11 +191,11 @@ export async function dispatchBriefing({
 
 function subjectFor(b: Briefing, cadence: "daily" | "weekly"): string {
   // Calm, brand-consistent, low-noise subject. Same shape every day.
-  // The content does the talking once the email is opened — the
+  // The content does the talking once the email is opened, the
   // subject's job is to be recognizable in the inbox, not alarming.
   //
   // Earlier iterations led with the loudest item ("Signal · Send
-  // invitations is 14 days overdue") — Gmail flagged it as spam-like
+  // invitations is 14 days overdue"), Gmail flagged it as spam-like
   // and the brand never just calls itself "Signal" alone (collides
   // with Signal Messenger). Fixed both at once.
   const date = new Date(b.generatedAt).toLocaleDateString("en-IE", {

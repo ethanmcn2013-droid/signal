@@ -1,5 +1,5 @@
 /**
- * The briefing — Analytics' product surface.
+ * The briefing, Analytics' product surface.
  *
  * One short read. Six sections. Hard cap of 3 items per bucket.
  * Plain language. Always "from {source}" provenance. Voice locked
@@ -40,8 +40,8 @@ export type BriefItem = {
   trigger: TriggerKind;
   reasons: string[]; // for /app/brief web view; emails skip these
   /** Consecutive days (≥ 2) this item has surfaced for this reader.
-   *  Present only on carry-overs — renderers show an honest age note
-   *  ("still waiting — day 3") and the engine sorts carry-overs to
+   *  Present only on carry-overs, renderers show an honest age note
+   *  ("still waiting, day 3") and the engine sorts carry-overs to
    *  the bottom of their block (PRODUCT.md §5.3 de-emphasis). */
   ageDays?: number;
 };
@@ -73,7 +73,7 @@ export type Briefing = {
   // The brief is "empty" when no bucket has anything. Renderer
   // shows a quiet "Nothing to flag today" state, no email is sent.
   isEmpty: boolean;
-  /** Segment-aware copy when isEmpty — from Tasks primary_use_case. */
+  /** Segment-aware copy when isEmpty, from Tasks primary_use_case. */
   emptyStateHeadline?: string;
   emptyStateBody?: string;
 };

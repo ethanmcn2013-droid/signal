@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import Link from "next/link";
 
 /**
- * App-segment error boundary — shown inside the authenticated shell
+ * App-segment error boundary, shown inside the authenticated shell
  * when /app/* routes throw. Wordmark link goes to /app/brief.
  */
 export default function AppError({
@@ -65,7 +65,7 @@ export default function AppError({
           margin: 0,
         }}
       >
-        A temporary problem occurred. Your data is fine — try refreshing.
+        A temporary problem occurred. Your data is fine, try refreshing.
       </p>
       <div style={{ display: "flex", gap: 16, flexWrap: "wrap", justifyContent: "center" }}>
         <button

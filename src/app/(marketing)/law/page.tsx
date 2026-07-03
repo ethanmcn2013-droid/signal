@@ -2,21 +2,21 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 /**
- * /law — Einstein's equation, one page, one diagram.
+ * /law, Einstein's equation, one page, one diagram.
  *
  * Row 12 of the walkover (locked 2026-06-07). Work-items axis (count)
  * vs attention-cost axis (consequence × proximity × cascade) with the
  * briefing-cut line drawn through. Three dots above the line, the rest
  * greyed. Static SVG. No interactivity. Tufte's Visual Display p. 13
- * energy — small, dense, honest.
+ * energy, small, dense, honest.
  *
  * The equation: Signal = top₃( rank( triggers(work) ) ) , where rank ⊥ model.
  */
 
 export const metadata: Metadata = {
-  title: "The Law — Signal",
+  title: "The Law, Signal",
   description:
-    "One page. One diagram. The shape of attention — and where the briefing draws the line.",
+    "One page. One diagram. The shape of attention, and where the briefing draws the line.",
 };
 
 const PROSE_MAX = {
@@ -27,15 +27,15 @@ const PROSE_MAX = {
 };
 
 // Twelve work items plotted on the (work-count, attention-cost) plane.
-// Three above the cut line — the briefing keeps these. Nine below — greyed.
+// Three above the cut line, the briefing keeps these. Nine below, greyed.
 // Coordinates are tuned to read as natural scatter, not as a curve.
 type Dot = { x: number; y: number; label?: string; keep: boolean };
 const DOTS: Dot[] = [
-  // Above the cut — kept
+  // Above the cut, kept
   { x: 0.20, y: 0.86, label: "blocked", keep: true },
   { x: 0.55, y: 0.78, label: "overdue", keep: true },
   { x: 0.78, y: 0.92, label: "dependency-stall", keep: true },
-  // Below the cut — dropped silently
+  // Below the cut, dropped silently
   { x: 0.08, y: 0.52, keep: false },
   { x: 0.18, y: 0.38, keep: false },
   { x: 0.30, y: 0.46, keep: false },
@@ -66,7 +66,7 @@ function Eyebrow({ children }: { children: React.ReactNode }) {
 }
 
 export default function LawPage() {
-  // SVG plotting space — Tufte-density, no gridlines, no tick marks.
+  // SVG plotting space, Tufte-density, no gridlines, no tick marks.
   const W = 720;
   const H = 420;
   const PAD_L = 80;
@@ -79,7 +79,7 @@ export default function LawPage() {
   const py = (y: number) => PAD_T + (1 - y) * plotH;
 
   // The briefing-cut: items above this line make it in. Drawn as a single
-  // thin diagonal — the cut isn't horizontal because attention-cost
+  // thin diagonal, the cut isn't horizontal because attention-cost
   // tolerance scales with how many items are in flight.
   const cutAtX0 = 0.64; // y-intercept on left
   const cutAtX1 = 0.68; // y-intercept on right
@@ -139,7 +139,7 @@ export default function LawPage() {
               fontFamily: "var(--font-mono-stack)",
             }}
           >
-            {/* Axes — thin, low-ink */}
+            {/* Axes, thin, low-ink */}
             <line
               x1={PAD_L}
               y1={H - PAD_B}
@@ -212,7 +212,7 @@ export default function LawPage() {
               briefing cut
             </text>
 
-            {/* Dropped dots — greyed */}
+            {/* Dropped dots, greyed */}
             {DOTS.filter((d) => !d.keep).map((d, i) => (
               <circle
                 key={`drop-${i}`}
@@ -224,7 +224,7 @@ export default function LawPage() {
               />
             ))}
 
-            {/* Kept dots — ink, with labels */}
+            {/* Kept dots, ink, with labels */}
             {DOTS.filter((d) => d.keep).map((d, i) => (
               <g key={`keep-${i}`}>
                 <circle
@@ -300,7 +300,7 @@ export default function LawPage() {
             <strong style={{ color: "var(--ink)", fontWeight: 600 }}>
               triggers(work)
             </strong>{" "}
-            — the ten rules read the work. Each rule has a name, a threshold,
+           , the ten rules read the work. Each rule has a name, a threshold,
             and a block it fires into.
           </p>
           <p
@@ -314,7 +314,7 @@ export default function LawPage() {
             <strong style={{ color: "var(--ink)", fontWeight: 600 }}>
               rank(·)
             </strong>{" "}
-            — cascade, then irreversibility, then proximity. A deterministic
+           , cascade, then irreversibility, then proximity. A deterministic
             order, not a learned one.
           </p>
           <p
@@ -328,8 +328,8 @@ export default function LawPage() {
             <strong style={{ color: "var(--ink)", fontWeight: 600 }}>
               top₃(·)
             </strong>{" "}
-            — the hard cap. Three items per block. The rest are dropped
-            silently — the briefing never lists &ldquo;and 14 more&rdquo;.
+           , the hard cap. Three items per block. The rest are dropped
+            silently, the briefing never lists &ldquo;and 14 more&rdquo;.
           </p>
           <p
             style={{
@@ -342,7 +342,7 @@ export default function LawPage() {
             <strong style={{ color: "var(--ink)", fontWeight: 600 }}>
               rank ⊥ model
             </strong>{" "}
-            — the ranking is independent of any model. There isn&apos;t one
+           , the ranking is independent of any model. There isn&apos;t one
             in the path.
           </p>
         </div>

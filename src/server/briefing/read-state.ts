@@ -1,8 +1,8 @@
 /**
- * server/briefing/read-state.ts — Per-user read state for the engine.
+ * server/briefing/read-state.ts, Per-user read state for the engine.
  *
  * Two concerns, both fail-safe (a missing table or a transient DB
- * error degrades to "no read state" — the briefing still builds):
+ * error degrades to "no read state", the briefing still builds):
  *
  *  1. Dismissals. The reader's "Not really" taps (briefing_feedback,
  *     verdict = not-useful) are read back so a dismissal sticks. The
@@ -10,10 +10,10 @@
  *     shipped; this module is what makes the promise true.
  *
  *  2. Surfacing history. Consecutive-day runs per (item, trigger) so
- *     carry-overs age honestly ("still waiting — day 3") and sort
+ *     carry-overs age honestly ("still waiting, day 3") and sort
  *     below fresh items (PRODUCT.md §5.3 de-emphasis).
  *
- * Day arithmetic is UTC day numbers — the same clock the engine's
+ * Day arithmetic is UTC day numbers, the same clock the engine's
  * dayRotation uses. Good enough for v1's single 06:00 UTC cron;
  * per-timezone day boundaries arrive with the per-TZ cron.
  */
@@ -65,7 +65,7 @@ export async function getDismissedKeys(
  * keyed `${triggerId}:${itemKey}`, valued as the age *including
  * today*: a row last surfaced yesterday with a 2-day run reads as
  * day 3 if it surfaces again today. Runs broken by a quiet day
- * reset to 1 (the item left the brief and came back — fresh).
+ * reset to 1 (the item left the brief and came back, fresh).
  */
 export async function getSurfacedAges(
   clerkId: string,
@@ -87,10 +87,10 @@ export async function getSurfacedAges(
     for (const row of rows) {
       const age =
         row.lastDay === today
-          ? row.runDays // same-day reload — already counted
+          ? row.runDays // same-day reload, already counted
           : row.lastDay === today - 1
             ? row.runDays + 1 // continues the run
-            : 1; // run broken — fresh again
+            : 1; // run broken, fresh again
       ages.set(`${row.triggerId}:${row.itemKey}`, age);
     }
     return ages;
@@ -103,7 +103,7 @@ export async function getSurfacedAges(
 /**
  * Record today's surfaced (item, trigger) pairs, extending or
  * resetting each run. Called after the build with the items that
- * actually rendered (attention + risks — the aging blocks).
+ * actually rendered (attention + risks, the aging blocks).
  */
 export async function recordSurfaced(
   clerkId: string,

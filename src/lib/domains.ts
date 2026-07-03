@@ -1,5 +1,5 @@
 /**
- * Analytics audience packs — same shape as Roadmap's domains.
+ * Analytics audience packs, same shape as Roadmap's domains.
  * Drives the AudienceToggle and reseeds the cinematic briefing demo.
  */
 
@@ -9,14 +9,14 @@ export type BlockId = "attention" | "moving" | "risks" | "focus";
 
 export type DemoItem = {
   id: string;
-  /** Phrasing variants — the rotation engine swaps these mid-loop. */
+  /** Phrasing variants, the rotation engine swaps these mid-loop. */
   variants: string[];
-  /** Provenance — e.g. "from Tasks · Wedding 2026". */
+  /** Provenance, e.g. "from Tasks · Wedding 2026". */
   provenance: string;
   /** Plain-English reason chain shown when "Why this?" expands. */
   whyThis?: string[];
   /**
-   * The trigger that fired — surfaced inside the "Why this?" expansion to
+   * The trigger that fired, surfaced inside the "Why this?" expansion to
    * make the determinism experienceable. e.g. `inactive-project · ≥ 8 days`.
    * One of the ten rules from PRODUCT.md §5.1.
    */
@@ -28,7 +28,7 @@ export type DemoBlock = {
   label: string;
   dot: string;
   items: DemoItem[];
-  /** Items that try to enter "Needs attention" — capped silently. */
+  /** Items that try to enter "Needs attention", capped silently. */
   overflow?: { id: string; text: string }[];
 };
 
@@ -95,7 +95,7 @@ const WEDDING_TODAY: DemoBlock[] = [
         variants: ["Catering tasting needs a final headcount by Friday"],
         whyThis: [
           "Deadline in 2 days.",
-          "Dependent on 'Send RSVPs' — also incomplete.",
+          "Dependent on 'Send RSVPs', also incomplete.",
         ],
       },
       {
@@ -155,7 +155,7 @@ const CONSTRUCTION_TODAY: DemoBlock[] = [
         variants: [
           "Windows on backorder since March 3",
           "Window supplier hasn't confirmed since March 3",
-          "Windows are 18 days late — chase supplier today",
+          "Windows are 18 days late, chase supplier today",
         ],
         whyThis: [
           "No status update in 18 days.",
@@ -198,7 +198,7 @@ const CONSTRUCTION_TODAY: DemoBlock[] = [
     items: [
       { id: "plumber", provenance: "from Tasks · Oak House", variants: ["Plumber hasn't replied in 7 days"] },
       { id: "weather", provenance: "from Tasks · Oak House", variants: ["Plaster scheduled on a forecast rain week"] },
-      { id: "owner", provenance: "from Tasks · Oak House", variants: ["Owner hasn't approved kitchen layout — 14 days out"] },
+      { id: "owner", provenance: "from Tasks · Oak House", variants: ["Owner hasn't approved kitchen layout, 14 days out"] },
     ],
   },
   {
@@ -239,7 +239,7 @@ const FREELANCE_TODAY: DemoBlock[] = [
       {
         id: "logo",
         provenance: "from Tasks · Client work",
-        variants: ["Maple Café logo — client feedback overdue since March 4"],
+        variants: ["Maple Café logo, client feedback overdue since March 4"],
         whyThis: ["Waiting on the client for 12 days.", "The final round can't start until they reply."],
       },
       {
@@ -259,7 +259,7 @@ const FREELANCE_TODAY: DemoBlock[] = [
     label: BLOCK_LABEL.moving,
     dot: BLOCK_DOT.moving,
     items: [
-      { id: "album", provenance: "from Tasks · Client work", variants: ["Wedding album delivered — client signed off"] },
+      { id: "album", provenance: "from Tasks · Client work", variants: ["Wedding album delivered, client signed off"] },
       { id: "retainer", provenance: "from Tasks · Client work", variants: ["Retainer renewed for another six months"] },
     ],
   },
@@ -341,7 +341,7 @@ const STUDENT_TODAY: DemoBlock[] = [
     dot: BLOCK_DOT.risks,
     items: [
       { id: "termstack", provenance: "from Tasks · Final year", variants: ["Three deadlines stacked in the last week of term"] },
-      { id: "funding", provenance: "from Tasks · Final year", variants: ["Funding application not started — closes in 21 days"] },
+      { id: "funding", provenance: "from Tasks · Final year", variants: ["Funding application not started, closes in 21 days"] },
       { id: "lab", provenance: "from Tasks · Final year", variants: ["Lab time still not booked for the experiment"] },
     ],
   },

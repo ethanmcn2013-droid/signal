@@ -1,8 +1,8 @@
 /**
- * prose/index.ts — Registry of all prose libraries (one per trigger).
+ * prose/index.ts, Registry of all prose libraries (one per trigger).
  *
  * Cycle 6.4 populated this with phrasings for the 10 v1 triggers.
- * Locked 2026-05-10 — Ethan signed off on the curated prose library.
+ * Locked 2026-05-10, Ethan signed off on the curated prose library.
  * Cycle 6.5a.1 added two phrasing variants (`self`, `focus`) per
  * the in-situ eval push: self-personalization for user-subject
  * insights, action-register for Suggested Focus.

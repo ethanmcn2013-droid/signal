@@ -7,10 +7,10 @@ interface WordmarkProps {
 }
 
 /**
- * Signal wordmark — `analytics·` with the M·04 tick gesture
+ * Signal wordmark, `analytics·` with the M·04 tick gesture
  * per the suite design system (v1, 2026-05-13). The dot is the canonical
  * middot (lifted), and its motion is a discrete jump between sample
- * positions — snapping instantly via steps(1,end), never gliding —
+ * positions, snapping instantly via steps(1,end), never gliding —
  * once per 3.6s cycle. The dot is always between readings, not travelling.
  */
 export function Wordmark({

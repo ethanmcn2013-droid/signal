@@ -1,11 +1,11 @@
 /**
- * data/source.ts — Bridge from external data systems → WorkRead.
+ * data/source.ts, Bridge from external data systems → WorkRead.
  *
  * Cycle 6.1 shipped the read() contract.
  * Cycle 6.2 added listForUser() against mockSource.
  * Cycle 6.3 implements `tasksDbSource` against the real Signal Tasks
  *   Turso DB (read-only token). The active `dataSource` const switches
- *   on TASKS_DATABASE_URL presence — prod uses the real source; dev
+ *   on TASKS_DATABASE_URL presence, prod uses the real source; dev
  *   without env vars falls back to mock so the marketing build still
  *   runs offline.
  */
@@ -31,7 +31,7 @@ export interface UserIdentity {
   clerkId: string;
   /**
    * Primary email from Clerk. Used as the first-priority key to locate
-   * a Tasks user row — email is hydrated by the Clerk webhook, whereas
+   * a Tasks user row, email is hydrated by the Clerk webhook, whereas
    * clerk_id may not yet be written (webhook-race hole). Nullable when
    * Clerk has no primary email on the account.
    */
@@ -50,7 +50,7 @@ export interface DataSource {
    * Workspaces this user can brief (owner or member).
    *
    * Resolution order (D1 decision):
-   *   1. email match  (canonical — hydrated by webhook, most reliable)
+   *   1. email match  (canonical, hydrated by webhook, most reliable)
    *   2. clerk_id match (belt-and-braces)
    *   3. id === clerkId (legacy seed rows with no clerk_id / email set)
    * Returns [] only when all three miss. Never throws to the page —
@@ -98,17 +98,17 @@ export const mockSource: DataSource = mockSourceWith({
  * Tasks's canonical lane vocabulary is `"todo" | "doing" | "review" | "done"`
  * (tasks/src/lib/data.ts). Analytics's Status enum is the trigger-facing
  * read contract Analytics owns. The translation is one-way and lives here
- * — triggers never see Tasks's vocabulary.
+ *, triggers never see Tasks's vocabulary.
  *
  * Derivation rules:
  *  - `blocked` is NOT lane-derived. A task is `blocked` when
  *    `blockedBy.length > 0 && lane !== "done"`. Tasks models blocking
  *    via the `blockedBy` array, not via a lane. Applied in deriveStatus.
- *  - `refused` does not materialize from Tasks's data — Tasks has no
+ *  - `refused` does not materialize from Tasks's data, Tasks has no
  *    rejected/cancelled state. Triggers must not assume it appears in
  *    real WorkRead snapshots from tasksDbSource.
  *  - Unknown lanes are logged once and mapped to `"next"` (safest
- *    fallback — no false-positive triggers).
+ *    fallback, no false-positive triggers).
  *
  * Documented in PRODUCT.md §6.
  */
@@ -129,7 +129,7 @@ function deriveStatus(lane: string, blockedBy: string[]): Status {
       if (!warnedLanes.has(lane)) {
         warnedLanes.add(lane);
         console.warn(
-          `[tasksDbSource] Unknown Tasks lane "${lane}" — mapping to "next".`,
+          `[tasksDbSource] Unknown Tasks lane "${lane}", mapping to "next".`,
         );
       }
       return "next";
@@ -300,7 +300,7 @@ export const tasksDbSource: DataSource = {
       snapshotAt: new Date().toISOString(),
       projects,
       tasks: taskReads,
-      // Activities deferred — v1 trigger set keys off task fields.
+      // Activities deferred, v1 trigger set keys off task fields.
       // Cycle 6.4 will populate this if any trigger needs the event log.
       events: [],
     };
@@ -309,14 +309,14 @@ export const tasksDbSource: DataSource = {
   async listForUser(identity: UserIdentity): Promise<WorkspaceCandidate[]> {
     if (!tasksDb) {
       // tasksDb is null when TASKS_DATABASE_URL is unset (Preview / dev without env).
-      // Return [] rather than throwing — the onboarding page handles empty gracefully.
-      console.warn("[tasksDbSource] TASKS_DATABASE_URL not set — listForUser returning []");
+      // Return [] rather than throwing, the onboarding page handles empty gracefully.
+      console.warn("[tasksDbSource] TASKS_DATABASE_URL not set, listForUser returning []");
       return [];
     }
     try {
       return await _listForUserFromDb(tasksDb, identity);
     } catch (err) {
-      console.error("[tasksDbSource] listForUser error — returning []", err);
+      console.error("[tasksDbSource] listForUser error, returning []", err);
       return [];
     }
   },

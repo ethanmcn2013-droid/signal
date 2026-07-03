@@ -1,7 +1,7 @@
 import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
 
 /**
- * Read-only mirror of the Signal Tasks Turso schema — only the
+ * Read-only mirror of the Signal Tasks Turso schema, only the
  * columns Analytics actually reads.
  *
  * IMPORTANT: this is a DERIVED mirror. Tasks owns the canonical
@@ -15,7 +15,7 @@ export const tasks = sqliteTable("tasks", {
   id: text("id").primaryKey(),
   workspaceId: text("workspace_id"),
   title: text("title").notNull(),
-  /** Tasks's lane field — Analytics maps to Status. */
+  /** Tasks's lane field, Analytics maps to Status. */
   lane: text("lane").notNull(),
   /** JSON-encoded array of user ids. First entry treated as the
    *  primary assignee in Analytics's TaskRead. */

@@ -5,7 +5,7 @@ import * as schema from "./schema";
 type DB = ReturnType<typeof drizzle<typeof schema>>;
 
 // Lazy singleton. The env vars are only required when the DB is
-// actually touched at request time — building / prerendering pages
+// actually touched at request time, building / prerendering pages
 // that never query (marketing routes, preview deploys without the
 // Analytics Turso envs) must not throw at module import.
 let _db: DB | null = null;

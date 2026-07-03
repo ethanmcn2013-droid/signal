@@ -210,7 +210,7 @@ export function AnalyticsDemo({ domain = "wedding" }: Props = {}) {
       await wait(900);
       if (!isCurrent()) return;
 
-      // Arrival — briefing already visible, "Delivered" pip fires
+      // Arrival, briefing already visible, "Delivered" pip fires
       setScene("arrival");
       await wait(900);
       if (!isCurrent()) return;
@@ -221,7 +221,7 @@ export function AnalyticsDemo({ domain = "wedding" }: Props = {}) {
       setToast(null);
       await wait(400);
 
-      // Cursor arrives — drifts in from left edge
+      // Cursor arrives, drifts in from left edge
       setScene("cursor-arrive");
       setCursor({ visible: true, x: -20, y: 240 });
       await wait(280);
@@ -276,7 +276,7 @@ export function AnalyticsDemo({ domain = "wedding" }: Props = {}) {
       }
 
       // The reader lets the briefing settle and steps away. No
-      // acknowledge gesture, no Yesterday toggle — the shipped brief
+      // acknowledge gesture, no Yesterday toggle, the shipped brief
       // has neither, so the demo holds the same line.
       setScene("cursor-leaves");
       setCursor({ visible: false, reading: false });
@@ -313,7 +313,7 @@ export function AnalyticsDemo({ domain = "wedding" }: Props = {}) {
     setCursorToItem,
   ]);
 
-  // One briefing per morning — there is no Yesterday view in the
+  // One briefing per morning, there is no Yesterday view in the
   // shipped product, so there is none here either. The brief now leads with
   // the one signal that needs you today (the "attention" block, which is also
   // what the cursor reads) and demotes the rest to a quiet list (review 22).
@@ -397,7 +397,7 @@ export function AnalyticsDemo({ domain = "wedding" }: Props = {}) {
         boxShadow: "var(--shadow-2, 0 2px 6px rgba(20,21,26,0.06))",
       }}
     >
-      {/* Top bar — sender chrome */}
+      {/* Top bar, sender chrome */}
       <div
         className="flex items-center gap-3 border-b px-5 py-2.5"
         style={{
@@ -449,7 +449,7 @@ export function AnalyticsDemo({ domain = "wedding" }: Props = {}) {
         </div>
       </div>
 
-      {/* Briefing body — settle entrance, not a feed pop.
+      {/* Briefing body, settle entrance, not a feed pop.
           --motion-moderate 320ms + --ease-out (JS mirror of contract). */}
       <motion.div
         initial={{ opacity: 0, y: 8 }}
@@ -474,7 +474,7 @@ export function AnalyticsDemo({ domain = "wedding" }: Props = {}) {
           {pack.greeting}
         </p>
 
-        {/* One thing leads — the signal that needs you today. */}
+        {/* One thing leads, the signal that needs you today. */}
         <p
           className="font-mono text-[11px] font-semibold uppercase"
           style={{ color: "var(--brand, var(--ink))", letterSpacing: "0.14em", marginBottom: 12 }}
@@ -485,7 +485,7 @@ export function AnalyticsDemo({ domain = "wedding" }: Props = {}) {
           {leadBlock ? renderBlock(leadBlock) : null}
         </div>
 
-        {/* The rest of the brief — present, but demoted. Quiet until it matters. */}
+        {/* The rest of the brief, present, but demoted. Quiet until it matters. */}
         {restBlocks.length > 0 ? (
           <div style={{ marginTop: 28 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 18 }}>

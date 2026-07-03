@@ -1,5 +1,5 @@
 /**
- * triggers/overload.ts — A single assignee carrying too much.
+ * triggers/overload.ts, A single assignee carrying too much.
  *
  * PRODUCT.md §5.1: "> 8 active tasks (or > 60% of all active tasks
  * in their workspace)." Active = not shipped, not refused.
@@ -8,7 +8,7 @@
  * name. Tasks's user records expose only opaque ids in WorkRead today,
  * and a wedding-planner workspace where the loaded assignee is also the
  * reader makes "Sarah is loaded" awkward. The phrasings read as
- * "Someone is carrying X" / "One person holds X" — works for solo and
+ * "Someone is carrying X" / "One person holds X", works for solo and
  * multi-person workspaces. Hydrating names is a follow-up.
  */
 

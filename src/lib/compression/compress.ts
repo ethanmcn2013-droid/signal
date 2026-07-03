@@ -1,5 +1,5 @@
 /**
- * compression/compress.ts — Rank + cap + drop.
+ * compression/compress.ts, Rank + cap + drop.
  *
  * Cycle 6.1 shipped the per-block compression skeleton.
  * Cycle 6.4 wired the Suggested Focus block.
@@ -14,7 +14,7 @@ import type { Insight, BriefingBlockId } from "../triggers/types";
 import { BLOCK_CAP, BLOCK_META, BLOCK_ORDER } from "./types";
 import type { BriefingBlock, BriefingItem } from "./types";
 
-/** Combined rank score — higher means more important. */
+/** Combined rank score, higher means more important. */
 export function rankScore(insight: Insight): number {
   const { cascade, irreversibility, proximity } = insight.rank;
   return cascade * 0.4 + irreversibility * 0.35 + proximity * 0.25;

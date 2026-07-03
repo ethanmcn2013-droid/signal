@@ -1,5 +1,5 @@
 /**
- * compression/types.ts — Briefing assembly types + locked caps.
+ * compression/types.ts, Briefing assembly types + locked caps.
  *
  * Per analytics/docs/PRODUCT.md §4 + §5.3:
  *  - 4 blocks. Always 4. Always in fixed order.
@@ -15,12 +15,12 @@
 
 import type { BriefingBlockId } from "../triggers/types";
 
-/** Hard cap per block. PRODUCT.md §5.3 says max 3 — non-negotiable. */
+/** Hard cap per block. PRODUCT.md §5.3 says max 3, non-negotiable. */
 export const BLOCK_CAP = 3;
 
-/** A single rendered briefing item — already prose. */
+/** A single rendered briefing item, already prose. */
 export interface BriefingItem {
-  /** The trigger that produced this — kept for "why am I seeing this?". */
+  /** The trigger that produced this, kept for "why am I seeing this?". */
   triggerId: import("../triggers/types").TriggerId;
   /** What this is about. */
   entityType: "task" | "project" | "user";
@@ -40,7 +40,7 @@ export interface BriefingBlock {
   items: BriefingItem[];
 }
 
-/** The 4 blocks in their fixed order. PRODUCT.md §4 — order is locked. */
+/** The 4 blocks in their fixed order. PRODUCT.md §4, order is locked. */
 export const BLOCK_ORDER: BriefingBlockId[] = [
   "needs-attention",
   "moving-well",
@@ -48,7 +48,7 @@ export const BLOCK_ORDER: BriefingBlockId[] = [
   "suggested-focus",
 ];
 
-/** Block metadata — labels and dot colors (PRODUCT.md §4 table). */
+/** Block metadata, labels and dot colors (PRODUCT.md §4 table). */
 export const BLOCK_META: Record<BriefingBlockId, { label: string; dot: string }> = {
   "needs-attention": { label: "Needs attention", dot: "#f59e0b" },
   "moving-well":     { label: "Moving well",     dot: "#10b981" },

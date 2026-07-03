@@ -8,7 +8,7 @@ type Props = {
 };
 
 /**
- * The mono timestamp + tick gesture. Steps once per beat — discrete reads,
+ * The mono timestamp + tick gesture. Steps once per beat, discrete reads,
  * never continuous flow. Reads as the briefing's own clock.
  */
 export function TickCursor({ delivered }: Props) {

@@ -8,11 +8,11 @@ import { resolveEntitlement } from "@/lib/entitlements-shared/reads";
 import { tierAtLeast } from "@/lib/entitlements-shared/tiers";
 
 export const metadata: Metadata = {
-  title: "Daily Signal — Signal",
+  title: "Daily Signal, Signal",
   description: "One short morning read on what needs attention today.",
 };
 
-// /app/brief — the in-app briefing surface. Backed by
+// /app/brief, the in-app briefing surface. Backed by
 // getBriefingSource() which selects tasksDbSource when the
 // Tasks read env vars are set, mockBriefingSource otherwise.
 export default async function BriefPage() {
@@ -57,7 +57,7 @@ export default async function BriefPage() {
           >
             Get it in your inbox each morning
           </a>{" "}
-          — €12/month.
+         , €12/month.
         </aside>
       ) : null}
     </>

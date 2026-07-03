@@ -22,7 +22,7 @@ export type SendTestResult =
 
 /**
  * Sends a one-off briefing to the signed-in user. Used by the
- * "Send a test now" button — the cheapest validation tool when the
+ * "Send a test now" button, the cheapest validation tool when the
  * cron's schedule doesn't match the moment you want to inspect.
  *
  * Honours the same brand promises as the cron: refuses to send on
@@ -81,7 +81,7 @@ export async function sendTestBriefingAction(): Promise<SendTestResult> {
       return {
         ok: false,
         message:
-          "Nothing on fire today — no test sent. (We don't send empty briefings, by design.)",
+          "Nothing on fire today, no test sent. (We don't send empty briefings, by design.)",
       };
     }
     if (result.reason === "no-resend-key") {
@@ -96,6 +96,6 @@ export async function sendTestBriefingAction(): Promise<SendTestResult> {
   revalidatePath("/app/settings/notifications");
   return {
     ok: true,
-    message: `Sent. Check ${prefs.email} — should land in under a minute.`,
+    message: `Sent. Check ${prefs.email}, should land in under a minute.`,
   };
 }

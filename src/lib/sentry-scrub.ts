@@ -8,7 +8,7 @@ import type { ErrorEvent, EventHint } from "@sentry/nextjs";
  *   - request.headers → sensitive auth/session headers redacted
  *   - breadcrumbs to clerk/webhook/auth endpoints → dropped
  *
- * Pairs with `sendDefaultPii: false` on the init — together they keep
+ * Pairs with `sendDefaultPii: false` on the init, together they keep
  * IP, cookies, and Clerk session tokens out of Sentry payloads.
  *
  * Ported byte-for-byte from the Tasks reference setup so PII handling

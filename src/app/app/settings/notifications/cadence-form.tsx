@@ -19,7 +19,7 @@ const OPTIONS: {
     value: "daily",
     label: "Daily",
     description:
-      "Every morning at 06:00 UTC. The same one short read — every day there's a real signal.",
+      "Every morning at 06:00 UTC. The same one short read, every day there's a real signal.",
   },
   {
     value: "off",

@@ -1,7 +1,7 @@
 import type { BriefItem, Briefing } from "@/lib/briefing/types";
 import { ageNote, greeting } from "@/lib/briefing/voice";
 
-/** "from Tasks · Wedding 2026 · still waiting — day 3" */
+/** "from Tasks · Wedding 2026 · still waiting, day 3" */
 function metaLine(item: BriefItem): string {
   const age = item.ageDays ? ` · ${ageNote(item.trigger, item.ageDays)}` : "";
   return `    from ${item.sourceLabel}${age}`;
@@ -10,7 +10,7 @@ function metaLine(item: BriefItem): string {
 /**
  * Plain-text alternative for the briefing email. Providing both
  * html + text in the multipart/alternative envelope is a real
- * deliverability signal — most spam filters punish html-only.
+ * deliverability signal, most spam filters punish html-only.
  */
 export function renderBriefingText(
   b: Briefing,
@@ -31,7 +31,7 @@ export function renderBriefingText(
   const lines: string[] = [];
 
   lines.push(
-    `signal studio. / analytics — ${cadence === "weekly" ? "Weekly" : "Daily"} brief`,
+    `signal studio. / analytics, ${cadence === "weekly" ? "Weekly" : "Daily"} brief`,
   );
   lines.push(date);
   lines.push("");
@@ -82,7 +82,7 @@ export function renderBriefingText(
   );
   lines.push(`View in browser:      ${links.viewInBrowserUrl}`);
   lines.push("");
-  lines.push("Sent by signal studio. — one short read per day, no marketing.");
+  lines.push("Sent by signal studio., one short read per day, no marketing.");
 
   return lines.join("\n");
 }

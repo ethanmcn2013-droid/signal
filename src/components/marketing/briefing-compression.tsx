@@ -1,5 +1,5 @@
 /**
- * Briefing compression — Einstein row 4. The mechanism made visible.
+ * Briefing compression, Einstein row 4. The mechanism made visible.
  *
  * The mechanism-in-one-line section says the engine *picks* language,
  * it doesn't generate it. This diagram shows what picking means:

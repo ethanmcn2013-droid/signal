@@ -11,7 +11,7 @@ import {
 import type { TaskSignal } from "./types";
 
 // ─────────────────────────────────────────────────────────────
-// Test data builders — terse, named. Same shape Tasks DB returns
+// Test data builders, terse, named. Same shape Tasks DB returns
 // after the source maps it.
 // ─────────────────────────────────────────────────────────────
 const DAY = 86_400_000;
@@ -60,7 +60,7 @@ describe("detectStuckWork", () => {
     assert.equal(out.length, 0);
   });
 
-  test("does not flag tasks blocked by others — different problem", () => {
+  test("does not flag tasks blocked by others, different problem", () => {
     const out = detectStuckWork([
       makeTask({ idleDays: 10, blockedBy: ["other-task"] }),
     ]);
@@ -307,7 +307,7 @@ describe("detectCrowdedWeek", () => {
     assert.equal(detectCrowdedWeek(tasks, NOW).length, 0);
   });
 
-  test("ignores overdue items (in the past) — they're due-soon's job", () => {
+  test("ignores overdue items (in the past), they're due-soon's job", () => {
     const tasks = [
       makeTask({ id: "a", dueAt: NOW - 2 * DAY }),
       makeTask({ id: "b", dueAt: NOW - 1 * DAY }),
@@ -363,7 +363,7 @@ describe("detectBlockedTooLong", () => {
     assert.equal(out.length, 0);
   });
 
-  test("does not flag stuck tasks that aren't blocked — that's stuck-work's job", () => {
+  test("does not flag stuck tasks that aren't blocked, that's stuck-work's job", () => {
     const out = detectBlockedTooLong([
       makeTask({ blockedBy: [], idleDays: 30 }),
     ]);
@@ -401,7 +401,7 @@ describe("detectBlockedTooLong", () => {
     assert.ok(high.severity > low.severity);
   });
 
-  test("closes the gap left by detectStuckWork — stuck-work excludes blocked", () => {
+  test("closes the gap left by detectStuckWork, stuck-work excludes blocked", () => {
     // A blocked-idle task should not appear in stuck-work but SHOULD
     // appear in blocked-too-long. Together they cover all idle paths.
     const t = makeTask({ blockedBy: ["other"], idleDays: 10 });

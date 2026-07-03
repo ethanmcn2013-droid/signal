@@ -6,7 +6,7 @@ export type { BlockId, DemoBlock, DemoItem, DomainId };
 // it arrives each morning, the reader scans it, "Why this" expands a
 // real reason chain, the phrasing rotates day to day, and the hard
 // three-item cap holds. No acknowledge gesture and no Today/Yesterday
-// toggle — the product has neither, so the demo claims neither.
+// toggle, the product has neither, so the demo claims neither.
 export type Scene =
   | "boot"
   | "arrival"

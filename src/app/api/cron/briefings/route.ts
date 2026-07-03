@@ -128,7 +128,7 @@ async function run(req: Request) {
     // the only place email is dispatched, so the gate goes here.
     //
     // resolveEntitlement and fetchFirstName are independent network
-    // calls — run them in parallel to halve per-user latency.
+    // calls, run them in parallel to halve per-user latency.
     const [{ tier }, firstName] = await Promise.all([
       resolveEntitlement(row.userId),
       fetchFirstName(clerk, row.userId),
@@ -187,7 +187,7 @@ async function run(req: Request) {
   const warnings: string[] = [];
   if (missingResendKey > 0) {
     warnings.push(
-      `RESEND_API_KEY is not set — ${missingResendKey} briefing(s) were skipped without sending.`,
+      `RESEND_API_KEY is not set, ${missingResendKey} briefing(s) were skipped without sending.`,
     );
   }
 

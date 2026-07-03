@@ -1,9 +1,9 @@
 /**
- * Signal /app loading boundary — wordmark identity loader.
+ * Signal /app loading boundary, wordmark identity loader.
  *
  * Replaces the prior bare 10px indigo dot. Pure Server Component:
  * zero JS, inlined keyframes so motion paints with the first HTML
- * chunk — survives the brief cross-origin pre-CSS window during
+ * chunk, survives the brief cross-origin pre-CSS window during
  * sibling-product jumps.
  *
  * Choreography:
@@ -19,7 +19,7 @@
  * tick animation stops.
  *
  * Long-wait escalation (loading canon, pitch 6): after a real 5s wait
- * one calm line appears — "Opening the briefing" — with role="status"
+ * one calm line appears, "Opening the briefing", with role="status"
  * aria-live="polite". The decorative wordmark stays aria-hidden.
  */
 import { LongWaitStatus } from "@/components/system/long-wait-status";
@@ -68,7 +68,7 @@ export default function AnalyticsLoading() {
         ))}
         <span
           style={{
-            // 10px hard px — boundary-dot authority (DESIGN.md §13.3).
+            // 10px hard px, boundary-dot authority (DESIGN.md §13.3).
             display: "inline-block",
             width: 10,
             height: 10,

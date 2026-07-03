@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Security — Signal",
+  title: "Security, Signal",
   description:
     "How Signal will handle your operational data when the product ships. The posture we are building toward.",
 };
@@ -9,10 +9,10 @@ export const metadata: Metadata = {
 const LAST_UPDATED = "2026-05-09";
 
 /**
- * /security — plain-English statement of Signal's security
- * posture as it is being built. Forward-looking — the product is in
+ * /security, plain-English statement of Signal's security
+ * posture as it is being built. Forward-looking, the product is in
  * private beta and does not yet collect operational data.
- * Static — no client-only code.
+ * Static, no client-only code.
  */
 export default function SecurityPage() {
   return (
@@ -42,7 +42,7 @@ export default function SecurityPage() {
         <Section title="What we will collect">
           <p>
             When Signal ships, it will capture a snapshot of
-            your work-in-progress signals — titles, statuses, and
+            your work-in-progress signals, titles, statuses, and
             dates from the tools you connect. It will not capture the
             contents of documents or task descriptions. It will not
             collect personally identifiable information beyond your
@@ -72,7 +72,7 @@ export default function SecurityPage() {
               Clerk
             </ExternalLink>
             , which is SOC 2 Type II audited. Your password never
-            reaches our servers — Clerk does the hashing, the rotation,
+            reaches our servers, Clerk does the hashing, the rotation,
             and the breach detection.
           </p>
         </Section>
@@ -82,7 +82,7 @@ export default function SecurityPage() {
             No AI training on your operational data. No third-party
             advertising or tracking on any page of the product. No
             selling of your data to anyone. No different security
-            posture for a paid tier versus a free one — the same
+            posture for a paid tier versus a free one, the same
             encryption and audit trail applies regardless of what is
             on the invoice.
           </p>
@@ -102,9 +102,9 @@ export default function SecurityPage() {
           <p>
             Until Signal is generally available, this page
             describes the posture we are building toward, not a current
-            operational commitment. The formal security policy — with
+            operational commitment. The formal security policy, with
             specific retention periods, subprocessor list, and legal
-            language — lands at general availability.
+            language, lands at general availability.
           </p>
           <p>
             The marketing site you are reading right now collects no

@@ -6,10 +6,10 @@ import { BriefingView } from "@/components/brief/briefing-view";
 import { isDemoMode } from "@/lib/access-mode";
 
 /**
- * /app — the authenticated landing surface.
+ * /app, the authenticated landing surface.
  *
  * Flow:
- *   - auth gate (also enforced at proxy + layout — defense in depth)
+ *   - auth gate (also enforced at proxy + layout, defense in depth)
  *   - if no linked workspace, kick to /app/onboarding
  *   - otherwise build a daily briefing for the user (engine-driven,
  *     prose-rendered, rotation-persisted) and render it
@@ -37,7 +37,7 @@ export default async function AppPage() {
     demo ? Promise.resolve(null) : currentUser(),
   ]);
 
-  // `no-workspace` is unreachable here — we just redirected on the
+  // `no-workspace` is unreachable here, we just redirected on the
   // same condition. Defensively narrow anyway.
   if (result.kind === "no-workspace") {
     redirect("/app/onboarding");

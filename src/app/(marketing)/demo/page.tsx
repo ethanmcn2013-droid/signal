@@ -2,20 +2,20 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 /**
- * /demo — full-bleed embed of the 30-second typography demo.
+ * /demo, full-bleed embed of the 30-second typography demo.
  *
  * Plan 7 · Cycle 7.2.
  *
  * The MP4 lives at /demo-typography.mp4 (Analytics public dir). Source
  * Remotion project at ~/Projects/personal/analytics-demo/.
  *
- * v1 (this cycle): typography only — no voice, no music. Cycle 7.3
+ * v1 (this cycle): typography only, no voice, no music. Cycle 7.3
  * lands the final cut once the music + voiceover decisions in
  * docs/demo-narrative.md §4–§5 are signed off.
  */
 
 export const metadata: Metadata = {
-  title: "The Demo — Signal",
+  title: "The Demo, Signal",
   description:
     "Thirty seconds. The morning briefing, written in plain English. Everything important. Nothing distracting.",
 };
@@ -62,7 +62,7 @@ export default function DemoPage() {
             What arrives before your day starts. Plain sentences, four blocks,
             two minutes to read. Watch.
           </p>
-          {/* Row 10 — lifted above the video so the subtitle frames the
+          {/* Row 10, lifted above the video so the subtitle frames the
               watching, not concludes it. */}
           <p
             style={{
@@ -75,7 +75,7 @@ export default function DemoPage() {
             }}
           >
             Every sentence the engine actually fires. Drawn from a library
-            written by hand — every line, a person wrote it.
+            written by hand, every line, a person wrote it.
           </p>
         </div>
       </section>
@@ -180,7 +180,7 @@ export default function DemoPage() {
               </Link>
             </div>
 
-            {/* Request access CTA — matches nav pill styling */}
+            {/* Request access CTA, matches nav pill styling */}
             <div
               style={{
                 marginTop: 8,

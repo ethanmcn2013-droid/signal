@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 /**
- * Root 404 — calm, on-brand. Wordmark inline so users can get back.
+ * Root 404, calm, on-brand. Wordmark inline so users can get back.
  */
 export default function NotFound() {
   return (

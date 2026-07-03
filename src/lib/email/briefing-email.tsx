@@ -13,7 +13,7 @@ import type { BriefItem, Briefing, FocusItem } from "@/lib/briefing/types";
 import { ageNote, graceNote, greeting, summaryLine } from "@/lib/briefing/voice";
 
 // ─────────────────────────────────────────────────────────────
-// Brand tokens — kept inline because email clients don't have
+// Brand tokens, kept inline because email clients don't have
 // CSS variables. Mirrors the marketing site's design language.
 // ─────────────────────────────────────────────────────────────
 const ink = "#14151a";
@@ -92,7 +92,7 @@ export function BriefingEmail({
             overflow: "hidden",
           }}
         >
-          {/* Wordmark header — branded identity strip */}
+          {/* Wordmark header, branded identity strip */}
           <Section
             style={{
               padding: "20px 28px 16px",
@@ -263,7 +263,7 @@ export function BriefingEmail({
                 marginTop: 10,
               }}
             >
-              Sent by signal studio. — one short read per day, no marketing,
+              Sent by signal studio., one short read per day, no marketing,
               no upsells.
             </Text>
           </Section>
@@ -453,10 +453,10 @@ function FocusBlock({ items }: { items: FocusItem[] }) {
 // (single source of truth across email/text/web).
 
 function previewText(b: Briefing): string {
-  // Inbox-snippet copy. Calmer than the subject — names the *shape*
+  // Inbox-snippet copy. Calmer than the subject, names the *shape*
   // of the day, not the alarming first item. Falls back to a quiet
   // line when summaryLine has nothing to say (quiet-but-not-empty
-  // days — e.g. only moving-well items survived).
+  // days, e.g. only moving-well items survived).
   if (b.isEmpty) return "Nothing to flag today.";
   return summaryLine(b) || "Nothing pulling today.";
 }

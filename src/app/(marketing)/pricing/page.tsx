@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Pricing — Signal",
+  title: "Pricing, Signal",
   description:
     "Currently in private beta. Pricing lands when Signal is generally available.",
 };

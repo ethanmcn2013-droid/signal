@@ -1,17 +1,17 @@
 import type { MetadataRoute } from "next";
 
 /**
- * PWA manifest — Signal.
+ * PWA manifest, Signal.
  *
- * Operational clarity. start_url goes to /app — the daily briefing
- * surface — because that's the value moment. Marketing home isn't
+ * Operational clarity. start_url goes to /app, the daily briefing
+ * surface, because that's the value moment. Marketing home isn't
  * where an installed-app user wants to land.
  *
  * Not a dashboard. A briefing.
  *
  * Shortcut "Past briefings" points to /app/brief (the historical
  * briefing surface that actually exists in the codebase). The
- * earlier /app/history target was a 404 — fixed in this cycle.
+ * earlier /app/history target was a 404, fixed in this cycle.
  *
  * Maskable icon at /icon1 (512×512) for Android adaptive icons.
  */

@@ -1,5 +1,5 @@
 /**
- * server/briefing/build-for-user.ts — Per-user briefing orchestrator.
+ * server/briefing/build-for-user.ts, Per-user briefing orchestrator.
  *
  * Wraps the pure `buildBriefing` pipeline with the user-bound concerns:
  *  - resolves which Tasks workspace this Clerk user is briefing on
@@ -7,7 +7,7 @@
  *  - loads the user's phrasing-rotation cursor before the build
  *  - bumps the cursor for each trigger that actually fired
  *
- * The renderer (Cycle 6.5) and any cron job will call this — the
+ * The renderer (Cycle 6.5) and any cron job will call this, the
  * underlying buildBriefing stays pure for testability.
  */
 
@@ -124,7 +124,7 @@ export async function buildBriefingForUser(opts: {
 
   // Per-user read state: dismissals stick ("Not really" → the item
   // stays out under that trigger) and carry-overs age honestly
-  // ("still waiting — day 3"). Both reads are fail-safe — a missing
+  // ("still waiting, day 3"). Both reads are fail-safe, a missing
   // table degrades to no suppression / no aging, never a failed brief.
   const now = Date.now();
   const [suppressed, ages] = await Promise.all([
@@ -155,7 +155,7 @@ export async function buildBriefingForUser(opts: {
   await bumpRotations(clerkId, Array.from(fired));
 
   // Extend/reset surfacing runs for the aging blocks (attention +
-  // risks). Moving-well never ages — celebration doesn't carry over.
+  // risks). Moving-well never ages, celebration doesn't carry over.
   await recordSurfaced(
     clerkId,
     [...briefing.needsAttention, ...briefing.quietRisks].map((item) => ({

@@ -2,16 +2,16 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 /**
- * /refusals — Einstein row 9. The page that tells you what we will
+ * /refusals, Einstein row 9. The page that tells you what we will
  * never ship. Each line is a sentence the product team can point at
  * when the request comes up. Sourced from docs/PRODUCT.md §7.
  *
- * Editorial register: no charts, no chrome — type only. The same
+ * Editorial register: no charts, no chrome, type only. The same
  * spareness as /law and /method. A refusal is a promise.
  */
 
 export const metadata: Metadata = {
-  title: "Refusals — Signal",
+  title: "Refusals, Signal",
   description:
     "What Signal will never ship. Seven sentences. Each is a decision we point at when the request comes up.",
 };
@@ -192,7 +192,7 @@ export default function RefusalsPage() {
           }}
         >
           Sourced from <code>docs/PRODUCT.md §7</code>. When this page and the
-          source disagree, the source wins — and we update this page in the
+          source disagree, the source wins, and we update this page in the
           same cycle.
         </p>
       </div>

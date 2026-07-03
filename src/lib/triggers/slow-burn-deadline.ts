@@ -1,12 +1,12 @@
 /**
- * triggers/slow-burn-deadline.ts — Project deadline close, work not.
+ * triggers/slow-burn-deadline.ts, Project deadline close, work not.
  *
  * PRODUCT.md §5.1: "A project with a deadline ≤ 7 days away and < 30%
  * of items closed."
  *
  * v1 caveat (documented in PRODUCT.md §6): Tasks doesn't model
  * project-level deadlines, so `ProjectRead.deadline` is always null
- * from `tasksDbSource`. This trigger therefore returns [] in v1 — it's
+ * from `tasksDbSource`. This trigger therefore returns [] in v1, it's
  * implemented and registered so the pipeline shape is stable, but it
  * cannot fire until project-level deadlines have a source.
  *
@@ -53,7 +53,7 @@ export const slowBurnDeadline: Trigger = {
         variables: {
           project: project.name,
           days: daysUntil,
-          // Whole-percent done — prose may use "still mostly open"
+          // Whole-percent done, prose may use "still mostly open"
           // wording rather than the number.
           done: Math.round(closedShare * 100),
         },

@@ -10,7 +10,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 
 /**
- * Anatomy of a briefing — Analytics' equivalent of Tasks' Anatomy of a
+ * Anatomy of a briefing, Analytics' equivalent of Tasks' Anatomy of a
  * Card, Notes' Anatomy of a Note, and Roadmap's Anatomy of an item.
  *
  * Same structural pattern as the siblings: demo on the left, numbered
@@ -18,14 +18,14 @@ import { useEffect, useRef, useState } from "react";
  *
  * Register: data-pulse. Slower than Tasks (no live presence), more
  * deliberate than Notes (briefing is a read, not a meditation). The
- * choreography is a guided tour — the spotlight moves through each
+ * choreography is a guided tour, the spotlight moves through each
  * section without ever hiding content. SSR + reduced-motion + no-JS
  * all see the full briefing at rest with every bucket populated.
  *
  * Two earned beats happen on the card itself:
  *   - Cap bar (3/3 hard cap) ticks during the Needs-attention beat
  *   - Focus pip drops on Suggested-focus item 2, then "Why this?"
- *     expands inline — the only real product affordance the anatomy
+ *     expands inline, the only real product affordance the anatomy
  *     dramatises (because it teaches the briefing's depth)
  */
 
@@ -106,7 +106,7 @@ function useChoreography(active: boolean, reduced: boolean) {
       return;
     }
     let cancelled = false;
-    // Only do the 0→3 cap-fill animation on the first iteration — that
+    // Only do the 0→3 cap-fill animation on the first iteration, that
     // beat is the "lesson". On subsequent loops, the cap stays at 3 and
     // Beat 3 just highlights the section. Prevents the every-iteration
     // 3→0 flash UXD flagged as a tic, not a beat.
@@ -114,23 +114,23 @@ function useChoreography(active: boolean, reduced: boolean) {
 
     const loop = async () => {
       while (!cancelled) {
-        // Reset — keep capFill at 3 so the bar never drops publicly
+        // Reset, keep capFill at 3 so the bar never drops publicly
         // on subsequent loops. Pip + why reset to false as before.
         setStage({ ...BASE, capFill: 3 });
         await wait(700);
         if (cancelled) return;
 
-        // Beat 1 — timestamp
+        // Beat 1, timestamp
         setStage((s) => ({ ...s, hi: "timestamp" }));
         await wait(900);
         if (cancelled) return;
 
-        // Beat 2 — greeting
+        // Beat 2, greeting
         setStage((s) => ({ ...s, hi: "greeting" }));
         await wait(900);
         if (cancelled) return;
 
-        // Beat 3 — needs attention. On first iteration, cap reads 0 → 3
+        // Beat 3, needs attention. On first iteration, cap reads 0 → 3
         // to demonstrate the hard-cap promise. On subsequent iterations,
         // cap stays at 3 (already proved) and we just highlight.
         if (firstLoop) {
@@ -153,7 +153,7 @@ function useChoreography(active: boolean, reduced: boolean) {
           if (cancelled) return;
         }
 
-        // Micro-breath — the briefing "takes a breath" between the
+        // Micro-breath, the briefing "takes a breath" between the
         // critical section and the positive signal. Differentiates the
         // data register from Notes's quieter loop and Tasks's reactive
         // cadence. 180ms of hi: null reads as deliberate, not idle.
@@ -161,29 +161,29 @@ function useChoreography(active: boolean, reduced: boolean) {
         await wait(180);
         if (cancelled) return;
 
-        // Beat 4 — moving well
+        // Beat 4, moving well
         setStage((s) => ({ ...s, hi: "moving" }));
         await wait(1000);
         if (cancelled) return;
 
-        // Beat 5 — quiet risks
+        // Beat 5, quiet risks
         setStage((s) => ({ ...s, hi: "risks" }));
         await wait(1000);
         if (cancelled) return;
 
-        // Beat 6 — suggested focus + pip drops
+        // Beat 6, suggested focus + pip drops
         setStage((s) => ({ ...s, hi: "focus", pip: true }));
         await wait(1100);
         if (cancelled) return;
 
-        // Beat 7 — "Why this?" expands inline (the briefing's depth).
+        // Beat 7, "Why this?" expands inline (the briefing's depth).
         // Held shorter (1100ms vs 1600) because the copy is only two
-        // sentences — feels like a reveal, not a lesson.
+        // sentences, feels like a reveal, not a lesson.
         setStage((s) => ({ ...s, why: true }));
         await wait(1100);
         if (cancelled) return;
 
-        // Long settle — let the visitor read the finished briefing
+        // Long settle, let the visitor read the finished briefing
         setStage((s) => ({ ...s, hi: null }));
         await wait(2400);
         if (cancelled) return;
@@ -261,7 +261,7 @@ export function BriefingAnatomy() {
               marginBottom: 12,
             }}
           >
-            The Daily Signal carries six signals. Most are quiet — they only
+            The Daily Signal carries six signals. Most are quiet, they only
             surface when the moment calls for them. The buckets stay; the
             contents change with the day.
           </p>
@@ -274,8 +274,8 @@ export function BriefingAnatomy() {
               marginBottom: 48,
             }}
           >
-            Watch the briefing read itself, or pick a number — on the card or
-            in the list — to see them speak.
+            Watch the briefing read itself, or pick a number, on the card or
+            in the list, to see them speak.
           </p>
 
           {/* Demo + annotations grid */}
@@ -296,7 +296,7 @@ export function BriefingAnatomy() {
   );
 }
 
-/* ── Demo briefing card — all six sections visible at rest ─────── */
+/* ── Demo briefing card, all six sections visible at rest ─────── */
 function DemoCard({
   active,
   setActive,
@@ -305,7 +305,7 @@ function DemoCard({
   setActive: (s: Slot | null) => void;
 }) {
   const wrapRef = useRef<HTMLDivElement>(null);
-  // amount: 0.5 — section must be at least half-visible before the
+  // amount: 0.5, section must be at least half-visible before the
   // loop starts. Prevents the hero AnalyticsDemo choreography from
   // running simultaneously with this one (UXD's dual-loop conflict).
   const inView = useInView(wrapRef, { amount: 0.5 });
@@ -335,7 +335,7 @@ function DemoCard({
       }}
       onMouseLeave={() => setActive(null)}
     >
-      {/* Ambient indigo glow — intensifies on active or on Why-this expansion */}
+      {/* Ambient indigo glow, intensifies on active or on Why-this expansion */}
       <motion.div
         aria-hidden
         className="absolute inset-0 -z-10 pointer-events-none"
@@ -365,7 +365,7 @@ function DemoCard({
         }}
         transition={SPRING_SOFT}
       >
-        {/* Slot 1 — Timestamp */}
+        {/* Slot 1, Timestamp */}
         <motion.div
           {...hoverProps("timestamp")}
           animate={spotlightAnim("timestamp", active, stage.hi)}
@@ -391,7 +391,7 @@ function DemoCard({
           </p>
         </motion.div>
 
-        {/* Slot 2 — Greeting */}
+        {/* Slot 2, Greeting */}
         <motion.div
           {...hoverProps("greeting")}
           animate={spotlightAnim("greeting", active, stage.hi)}
@@ -415,7 +415,7 @@ function DemoCard({
           </h3>
         </motion.div>
 
-        {/* Slot 3 — Needs attention (with cap bar) */}
+        {/* Slot 3, Needs attention (with cap bar) */}
         <motion.div
           {...hoverProps("needs")}
           animate={spotlightAnim("needs", active, stage.hi)}
@@ -447,7 +447,7 @@ function DemoCard({
 
         <div style={{ height: 10 }} />
 
-        {/* Slot 4 — Moving well */}
+        {/* Slot 4, Moving well */}
         <motion.div
           {...hoverProps("moving")}
           animate={spotlightAnim("moving", active, stage.hi)}
@@ -468,7 +468,7 @@ function DemoCard({
 
         <div style={{ height: 10 }} />
 
-        {/* Slot 5 — Quiet risks */}
+        {/* Slot 5, Quiet risks */}
         <motion.div
           {...hoverProps("risks")}
           animate={spotlightAnim("risks", active, stage.hi)}
@@ -486,7 +486,7 @@ function DemoCard({
 
         <div style={{ height: 10 }} />
 
-        {/* Slot 6 — Suggested focus (with pip + Why-this expansion) */}
+        {/* Slot 6, Suggested focus (with pip + Why-this expansion) */}
         <motion.div
           {...hoverProps("focus")}
           animate={spotlightAnim("focus", active, stage.hi)}
@@ -663,7 +663,7 @@ function FocusItem({
         }}
       >
         {`0${index + 1}`.slice(-2)}
-        {/* Focus pip — drops in on Suggested focus item 2 */}
+        {/* Focus pip, drops in on Suggested focus item 2 */}
         <AnimatePresence initial={false}>
           {pip ? (
             <motion.span

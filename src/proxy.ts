@@ -5,17 +5,17 @@ import { isDemoMode } from "@/lib/access-mode";
 
 // ─── Layer 2: M→app redirect ────────────────────────────────────────────────
 //
-// Category M — marketing routes. An authenticated user on any of these is
+// Category M, marketing routes. An authenticated user on any of these is
 // shown the app/briefing instead. Unauthed users get the marketing page as
 // normal. The set is an explicit allowlist per Layer 0 route spec (never a
 // "catch everything public" heuristic).
 //
 // Category C (/wedding-planning and future shared briefings) is intentionally
 // ABSENT from this set. A prospect or logged-in colleague opening a shared
-// briefing link MUST see the briefing — bouncing them is the single worst
+// briefing link MUST see the briefing, bouncing them is the single worst
 // failure mode. C routes are never redirected, never auth-gated.
 //
-// Category A (/app/*) is never redirected — it's already the destination.
+// Category A (/app/*) is never redirected, it's already the destination.
 // Category X (/api/*, /og/*, cron, /sign-in, /sign-up) is never touched.
 const MARKETING_PATHS = new Set([
   "/",
@@ -62,7 +62,7 @@ const productionProxy = clerkMiddleware(async (auth, req) => {
     const isAuthed = Boolean(userId);
 
     if (isAuthed && !isPreview) {
-      // 307 Temporary Redirect — preserves method, signals the client this
+      // 307 Temporary Redirect, preserves method, signals the client this
       // URL is still canonical (not a permanent move).
       return NextResponse.redirect(new URL(APP_ENTRY, req.url), 307);
     }

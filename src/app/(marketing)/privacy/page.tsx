@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Privacy — Signal",
+  title: "Privacy, Signal",
   description:
     "We see your work so the system can write the briefing. We don't share it. We don't sell it.",
 };
@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 const SECTIONS = [
   {
     title: "What we collect",
-    body: "Signal reads the structure and state of your work — tasks, projects, project activity, deadlines, and updates. We collect what is necessary to generate the briefing and nothing more.",
+    body: "Signal reads the structure and state of your work, tasks, projects, project activity, deadlines, and updates. We collect what is necessary to generate the briefing and nothing more.",
   },
   {
     title: "How we use it",

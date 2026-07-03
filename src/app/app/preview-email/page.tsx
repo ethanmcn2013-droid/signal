@@ -5,7 +5,7 @@ import { getOrCreatePreferences } from "@/lib/preferences";
 import { BriefingEmail } from "@/lib/email/briefing-email";
 
 export const metadata = {
-  title: "Email preview — Signal",
+  title: "Email preview, Signal",
 };
 
 /**

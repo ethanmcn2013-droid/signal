@@ -1,5 +1,5 @@
 /**
- * prose/types.ts — The Phrasing contract.
+ * prose/types.ts, The Phrasing contract.
  *
  * Per analytics/docs/PRODUCT.md §5.2 + §9 LOCKED DECISION C:
  * each Trigger has a hand-written set of 4–8 phrasings. When a
@@ -17,12 +17,12 @@
  * the 100th active user. NOT calendar-driven.
  *
  * Cycle 6.5a.1 added two phrasing variants per library:
- *   - `selfPhrasings` — used when the insight's subject is the
+ *   - `selfPhrasings`, used when the insight's subject is the
  *     reader themselves (entityType="user" && entityId === reader's
  *     clerk userId). Switches the briefing voice from third-person
  *     ("Someone holds 6 items") to second-person ("You hold 6
  *     things") for the personal moment.
- *   - `focusPhrasings` — used when the insight surfaces in the
+ *   - `focusPhrasings`, used when the insight surfaces in the
  *     Suggested Focus block. Reframes "what's happening" as a
  *     "do this today" sentence. PRODUCT.md §4: Suggested Focus is
  *     an action read, not a restatement.
@@ -50,7 +50,7 @@ export interface ProseLibrary {
   selfPhrasings?: Phrasing[];
   /** Action-register variants for the Suggested Focus block. Authored
    *  for triggers that read sensibly as "do this today" actions
-   *  (everything except moving-well triggers — those rarely surface
+   *  (everything except moving-well triggers, those rarely surface
    *  in focus given their low rank weights). */
   focusPhrasings?: Phrasing[];
 }
@@ -58,7 +58,7 @@ export interface ProseLibrary {
 /**
  * Render a phrasing by substituting `${name}` slots.
  * Variables not present in `vars` are left as the literal `${name}`
- * string — caller's bug, surface it loudly rather than silently
+ * string, caller's bug, surface it loudly rather than silently
  * dropping data.
  */
 export function renderPhrasing(

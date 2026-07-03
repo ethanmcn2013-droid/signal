@@ -5,7 +5,7 @@ import * as schema from "./schema";
 /**
  * libSQL client for Analytics's own prefs DB.
  *
- * Separate Turso DB from the Tasks DB Analytics reads from — Analytics
+ * Separate Turso DB from the Tasks DB Analytics reads from, Analytics
  * is read-only against Tasks, write-only against this one.
  *
  * Local dev with no Turso env falls back to a local SQLite file so

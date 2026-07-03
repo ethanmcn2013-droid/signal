@@ -3,7 +3,7 @@ import Link from "next/link";
 import { SignIn } from "@clerk/nextjs";
 
 export const metadata: Metadata = {
-  title: "Sign in — Signal",
+  title: "Sign in, Signal",
 };
 
 export default function SignInPage() {
@@ -59,7 +59,7 @@ export default function SignInPage() {
       {/*
        * SSR shell rendered before Clerk hydrates. The outer div is
        * position:relative so the Clerk widget paints over this text
-       * node once it mounts — zero layout shift, no blank void on
+       * node once it mounts, zero layout shift, no blank void on
        * slow connections.
        */}
       <div style={{ position: "relative" }}>

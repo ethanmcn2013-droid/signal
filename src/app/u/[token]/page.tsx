@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { lookupByToken, unsubscribeByToken } from "@/lib/preferences";
 
 export const metadata: Metadata = {
-  title: "Unsubscribe — Signal",
+  title: "Unsubscribe, Signal",
   description: "Confirm you want to stop briefing emails.",
 };
 
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 // The actual mutation happens on POST via a server action below.
 //
 // Apple Mail / Gmail's native one-click unsubscribe button hits
-// `/api/unsubscribe/[token]` directly per RFC 8058 — that endpoint stays
+// `/api/unsubscribe/[token]` directly per RFC 8058, that endpoint stays
 // auto-confirming because the mail client doesn't render this page.
 export default async function UnsubscribePage({
   params,
@@ -40,7 +40,7 @@ export default async function UnsubscribePage({
 
   async function confirm() {
     "use server";
-    // Closes over `token` from params — ignores any form-submitted token
+    // Closes over `token` from params, ignores any form-submitted token
     // to prevent a crafted form from unsubscribing a different token.
     const result = await unsubscribeByToken(token);
     if (result.ok) {

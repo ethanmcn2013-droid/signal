@@ -1,5 +1,5 @@
 /**
- * prose/blocked.ts — Phrasings for the `blocked` trigger.
+ * prose/blocked.ts, Phrasings for the `blocked` trigger.
  *
  * Locked Cycle 6.4 (signoff 2026-05-10).
  * Cycle 6.5a.1 added focusPhrasings (action register for Suggested Focus).
@@ -20,7 +20,7 @@ export const blockedProse: ProseLibrary = {
     "Nothing has happened on ${task} in ${days} days. Still waiting.",
   ],
   focusPhrasings: [
-    "Unblock ${task} today — it's been stuck ${days} days.",
+    "Unblock ${task} today, it's been stuck ${days} days.",
     "Move ${task} today. It's been blocked ${days} days.",
     "Clear whatever's blocking ${task} today.",
     "Get ${task} unstuck today. ${days} days now.",

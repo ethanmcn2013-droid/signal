@@ -3,7 +3,7 @@ import Link from "next/link";
 import { SiteFooter } from "@/components/marketing/site-footer";
 
 export const metadata: Metadata = {
-  title: "Wedding planning briefing — Signal",
+  title: "Wedding planning briefing, Signal",
   description:
     "What a daily briefing looks like for a wedding workspace, four weeks out. Plain sentences. What needs you, what's moving, what's quiet, what to do today.",
 };
@@ -30,7 +30,7 @@ const BRIEFING = [
     label: "Quiet risks",
     dot: "#71717a",
     items: [
-      "Niamh asked about the dietary list 4 days ago — no reply has gone back.",
+      "Niamh asked about the dietary list 4 days ago, no reply has gone back.",
       "Save-the-date design has had no activity in 11 days.",
       "Two trips to Highfield in two weeks, with no decision after either.",
     ],
@@ -39,9 +39,9 @@ const BRIEFING = [
     label: "Suggested focus",
     dot: "#4f46e5",
     items: [
-      "Book the Lambs Hill visit today — it is blocking the venue decision.",
-      "Send the final guest count to Niamh today — it was due 5 days ago.",
-      "Pick a dietary template by tonight — the deadline is 4 June.",
+      "Book the Lambs Hill visit today, it is blocking the venue decision.",
+      "Send the final guest count to Niamh today, it was due 5 days ago.",
+      "Pick a dietary template by tonight, the deadline is 4 June.",
     ],
   },
 ] as const;
@@ -76,7 +76,7 @@ export default function WeddingPlanningBriefingPage() {
         <div style={PROSE}>
           <Eyebrow>Signal · Wedding planning briefing</Eyebrow>
           <h1 className="h-display" style={{ marginBottom: 24 }}>
-            Today&apos;s briefing — for your wedding workspace.
+            Today&apos;s briefing, for your wedding workspace.
           </h1>
           <p
             style={{
@@ -88,7 +88,7 @@ export default function WeddingPlanningBriefingPage() {
             }}
           >
             Four weeks out. Three live suppliers. One date held but not confirmed.
-            This is what a Sunday morning looks like in plain sentences — not a
+            This is what a Sunday morning looks like in plain sentences, not a
             dashboard, not a feed, just what actually needs you today.
           </p>
           <p
@@ -236,7 +236,7 @@ export default function WeddingPlanningBriefingPage() {
           >
             A spreadsheet can hold a hundred tasks. It can&apos;t tell you that
             the venue deposit deadline is the real bottleneck this week. The
-            daily briefing is what does that — quietly, in the same words you
+            daily briefing is what does that, quietly, in the same words you
             would use.
           </p>
           <p
@@ -352,7 +352,7 @@ export default function WeddingPlanningBriefingPage() {
                   Where the work actually lives
                 </span>
                 <span style={{ fontSize: 14, color: "var(--ink-soft)", lineHeight: 1.55 }}>
-                  The full wedding planning workspace template — twelve months of
+                  The full wedding planning workspace template, twelve months of
                   real work, organised the way couples actually plan.
                 </span>
               </span>
@@ -401,7 +401,7 @@ export default function WeddingPlanningBriefingPage() {
                 </span>
                 <span style={{ fontSize: 14, color: "var(--ink-soft)", lineHeight: 1.55 }}>
                   One page that says what is happening now, what is held up, and
-                  what is next — no app required.
+                  what is next, no app required.
                 </span>
               </span>
               <span style={{ color: "var(--ink-quiet)", fontSize: 14, alignSelf: "center" }}>↗</span>
@@ -441,7 +441,7 @@ export default function WeddingPlanningBriefingPage() {
               }}
             >
               Connect your Signal Tasks workspace and the briefing arrives in your
-              inbox each morning — plain sentences, no charts, no noise.
+              inbox each morning, plain sentences, no charts, no noise.
             </p>
             {/* R10: verb "Open the briefing" per DESIGN.md §6 locked CTA vocab.
                 Primary: indigo fill + pill radius per §6 primary button spec.

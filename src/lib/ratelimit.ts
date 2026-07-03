@@ -11,10 +11,10 @@ import { Redis } from "@upstash/redis";
  * Design decisions:
  *   - GATED. When `UPSTASH_REDIS_REST_URL` / `_TOKEN` are unset (dev,
  *     preview, or before the operator provisions Upstash) the limiter is a
- *     no-op that ALLOWS. So wiring this up never breaks a deployment — it
+ *     no-op that ALLOWS. So wiring this up never breaks a deployment, it
  *     simply starts enforcing the moment the env is present.
  *   - FAILS OPEN. If Redis errors at request time we allow rather than
- *     500 — a cache outage must not take a public endpoint down. Abuse
+ *     500, a cache outage must not take a public endpoint down. Abuse
  *     protection is best-effort by nature.
  *   - Sliding window, keyed by the caller (IP for anonymous routes, userId
  *     for authed ones). One Ratelimit instance is cached per (name, limit,
@@ -61,10 +61,10 @@ export function clientIp(req: Request): string {
 
 /**
  * Returns true if the request is within the limit. Allows (returns true)
- * when Upstash is unconfigured OR errors — see the fail-open note above.
+ * when Upstash is unconfigured OR errors, see the fail-open note above.
  *
- * @param name        logical bucket, e.g. "unsubscribe" — namespaces the keys
- * @param identifier  the caller key — an IP or a userId
+ * @param name        logical bucket, e.g. "unsubscribe", namespaces the keys
+ * @param identifier  the caller key, an IP or a userId
  */
 export async function allow(
   name: string,
@@ -78,6 +78,6 @@ export async function allow(
     const { success } = await limiter.limit(identifier);
     return success;
   } catch {
-    return true; // fail open — never let a cache outage break the endpoint
+    return true; // fail open, never let a cache outage break the endpoint
   }
 }

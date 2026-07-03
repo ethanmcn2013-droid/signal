@@ -1,5 +1,5 @@
 /**
- * triggers/unresolved-recurring-block.ts — One blocker hitting many tasks.
+ * triggers/unresolved-recurring-block.ts, One blocker hitting many tasks.
  *
  * PRODUCT.md §5.1 (canonical): "The same blocker pattern appears ≥ 3
  * times across the project's history."
@@ -23,7 +23,7 @@ export const unresolvedRecurringBlock: Trigger = {
     const byId = new Map(work.tasks.map((t) => [t.id, t]));
 
     // Count distinct dependents per blocker id. Only count blockers that
-    // are themselves still open — a shipped blocker that hasn't been
+    // are themselves still open, a shipped blocker that hasn't been
     // cleared from the dependents' blockedBy array isn't recurring,
     // it's stale data.
     const dependents = new Map<string, Set<string>>();

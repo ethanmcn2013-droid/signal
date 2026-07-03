@@ -1,8 +1,8 @@
 /**
- * triggers/streak.ts — An assignee on a hot streak.
+ * triggers/streak.ts, An assignee on a hot streak.
  *
  * PRODUCT.md §5.1: "An assignee with ≥ 5 completions in the last 7 days."
- * Workspace-level — not per-project. Tasks shipped without an assignee
+ * Workspace-level, not per-project. Tasks shipped without an assignee
  * (rare) are excluded.
  *
  * Voice note: like overload, prose doesn't slot the person's name.

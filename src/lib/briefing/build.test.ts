@@ -31,7 +31,7 @@ function task(overrides: Partial<TaskSignal> = {}): TaskSignal {
 // ─────────────────────────────────────────────────────────────
 // Engine output
 // ─────────────────────────────────────────────────────────────
-describe("buildBriefing — empty + base shape", () => {
+describe("buildBriefing, empty + base shape", () => {
   test("isEmpty=true when nothing is triggered", async () => {
     const b = await buildBriefing(source([]), CTX, NOW);
     assert.equal(b.isEmpty, true);
@@ -49,7 +49,7 @@ describe("buildBriefing — empty + base shape", () => {
   });
 });
 
-describe("buildBriefing — bucket caps", () => {
+describe("buildBriefing, bucket caps", () => {
   test("Needs attention is hard-capped at 3 items even with 5 due-soon", async () => {
     const signals = Array.from({ length: 5 }, (_, i) =>
       task({ id: `t${i}`, dueAt: NOW + i * 3_600_000 }),
@@ -92,7 +92,7 @@ describe("buildBriefing — bucket caps", () => {
   });
 });
 
-describe("buildBriefing — bucket dedup", () => {
+describe("buildBriefing, bucket dedup", () => {
   test("a task that hits multiple triggers appears in only one bucket", async () => {
     // This task is BOTH overdue AND idle 10 days. It should land in
     // Needs attention (due-soon ranks higher) but NOT also in Quiet risks.
@@ -109,7 +109,7 @@ describe("buildBriefing — bucket dedup", () => {
   });
 });
 
-describe("buildBriefing — focus ranking", () => {
+describe("buildBriefing, focus ranking", () => {
   test("due-soon ranks higher than stuck-work in the focus block", async () => {
     const signals = [
       task({ id: "stuck", idleDays: 30 }),
@@ -129,7 +129,7 @@ describe("buildBriefing — focus ranking", () => {
   });
 });
 
-describe("buildBriefing — prose rotation determinism", () => {
+describe("buildBriefing, prose rotation determinism", () => {
   test("same (user, day) → same phrasing across two calls", async () => {
     const signals = [task({ id: "x", idleDays: 5 })];
     const a = await buildBriefing(source(signals), CTX, NOW);
@@ -159,7 +159,7 @@ describe("buildBriefing — prose rotation determinism", () => {
 // ─────────────────────────────────────────────────────────────
 // Bucket-orchestration tests for the new triggers (Phase F.1)
 // ─────────────────────────────────────────────────────────────
-describe("buildBriefing — crowded-week orchestration", () => {
+describe("buildBriefing, crowded-week orchestration", () => {
   test("crowded-week lands in needsAttention, not quietRisks", async () => {
     const signals = Array.from({ length: 4 }, (_, i) =>
       task({ id: `t${i}`, dueAt: NOW + (i + 1) * DAY }),
@@ -174,7 +174,7 @@ describe("buildBriefing — crowded-week orchestration", () => {
   });
 
   test("when due-soon and crowded-week both fire, attention bucket carries both", async () => {
-    // Five items in 7-day window — three of them in ≤ 2 days (due-soon)
+    // Five items in 7-day window, three of them in ≤ 2 days (due-soon)
     // plus the cluster signal from crowded-week.
     const signals = [
       task({ id: "d1", dueAt: NOW + 0.5 * DAY }),
@@ -213,7 +213,7 @@ describe("buildBriefing — crowded-week orchestration", () => {
   });
 });
 
-describe("buildBriefing — blocked-too-long orchestration", () => {
+describe("buildBriefing, blocked-too-long orchestration", () => {
   test("blocked-too-long lands in quietRisks, not needsAttention", async () => {
     const signals = [
       task({ id: "blocker", title: "Music supplier confirm" }),
@@ -254,7 +254,7 @@ describe("buildBriefing — blocked-too-long orchestration", () => {
   });
 });
 
-describe("buildBriefing — name-the-blocker prose", () => {
+describe("buildBriefing, name-the-blocker prose", () => {
   test("brief item names the blocker task when title is resolvable", async () => {
     const signals = [
       task({ id: "music", title: "Music supplier confirmation" }),
@@ -311,7 +311,7 @@ describe("buildBriefing — name-the-blocker prose", () => {
   });
 
   test("falls back to generic phrasing when blocker title is unresolvable", async () => {
-    // blockedBy references a task id NOT in signals — title can't resolve.
+    // blockedBy references a task id NOT in signals, title can't resolve.
     const signals = [
       task({
         id: "orphaned-blocked",
@@ -330,7 +330,7 @@ describe("buildBriefing — name-the-blocker prose", () => {
   });
 });
 
-describe("buildBriefing — full Wedding 2026 shape", () => {
+describe("buildBriefing, full Wedding 2026 shape", () => {
   test("produces a sensible Wedding-shaped briefing from the demo signals", async () => {
     // Mirrors the marketing demo's Wedding 2026 shape so the test
     // doubles as a regression check on the brief the marketing
@@ -368,9 +368,9 @@ describe("buildBriefing — full Wedding 2026 shape", () => {
 });
 
 // ─────────────────────────────────────────────────────────────
-// Read state — dismissals stick, carry-overs age honestly
+// Read state, dismissals stick, carry-overs age honestly
 // ─────────────────────────────────────────────────────────────
-describe("buildBriefing — dismissals (ReadState.suppressed)", () => {
+describe("buildBriefing, dismissals (ReadState.suppressed)", () => {
   test("a not-useful tap keeps the item out under that trigger", async () => {
     const signals = [
       task({ id: "florist", title: "Florist deposit", dueAt: NOW - DAY }),
@@ -384,7 +384,7 @@ describe("buildBriefing — dismissals (ReadState.suppressed)", () => {
     assert.ok(ids.includes("catering"), "other items are unaffected");
   });
 
-  test("a dismissal is per-trigger — the item can surface for a new reason", async () => {
+  test("a dismissal is per-trigger, the item can surface for a new reason", async () => {
     // Dismissed as stuck-work; later it gains a real deadline. The
     // deadline read is new information and must still get through.
     const signals = [
@@ -425,7 +425,7 @@ describe("buildBriefing — dismissals (ReadState.suppressed)", () => {
   });
 });
 
-describe("buildBriefing — carry-over aging (ReadState.ages)", () => {
+describe("buildBriefing, carry-over aging (ReadState.ages)", () => {
   test("a day-3 carry-over gets ageDays and sorts below fresh items", async () => {
     const signals = [
       // Aged item is *more* severe (further overdue) so without the

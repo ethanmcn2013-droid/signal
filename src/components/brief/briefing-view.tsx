@@ -15,7 +15,7 @@ import {
 } from "@/app/app/brief/feedback-actions";
 
 // ─────────────────────────────────────────────────────────────
-// Motion grammar — Signal Studio Motion Contract v1.
+// Motion grammar · Signal Studio Motion Contract v1.
 //
 // These are JS-side mirrors of the CSS contract tokens. Motion/react
 // does not read CSS custom properties at runtime, so we keep named
@@ -31,11 +31,11 @@ import {
 //   expand: --motion-moderate 320ms accordion open/close
 //
 // Reduced motion: MotionConfig reducedMotion="user" collapses
-// every animation to zero — accessibility prefs win in one line.
+// every animation to zero, accessibility prefs win in one line.
 // ─────────────────────────────────────────────────────────────
-// --ease-out: cubic-bezier(0, 0, 0.2, 1)  — confident arrivals
+// --ease-out: cubic-bezier(0, 0, 0.2, 1) , confident arrivals
 const EASE_OUT = [0, 0, 0.2, 1] as const;
-// --ease-standard: cubic-bezier(0.2, 0, 0, 1) — crossfades / dim
+// --ease-standard: cubic-bezier(0.2, 0, 0, 1), crossfades / dim
 const EASE_STANDARD = [0.2, 0, 0, 1] as const;
 
 const bucketAccents = {
@@ -45,7 +45,7 @@ const bucketAccents = {
 
 /**
  * The in-app render of the briefing. Mirrors the email's hierarchy
- * but earns its extra cost on the web — motion-led reveals, the
+ * but earns its extra cost on the web, motion-led reveals, the
  * reader-cursor hover affordance, and the motion accordion for
  * "why this →" expansions (the one thing email by design omits).
  */
@@ -112,8 +112,8 @@ export function BriefingView({
                 The just-shipped trigger weight is the lowest of six
                 (100/1000); the engine had already decided this is
                 not the signal. The bucket data still lives on the
-                Briefing object — a future "what shipped" surface
-                may consume it — but the morning read does not. */}
+                Briefing object, a future "what shipped" surface
+                may consume it, but the morning read does not. */}
             <Bucket
               title="Quiet risks"
               items={briefing.quietRisks}
@@ -121,7 +121,7 @@ export function BriefingView({
             />
             {/* "Suggested focus" is cut. The block was a sorted
                 re-projection of attention + risks already on the
-                page — the same items, second time on screen, under
+                page, the same items, second time on screen, under
                 a different header. The Needs-attention items are
                 already the focus. The suggestedFocus array stays on
                 the Briefing object for the email render and future
@@ -288,7 +288,7 @@ function BriefRow({
 }
 
 /**
- * Useful / not-useful — the one feedback signal the product collects
+ * Useful / not-useful, the one feedback signal the product collects
  * (PRODUCT.md §2.4). One quiet tap per item; tuning happens off the
  * aggregate. Optimistic: the tap is acknowledged immediately and the
  * write is fire-and-forget through a fail-safe server action, so the
@@ -307,7 +307,7 @@ function FeedbackControl({
   if (chosen) {
     return (
       <p className="mt-2 text-[11.5px]" style={{ color: "var(--ink-quiet)" }}>
-        {chosen === "useful" ? "Thanks — noted." : "Thanks — I'll show less of this."}
+        {chosen === "useful" ? "Thanks, noted." : "Thanks, I'll show less of this."}
       </p>
     );
   }
@@ -347,7 +347,7 @@ function FeedbackControl({
 }
 
 /**
- * Why-this gesture — replaces the browser-default <details> with
+ * Why-this gesture, replaces the browser-default <details> with
  * a motion accordion that cascades reasons in with a stagger.
  * This is the one expansion email by design omits, so the web view
  * owes it real polish.
@@ -375,7 +375,7 @@ function WhyThisAccordion({
         <motion.span
           className="inline-block"
           animate={{ rotate: open ? 90 : 0 }}
-          // --motion-fast 140ms + --ease-out — micro-affordance
+          // --motion-fast 140ms + --ease-out, micro-affordance
           transition={{ duration: 0.14, ease: EASE_OUT }}
         >
           →
@@ -388,7 +388,7 @@ function WhyThisAccordion({
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            // --motion-moderate 320ms + --ease-out — accordion expand
+            // --motion-moderate 320ms + --ease-out, accordion expand
             transition={{ duration: 0.32, ease: EASE_OUT }}
             className="overflow-hidden"
           >
@@ -429,7 +429,7 @@ function WhyThisAccordion({
 }
 
 /**
- * The all-clear — a destination, not a fallback. Silence is the
+ * The all-clear, a destination, not a fallback. Silence is the
  * signal: on the days when nothing fires, the product's whole job is
  * this one line, so it gets the display type, the vertical centre of
  * the viewport, and the product's own quiet gesture (the sampled
@@ -451,7 +451,7 @@ function AllClear({
       aria-label="All clear"
       className="flex min-h-[62dvh] flex-col items-center justify-center text-center"
     >
-      {/* The signal dot — ticks once every ~3.6s (the wordmark's
+      {/* The signal dot, ticks once every ~3.6s (the wordmark's
           sampled-cadence gesture). Static under reduced motion. */}
       <motion.span
         aria-hidden

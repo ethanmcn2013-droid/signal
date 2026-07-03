@@ -5,12 +5,12 @@ import { db as libDb } from "@/lib/db";
 import { exportAccountData } from "@/server/account-export";
 
 /**
- * GET /api/account/export — Signal.
+ * GET /api/account/export, Signal.
  *
  * GDPR Art. 20 data portability: the signed-in user downloads a complete
  * machine-readable (JSON) copy of everything Analytics holds for them across
  * both Turso DBs. Authed; caller-scoped by Clerk userId. The unsubscribe
- * token is omitted — see account-export.ts.
+ * token is omitted, see account-export.ts.
  */
 export async function GET() {
   const { userId } = await auth();

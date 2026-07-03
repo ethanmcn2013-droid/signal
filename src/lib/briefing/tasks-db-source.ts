@@ -13,7 +13,7 @@ import type { Lane, TaskSignal } from "./types";
  * TaskSignal[]. Joins on EMAIL (Tasks/Analytics may live in
  * different Clerk apps; clerk_id wouldn't match across them).
  *
- * Read-only by design — the token used here must be a Turso
+ * Read-only by design, the token used here must be a Turso
  * read-only token. The data flow is Analytics ← Tasks; never the
  * other way.
  *
@@ -23,11 +23,11 @@ import type { Lane, TaskSignal } from "./types";
  *   - dueAt:       passed through (unix ms or null)
  *   - idleDays:    passed through (Tasks pre-computes this)
  *   - blockedBy:   JSON-parsed; defaults to []
- *   - commentCount:set to 0 for v1 — a JOIN on comments per task is
+ *   - commentCount:set to 0 for v1, a JOIN on comments per task is
  *                 measurable cost and the engine doesn't use this in
  *                 v1 triggers
  *   - sourceLabel: "Tasks · {workspace.name}"
- *   - movedToShippedAt: real read of the activities table — most
+ *   - movedToShippedAt: real read of the activities table, most
  *                 recent toggleComplete or move event per task,
  *                 converted from unix seconds to ms. Used only when
  *                 lane='shipped'; null otherwise. The just-shipped
@@ -69,7 +69,7 @@ export function makeTasksDbSource(): BriefingSource | null {
     async getSignalsForUser(ctx: BriefingContext): Promise<TaskSignal[]> {
       // Resolve email → Tasks user_id. Email is the cross-product key.
       // Any Tasks DB outage / expired token / schema drift here must
-      // not abort the cron run — return [] so the empty-state render
+      // not abort the cron run, return [] so the empty-state render
       // fires for this user and the fanout continues for the rest.
       const signals: TaskSignal[] = [];
       let tasksUserId: Value | undefined;
@@ -82,7 +82,7 @@ export function makeTasksDbSource(): BriefingSource | null {
       } catch (err) {
         dropClientIfAuth(err);
         console.error(
-          "[tasks-db-source] user lookup failed — returning empty signals:",
+          "[tasks-db-source] user lookup failed, returning empty signals:",
           { userId: ctx.userId, error: String(err) },
         );
         return [];
@@ -91,14 +91,14 @@ export function makeTasksDbSource(): BriefingSource | null {
 
       // Get all tasks in workspaces this user belongs to, with the
       // most recent shipping-relevant activity timestamp joined in.
-      // Limit 200 — defends the engine if a workspace is huge; the
+      // Limit 200, defends the engine if a workspace is huge; the
       // cap-3-per-bucket renderer doesn't need more than that.
       //
       // shipped_activity_at:
       //   activities.created_at is unix SECONDS (default unixepoch());
       //   we multiply by 1000 to align with the rest of the engine's
       //   millisecond clock. Considered only on lane=done tasks
-      //   below — null on everything else.
+      //   below, null on everything else.
       let rows: Awaited<ReturnType<Client["execute"]>>["rows"];
       try {
         const result = await getClient().execute({
@@ -133,7 +133,7 @@ export function makeTasksDbSource(): BriefingSource | null {
       } catch (err) {
         dropClientIfAuth(err);
         console.error(
-          "[tasks-db-source] signals query failed — returning empty signals:",
+          "[tasks-db-source] signals query failed, returning empty signals:",
           { userId: ctx.userId, error: String(err) },
         );
         return [];

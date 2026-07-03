@@ -42,7 +42,7 @@ describe("greeting", () => {
 });
 
 describe("summaryLine", () => {
-  test("silent on a quiet day — nothing pulling, no filler", () => {
+  test("silent on a quiet day, nothing pulling, no filler", () => {
     // Silence is the signal. Empty string lets EmptyState carry the frame.
     assert.equal(summaryLine(brief()), "");
   });
@@ -71,7 +71,7 @@ describe("summaryLine", () => {
     );
     assert.equal(
       summaryLine(brief({ needsAttention: [{}, {}] as never[] })),
-      "Two things calling — and a few quieter signals below.",
+      "Two things calling, and a few quieter signals below.",
     );
     assert.equal(
       summaryLine(brief({ needsAttention: [{}, {}, {}] as never[] })),
@@ -95,7 +95,7 @@ describe("graceNote", () => {
   });
 
   test("no focus block", () => {
-    assert.equal(graceNote(brief()), "That's the read — good day.");
+    assert.equal(graceNote(brief()), "That's the read, good day.");
   });
 
   test("two-plus attention items steers to the focus block", () => {

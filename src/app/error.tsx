@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import Link from "next/link";
 
 /**
- * Root error boundary — client component per Next.js spec.
+ * Root error boundary, client component per Next.js spec.
  * Calm, on-brand; offers a reset and a back link.
  */
 export default function RootError({

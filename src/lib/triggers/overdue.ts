@@ -1,8 +1,8 @@
 /**
- * triggers/overdue.ts — Tasks past their due date and not done.
+ * triggers/overdue.ts, Tasks past their due date and not done.
  *
  * PRODUCT.md §5.1: "A task past its due date with no `done` status
- * and no `pushed-to` date." Tasks doesn't model `pushed-to` — a task
+ * and no `pushed-to` date." Tasks doesn't model `pushed-to`, a task
  * is overdue iff it has a dueDate in the past and status !== shipped
  * and status !== refused.
  */
@@ -35,7 +35,7 @@ export const overdue: Trigger = {
         },
         rank: {
           cascade: 0.4,
-          // Overdue is hard to undo cleanly — the missed window is gone.
+          // Overdue is hard to undo cleanly, the missed window is gone.
           irreversibility: 0.7,
           proximity: 1.0,
         },

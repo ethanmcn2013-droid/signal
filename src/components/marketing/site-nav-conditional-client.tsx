@@ -9,7 +9,7 @@ import { SiteNav } from "./site-nav";
  * down to SiteNav.
  *
  * Previously this was the only SiteNavConditional file and was the default
- * export. Now it's the client half — the server wrapper (site-nav-conditional.tsx)
+ * export. Now it's the client half, the server wrapper (site-nav-conditional.tsx)
  * resolves auth and passes isAuthed here.
  */
 export function SiteNavConditionalClient({ isAuthed }: { isAuthed: boolean }) {

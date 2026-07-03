@@ -1,12 +1,12 @@
 /**
- * Account-erasure integration test — Signal (analytics). GDPR
+ * Account-erasure integration test, Signal (analytics). GDPR
  * right-to-erasure / App Store 5.1.1(v) guard.
  *
  * Analytics spans TWO Turso DBs (prefs + email-subscription). This runs the
  * REAL `eraseAccountData` against two in-memory libSQL DBs covering all five
  * user-keyed tables, with a bystander user whose rows must survive. The
- * load-bearing assertion is that `briefing_feedback` — which a prior version
- * MISSED — is cleared. A regression that drops that delete fails here.
+ * load-bearing assertion is that `briefing_feedback`, which a prior version
+ * MISSED, is cleared. A regression that drops that delete fails here.
  *
  * Run: node --import tsx --test src/server/account-erasure.test.ts
  */

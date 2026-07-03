@@ -130,7 +130,7 @@ export function OnboardingPicker({
         disabled={pending || !selected || !timezone}
         aria-label={
           !timezone
-            ? "Detecting your time zone — please wait"
+            ? "Detecting your time zone, please wait"
             : pending
               ? "Linking workspace"
               : single

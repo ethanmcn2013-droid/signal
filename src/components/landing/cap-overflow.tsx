@@ -5,12 +5,12 @@ import { AnimatePresence, motion } from "motion/react";
 type Props = {
   /** Items that tried to enter but failed the cap. */
   overflow: { id: string; text: string }[];
-  /** "attempt" — visible, dimmed, slated for drop. "drop" — fading out. */
+  /** "attempt", visible, dimmed, slated for drop. "drop", fading out. */
   phase: "hidden" | "attempt" | "drop";
 };
 
 /**
- * Renders the silent-drop moment — extra items briefly appear under a block,
+ * Renders the silent-drop moment, extra items briefly appear under a block,
  * then fade out without UI fanfare. The discipline IS the demo.
  */
 export function CapOverflow({ overflow, phase }: Props) {
@@ -47,7 +47,7 @@ export function CapOverflow({ overflow, phase }: Props) {
                   opacity: [0, 0.62, 0.62, 0],
                   x: 0,
                 }}
-                // Demo choreography — 1.8s is intentional cap-drop timing
+                // Demo choreography, 1.8s is intentional cap-drop timing
                 transition={{
                   duration: 1.8,
                   times: [0, 0.18, 0.7, 1],

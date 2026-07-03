@@ -6,7 +6,7 @@ import { TASKS_URL } from "@/lib/product-urls";
 import { OnboardingPicker } from "./picker";
 
 /**
- * Onboarding — workspace mapping.
+ * Onboarding, workspace mapping.
  *
  * Auto-detect-with-override pattern. The picker UI handles all three
  * cases (0 / 1 / many candidates) so the user always sees one clear
@@ -25,7 +25,7 @@ export default async function OnboardingPage() {
 
   // Resolve email for the email-first identity fallback (D1).
   // currentUser() is a separate Clerk call but runs server-side; the cost
-  // is acceptable here — onboarding is a one-time flow.
+  // is acceptable here, onboarding is a one-time flow.
   const me = await currentUser();
   const email = me?.primaryEmailAddress?.emailAddress ?? null;
 

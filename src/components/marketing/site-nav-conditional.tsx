@@ -11,7 +11,7 @@ import { SiteNavConditionalClient } from "./site-nav-conditional-client";
  * "Request access" CTA and mount the account menu when the user is signed in.
  *
  * L3 compliance: when isAuthed, SiteNav renders no "Sign in" / "Request
- * access" / "Start for free" strings — those strings make an authenticated
+ * access" / "Start for free" strings, those strings make an authenticated
  * user feel logged out (§14 Kill the false "Sign in").
  */
 export async function SiteNavConditional() {

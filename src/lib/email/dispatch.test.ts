@@ -40,11 +40,11 @@ const okSender: EmailSender = async () => ({
 });
 
 // ─────────────────────────────────────────────────────────────
-// dispatchBriefing — early-return branches don't need DB or net.
+// dispatchBriefing, early-return branches don't need DB or net.
 // We can test these without injecting a sender.
 // ─────────────────────────────────────────────────────────────
 
-describe("dispatchBriefing — refusals", () => {
+describe("dispatchBriefing, refusals", () => {
   test("empty briefing → skipped: empty-briefing (no sender called)", async () => {
     let senderCalled = false;
     const result = await dispatchBriefing({
@@ -85,12 +85,12 @@ describe("dispatchBriefing — refusals", () => {
 });
 
 // ─────────────────────────────────────────────────────────────
-// dispatchBriefing — error branch via injected sender.
+// dispatchBriefing, error branch via injected sender.
 // Crucially: no DB write happens on the error path, so persist:false
-// doesn't matter here — the error guard is upstream of the write.
+// doesn't matter here, the error guard is upstream of the write.
 // ─────────────────────────────────────────────────────────────
 
-describe("dispatchBriefing — error branch via injected sender", () => {
+describe("dispatchBriefing, error branch via injected sender", () => {
   test("sender returns error → { ok: false, error }", async () => {
     const result = await dispatchBriefing({
       userId: "u",
@@ -122,12 +122,12 @@ describe("dispatchBriefing — error branch via injected sender", () => {
 });
 
 // ─────────────────────────────────────────────────────────────
-// Sender contract — the headers, from, replyTo, subject the cron
+// Sender contract, the headers, from, replyTo, subject the cron
 // actually puts on the wire. Locks the contract so a future
 // refactor that drops List-Unsubscribe-Post would be caught.
 // ─────────────────────────────────────────────────────────────
 
-describe("dispatchBriefing — sender receives the right contract", () => {
+describe("dispatchBriefing, sender receives the right contract", () => {
   let captured: Parameters<EmailSender>[0] | null = null;
   const captureSender: EmailSender = async (params) => {
     captured = params;

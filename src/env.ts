@@ -11,14 +11,14 @@ import { isDemoMode } from "@/lib/access-mode";
  *
  * Behaviour:
  *   - Only enforces in REAL production (`NODE_ENV==='production'` and not
- *     demo/review). Dev/demo/review skip enforcement entirely — those modes
+ *     demo/review). Dev/demo/review skip enforcement entirely, those modes
  *     intentionally run without Clerk/Turso.
  *   - REQUIRED vars missing → throws at boot with an aggregated message. A
  *     production deploy without its database or auth keys is non-functional;
  *     refusing to boot is strictly better than 500ing every request.
  *   - RECOMMENDED vars missing → warns (feature degraded) but boots.
  *
- * Dependency-free on purpose (no zod) — it's a handful of presence checks,
+ * Dependency-free on purpose (no zod), it's a handful of presence checks,
  * called once from instrumentation.ts `register()`.
  */
 
@@ -52,7 +52,7 @@ export function validateEnv(): void {
   if (missingRecommended.length > 0) {
     console.warn(
       "[env] missing recommended production variables (features degraded):\n" +
-        missingRecommended.map(([k, why]) => `  - ${k} — ${why}`).join("\n"),
+        missingRecommended.map(([k, why]) => `  - ${k}, ${why}`).join("\n"),
     );
   }
 
@@ -61,12 +61,12 @@ export function validateEnv(): void {
   );
   if (missingRequired.length > 0) {
     const detail = missingRequired
-      .map(([k, why]) => `  - ${k} — ${why}`)
+      .map(([k, why]) => `  - ${k}, ${why}`)
       .join("\n");
     throw new Error(
       `[env] FATAL: missing required production environment variables:\n${detail}\n\n` +
         "Set them in the Vercel project (or run in demo/review mode). Refusing to " +
-        "boot a half-configured production environment — this would otherwise 500 " +
+        "boot a half-configured production environment, this would otherwise 500 " +
         "every authenticated request at runtime instead of failing here, visibly.",
     );
   }
