@@ -95,8 +95,8 @@ export default function RefusalsPage() {
             marginBottom: 56,
           }}
         >
-          Seven sentences. Each is a decision, not a future consideration —
-          something we point at when the request comes up. A refusal is a
+          Seven sentences. Each is a decision, not a future consideration.
+          Something we point at when the request comes up. A refusal is a
           promise. Read alongside{" "}
           <Link
             href="/method"
