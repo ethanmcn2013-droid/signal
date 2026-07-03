@@ -314,10 +314,76 @@ export function AnalyticsDemo({ domain = "wedding" }: Props = {}) {
   ]);
 
   // One briefing per morning — there is no Yesterday view in the
-  // shipped product, so there is none here either.
-  const activeBlocks: DemoBlock[] = useMemo(
-    () => pack.blocks,
-    [pack]
+  // shipped product, so there is none here either. The brief now leads with
+  // the one signal that needs you today (the "attention" block, which is also
+  // what the cursor reads) and demotes the rest to a quiet list (review 22).
+  const activeBlocks: DemoBlock[] = useMemo(() => pack.blocks, [pack]);
+  const leadBlock = useMemo(
+    () => activeBlocks.find((b) => b.id === "attention") ?? activeBlocks[0],
+    [activeBlocks]
+  );
+  const restBlocks = useMemo(
+    () => activeBlocks.filter((b) => b !== leadBlock),
+    [activeBlocks, leadBlock]
+  );
+
+  const renderBlock = (block: DemoBlock) => (
+    <div key={block.id}>
+      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+        <span
+          aria-hidden
+          style={{ width: 6, height: 6, borderRadius: "50%", background: block.dot, flexShrink: 0 }}
+        />
+        <span
+          className="font-mono text-[11px] font-semibold uppercase"
+          style={{ color: "var(--ink-quiet)", letterSpacing: "0.12em" }}
+        >
+          {block.label}
+        </span>
+      </div>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: 10, paddingLeft: 14 }}>
+        {block.items.map((item) => {
+          const variantIndex = state.variantByItemId[item.id] ?? 0;
+          const text = item.variants[variantIndex] ?? item.variants[0];
+          return (
+            <BriefingItem
+              key={item.id}
+              text={text}
+              variantKey={variantIndex}
+              swapping={state.swappingItemId === item.id}
+              provenance={item.provenance}
+              itemId={item.id}
+              onRegister={onRegisterItem}
+              highlight={
+                state.cursor.reading &&
+                state.scene !== "cursor-leaves" &&
+                state.scene !== "reset" &&
+                (state.whyThisItemId === item.id ||
+                  (state.scene !== "why-this-close" && item.id === pack.inspectItemId))
+              }
+              whyThisVisible={state.whyThisItemId === item.id}
+              whyThisReasons={item.whyThis}
+              whyThisReveal={state.whyThisReveal}
+              whyThisTrigger={item.triggerName}
+            />
+          );
+        })}
+      </div>
+
+      {block.id === "attention" ? (
+        <CapOverflow
+          overflow={state.overflowVisible}
+          phase={
+            state.scene === "cap-attempt"
+              ? "attempt"
+              : state.scene === "cap-drop"
+              ? "drop"
+              : "hidden"
+          }
+        />
+      ) : null}
+    </div>
   );
 
   return (
@@ -408,90 +474,35 @@ export function AnalyticsDemo({ domain = "wedding" }: Props = {}) {
           {pack.greeting}
         </p>
 
+        {/* One thing leads — the signal that needs you today. */}
+        <p
+          className="font-mono text-[11px] font-semibold uppercase"
+          style={{ color: "var(--brand, var(--ink))", letterSpacing: "0.14em", marginBottom: 12 }}
+        >
+          One thing needs you today
+        </p>
         <div style={{ display: "flex", flexDirection: "column", gap: 26 }}>
-          {activeBlocks.map((block) => (
-            <div key={block.id}>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  marginBottom: 10,
-                }}
-              >
-                <span
-                  aria-hidden
-                  style={{
-                    width: 6,
-                    height: 6,
-                    borderRadius: "50%",
-                    background: block.dot,
-                    flexShrink: 0,
-                  }}
-                />
-                <span
-                  className="font-mono text-[11px] font-semibold uppercase"
-                  style={{
-                    color: "var(--ink-quiet)",
-                    letterSpacing: "0.12em",
-                  }}
-                >
-                  {block.label}
-                </span>
-              </div>
-
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 10,
-                  paddingLeft: 14,
-                }}
-              >
-                {block.items.map((item) => {
-                  const variantIndex = state.variantByItemId[item.id] ?? 0;
-                  const text = item.variants[variantIndex] ?? item.variants[0];
-                  return (
-                    <BriefingItem
-                      key={item.id}
-                      text={text}
-                      variantKey={variantIndex}
-                      swapping={state.swappingItemId === item.id}
-                      provenance={item.provenance}
-                      itemId={item.id}
-                      onRegister={onRegisterItem}
-                      highlight={
-                        state.cursor.reading &&
-                        state.scene !== "cursor-leaves" &&
-                        state.scene !== "reset" &&
-                        (state.whyThisItemId === item.id ||
-                          (state.scene !== "why-this-close" &&
-                            item.id === pack.inspectItemId))
-                      }
-                      whyThisVisible={state.whyThisItemId === item.id}
-                      whyThisReasons={item.whyThis}
-                      whyThisReveal={state.whyThisReveal}
-                      whyThisTrigger={item.triggerName}
-                    />
-                  );
-                })}
-              </div>
-
-              {block.id === "attention" ? (
-                <CapOverflow
-                  overflow={state.overflowVisible}
-                  phase={
-                    state.scene === "cap-attempt"
-                      ? "attempt"
-                      : state.scene === "cap-drop"
-                      ? "drop"
-                      : "hidden"
-                  }
-                />
-              ) : null}
-            </div>
-          ))}
+          {leadBlock ? renderBlock(leadBlock) : null}
         </div>
+
+        {/* The rest of the brief — present, but demoted. Quiet until it matters. */}
+        {restBlocks.length > 0 ? (
+          <div style={{ marginTop: 28 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 18 }}>
+              <span style={{ height: 1, flex: 1, background: "var(--border-soft)" }} aria-hidden />
+              <span
+                className="font-mono text-[10.5px] uppercase"
+                style={{ color: "var(--ink-faint)", letterSpacing: "0.12em", whiteSpace: "nowrap" }}
+              >
+                Then the rest, quiet until it matters
+              </span>
+              <span style={{ height: 1, flex: 1, background: "var(--border-soft)" }} aria-hidden />
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 22, opacity: 0.5 }}>
+              {restBlocks.map(renderBlock)}
+            </div>
+          </div>
+        ) : null}
 
         <div
           style={{
