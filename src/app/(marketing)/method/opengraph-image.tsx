@@ -94,7 +94,7 @@ export default async function OG() {
               marginTop: 8,
             }}
           >
-            Attention engine. Plain English. Priority compression.
+            Attention engine. Plain English. Three items kept.
           </div>
         </div>
 

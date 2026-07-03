@@ -55,8 +55,8 @@ export default function SecurityPage() {
           <p>
             Data will be encrypted at rest. Connections will run over
             HTTPS with no plaintext fallbacks. We will offer regional
-            data residency on request for teams where that matters. The
-            hosting layer is{" "}
+            data residency on request for teams where that matters. We
+            host on{" "}
             <ExternalLink href="https://vercel.com/security">
               Vercel
             </ExternalLink>

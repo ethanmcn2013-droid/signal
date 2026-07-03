@@ -27,7 +27,7 @@ const REFUSALS = [
   },
   {
     head: "Not configurable.",
-    body: "No rule editor. No threshold sliders. No widget composer. If the product needs a settings page beyond account, billing, and integrations, the product is wrong.",
+    body: "No rule editor. No threshold sliders. No widget composer. If the product needs a settings page beyond account, billing, and connections, the product is wrong.",
   },
   {
     head: "Not a notification stream.",
@@ -39,7 +39,7 @@ const REFUSALS = [
   },
   {
     head: "Not AI-marketed.",
-    body: "Even if a future cycle introduces an LLM somewhere in the pipeline, the marketing surface never says “AI,” “intelligent,” “smart,” “agent,” or “copilot.” The voice rules govern.",
+    body: "Even if a future cycle introduces an LLM somewhere in the pipeline, the marketing never says “AI,” “intelligent,” “smart,” “agent,” or “copilot.” The voice rules govern.",
   },
   {
     head: "Not real-time.",
