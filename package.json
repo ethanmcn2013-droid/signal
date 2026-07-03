@@ -10,7 +10,7 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "ds:check": "node scripts/ds/ds-check.mjs",
-    "test": "node scripts/check-suite-switcher-contract.mjs && bash scripts/check-suiteloader-identity.sh && node --test src/cross-tenant-isolation.test.mjs && node --import tsx --test 'src/lib/**/*.test.ts' src/server/account-erasure.test.ts src/server/account-export.test.ts",
+    "test": "node scripts/check-suite-switcher-contract.mjs && node scripts/check-chrome-contract.mjs && bash scripts/check-suiteloader-identity.sh && node --test src/cross-tenant-isolation.test.mjs && node --import tsx --test 'src/lib/**/*.test.ts' src/server/account-erasure.test.ts src/server/account-export.test.ts",
     "check:suite-switcher": "node scripts/check-suite-switcher-contract.mjs",
     "test:local": "node --env-file-if-exists=.env.local --import tsx --test 'src/lib/**/*.test.ts'",
     "test:watch": "node --watch --import tsx --test 'src/lib/**/*.test.ts'",
