@@ -35,7 +35,6 @@ export function AnalyticsHeroSignal() {
     const barsRowEl    = root.querySelector<HTMLElement>(".anl-bars-row");
     const tallBarEl    = root.querySelector<HTMLElement>(".anl-bar.anl-tall");
     const captionEl    = root.querySelector<HTMLElement>(".anl-caption");
-    const statusTREl   = root.querySelector<HTMLElement>(".anl-status-tr");
     const scanLineEl   = root.querySelector<HTMLElement>(".anl-scan-line");
     const bloomLabelEl = root.querySelector<HTMLElement>(".anl-bloom-label");
     const trail1El     = root.querySelector<HTMLElement>(".anl-trail-1");
@@ -46,7 +45,7 @@ export function AnalyticsHeroSignal() {
 
     if (
       !composerEl || !dotEl || !barsRowEl || !tallBarEl || !captionEl ||
-      !statusTREl || !scanLineEl || !bloomLabelEl ||
+      !scanLineEl || !bloomLabelEl ||
       !trail1El || !trail2El || !trail3El || !rippleEl || !rippleSlowEl
     ) return;
 
@@ -190,9 +189,6 @@ export function AnalyticsHeroSignal() {
       bloomLabelEl!.style.transition = "opacity 320ms cubic-bezier(0,0,.2,1), transform 320ms cubic-bezier(0,0,.2,1)"; // ds-allow: signal hero choreography
       bloomLabelEl!.style.opacity    = "1";
       bloomLabelEl!.style.transform  = "translateX(-50%) translateY(-100%)";
-
-      // TR chrome snaps to "the signal clears" on bloom
-      statusTREl!.textContent = "the signal clears";
     }
 
     // ── Unbloom ────────────────────────────────────────────────────────
@@ -238,9 +234,6 @@ export function AnalyticsHeroSignal() {
 
         const scanStart = performance.now();
         let bloomFired  = false;
-
-        // TR chrome → "scanning" during travel
-        statusTREl!.textContent = "scanning";
 
         // Show scan line at left edge
         scanLineEl!.style.transition = "";
@@ -459,9 +452,6 @@ export function AnalyticsHeroSignal() {
       captionEl!.offsetHeight;    // flush
       captionEl!.style.animation  = CAPTION_ANIM;
 
-      // Reset TR status
-      statusTREl!.textContent = "the signal clears";
-
       // Restart CSS animations (none → reflow → restore)
       dotEl!.style.animation = "none";
       [trail1El, trail2El, trail3El, rippleEl, rippleSlowEl].forEach(el => {
@@ -514,19 +504,8 @@ export function AnalyticsHeroSignal() {
       className="anl-hero-section"
       aria-label="Signal"
     >
-      <div className="anl-chrome anl-chrome-tl">
-        <span className="anl-wm">
-          <span>signal studio</span>
-          <span className="anl-dot-static" />
-          <span className="anl-sep">·</span>
-          <span>signal</span>
-        </span>
-      </div>
-
-      <div className="anl-chrome anl-chrome-tr" aria-hidden>
-        <span className="anl-pip" aria-hidden />
-        <span className="anl-status-tr">the signal clears</span>
-      </div>
+      {/* Corner chrome removed (review 08/09): the site header already carries
+          the signal studio · signal breadcrumb — the hero stays uncluttered. */}
 
       <div className="anl-stage" aria-hidden>
         <div className="anl-composer-with-bars">
@@ -594,56 +573,6 @@ const CSS = `
   justify-content: center;
 }
 
-/* ── Corner chrome ──────────────────────────────────────────────── */
-.anl-chrome {
-  position: absolute;
-  z-index: 2;
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  color: var(--anl-stone);
-  font-family: var(--anl-mono);
-  font-size: 11px;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-}
-.anl-chrome-tl { top: 32px; left: 32px; }
-.anl-chrome-tr { top: 32px; right: 32px; }
-.anl-pip {
-  display: inline-block;
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: var(--anl-indigo);
-  animation: anl-pip-blink 1.6s cubic-bezier(.45,.05,.55,.95) infinite; /* ds-allow: signal hero choreography */
-}
-@keyframes anl-pip-blink { 0%,100% { opacity: 1 } 50% { opacity: .35 } }
-
-.anl-wm {
-  display: inline-flex;
-  align-items: baseline;
-  color: var(--anl-ink);
-  font-family: var(--anl-font);
-  font-size: 14px;
-  font-weight: 500;
-  letter-spacing: -.025em;
-  line-height: .95;
-  text-transform: none;
-}
-.anl-dot-static {
-  width: .16em; height: .16em;
-  margin-bottom: .06em; margin-left: .06em;
-  align-self: flex-end;
-  border-radius: 50%;
-  background: var(--anl-indigo);
-  display: inline-block;
-  flex: 0 0 auto;
-}
-.anl-sep {
-  margin: 0 .4em;
-  color: var(--anl-stone);
-  font-weight: 300;
-}
-
 /* ── Stage ──────────────────────────────────────────────────────── */
 .anl-stage {
   width: 100%;
@@ -655,11 +584,17 @@ const CSS = `
   padding: 72px 24px 52px;
   transform: translateY(-8px);
 }
+/* The wordmark defines the column width so "signal." centres in the hero
+   (review 10). The bars hang from the period via absolute positioning, so the
+   wider bar-row no longer shoves the word off-centre; margin-bottom reserves
+   the space the absolute bars occupy below. */
 .anl-composer-with-bars {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   gap: 0;
+  margin-bottom: calc(var(--anl-wm-size) * .8);
 }
 
 /* ── Wordmark composer ──────────────────────────────────────────── */
@@ -794,7 +729,9 @@ const CSS = `
 /* ── Bars row ────────────────────────────────────────────────────── */
 /* position:relative required for scan-line + bloom-label absolute children */
 .anl-bars-row {
-  position: relative;
+  position: absolute;
+  right: 0;
+  top: 100%;
   display: flex;
   flex-direction: row-reverse;
   align-items: flex-start;
@@ -870,8 +807,7 @@ const CSS = `
 /* ── Reduced motion: bloomed final state ────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   .anl-dot, .anl-trail,
-  .anl-intro-ripple, .anl-intro-ripple-slow,
-  .anl-pip { animation: none !important }
+  .anl-intro-ripple, .anl-intro-ripple-slow { animation: none !important }
   .anl-dot { opacity: 1; transform: none }
   .anl-trail, .anl-intro-ripple, .anl-intro-ripple-slow { display: none }
   .anl-bar { transition: none }
@@ -884,10 +820,8 @@ const CSS = `
   .anl-bloom-label { opacity: 1; transform: translateX(-50%) translateY(-100%) }
 }
 
-/* ── Responsive chrome ──────────────────────────────────────────── */
+/* ── Responsive ─────────────────────────────────────────────────── */
 @media (max-width: 600px) {
-  .anl-chrome-tl { top: 20px; left: 20px }
-  .anl-chrome-tr { top: 20px; right: 20px; font-size: 10px }
   .anl-hero-section {
     min-height: 58svh;
     --anl-wm-size: clamp(52px, 15vw, 82px);
@@ -897,8 +831,5 @@ const CSS = `
     padding: 62px 20px 46px;
     transform: none;
   }
-}
-@media (max-width: 420px) {
-  .anl-chrome-tr { display: none }
 }
 `;
