@@ -8,12 +8,15 @@ import { UserButton } from "@clerk/nextjs";
 
 // Nav labels: the noun IS the navigation. "Ten rules" (not "Method")
 // puts the no-LLM stance in the primary nav (row 8, Einstein's walkover).
+const UMBRELLA_DESIGN = "https://signalstudio.ie/design";
+
 const NAV: { href: string; label: string; external?: boolean }[] = [
   { href: "/signal",   label: "Signal"     },
   { href: "/method",   label: "Ten rules"  },
   { href: "/refusals", label: "Refusals"   },
   { href: "/pricing",  label: "Pricing"    },
   { href: "/about",    label: "About"      },
+  { href: UMBRELLA_DESIGN, label: "Design", external: true },
 ];
 
 /**
