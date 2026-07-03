@@ -302,7 +302,7 @@ body::after { content: none; }
   outline-offset: 3px;
   border-radius: 6px;
   /* WCAG 2.4.11: scroll-margin-top keeps focus target clear of the
-     sticky 48---56px header on both marketing and app routes. */
+     sticky 56px header on both marketing and app routes. */
   scroll-margin-top: 72px;
 }
 
