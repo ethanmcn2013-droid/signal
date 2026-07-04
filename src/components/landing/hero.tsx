@@ -24,11 +24,11 @@ export function Hero() {
           className="font-mono text-[11px] font-semibold uppercase"
           style={{ color: "var(--ink-quiet)", letterSpacing: "0.14em" }}
         >
-          Signal &middot; Attention clarity
+          Signal &middot; Your work
         </p>
 
         <h1
-          className="mt-5 max-w-[16ch] text-balance"
+          className="mt-5 max-w-[18ch] text-balance"
           style={{
             fontSize: "clamp(2.6rem, 1.8rem + 4.6vw, 5.5rem)",
             fontWeight: 600,
@@ -37,17 +37,17 @@ export function Hero() {
             color: "var(--ink)",
           }}
         >
-          One thing, first.
+          Whatever you run, Signal reads it.
         </h1>
 
-        {/* One breath. The old three-paragraph brief was the noise it warned
-            against; this is the whole promise in two sentences. */}
+        {/* Escalation from the opener: that brief was a sample; this makes it
+            the visitor's own. The audience toggle is the interactive proof. */}
         <p
-          className="mt-6 max-w-[46ch] text-[17px]"
+          className="mt-6 max-w-[48ch] text-[17px]"
           style={{ color: "var(--ink-soft)", lineHeight: 1.55 }}
         >
-          A short morning read that opens on the one thing that needs you today.
-          Everything else waits below, quiet until it matters.
+          That brief was a sample. Signal builds yours from your own tools. Pick
+          a scenario and watch it change.
         </p>
 
         <p
