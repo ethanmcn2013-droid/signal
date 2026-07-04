@@ -1,5 +1,6 @@
 import { SuiteSwitcher } from "@/components/suite-switcher-pills";
 import { UserButtonWithSuite } from "@/components/user-button-with-suite";
+import { SuiteHeader } from "@/components/chrome/suite-header";
 
 /**
  * Authenticated app chrome for Signal.
@@ -28,33 +29,13 @@ export default function AppLayout({
     <div
       style={{ minHeight: "100vh", background: "var(--bg)", display: "flex", flexDirection: "column" }}
     >
-      {/*
-        §14 persistent chrome.
-        z-40 (spec), one level below Clerk modal overlays (z-50+).
-        backdrop-blur-md = saturate(160%) blur(12px) in this system.
-      */}
-      <header
-        className="sticky top-0 z-40 border-b"
-        style={{
-          background: "color-mix(in srgb, var(--bg) 88%, transparent)",
-          backdropFilter: "saturate(150%) blur(12px)",
-          WebkitBackdropFilter: "saturate(150%) blur(12px)",
-          borderBottomColor: "var(--border-soft)",
-        }}
-      >
-        <div className="mx-auto flex h-14 w-full max-w-[1240px] items-center justify-between px-6">
-
-          {/* Left slot, §14 (amended 2026-05-19): umbrella anchor (once)
-              + always-visible 4-product pill switcher. The active pill is
-              the product-you-are-in indicator (no separate breadcrumb). */}
-          <div className="flex min-w-0 items-center">
-            <SuiteSwitcher current="analytics" />
-          </div>
-
-          {/* Right slot, account menu */}
-          <UserButtonWithSuite current="analytics" />
-        </div>
-      </header>
+      {/* §14 persistent chrome — the shared SuiteHeader shell (switcher
+          lockup, no wordmark). One header for marketing + app. */}
+      <SuiteHeader
+        launcher={<SuiteSwitcher current="analytics" />}
+        nav={[]}
+        account={<UserButtonWithSuite current="analytics" />}
+      />
 
       <main style={{ flex: 1, display: "flex", flexDirection: "column" }}>
         {children}
