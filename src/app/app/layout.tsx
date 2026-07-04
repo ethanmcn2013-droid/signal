@@ -1,6 +1,9 @@
+import { Suspense } from "react";
 import { SuiteSwitcher } from "@/components/suite-switcher-pills";
 import { UserButtonWithSuite } from "@/components/user-button-with-suite";
 import { SuiteHeader } from "@/components/chrome/suite-header";
+import { AppAccessGate } from "@/components/app-access-gate";
+import AppLoading from "./loading";
 
 /**
  * Authenticated app chrome for Signal.
@@ -38,7 +41,11 @@ export default function AppLayout({
       />
 
       <main style={{ flex: 1, display: "flex", flexDirection: "column" }}>
-        {children}
+        {/* Closed-beta gate: only allowlisted accounts reach the app content
+            (production only). The wordmark loader paints during the check. */}
+        <Suspense fallback={<AppLoading />}>
+          <AppAccessGate>{children}</AppAccessGate>
+        </Suspense>
       </main>
     </div>
   );
