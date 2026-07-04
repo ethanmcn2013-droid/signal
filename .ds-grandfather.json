@@ -79,8 +79,16 @@
     "hex": 5,
     "ease": 0
   },
+  "src/app/waitlist/page.tsx": {
+    "hex": 5,
+    "ease": 0
+  },
   "src/components/account/danger-zone.tsx": {
     "hex": 7,
+    "ease": 0
+  },
+  "src/components/chrome/suite-header.tsx": {
+    "hex": 4,
     "ease": 0
   },
   "src/components/account/manage-identity-button.tsx": {
