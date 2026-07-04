@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { AnalyticsHeroSignal } from "@/components/landing/analytics-hero-signal";
+import { TheBriefHero } from "@/components/landing/the-brief-hero";
 import { Hero } from "@/components/landing/hero";
 import { BriefingAnatomy } from "@/components/marketing/briefing-anatomy";
 import { SuiteArrows } from "@/components/suite-arrows";
@@ -9,7 +9,9 @@ const REQUEST_ACCESS_HREF =
 
 /**
  * Analytics marketing homepage, structure:
- *   1. AnalyticsHeroSignal, "The Signal" scan-line hero (A·1, 2026-05-28)
+ *   1. TheBriefHero        , full-bleed opener: a noisy 44-note pile distils
+ *                            into the daily brief (noise to signal), SSR-settled
+ *                            with a play-once reveal
  *   2. Hero               , product intro text + audience toggle + live briefing demo
  *   3. BriefingAnatomy    , anatomy of a briefing item (the diagram
  *                            that earns its pixels, shows the artifact
@@ -25,7 +27,7 @@ export default function HomePage() {
   return (
     <div style={{ background: "var(--bg)" }}>
       <SuiteArrows current="analytics" />
-      <AnalyticsHeroSignal />
+      <TheBriefHero />
       <Hero />
 
       <BriefingAnatomy />
