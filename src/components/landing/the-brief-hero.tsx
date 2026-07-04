@@ -299,6 +299,7 @@ export function TheBriefHero() {
             <div className={`${PREFIX}-lead-wrap`}>
               <span className={`${PREFIX}-marker`} aria-hidden="true" />
               <h2 className={`${PREFIX}-signal ${PREFIX}-signal-lead`}>{LEAD.signal}</h2>
+              <p className={`${PREFIX}-lead-dek`}>Waiting on the final guest count.</p>
             </div>
           </article>
 
@@ -461,8 +462,8 @@ const CSS = `
 .${PREFIX}-hero-section{
   position:relative;
   box-sizing:border-box;
-  min-height:100vh;
-  min-height:100svh;
+  min-height:92vh;
+  min-height:92svh;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -896,6 +897,21 @@ const CSS = `
   clip-path:inset(0 0 0 0);
 }
 
+/* Lead dek — quiet standfirst under the lead headline, reveals with the lead */
+.${PREFIX}-lead-dek{
+  margin:10px 0 0;
+  max-width:40ch;
+  font-size:clamp(14px,1.5vw,15px);
+  line-height:1.45;
+  color:var(--sig5-ink-faint);
+  opacity:0;
+}
+.${PREFIX}-run .${PREFIX}-lead-dek{
+  animation:${PREFIX}-soft-in var(--sig5-lead-dur) var(--sig5-ease-soft)
+    var(--sig5-lead-at) both;
+}
+.${PREFIX}-static .${PREFIX}-lead-dek{opacity:1;}
+
 /* ---- SET ASIDE index — reveals last with the ledger ---- */
 .${PREFIX}-aside{
   margin-top:16px;
@@ -1025,7 +1041,7 @@ const CSS = `
 .${PREFIX}-scrollcue{
   position:absolute;
   left:50%;
-  bottom:clamp(14px,3vh,26px);
+  bottom:clamp(24px,3vh,32px);
   transform:translateX(-50%);
   z-index:1;
   opacity:0;
@@ -1205,6 +1221,7 @@ const CSS = `
   .${PREFIX}-standfirst-band,
   .${PREFIX}-rail-label,
   .${PREFIX}-kicker,
+  .${PREFIX}-lead-dek,
   .${PREFIX}-aside,
   .${PREFIX}-ledger,
   .${PREFIX}-cta{opacity:1 !important;}
