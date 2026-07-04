@@ -15,5 +15,7 @@ import { SiteNav } from "./site-nav";
 export function SiteNavConditionalClient({ isAuthed }: { isAuthed: boolean }) {
   const pathname = usePathname() ?? "";
   if (pathname === "/app" || pathname.startsWith("/app/")) return null;
+  // Hero lab (local-only review surface) renders its own minimal chrome.
+  if (pathname === "/lab" || pathname.startsWith("/lab/")) return null;
   return <SiteNav isAuthed={isAuthed} />;
 }
