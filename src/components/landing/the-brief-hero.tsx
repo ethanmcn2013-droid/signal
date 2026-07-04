@@ -410,25 +410,26 @@ export function TheBriefHero() {
 const ROOT_VARS: CSSVars = {
   "--sig5-font": "var(--font-geist-sans, 'Geist', system-ui, sans-serif)",
   "--sig5-mono": "var(--font-geist-mono, monospace)",
-  // Palette repointed to the Design System tokens, current hex kept as fallback
-  // so there is zero visual regression when a token is absent.
-  "--sig5-ink": "var(--ink, #111111)",
-  "--sig5-ink-soft": "var(--ink-soft, #3f3f46)",
-  "--sig5-ink-faint": "var(--ink-faint, #71717a)",
-  "--sig5-paper": "var(--paper, #ffffff)",
+  // Palette points at the Design System tokens (no raw hex, so the DS drift gate
+  // stays clean and the hero inherits the live theme, dark mode included).
+  "--sig5-ink": "var(--ink)",
+  "--sig5-ink-soft": "var(--ink-soft)",
+  "--sig5-ink-faint": "var(--ink-faint)",
+  "--sig5-paper": "var(--paper)",
   // Rule hierarchy: solid ink for the masthead top line + page close, a light
   // hairline for structural furniture, the faintest only for the section border.
-  "--sig5-rule": "#111111",
+  "--sig5-rule": "var(--ink)",
   "--sig5-hair": "rgba(17,17,17,.12)",
   "--sig5-hairline": "var(--border, rgba(17,17,17,.06))",
-  // The one accent — indigo, on the read sweep, the markers, and the lead pencil.
-  "--sig5-indigo": "var(--accent, #4f46e5)",
+  // The one accent, indigo, on the read sweep, the markers, and the lead pencil.
+  "--sig5-indigo": "var(--accent)",
   "--sig5-indigo-soft": "rgba(79,70,229,.10)",
-  // One decelerating curve (the tool settling), one soft curve for fades, one
-  // draw curve for rules.
-  "--sig5-ease-rack": "cubic-bezier(0.22,0.61,0.18,1)",
-  "--sig5-ease-soft": "cubic-bezier(0.16,1,0.3,1)",
-  "--sig5-ease-draw": "cubic-bezier(0.22,0.61,0.36,1)",
+  // Bespoke motion curves for the noise-to-signal choreography (settle, fade,
+  // draw, pencil). ds-allow: hero motion, not reusable UI transitions.
+  "--sig5-ease-rack": "cubic-bezier(0.22,0.61,0.18,1)", // ds-allow: hero motion choreography
+  "--sig5-ease-soft": "cubic-bezier(0.16,1,0.3,1)", // ds-allow: hero motion choreography
+  "--sig5-ease-draw": "cubic-bezier(0.22,0.61,0.36,1)", // ds-allow: hero motion choreography
+  "--sig5-ease-pencil": "cubic-bezier(0.7,0,0.3,1)", // ds-allow: hero motion choreography
   // Vertical rhythm + mono tracking.
   "--sig5-unit": "8px",
   "--sig5-track-label": ".18em",
@@ -749,7 +750,7 @@ const CSS = `
   transform-origin:top;
 }
 .${PREFIX}-run .${PREFIX}-marker{
-  animation:${PREFIX}-grow var(--sig5-marker-dur) cubic-bezier(0.7,0,0.3,1)
+  animation:${PREFIX}-grow var(--sig5-marker-dur) var(--sig5-ease-pencil)
     var(--sig5-marker-at) both;
 }
 .${PREFIX}-static .${PREFIX}-marker{transform:scaleY(1);}
