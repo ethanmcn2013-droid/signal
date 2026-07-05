@@ -25,7 +25,9 @@ export default function RootError({
   }, [error]);
 
   return (
-    <div
+    <main
+      id="main-content"
+      tabIndex={-1}
       style={{
         minHeight: "100vh",
         background: "var(--bg)",
@@ -105,6 +107,6 @@ export default function RootError({
           Back to Signal
         </Link>
       </div>
-    </div>
+    </main>
   );
 }

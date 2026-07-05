@@ -3,6 +3,17 @@
 Convention: BRAND.md §6.5. Entries before 2026-05-14 keep their
 original shape; the new shape starts at the next cycle.
 
+## 2026-07-05 · A·17 · fixes · the 404 and error pages get a real landmark, a real title, and the skip target
+
+**The 404 and root error pages now render a `<main>` landmark, carry the skip target, and the 404 shows its own tab title instead of impersonating the homepage.** These pages sit outside the marketing and app layouts, so nothing was providing them a `<main>` — they were landmark-less, and the skip link added in A·15 had nowhere to land on them.
+
+- **Problem** — `not-found.tsx` and root `error.tsx` rendered a bare `<div>`: no `<main>` landmark (a screen reader finds no main region), no `#main-content`, so the new skip link no-oped there. The 404 also inherited the root layout's title — a "Page not found" screen announcing itself as "Signal · Operational clarity. Know what needs your attention." in the tab and to search engines.
+- **Root cause** — Both are special Next files rendered directly under the root layout, bypassing the `(marketing)` / `/app` layouts that own the `<main>` landmark and skip target for every other page. They were authored before the skip-link/landmark contract existed.
+- **Files changed** — `src/app/not-found.tsx` (adds `metadata.title`, outer `<div>` → `<main id="main-content" tabIndex={-1}>`), `src/app/error.tsx` (outer `<div>` → `<main id="main-content" tabIndex={-1}>`). `app/error.tsx` is deliberately untouched — it renders inside `app/layout`'s existing `<main>`, so giving it another would nest landmarks.
+- **Solution** — Each page now owns exactly one `<main id="main-content">` so the skip link resolves everywhere, and the 404 sets `title: "Page not found · Signal"`. No visual change.
+- **Expected user impact** — Screen-reader users get a named main region and an honest page title on the 404; keyboard users can skip to content on error surfaces too.
+- **Expected engineering impact** — The `#main-content` skip contract is now universal across every route, including the special error/not-found surfaces. Verified in a real browser: `/this-route-does-not-exist` returns HTTP 404 with `main#main-content`, the skip link, and the corrected `<title>`. 176 tests, typecheck, lint clean.
+
 ## 2026-07-05 · A·16 · guards · a contract test locks the crawler policy, and catches a hole in it
 
 **The public SEO surface (A·10) now has a regression test, and writing it immediately caught that the robots policy left the `/app` and `/api` entry paths crawlable.** The invariant worth protecting is a privacy one — no auth-walled, tokenised, or gated route may ever be advertised to crawlers — and it was previously enforced only by the author remembering to keep the two files in sync.

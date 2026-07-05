@@ -1,11 +1,22 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+
+// Correct the tab title — a 404 otherwise inherits the marketing default
+// ("Signal · Operational clarity…"), which reads as a real page.
+export const metadata: Metadata = {
+  title: "Page not found · Signal",
+};
 
 /**
  * Root 404, calm, on-brand. Wordmark inline so users can get back.
+ * Renders its own <main> landmark (it sits outside the marketing/app
+ * layouts, so nothing else provides one) and carries the skip target.
  */
 export default function NotFound() {
   return (
-    <div
+    <main
+      id="main-content"
+      tabIndex={-1}
       style={{
         minHeight: "100vh",
         background: "var(--bg)",
@@ -65,6 +76,6 @@ export default function NotFound() {
       >
         Back to Signal
       </Link>
-    </div>
+    </main>
   );
 }
