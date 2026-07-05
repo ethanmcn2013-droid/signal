@@ -44,6 +44,16 @@ jobs:
       - name: Install
         run: npm ci --no-audit --no-fund
 
+      # ── Supply-chain gate ────────────────────────────────────────────
+      # Blocks merge on any HIGH or CRITICAL advisory in the dependencies
+      # that actually ship to users (`--omit=dev`). Added 2026-07-05
+      # (security audit, Track A) after a Next.js middleware-bypass CVE and
+      # high-severity ws / js-cookie advisories shipped unnoticed. Dev-only
+      # advisories are surfaced by the informational step below but do not
+      # block — they never reach the deployed runtime.
+      - name: Dependency audit — high/critical in prod deps (blocks)
+        run: npm audit --omit=dev --audit-level=high
+
       - name: Typecheck
         run: npm run typecheck
 
@@ -58,4 +68,13 @@ jobs:
 
       - name: Lint (informational — does not block)
         run: npm run lint
+        continue-on-error: true
+
+      # Full-tree audit (incl. dev deps + moderate/low). Informational so
+      # dev-only advisories (e.g. the drizzle-kit → esbuild migration-CLI
+      # chain) are visible to reviewers without blocking a merge. Promote
+      # anything here to the blocking gate above once a non-breaking fix
+      # exists.
+      - name: Dependency audit — full tree (informational)
+        run: npm audit
         continue-on-error: true
