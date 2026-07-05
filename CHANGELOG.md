@@ -3,6 +3,17 @@
 Convention: BRAND.md §6.5. Entries before 2026-05-14 keep their
 original shape; the new shape starts at the next cycle.
 
+## 2026-07-05 · A·11 · fixes · client-side crashes now reach Sentry, not just the console
+
+**The two React error boundaries now forward the error to Sentry, so a render crash that a reader hits in the browser becomes a visible, alertable event instead of a line in a console no one is watching.** Signal already wires Sentry on the server (`instrumentation.ts`) and on the client (`instrumentation-client.ts`), but the boundaries that actually catch failures were only calling `console.error` — the one class of error most likely to be seen by a paying reader was the one class not being reported.
+
+- **Problem** — When a client component throws during render, Next shows `error.tsx` (root) or `app/error.tsx` (the signed-in shell). Both boundaries logged to the console and nothing else. `instrumentation.ts`'s `onRequestError` only observes *server* request errors, so client-side render crashes never reached Sentry: no alert, no stack, no digest, no idea it happened.
+- **Root cause** — The boundaries predate the Sentry wiring, or were ported before the capture step was added. The observability setup was complete on both runtimes but the boundaries were never connected to it.
+- **Files changed** — `src/app/error.tsx`, `src/app/app/error.tsx`.
+- **Solution** — Each boundary's effect now calls `Sentry.captureException(error)` before the existing `console.error`. `captureException` is a safe no-op when Sentry is unconfigured (dev/preview skip `init()`), so local development and preview builds are unchanged; only DSN-configured environments start reporting. The client Sentry bundle is already loaded by `instrumentation-client.ts`, so there is no new bundle cost.
+- **Expected user impact** — None visible; the calm "Try again" surface is unchanged. Indirectly, faster fixes: a crash that reaches a reader now pages the operator with a real stack trace.
+- **Expected engineering impact** — Client render errors become first-class Sentry events with digest and stack, closing the observability gap the server side already covered. Verified: `captureException` resolves as a real export and no-ops without init; typecheck clean; changed files lint clean.
+
 ## 2026-07-05 · A·10 · ships · the site tells search engines what to read and what to leave alone
 
 **Signal now emits a `sitemap.xml` and a `robots.txt` — the public marketing surface is enumerated for crawlers, and everything auth-walled, tokenised, or private is closed off — so the pages built to be found can be found, and the pages that must never be indexed cannot leak in.** Before launch this summer, a public marketing site with thirteen content pages was shipping with neither file: search engines had to discover pages by luck, and a tokenised unsubscribe link (`/u/<token>`) or a shared-briefing URL could have been indexed just by being followed once.

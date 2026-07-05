@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import * as Sentry from "@sentry/nextjs";
 import Link from "next/link";
 
 /**
@@ -16,6 +17,10 @@ export default function RootError({
 }) {
   useEffect(() => {
     // Surface to observability without exposing raw error to the UI.
+    // instrumentation's onRequestError only sees server request errors;
+    // client-side render errors reach Sentry only from here. No-op when
+    // Sentry is unconfigured (instrumentation-client skips init).
+    Sentry.captureException(error);
     console.error("[root-error]", error);
   }, [error]);
 

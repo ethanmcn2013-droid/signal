@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import * as Sentry from "@sentry/nextjs";
 import Link from "next/link";
 
 /**
@@ -15,6 +16,9 @@ export default function AppError({
   reset: () => void;
 }) {
   useEffect(() => {
+    // Forward client-side render errors to Sentry — instrumentation's
+    // onRequestError covers server errors only. No-op when unconfigured.
+    Sentry.captureException(error);
     console.error("[app-error]", error);
   }, [error]);
 
