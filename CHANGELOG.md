@@ -3,7 +3,18 @@
 Convention: BRAND.md §6.5. Entries before 2026-05-14 keep their
 original shape; the new shape starts at the next cycle.
 
-## 2026-07-05 · A·12 · fixes · a keyboard can now skip the nav, and every page has exactly one landmark
+## 2026-07-05 · A·16 · guards · a contract test locks the crawler policy, and catches a hole in it
+
+**The public SEO surface (A·10) now has a regression test, and writing it immediately caught that the robots policy left the `/app` and `/api` entry paths crawlable.** The invariant worth protecting is a privacy one — no auth-walled, tokenised, or gated route may ever be advertised to crawlers — and it was previously enforced only by the author remembering to keep the two files in sync.
+
+- **Problem** — `sitemap.ts` and `robots.ts` encoded a privacy/SEO contract with nothing to stop a future edit from adding a private route to the sitemap or dropping a `Disallow`. And the contract itself had a hole: `Disallow: /app/` and `/api/` (trailing slash) only block *subpaths* — a crawler could still fetch the bare `/app` and `/api` entries.
+- **Root cause** — The sitemap/robots pair shipped in A·10 without a guard, and the disallow list used trailing-slash prefixes, which the robots spec treats as "everything *under* this path", not the path itself.
+- **Files changed** — `src/app/seo-routes.test.ts` (new), `src/app/robots.ts` (disallow `/app` and `/api` bare), `package.json` (test wired into `npm test`).
+- **Solution** — A `node --test` suite asserts the sitemap lists only absolute, de-duplicated, public URLs (no `/app`, `/u/`, `/api`, `/waitlist`, `/sign-in`, `/sign-up`), that priorities are valid and the home page leads, and that robots allows `/`, disallows every private prefix, and points at a well-formed sitemap under the same host. The disallow list drops the trailing slashes on `/app` and `/api` so the entry paths are covered too. Wired into the existing `npm test` gate alongside the other contract checks.
+- **Expected user impact** — None directly; the guard keeps private URLs out of search results as the route map grows.
+- **Expected engineering impact** — The crawler policy is now a tested contract, not a convention: a private route added to the sitemap, or a dropped disallow, fails CI. 176 tests pass (was 167); typecheck, `ds:check`, lint clean.
+
+## 2026-07-05 · A·15 · fixes · a keyboard can now skip the nav, and every page has exactly one landmark
 
 **A "Skip to content" link is now the first thing a keyboard or screen-reader user reaches, and the nested `<main>` landmarks that four pages carried are collapsed to one per page — so the primary way non-mouse users navigate the site actually works.** Before this, tabbing into any page meant stepping through the whole sticky nav — logo, launcher, five nav links, the account control — on every single page before reaching a word of content, and four pages announced two `<main>` regions, so "jump to main" was ambiguous where it wasn't impossible.
 
