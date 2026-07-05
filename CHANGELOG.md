@@ -3,6 +3,17 @@
 Convention: BRAND.md §6.5. Entries before 2026-05-14 keep their
 original shape; the new shape starts at the next cycle.
 
+## 2026-07-05 · A·24 · ships · the homepage carries Schema.org structured data
+
+**The homepage now emits a Schema.org `WebSite` + `Organization` JSON-LD block, so search engines can resolve "Signal" and its publisher "Signal Studio" (with its social profiles) into a proper brand entity.** This is the last piece of the discoverability set alongside the sitemap, robots, and canonical work: telling crawlers not just which pages exist, but what the brand behind them is.
+
+- **Problem** — Signal published no structured data. Search engines had to infer the brand, its name, language, and social presence from unstructured page copy, with no eligibility for organisation/site knowledge features.
+- **Root cause** — JSON-LD was never added; the metadata story stopped at Open Graph and Twitter cards.
+- **Files changed** — `src/app/(marketing)/page.tsx`.
+- **Solution** — A single `<script type="application/ld+json">` (a data block, not executable JS — no CSP or injection concern; all values are static constants) declaring a `WebSite` (Signal, `en-IE`, canonical origin from `SITE_URL`) published by an `Organization` (Signal Studio, `STUDIO_URL`, with `sameAs` linking the X / YouTube / TikTok / LinkedIn profiles that mirror the footer). Both URLs derive from the shared constants, so they track the canonical origin.
+- **Expected user impact** — None on the page; makes Signal eligible for richer, correctly-attributed search presentation.
+- **Expected engineering impact** — Completes the discoverability layer (sitemap · robots · canonical · Open Graph · structured data). Verified in a real browser: the homepage emits a valid, well-formed `@graph` with resolved absolute URLs; typecheck and lint clean.
+
 ## 2026-07-05 · A·23 · tightens · the demo video gets an accessible name
 
 **The `/demo` typography video now carries an `aria-label`, so a screen reader announces what it is instead of an unlabeled "video".** The clip is the centrepiece of the demo page; it should introduce itself to every visitor.

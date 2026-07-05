@@ -4,12 +4,47 @@ import { TheBriefHero } from "@/components/landing/the-brief-hero";
 import { Hero } from "@/components/landing/hero";
 import { BriefingAnatomy } from "@/components/marketing/briefing-anatomy";
 import { SuiteArrows } from "@/components/suite-arrows";
+import { SITE_URL } from "@/lib/site-url";
+import { STUDIO_URL } from "@/lib/product-urls";
 
 // Title/description come from the root layout; declare the canonical so the
 // owner-only ?preview=public escape hatch (proxy.ts) and any tracking params
 // don't read as a duplicate of the home page.
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
+};
+
+// Schema.org structured data: Signal (the website) published by Signal Studio
+// (the organisation). Helps search engines resolve the brand and its socials
+// into a knowledge entry. Injected as an ld+json data block (not executable
+// JS); all values are static constants, so no injection surface. Socials
+// mirror the footer's SOCIALS list — keep them in sync if either changes.
+const STRUCTURED_DATA = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": `${SITE_URL}/#website`,
+      url: SITE_URL,
+      name: "Signal",
+      description:
+        "Signal reads the state of your work and writes a short briefing: what needs you, what's moving, what's quiet, what to do next.",
+      inLanguage: "en-IE",
+      publisher: { "@id": `${STUDIO_URL}/#organization` },
+    },
+    {
+      "@type": "Organization",
+      "@id": `${STUDIO_URL}/#organization`,
+      name: "Signal Studio",
+      url: STUDIO_URL,
+      sameAs: [
+        "https://x.com/signalstudio_ie",
+        "https://www.youtube.com/@signalstudio_ie",
+        "https://www.tiktok.com/@signalstudio_ie",
+        "https://www.linkedin.com/company/signal-studio-ie",
+      ],
+    },
+  ],
 };
 
 const REQUEST_ACCESS_HREF =
@@ -34,6 +69,10 @@ const REQUEST_ACCESS_HREF =
 export default function HomePage() {
   return (
     <div style={{ background: "var(--bg)" }}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(STRUCTURED_DATA) }}
+      />
       <SuiteArrows current="analytics" />
       <TheBriefHero />
       <Hero />
