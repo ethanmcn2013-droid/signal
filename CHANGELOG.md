@@ -3,6 +3,17 @@
 Convention: BRAND.md §6.5. Entries before 2026-05-14 keep their
 original shape; the new shape starts at the next cycle.
 
+## 2026-07-05 · A·23 · tightens · the demo video gets an accessible name
+
+**The `/demo` typography video now carries an `aria-label`, so a screen reader announces what it is instead of an unlabeled "video".** The clip is the centrepiece of the demo page; it should introduce itself to every visitor.
+
+- **Problem** — The `<video>` had no accessible name (WCAG 1.1.1 / 4.1.2). Assistive tech announced a generic, unlabeled media element with no indication of its content.
+- **Root cause** — The element was added with playback attributes (`autoPlay muted loop controls`) but no `aria-label`; being muted and caption-free it also offered no other textual hook.
+- **Files changed** — `src/app/(marketing)/demo/page.tsx`.
+- **Solution** — Add `aria-label="Thirty-second typography demo of a Signal morning briefing"`. `controls` is already present, so the auto-playing, looping clip can be paused (WCAG 2.2.2). No visual change.
+- **Expected user impact** — Screen-reader users hear what the video is; everyone else is unaffected.
+- **Expected engineering impact** — One more media element with a proper accessible name. Typecheck and lint clean.
+
 ## 2026-07-05 · A·22 · tightens · the pages with a preview twin now declare their canonical URL
 
 **The five marketing routes that the owner-only `?preview=public` escape hatch can duplicate — `/`, `/signal`, `/method`, `/pricing`, `/about` — now emit a `<link rel="canonical">`, so a crawler that lands on a query-parametered variant is pointed back at the clean URL.** These are exactly the paths `proxy.ts` treats specially (its `MARKETING_PATHS` set), where the preview cookie/param produces a second reachable URL for the same content.

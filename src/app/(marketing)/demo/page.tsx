@@ -100,6 +100,7 @@ export default function DemoPage() {
           >
             <video
               src="/demo-typography.mp4"
+              aria-label="Thirty-second typography demo of a Signal morning briefing"
               autoPlay
               muted
               loop
