@@ -46,16 +46,18 @@ If any of these three drift, the product is no longer Signal — it has become a
 
 ## 4 · The artifact: the Daily Signal
 
-The briefing has four blocks. Always four. Always in this order. The contents change; the structure does not.
+The **daily** briefing has **two** blocks: **Needs attention** then **Quiet risks**, in that order. The contents change; the structure does not. The table below lists all four blocks the engine can render; the **Cadence** column says where each one actually appears. **Moving well** and **Suggested focus** are **weekly-cadence** blocks — they belong to the Friday read, not the morning one.
 
-| Block | Color dot | Job |
-|---|---|---|
-| **Needs attention** | `--status-flight` (#f59e0b) | Things actively costing time or money if left alone today. Blocked work, overload, missed deadlines, dependency failures. Two to three items, never more. |
-| **Moving well** | `--status-shipped` (#10b981) | Quiet wins. Where momentum is. Calibrates the briefing against pure-bad-news fatigue. Two to three items. |
-| **Quiet risks** | neutral grey (#71717a) | What is invisible but accumulating. Inactive projects, single points of failure, drift toward a deadline with no visible progress. The block dashboards miss. |
-| **Suggested focus** | brand indigo (#4f46e5) | One to three actions worth doing today. Not a sorted to-do list. A considered read of where effort would do the most before the day ends. |
+> **Amended 2026-07-05 (was "Always four").** Recorded reason: the morning read is *what needs you today*. "Moving well" is celebration — its `just-shipped` trigger carries the lowest weight of six (100/1000), i.e. the engine had already ranked it as not-the-signal — and a daily celebration is the inverse of *silence is the signal*. "Suggested focus" was a sorted re-projection of items already shown in Needs attention, so the reader met the same task twice under two headers. The web brief cut both on 2026-06-09 (A·3); this amendment brings the contract, the daily email, the marketing demo, and the sample page into line with the shipped web brief (per §12: fix the document first, then the surfaces). The two blocks keep their full jobs in the **weekly** read, where a ten-minute Friday review can bear celebration and a considered focus list without crowding the morning.
 
-**Three cadences, one format.** The same four blocks render at three rhythms: Daily (every morning, two-minute read), Weekly (every Friday, ten-minute read with trend lines in plain sentences), Launch (before a ship event, fifteen-minute read of edges and outstanding items).
+| Block | Color dot | Cadence | Job |
+|---|---|---|---|
+| **Needs attention** | `--status-flight` (#f59e0b) | Daily + Weekly | Things actively costing time or money if left alone today. Blocked work, overload, missed deadlines, dependency failures. Two to three items, never more. |
+| **Quiet risks** | neutral grey (#71717a) | Daily + Weekly | What is invisible but accumulating. Inactive projects, single points of failure, drift toward a deadline with no visible progress. The block dashboards miss. |
+| **Moving well** | `--status-shipped` (#10b981) | Weekly only | Quiet wins. Where momentum is. Calibrates the weekly review against pure-bad-news fatigue. Two to three items. |
+| **Suggested focus** | brand indigo (#4f46e5) | Weekly only | One to three actions worth doing this week. Not a sorted to-do list. A considered read of where effort would do the most. |
+
+**Three cadences, two shapes.** Daily (every morning, two-minute read) renders the two attention blocks. Weekly (every Friday, ten-minute read with trend lines in plain sentences) and Launch (before a ship event, fifteen-minute read of edges and outstanding items) render the fuller four-block read. The engine still computes all four blocks on every build; the render layer decides which surface shows which, keyed on cadence.
 
 **Hard size limits.** Daily ≤ 350 words. Weekly ≤ 900 words. Launch ≤ 1200 words. These are caps, not targets — most days run shorter. The cap is the discipline.
 

@@ -174,6 +174,13 @@ export function BriefingEmail({
               </Text>
             ) : null}
 
+            {/* The daily brief is two blocks — Needs attention and Quiet
+                risks. Moving well (celebration, lowest trigger weight) and
+                Suggested focus (a re-projection of what's already above)
+                are weekly-cadence blocks, not part of the morning read
+                (PRODUCT.md §4). The web brief already ships two; the daily
+                email now matches it. The Friday weekly keeps the fuller
+                four-block read. */}
             {briefing.needsAttention.length > 0 && (
               <Bucket
                 title="Needs attention"
@@ -181,7 +188,7 @@ export function BriefingEmail({
                 accent={accentAttention}
               />
             )}
-            {briefing.movingWell.length > 0 && (
+            {cadence === "weekly" && briefing.movingWell.length > 0 && (
               <Bucket
                 title="Moving well"
                 items={briefing.movingWell}
@@ -196,7 +203,7 @@ export function BriefingEmail({
                 accent={accentRisk}
               />
             )}
-            {briefing.suggestedFocus.length > 0 && (
+            {cadence === "weekly" && briefing.suggestedFocus.length > 0 && (
               <FocusBlock items={briefing.suggestedFocus} />
             )}
 

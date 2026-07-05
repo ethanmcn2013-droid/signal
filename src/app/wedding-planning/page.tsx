@@ -5,9 +5,13 @@ import { SiteFooter } from "@/components/marketing/site-footer";
 export const metadata: Metadata = {
   title: "Wedding planning briefing, Signal",
   description:
-    "What a daily briefing looks like for a wedding workspace, four weeks out. Plain sentences. What needs you, what's moving, what's quiet, what to do today.",
+    "What a daily briefing looks like for a wedding workspace, four weeks out. Plain sentences. What needs you today, and what's quietly drifting.",
 };
 
+// The daily briefing is two blocks — what needs you today, and what is
+// quietly at risk. Moving well and Suggested focus are weekly-cadence
+// blocks (PRODUCT.md §4), so a daily sample shows the two the reader
+// actually receives each morning.
 const BRIEFING = [
   {
     label: "Needs attention",
@@ -19,29 +23,12 @@ const BRIEFING = [
     ],
   },
   {
-    label: "Moving well",
-    dot: "#10b981",
-    items: [
-      "Photography slots are booked, and the DJ shortlist is back from the couple.",
-      "You closed 3 things this week.",
-    ],
-  },
-  {
     label: "Quiet risks",
     dot: "#71717a",
     items: [
       "Niamh asked about the dietary list 4 days ago, no reply has gone back.",
       "Save-the-date design has had no activity in 11 days.",
       "Two trips to Highfield in two weeks, with no decision after either.",
-    ],
-  },
-  {
-    label: "Suggested focus",
-    dot: "#4f46e5",
-    items: [
-      "Book the Lambs Hill visit today, it is blocking the venue decision.",
-      "Send the final guest count to Niamh today, it was due 5 days ago.",
-      "Pick a dietary template by tonight, the deadline is 4 June.",
     ],
   },
 ] as const;
@@ -248,8 +235,8 @@ export default function WeddingPlanningBriefingPage() {
             }}
           >
             No charts. No completion percentages. No project-manager voice. Just
-            the three things that need you today, the things that are quietly
-            drifting, and the wins that are working themselves out.
+            the things that need you today, and the ones that are quietly
+            drifting toward a deadline before anyone notices.
           </p>
         </div>
       </section>

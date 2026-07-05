@@ -84,6 +84,9 @@ export function ageNote(trigger: TriggerKind, days: number): string {
 export function graceNote(b: Briefing): string {
   if (b.isEmpty) return "That's the read.";
   if (b.suggestedFocus.length === 0) return "That's the read, good day.";
-  if (b.needsAttention.length >= 2) return "Take the focus block first. The rest can wait.";
+  // The daily read leads with Needs attention and no longer renders a
+  // separate focus block, so the sign-off steers to the top of the list,
+  // not to a block that may not be on the page.
+  if (b.needsAttention.length >= 2) return "Start at the top. The rest can wait.";
   return "That's the read. Open Tasks when you're ready.";
 }

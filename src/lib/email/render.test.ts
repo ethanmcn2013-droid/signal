@@ -48,8 +48,8 @@ describe("BriefingEmail HTML render", () => {
     assert.match(html, /signal studio\./);
   });
 
-  test("renders full-bucket briefing without throwing", async () => {
-    const full: Briefing = brief({
+  function fullBrief(): Briefing {
+    return brief({
       isEmpty: false,
       needsAttention: [
         {
@@ -87,12 +87,27 @@ describe("BriefingEmail HTML render", () => {
         },
       ],
     });
+  }
+
+  // The daily brief is two blocks — Needs attention and Quiet risks.
+  // Moving well and Suggested focus are weekly-cadence blocks (PRODUCT.md
+  // §4) and must not appear in the daily email even when the engine has
+  // populated their arrays.
+  test("daily brief renders two blocks, hides moving-well + focus", async () => {
     const html = await render(
-      BriefingEmail({
-        briefing: full,
-        cadence: "daily",
-        ...LINKS,
-      }),
+      BriefingEmail({ briefing: fullBrief(), cadence: "daily", ...LINKS }),
+    );
+    assert.ok(html.length > 1000);
+    assert.match(html, /Needs attention/);
+    assert.match(html, /Quiet risks/);
+    assert.match(html, /Florist deposit/);
+    assert.doesNotMatch(html, /Moving well/);
+    assert.doesNotMatch(html, /Suggested focus/);
+  });
+
+  test("weekly brief renders all four blocks", async () => {
+    const html = await render(
+      BriefingEmail({ briefing: fullBrief(), cadence: "weekly", ...LINKS }),
     );
     assert.ok(html.length > 1000);
     assert.match(html, /Needs attention/);
@@ -218,7 +233,7 @@ describe("renderBriefingText (plain-text alt)", () => {
     assert.ok(text.includes(LINKS.viewInBrowserUrl));
   });
 
-  test("renders SUGGESTED FOCUS block + due tags when focus items present", () => {
+  test("weekly renders SUGGESTED FOCUS block + due tags when focus items present", () => {
     const text = renderBriefingText(
       brief({
         isEmpty: false,
@@ -238,11 +253,25 @@ describe("renderBriefingText (plain-text alt)", () => {
         ],
       }),
       LINKS,
-      "daily",
+      "weekly",
     );
     assert.match(text, /SUGGESTED FOCUS/);
     assert.match(text, /Confirm florist deposit Monday.*\(today\)/);
     assert.match(text, /Send catering headcount by Friday.*\(by Friday\)/);
+  });
+
+  test("daily hides the SUGGESTED FOCUS block even when focus items present", () => {
+    const text = renderBriefingText(
+      brief({
+        isEmpty: false,
+        suggestedFocus: [
+          { id: "f1", text: "Confirm florist deposit Monday", due: "today", trigger: "stuck-work" },
+        ],
+      }),
+      LINKS,
+      "daily",
+    );
+    assert.doesNotMatch(text, /SUGGESTED FOCUS/);
   });
 
   test("weekly cadence offers 'Send daily instead' in the footer", () => {

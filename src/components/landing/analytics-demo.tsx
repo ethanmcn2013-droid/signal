@@ -317,7 +317,16 @@ export function AnalyticsDemo({ domain = "wedding" }: Props = {}) {
   // shipped product, so there is none here either. The brief now leads with
   // the one signal that needs you today (the "attention" block, which is also
   // what the cursor reads) and demotes the rest to a quiet list (review 22).
-  const activeBlocks: DemoBlock[] = useMemo(() => pack.blocks, [pack]);
+  //
+  // The daily brief ships two blocks — Needs attention and Quiet risks — so
+  // the demo shows exactly those two. Moving well and Suggested focus are
+  // weekly-cadence material (PRODUCT.md §4) and are not part of the morning
+  // read; their data stays in `domains.ts` for a future weekly demo. The
+  // demo must be the product, not a richer promise than the product keeps.
+  const activeBlocks: DemoBlock[] = useMemo(
+    () => pack.blocks.filter((b) => b.id === "attention" || b.id === "risks"),
+    [pack],
+  );
   const leadBlock = useMemo(
     () => activeBlocks.find((b) => b.id === "attention") ?? activeBlocks[0],
     [activeBlocks]

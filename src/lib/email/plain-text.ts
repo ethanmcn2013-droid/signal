@@ -47,7 +47,9 @@ export function renderBriefingText(
     lines.push("");
   }
 
-  if (b.movingWell.length > 0) {
+  // Moving well is a weekly-cadence block; the daily read is two blocks
+  // (Needs attention, Quiet risks). See PRODUCT.md §4.
+  if (cadence === "weekly" && b.movingWell.length > 0) {
     lines.push("MOVING WELL");
     for (const item of b.movingWell) {
       lines.push(`  ${item.text}`);
@@ -65,7 +67,9 @@ export function renderBriefingText(
     lines.push("");
   }
 
-  if (b.suggestedFocus.length > 0) {
+  // Suggested focus is a weekly-cadence block (PRODUCT.md §4); on the
+  // daily read the Needs-attention items are already the focus.
+  if (cadence === "weekly" && b.suggestedFocus.length > 0) {
     lines.push("SUGGESTED FOCUS");
     for (const item of b.suggestedFocus) {
       lines.push(`  ${item.text}  (${item.due})`);

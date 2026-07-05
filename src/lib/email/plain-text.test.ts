@@ -46,31 +46,42 @@ describe("renderBriefingText", () => {
     assert.match(out, /Three per block\. Hard cap\./);
   });
 
-  test("bucket headers + items + provenance render", () => {
+  test("daily brief shows two blocks, hides moving-well + focus", () => {
     const out = renderBriefingText(
       brief({
         needsAttention: [item({ text: "A overdue" })],
         movingWell: [item({ id: "m", text: "B shipped", sourceLabel: "Tasks · X" })],
         quietRisks: [item({ id: "q", text: "C stalled" })],
+        suggestedFocus: [focus({ text: "Send invitations", due: "tomorrow" })],
       }),
       LINKS,
       "daily",
     );
     assert.match(out, /NEEDS ATTENTION/);
-    assert.match(out, /MOVING WELL/);
     assert.match(out, /QUIET RISKS/);
     assert.match(out, /A overdue/);
-    assert.match(out, /from Tasks · X/);
+    // Weekly-cadence blocks stay off the daily read (PRODUCT.md §4).
+    assert.doesNotMatch(out, /MOVING WELL/);
+    assert.doesNotMatch(out, /SUGGESTED FOCUS/);
   });
 
-  test("suggested focus block shows the due tag", () => {
+  test("weekly brief renders all four block headers", () => {
     const out = renderBriefingText(
-      brief({ suggestedFocus: [focus({ text: "Send invitations", due: "tomorrow" })] }),
+      brief({
+        needsAttention: [item({ text: "A overdue" })],
+        movingWell: [item({ id: "m", text: "B shipped", sourceLabel: "Tasks · X" })],
+        quietRisks: [item({ id: "q", text: "C stalled" })],
+        suggestedFocus: [focus({ text: "Send invitations", due: "tomorrow" })],
+      }),
       LINKS,
-      "daily",
+      "weekly",
     );
+    assert.match(out, /NEEDS ATTENTION/);
+    assert.match(out, /MOVING WELL/);
+    assert.match(out, /QUIET RISKS/);
     assert.match(out, /SUGGESTED FOCUS/);
     assert.match(out, /Send invitations {2}\(tomorrow\)/);
+    assert.match(out, /from Tasks · X/);
   });
 
   test("greeting personalises with firstName", () => {

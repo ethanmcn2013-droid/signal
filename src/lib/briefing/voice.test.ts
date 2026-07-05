@@ -98,7 +98,7 @@ describe("graceNote", () => {
     assert.equal(graceNote(brief()), "That's the read, good day.");
   });
 
-  test("two-plus attention items steers to the focus block", () => {
+  test("two-plus attention items steers to the top of the list", () => {
     assert.equal(
       graceNote(
         brief({
@@ -106,7 +106,7 @@ describe("graceNote", () => {
           suggestedFocus: [{}] as never[],
         }),
       ),
-      "Take the focus block first. The rest can wait.",
+      "Start at the top. The rest can wait.",
     );
   });
 
