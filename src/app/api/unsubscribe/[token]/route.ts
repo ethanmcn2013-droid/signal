@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { unsubscribeByToken } from "@/lib/preferences";
 import { allow, clientIp } from "@/lib/ratelimit";
+import { SITE_URL } from "@/lib/site-url";
 
 // One-click POST handler for the RFC 8058 `List-Unsubscribe-Post` header.
 // Gmail and Apple Mail call this endpoint when the user taps the native
@@ -34,9 +35,6 @@ export async function GET(
   }
   const { token } = await ctx.params;
   return NextResponse.redirect(
-    new URL(
-      `/u/${encodeURIComponent(token)}`,
-      process.env.NEXT_PUBLIC_SITE_URL ?? "https://signal.signalstudio.ie",
-    ),
+    new URL(`/u/${encodeURIComponent(token)}`, SITE_URL),
   );
 }

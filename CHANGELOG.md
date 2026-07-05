@@ -3,6 +3,17 @@
 Convention: BRAND.md §6.5. Entries before 2026-05-14 keep their
 original shape; the new shape starts at the next cycle.
 
+## 2026-07-05 · A·19 · tightens · the canonical origin is now defined exactly once
+
+**The three remaining copies of the `NEXT_PUBLIC_SITE_URL ?? "https://signal.signalstudio.ie"` literal — in the email dispatcher, the email preview, and the unsubscribe redirect — now read the `SITE_URL` constant introduced in A·10, so the origin that builds every email link, the unsubscribe landing, the sitemap, robots, and page metadata is written in one place.** A drifted fallback here would have quietly pointed unsubscribe links or email CTAs at the wrong host.
+
+- **Problem** — A·10 centralised the canonical origin into `src/lib/site-url.ts` and pointed `metadataBase` at it, but three older call sites still inlined the same `process.env.NEXT_PUBLIC_SITE_URL ?? "https://signal.signalstudio.ie"` expression. Four definitions of one value; any could drift (a typo, a changed default) without the others noticing.
+- **Root cause** — These usages predate the shared constant and were not swept in when A·10 landed.
+- **Files changed** — `src/lib/email/dispatch.ts` (`siteBaseUrl()` returns `SITE_URL`), `src/app/app/preview-email/page.tsx`, `src/app/api/unsubscribe/[token]/route.ts`.
+- **Solution** — Each inlined expression is replaced with an import of `SITE_URL`. Behaviour is identical (same env var, same fallback), but the value is now single-sourced across metadata, sitemap, robots, email links, the unsubscribe redirect, and the preview surface.
+- **Expected user impact** — None today; the safeguard is against a future drift that would misdirect email or unsubscribe links.
+- **Expected engineering impact** — One definition of the canonical origin, period. Verified: typecheck, lint, and the full 176-test suite (including the email dispatch/render tests that assert the generated URLs) stay green.
+
 ## 2026-07-05 · A·18 · fixes · one bad row can no longer take down the whole morning fanout
 
 **In the daily briefing cron, a single user whose briefing build throws would abort the entire run — every recipient processed after them silently got no email that day. Each user is now isolated, so one failure is reported and skipped while everyone else is still delivered.** This is the mechanism that delivers the whole product; its worst failure mode was a fanout-wide outage triggered by one poisoned row or one transient read.

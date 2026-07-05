@@ -3,6 +3,7 @@ import { buildBriefing } from "@/lib/briefing/build";
 import { getMockSource } from "@/lib/briefing/get-source";
 import { getOrCreatePreferences } from "@/lib/preferences";
 import { BriefingEmail } from "@/lib/email/briefing-email";
+import { SITE_URL } from "@/lib/site-url";
 
 export const metadata = {
   title: "Email preview, Signal",
@@ -27,8 +28,7 @@ export default async function PreviewEmailPage() {
     userId: prefs.userId,
     email: prefs.email,
   });
-  const base =
-    process.env.NEXT_PUBLIC_SITE_URL ?? "https://signal.signalstudio.ie";
+  const base = SITE_URL;
 
   const html = await render(
     BriefingEmail({

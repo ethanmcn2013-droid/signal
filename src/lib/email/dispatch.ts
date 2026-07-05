@@ -12,13 +12,14 @@ import type { Briefing } from "@/lib/briefing/types";
 import { BriefingEmail } from "./briefing-email";
 import { renderBriefingText } from "./plain-text";
 import { generateUnsubscribeToken } from "./tokens";
+import { SITE_URL } from "@/lib/site-url";
 
 const REPLY_TO = process.env.RESEND_REPLY_TO ?? "hello@signalstudio.ie";
 
 const FROM = process.env.RESEND_FROM ?? "Signal <hello@signalstudio.ie>";
 
 function siteBaseUrl(): string {
-  return process.env.NEXT_PUBLIC_SITE_URL ?? "https://signal.signalstudio.ie";
+  return SITE_URL;
 }
 
 // Memoised Resend client, keyed on the API key so a key rotation
