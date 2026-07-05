@@ -6,6 +6,9 @@ import { lookupByToken, unsubscribeByToken } from "@/lib/preferences";
 export const metadata: Metadata = {
   title: "Unsubscribe, Signal",
   description: "Confirm you want to stop briefing emails.",
+  // Tokenised per-recipient link — never index it. robots.ts disallows /u/
+  // for crawlers that read it; this closes the same door at the page level.
+  robots: { index: false, follow: false },
 };
 
 // No-auth landing for unsubscribe links inside emails. GET is read-only

@@ -5,6 +5,7 @@ import "./globals.css";
 import { SiteNavConditional } from "@/components/marketing/site-nav-conditional";
 import { DevBanner } from "@/components/dev-banner";
 import { clerkPublishableKey, isDemoMode } from "@/lib/access-mode";
+import { SITE_URL } from "@/lib/site-url";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,9 +28,7 @@ export const metadata: Metadata = {
   title: "Signal · Operational clarity. Know what needs your attention.",
   description:
     "Signal reads the state of your work and writes a short briefing. What needs you. What's moving. What's quiet. What to do next.",
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL ?? "https://signal.signalstudio.ie",
-  ),
+  metadataBase: new URL(SITE_URL),
   manifest: "/manifest.webmanifest",
   openGraph: {
     title: "Signal · Operational clarity.",
