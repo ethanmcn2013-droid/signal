@@ -3,6 +3,17 @@
 Convention: BRAND.md §6.5. Entries before 2026-05-14 keep their
 original shape; the new shape starts at the next cycle.
 
+## 2026-07-05 · A·20 · tightens · shared links carry the site name and locale
+
+**Every page's Open Graph card now declares `og:site_name`, `og:locale`, and `og:url`, so a Signal link shared to X, LinkedIn, iMessage, or Slack unfurls as "Signal", in Irish English, pointing at the canonical origin.** The suite promotes on those exact networks (the footer links four of them); a card missing its site name and locale reads as generic.
+
+- **Problem** — The root `openGraph` set only `title`, `description`, and `type`. Unfurls carried no `og:site_name` (so the source app wasn't named on the card) and no `og:locale` (defaulting to `en_US` against content that is `en-IE` everywhere else — the manifest, the date formatting, the `html lang`).
+- **Root cause** — The metadata was written with the minimum viable OG fields; the site-name/locale fields were never added.
+- **Files changed** — `src/app/layout.tsx`.
+- **Solution** — Add `siteName: "Signal"`, `locale: "en_IE"`, and `url: "/"` (resolved to the canonical origin via `metadataBase`) to the root `openGraph`. Applies to every page that doesn't override it — one edit, whole site.
+- **Expected user impact** — Cleaner, correctly-attributed link previews wherever Signal is shared.
+- **Expected engineering impact** — Complete OG baseline. Verified in a real browser: the home page emits `og:site_name="Signal"`, `og:locale="en_IE"`, and `og:url="https://signal.signalstudio.ie"`; typecheck clean.
+
 ## 2026-07-05 · A·19 · tightens · the canonical origin is now defined exactly once
 
 **The three remaining copies of the `NEXT_PUBLIC_SITE_URL ?? "https://signal.signalstudio.ie"` literal — in the email dispatcher, the email preview, and the unsubscribe redirect — now read the `SITE_URL` constant introduced in A·10, so the origin that builds every email link, the unsubscribe landing, the sitemap, robots, and page metadata is written in one place.** A drifted fallback here would have quietly pointed unsubscribe links or email CTAs at the wrong host.

@@ -34,6 +34,9 @@ export const metadata: Metadata = {
     title: "Signal · Operational clarity.",
     description: "Not a dashboard. A briefing. Know what needs your attention.",
     type: "website",
+    siteName: "Signal",
+    locale: "en_IE",
+    url: "/",
   },
 };
 
