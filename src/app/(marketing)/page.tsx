@@ -1,8 +1,16 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { TheBriefHero } from "@/components/landing/the-brief-hero";
 import { Hero } from "@/components/landing/hero";
 import { BriefingAnatomy } from "@/components/marketing/briefing-anatomy";
 import { SuiteArrows } from "@/components/suite-arrows";
+
+// Title/description come from the root layout; declare the canonical so the
+// owner-only ?preview=public escape hatch (proxy.ts) and any tracking params
+// don't read as a duplicate of the home page.
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
 
 const REQUEST_ACCESS_HREF =
   "mailto:hello@signalstudio.ie?subject=Signal%20access";

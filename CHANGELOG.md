@@ -3,6 +3,17 @@
 Convention: BRAND.md §6.5. Entries before 2026-05-14 keep their
 original shape; the new shape starts at the next cycle.
 
+## 2026-07-05 · A·22 · tightens · the pages with a preview twin now declare their canonical URL
+
+**The five marketing routes that the owner-only `?preview=public` escape hatch can duplicate — `/`, `/signal`, `/method`, `/pricing`, `/about` — now emit a `<link rel="canonical">`, so a crawler that lands on a query-parametered variant is pointed back at the clean URL.** These are exactly the paths `proxy.ts` treats specially (its `MARKETING_PATHS` set), where the preview cookie/param produces a second reachable URL for the same content.
+
+- **Problem** — None of these pages declared a canonical. The documented `?preview=public` escape hatch (and any `utm_*`/tracking params) makes the same page reachable at more than one URL; without a canonical, a crawler can treat those as distinct, duplicate pages and split ranking signals.
+- **Root cause** — Canonicals were never set; A·10 added the sitemap (which lists the clean URLs) but the pages themselves didn't reinforce it with a canonical tag.
+- **Files changed** — `src/app/(marketing)/page.tsx` (new `metadata` with canonical `/`), `src/app/(marketing)/signal/page.tsx`, `.../method/page.tsx`, `.../pricing/page.tsx`, `.../about/page.tsx` (each adds `alternates.canonical`).
+- **Solution** — Each page sets `alternates: { canonical: "/…" }`, which Next resolves against `metadataBase` (the shared `SITE_URL`) into an absolute canonical. Scope is deliberately the `MARKETING_PATHS` set — the paths with a concrete duplicate source — not a blanket sweep.
+- **Expected user impact** — None visible; consolidates search-ranking signals onto the canonical URLs.
+- **Expected engineering impact** — The pages with a known duplicate variant now self-identify their canonical, complementing the A·10 sitemap. Verified in a real browser: all five emit `<link rel="canonical">` at the expected absolute URL; typecheck and lint clean.
+
 ## 2026-07-05 · A·21 · fixes · the briefing confirms your feedback tap to a screen reader
 
 **When you tap "Useful? Yes / Not really" on a briefing item, the buttons are replaced by a small "Thanks, noted." — now wrapped in a live region, so a screen-reader user hears the confirmation instead of silence.** This is the one feedback signal the product collects; the acknowledgement of a successful tap should reach every reader.

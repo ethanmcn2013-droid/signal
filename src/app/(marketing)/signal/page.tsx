@@ -4,6 +4,7 @@ export const metadata: Metadata = {
   title: "The Daily Signal, Signal",
   description:
     "Not a report. Not a feed. A briefing written for the person who needs to make decisions today.",
+  alternates: { canonical: "/signal" },
 };
 
 const BLOCKS = [

@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: "Method, Signal",
   description:
     "How the briefing gets made. A rule engine, a library of phrasings written by hand, and one job: surface what matters today. No machine writes the words.",
+  alternates: { canonical: "/method" },
 };
 
 const STEPS = [

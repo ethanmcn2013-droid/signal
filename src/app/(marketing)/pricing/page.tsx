@@ -4,6 +4,7 @@ export const metadata: Metadata = {
   title: "Pricing, Signal",
   description:
     "Currently in private beta. Pricing lands when Signal is generally available.",
+  alternates: { canonical: "/pricing" },
 };
 
 const PROSE_MAX = { maxWidth: 640, margin: "0 auto", paddingLeft: 24, paddingRight: 24 };

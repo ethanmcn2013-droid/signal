@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: "About, Signal",
   description:
     "A briefing, not a dashboard. What Signal is, why it exists, and where it sits in the Signal Studio suite.",
+  alternates: { canonical: "/about" },
 };
 
 const PROSE_MAX = { maxWidth: 640, margin: "0 auto", paddingLeft: 24, paddingRight: 24 };
