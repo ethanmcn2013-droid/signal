@@ -27,8 +27,8 @@ import {
  *            time, each alone in the centre:
  *              1. the reality      "Every day, more arrives than you can read."
  *              2. the reframe       "Most of it doesn't need you."
- *              3. the philosophy    "Turn noise into signal."
- *            On the third line the word *noise* is the seed: it blooms open and
+ *              3. the philosophy    "Turn chaos into signal."
+ *            On the third line the word *chaos* is the seed: it blooms open and
  *            scatters, and out of it the pile materialises. The idea hands off
  *            into the mechanism — the animation is now the sentence made true.
  *
@@ -186,8 +186,10 @@ type Stage = "idle" | "overture" | "mechanism" | "rest";
 // How long the spoken overture holds before the pile materialises, and how long
 // the mechanism runs before we drop performance hints. OVERTURE_MS must stay in
 // step with the --sig5-ov-* timings in ROOT_VARS (the seed word begins to bloom
-// just before this, so the pile emerges out of it rather than after it).
-const OVERTURE_MS = 4300;
+// just before this, so the pile emerges out of it rather than after it). The
+// overture is paced unhurried on purpose — each line gets room to be read once
+// and land before the next arrives.
+const OVERTURE_MS = 5500;
 const MECHANISM_MS = 2500;
 
 export function TheBriefHero() {
@@ -268,7 +270,7 @@ export function TheBriefHero() {
               Most of it doesn’t need you.
             </p>
             <p className={`${PREFIX}-ov-line ${PREFIX}-ov-3`}>
-              Turn <span className={`${PREFIX}-ov-seed`}>noise</span> into
+              Turn <span className={`${PREFIX}-ov-seed`}>chaos</span> into
               signal.
             </p>
           </div>
@@ -495,17 +497,17 @@ const ROOT_VARS: CSSVars = {
   "--sig5-field-top": "44px",
   // The overture (Act I). Each line arrives, is held long enough to read once,
   // and leaves before the next — one thought alone at a time. The third line
-  // holds while its seed word ("noise") blooms open, and the pile emerges out of
+  // holds while its seed word ("chaos") blooms open, and the pile emerges out of
   // that bloom. Keep the last beat (seed-at + its duration) in step with
   // OVERTURE_MS so the hand-off is seamless rather than a cut.
-  "--sig5-ov-dur": "1500ms", // on-screen life of lines 1 & 2 (in, hold, out)
-  "--sig5-ov-l1-at": "150ms",
-  "--sig5-ov-l2-at": "1650ms",
-  "--sig5-ov-l3-at": "3250ms",
-  "--sig5-ov-l3-dur": "900ms", // line 3 sets and then holds (no scheduled out)
-  "--sig5-ov-seed-at": "4100ms", // the word noise begins to scatter into the pile
-  "--sig5-ov-seed-dur": "760ms",
-  "--sig5-ov-out-dur": "380ms", // the whole overture dissolves as the pile arrives
+  "--sig5-ov-dur": "1900ms", // on-screen life of lines 1 & 2 (in, hold, out)
+  "--sig5-ov-l1-at": "200ms",
+  "--sig5-ov-l2-at": "2100ms",
+  "--sig5-ov-l3-at": "4200ms",
+  "--sig5-ov-l3-dur": "1000ms", // line 3 sets and then holds (no scheduled out)
+  "--sig5-ov-seed-at": "5300ms", // the word chaos begins to scatter into the pile
+  "--sig5-ov-seed-dur": "900ms",
+  "--sig5-ov-out-dur": "460ms", // the whole overture dissolves as the pile arrives
   // Motion tuning. Eye reads: sweep -> select three -> clear the pile -> the
   // three promote into headlines -> set aside index + ledger.
   "--sig5-sweep-dur": "560ms",
@@ -1226,7 +1228,7 @@ const CSS = `
   0%{opacity:0;transform:translateY(12px);}
   100%{opacity:1;transform:translateY(0);}
 }
-/* Overture: the seed word "noise" blooms open and scatters into the pile. */
+/* Overture: the seed word "chaos" blooms open and scatters into the pile. */
 @keyframes ${PREFIX}-ov-seed{
   0%{opacity:1;transform:scale(1);filter:blur(0);}
   100%{opacity:0;transform:scale(1.9);filter:blur(1.5px);}
