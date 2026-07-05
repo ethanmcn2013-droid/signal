@@ -30,10 +30,10 @@ export async function POST() {
 
     return NextResponse.json({ ok: true });
   } catch (err) {
-    const message = err instanceof Error ? err.message : String(err);
-    return NextResponse.json(
-      { error: "delete_failed", message },
-      { status: 500 },
-    );
+    // Log the detail server-side (flows to Vercel function logs + Sentry via
+    // instrumentation's onRequestError); return an opaque error so internal
+    // exception text never reaches the client.
+    console.error(`[account/delete] failed for user ${userId}:`, err);
+    return NextResponse.json({ error: "delete_failed" }, { status: 500 });
   }
 }

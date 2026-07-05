@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { db as prefsDb } from "@/server/db";
 import { db as libDb } from "@/lib/db";
 import { exportAccountData } from "@/server/account-export";
+import { allow } from "@/lib/ratelimit";
 
 /**
  * GET /api/account/export, Signal.
@@ -18,6 +19,14 @@ export async function GET() {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
 
+  // Throttle this data-exfiltration-sensitive endpoint per user. A full
+  // account export is heavy and legitimately needed only a handful of times;
+  // capping it bounds how fast a hijacked session could repeatedly pull the
+  // entire account. No-ops until Upstash is provisioned (see lib/ratelimit.ts).
+  if (!(await allow("account-export", userId, 10, "1 h"))) {
+    return NextResponse.json({ error: "rate_limited" }, { status: 429 });
+  }
+
   try {
     const data = await exportAccountData(prefsDb, libDb, userId);
     return new NextResponse(JSON.stringify(data, null, 2), {
@@ -29,10 +38,10 @@ export async function GET() {
       },
     });
   } catch (err) {
-    const message = err instanceof Error ? err.message : String(err);
-    return NextResponse.json(
-      { error: "export_failed", message },
-      { status: 500 },
-    );
+    // Log the detail server-side (flows to Vercel function logs + Sentry via
+    // instrumentation's onRequestError); return an opaque error so internal
+    // exception text (DB errors, connection details) never reaches the client.
+    console.error(`[account/export] failed for user ${userId}:`, err);
+    return NextResponse.json({ error: "export_failed" }, { status: 500 });
   }
 }
