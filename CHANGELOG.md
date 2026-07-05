@@ -3,7 +3,9 @@
 Convention: BRAND.md §6.5. Entries before 2026-05-14 keep their
 original shape; the new shape starts at the next cycle.
 
-## 2026-07-02 · A·7 · tightens · the product switcher contract is guarded
+## 2026-07-05 · A·8 · teaches · the opener says the idea before it shows the interface
+
+**The homepage opener now introduces the philosophy before the mechanism: an idea → philosophy → demonstration → clarity arc, so a first-time visitor understands *why* the animation happens, not just *that* it happens.** The distillation motion (read → select → clear → promote → the Morning Spread) is preserved frame-for-frame; a short spoken overture is placed in front of it. On a near-blank page carrying only the masthead, three plain lines arrive and leave one at a time — "Every day, more arrives than you can read." → "Most of it doesn't need you." → "Turn noise into signal." On the third line the word *noise* is the seed: it blooms open and scatters, and the pile materialises out of it, so the animation reads as the sentence made true rather than a clever effect to decode. The settled headline "The signal, not the noise." now lands as the philosophy said back to the reader once they have watched it happen. Copy stays outcome-first (no scans/analyses/AI/processes). The whole overture is a play-once, aria-hidden enhancement: SSR still renders the settled spread, and prefers-reduced-motion / no-JS skip straight to it with no overture and no flash. Implemented as a four-stage machine (idle → overture → mechanism → rest) with all motion in scoped CSS keyframes; no new dependencies, DS drift gate clean.
 
 **Signal keeps the suite switcher in its newer shape: visible pills for signed-in app chrome, rich gesture dropdown only where the marketing/public surface earns it.** The local contract check now runs before tests and fails if `/app` chrome drifts back to the hidden dropdown or if the dropdown loses the rich product-gesture refactor.
 

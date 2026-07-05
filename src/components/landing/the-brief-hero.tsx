@@ -10,46 +10,63 @@ import {
 } from "react";
 
 /**
- * Signal homepage opener — "The Brief" (distillation: a packed pile of noise
- * resolves into the front page).
+ * Signal homepage opener — "The Brief."
  *
- * The rest state is "The Morning Spread": an asymmetric editorial front page. A
- * full-width masthead + double Oxford rule (crisp from t=0), a full-width
- * standfirst band with the subhead pushed flush-right on the same baseline, a
- * drawn hairline, then a dominant lead column beside a narrower filed rail that
- * carries stories 02/03 over a SET ASIDE index, closed by one honest ledger
- * line, then a restrained CTA row. Everything hangs to one left optical edge;
- * the only colour at rest is the indigo editor's pencil in the lead gutter.
+ * The old opener began in medias res: a packed pile of noise was already on
+ * screen, got read and sorted, and resolved into a front page. It demonstrated
+ * the *behaviour* beautifully but never stated the *intent* — a first-time
+ * visitor watched something happen without being told why it mattered. This
+ * version keeps every frame of that distillation and puts a short spoken idea
+ * in front of it, so the motion becomes the proof of a sentence you have
+ * already read rather than a clever animation you have to decode.
+ *
+ * The shape is Apple's: idea → philosophy → demonstration → clarity.
+ *
+ *   ACT I  — THE OVERTURE (words, no interface). A near-blank page carrying
+ *            only the masthead. Three plain lines arrive and leave, one at a
+ *            time, each alone in the centre:
+ *              1. the reality      "Every day, more arrives than you can read."
+ *              2. the reframe       "Most of it doesn't need you."
+ *              3. the philosophy    "Turn noise into signal."
+ *            On the third line the word *noise* is the seed: it blooms open and
+ *            scatters, and out of it the pile materialises. The idea hands off
+ *            into the mechanism — the animation is now the sentence made true.
+ *
+ *   ACT II — THE MECHANISM (the product doing its job) — UNCHANGED:
+ *     A READ    — one 1px indigo line sweeps top to bottom; each row ticks faint
+ *                 indigo as it is read.
+ *     B SELECT  — three chips gain a persistent indigo marker and lift; every other
+ *                 chip dims and desaturates.
+ *     C CLEAR   — the dimmed noise collapses away in a top-to-bottom wave, scaling
+ *                 down and drifting aside, opening whitespace.
+ *     D PROMOTE — the three survivors hand off to the front-page headlines with a
+ *                 position-independent cross-dissolve while the real headlines set
+ *                 via a left-to-right clip wipe, kickers and rules draw in, the
+ *                 indigo pencil grows, and the standfirst band fades in.
+ *
+ *   ACT III — REST / CLARITY. "The Morning Spread": an asymmetric editorial
+ *            front page. A masthead + double Oxford rule, a standfirst band whose
+ *            headline — "The signal, not the noise." — is the philosophy line
+ *            said back to you now that you have watched it happen, a dominant
+ *            lead column beside a filed rail carrying stories 02/03 over a SET
+ *            ASIDE index, one honest ledger line, then a restrained CTA row.
+ *            Everything hangs to one left optical edge; the only colour is the
+ *            indigo editor's pencil in the lead gutter.
  *
  * SSR-SETTLED + PLAY-ONCE: the component's initial React state is the SETTLED
- * broadsheet — real semantic headings, no noise field. So server render ===
- * first client render === settled (no hydration mismatch, works with no JS,
- * good for SEO / accessibility / reduced motion). An isomorphic layout effect
- * then switches into the intro exactly once BEFORE first paint when motion is
- * allowed, so the first painted frame is the packed noise start rather than the
- * settled page — no flash of the rest state. Under prefers-reduced-motion the
- * intro never starts and the settled render stays.
- *
- * THE MOTION (the product doing its job) — UNCHANGED:
- *   A READ    — one 1px indigo line sweeps top to bottom; each row ticks faint
- *               indigo as it is read.
- *   B SELECT  — three chips gain a persistent indigo marker and lift; every other
- *               chip dims and desaturates.
- *   C CLEAR   — the dimmed noise collapses away in a top-to-bottom wave, scaling
- *               down and drifting aside, opening whitespace.
- *   D PROMOTE — the three survivors hand off to the front-page headlines with a
- *               position-independent cross-dissolve while the real headlines set
- *               via a left-to-right clip wipe, kickers and rules draw in, the
- *               indigo pencil grows, and the standfirst band fades in.
- *   E REST    — the clean front page. The SET ASIDE index, ledger and CTA fade
- *               in last.
+ * broadsheet — real semantic headings, no overture, no noise field. So server
+ * render === first client render === settled (no hydration mismatch, works with
+ * no JS, good for SEO / accessibility / reduced motion). An isomorphic layout
+ * effect then steps the stage forward exactly once BEFORE first paint when
+ * motion is allowed (idle → overture → mechanism → rest), so the first painted
+ * frame is the quiet overture page, never the settled spread. Under
+ * prefers-reduced-motion the stage never advances and the settled render stays.
  *
  * Self-contained: no project imports except React. Everything is inline and
- * scoped with the `sig5` prefix. In-flow only — no fixed positioning, no
- * inset:0, no escaping z-index (the note field is position:absolute within the
- * page column, aria-hidden, below the content). Motion runs through CSS
- * keyframes kicked off once by the layout effect; every timer is tracked and
- * cleared on unmount.
+ * scoped with the `sig5` prefix. In-flow only for the spread; the overture and
+ * note field are position:absolute *within the page column*, aria-hidden, and
+ * never displace layout. Motion runs through CSS keyframes kicked off once by
+ * the layout effect; every timer is tracked and cleared on unmount.
  */
 
 const PREFIX = "sig5";
@@ -160,24 +177,36 @@ const ASIDE: { what: string; time: string }[] = [
 
 const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
 
+// The stages of the opener. `idle` is the SSR-settled spread; the layout effect
+// advances idle → overture → mechanism → rest exactly once when motion is
+// allowed. Kept as a string union (not two booleans) so the three motion phases
+// are mutually exclusive by construction.
+type Stage = "idle" | "overture" | "mechanism" | "rest";
+
+// How long the spoken overture holds before the pile materialises, and how long
+// the mechanism runs before we drop performance hints. OVERTURE_MS must stay in
+// step with the --sig5-ov-* timings in ROOT_VARS (the seed word begins to bloom
+// just before this, so the pile emerges out of it rather than after it).
+const OVERTURE_MS = 4300;
+const MECHANISM_MS = 2500;
+
 export function TheBriefHero() {
   // Initial state is the SETTLED broadsheet, so server render === first client
-  // render. The layout effect below flips this to the intro before first paint
+  // render. The layout effect below steps the stage forward before first paint
   // when motion is allowed.
-  const [intro, setIntro] = useState(false);
-  const [restReached, setRestReached] = useState(false);
+  const [stage, setStage] = useState<Stage>("idle");
 
   // Play-once guard + tracked timers for clean unmount.
   const startedRef = useRef(false);
   const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   useIsoLayoutEffect(() => {
-    // Only ever start the intro once per mount.
+    // Only ever start the sequence once per mount.
     if (startedRef.current) return;
     if (typeof window === "undefined") return;
 
-    // Reduced motion (or no matchMedia): stay on the settled render. No field,
-    // no motion, no delay.
+    // Reduced motion (or no matchMedia): stay on the settled render. No
+    // overture, no field, no motion, no delay.
     const prefersReduced =
       typeof window.matchMedia === "function" &&
       window.matchMedia(REDUCED_MOTION_QUERY).matches;
@@ -186,15 +215,18 @@ export function TheBriefHero() {
     startedRef.current = true;
 
     // Because this runs inside a layout effect, React re-renders and commits the
-    // intro state before the browser paints — the first painted frame is the
-    // packed noise start, never the settled page. No flash of the rest state.
-    setIntro(true);
+    // overture state before the browser paints — the first painted frame is the
+    // quiet overture page, never the settled spread. No flash of the rest state.
+    setStage("overture");
 
     const timers = timersRef.current;
-    // The whole choreography lands by ~2.4s; strip hints and stop the idle drift
-    // shortly after so low-end devices are not left holding will-change.
-    const restTimer = setTimeout(() => setRestReached(true), 2500);
-    timers.push(restTimer);
+    // The idea speaks, then hands off into the pile; the mechanism lands ~2.4s
+    // after that. Strip hints and stop the idle drift shortly after so low-end
+    // devices are not left holding will-change.
+    timers.push(setTimeout(() => setStage("mechanism"), OVERTURE_MS));
+    timers.push(
+      setTimeout(() => setStage("rest"), OVERTURE_MS + MECHANISM_MS),
+    );
 
     return () => {
       timers.forEach((id) => clearTimeout(id));
@@ -202,13 +234,19 @@ export function TheBriefHero() {
     };
   }, []);
 
-  const running = intro;
-  const atRest = !running || restReached;
+  const isOverture = stage === "overture";
+  const running = stage === "mechanism" || stage === "rest";
+  const showField = running;
+  // The overture layer is mounted through the mechanism's opening frames so the
+  // seed word can cross-dissolve into the pile rather than cutting to it.
+  const showOverture = isOverture || stage === "mechanism";
 
   const sectionClass = [
     `${PREFIX}-hero-section`,
-    running ? `${PREFIX}-run` : `${PREFIX}-static`,
-    atRest ? `${PREFIX}-rest` : "",
+    running ? `${PREFIX}-run` : "",
+    stage === "idle" ? `${PREFIX}-static` : "",
+    isOverture ? `${PREFIX}-overture` : "",
+    stage === "rest" ? `${PREFIX}-rest` : "",
   ]
     .filter(Boolean)
     .join(" ");
@@ -217,9 +255,28 @@ export function TheBriefHero() {
     <section className={sectionClass} style={ROOT_VARS}>
       {/* The front page — one editorial spread. */}
       <div className={`${PREFIX}-page`}>
-        {/* Decorative note field — the packed pile. Only mounted for the intro;
-            aria-hidden and below the real content. */}
-        {running && (
+        {/* The overture — the idea, spoken before any interface. Decorative and
+            aria-hidden: the settled headings below carry the same message for
+            assistive tech and no-JS. Mounted through the mechanism's opening
+            frames so the seed word can dissolve into the pile. */}
+        {showOverture && (
+          <div className={`${PREFIX}-overture-layer`} aria-hidden="true">
+            <p className={`${PREFIX}-ov-line ${PREFIX}-ov-1`}>
+              Every day, more arrives than you can read.
+            </p>
+            <p className={`${PREFIX}-ov-line ${PREFIX}-ov-2`}>
+              Most of it doesn’t need you.
+            </p>
+            <p className={`${PREFIX}-ov-line ${PREFIX}-ov-3`}>
+              Turn <span className={`${PREFIX}-ov-seed`}>noise</span> into
+              signal.
+            </p>
+          </div>
+        )}
+
+        {/* Decorative note field — the packed pile. Only mounted once the idea
+            has handed off; aria-hidden and below the real content. */}
+        {showField && (
           <div className={`${PREFIX}-noise-field`} aria-hidden="true">
             <span className={`${PREFIX}-sweep`} />
             {CHIPS.map((c, i) => {
@@ -436,6 +493,19 @@ const ROOT_VARS: CSSVars = {
   "--sig5-track-mono": ".06em",
   // Where the mosaic starts, just under the now two-line masthead.
   "--sig5-field-top": "44px",
+  // The overture (Act I). Each line arrives, is held long enough to read once,
+  // and leaves before the next — one thought alone at a time. The third line
+  // holds while its seed word ("noise") blooms open, and the pile emerges out of
+  // that bloom. Keep the last beat (seed-at + its duration) in step with
+  // OVERTURE_MS so the hand-off is seamless rather than a cut.
+  "--sig5-ov-dur": "1500ms", // on-screen life of lines 1 & 2 (in, hold, out)
+  "--sig5-ov-l1-at": "150ms",
+  "--sig5-ov-l2-at": "1650ms",
+  "--sig5-ov-l3-at": "3250ms",
+  "--sig5-ov-l3-dur": "900ms", // line 3 sets and then holds (no scheduled out)
+  "--sig5-ov-seed-at": "4100ms", // the word noise begins to scatter into the pile
+  "--sig5-ov-seed-dur": "760ms",
+  "--sig5-ov-out-dur": "380ms", // the whole overture dissolves as the pile arrives
   // Motion tuning. Eye reads: sweep -> select three -> clear the pile -> the
   // three promote into headlines -> set aside index + ledger.
   "--sig5-sweep-dur": "560ms",
@@ -487,7 +557,73 @@ const CSS = `
   margin-inline:auto;
 }
 
-/* ---- The packed note field (the pile) — UNCHANGED ---- */
+/* ---- The overture (Act I) — the idea, spoken before the interface ----
+   Absolutely positioned within the page column so it never displaces the
+   settled spread underneath (which is already laid out at opacity:0). One line
+   is visible at a time; all three share the same grid cell so nothing reflows
+   as they cross-fade. */
+.${PREFIX}-overture-layer{
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  height:100%;
+  z-index:4;
+  display:grid;
+  place-items:center;
+  padding:0 clamp(16px,6vw,64px);
+  pointer-events:none;
+}
+/* The layer dissolves as the pile takes over — the seed word has already begun
+   scattering, so this reads as the idea becoming the mechanism. */
+.${PREFIX}-run .${PREFIX}-overture-layer{
+  animation:${PREFIX}-ov-out var(--sig5-ov-out-dur) var(--sig5-ease-soft) both;
+}
+.${PREFIX}-ov-line{
+  grid-column:1;
+  grid-row:1;
+  margin:0;
+  max-width:22ch;
+  text-align:center;
+  text-wrap:balance;
+  font-size:clamp(27px,4.4vw,50px);
+  font-weight:600;
+  line-height:1.06;
+  letter-spacing:-0.03em;
+  color:var(--sig5-ink);
+  opacity:0;
+  will-change:transform,opacity;
+}
+.${PREFIX}-overture .${PREFIX}-ov-1{
+  animation:${PREFIX}-ov-inout var(--sig5-ov-dur) var(--sig5-ease-soft)
+    var(--sig5-ov-l1-at) both;
+}
+.${PREFIX}-overture .${PREFIX}-ov-2{
+  animation:${PREFIX}-ov-inout var(--sig5-ov-dur) var(--sig5-ease-soft)
+    var(--sig5-ov-l2-at) both;
+}
+/* Line 3 sets and holds; it does not fade on its own — the seed bloom and the
+   layer dissolve carry it out, straight into the pile. */
+.${PREFIX}-ov-3{
+  color:var(--sig5-ink-soft);
+}
+.${PREFIX}-overture .${PREFIX}-ov-3{
+  animation:${PREFIX}-ov-in var(--sig5-ov-l3-dur) var(--sig5-ease-soft)
+    var(--sig5-ov-l3-at) both;
+}
+.${PREFIX}-ov-3 .${PREFIX}-ov-seed{color:var(--sig5-ink);font-weight:660;}
+/* The seed word blooms open — scaling up and releasing — and out of it the
+   pile appears. Transform + opacity only, so the rest of the line never shifts. */
+.${PREFIX}-ov-seed{
+  display:inline-block;
+  transform-origin:center;
+}
+.${PREFIX}-overture .${PREFIX}-ov-seed{
+  animation:${PREFIX}-ov-seed var(--sig5-ov-seed-dur) var(--sig5-ease-rack)
+    var(--sig5-ov-seed-at) both;
+}
+
+/* ---- The packed note field (the pile) — motion UNCHANGED ---- */
 .${PREFIX}-noise-field{
   position:absolute;
   top:var(--sig5-field-top);
@@ -503,6 +639,11 @@ const CSS = `
   pointer-events:none;
 }
 .${PREFIX}-static .${PREFIX}-noise-field{display:none;}
+/* The pile emerges out of the seed bloom rather than popping in. Short enough
+   that it is fully present by the time the read sweep reaches the upper rows. */
+.${PREFIX}-run .${PREFIX}-noise-field{
+  animation:${PREFIX}-ov-in 260ms var(--sig5-ease-soft) both;
+}
 
 /* Read sweep: one indigo line, top to bottom, once. */
 .${PREFIX}-sweep{
@@ -1072,6 +1213,29 @@ const CSS = `
 .${PREFIX}-rest .${PREFIX}-drift{animation:none;}
 
 /* ---- Keyframes ---- */
+/* Overture: a line rises in, holds, and lifts away. */
+@keyframes ${PREFIX}-ov-inout{
+  0%{opacity:0;transform:translateY(12px);}
+  16%{opacity:1;transform:translateY(0);}
+  74%{opacity:1;transform:translateY(0);}
+  100%{opacity:0;transform:translateY(-9px);}
+}
+/* Overture: a line rises in and holds (the philosophy beat; it is carried out
+   by the seed bloom and the layer dissolve, not by its own fade). */
+@keyframes ${PREFIX}-ov-in{
+  0%{opacity:0;transform:translateY(12px);}
+  100%{opacity:1;transform:translateY(0);}
+}
+/* Overture: the seed word "noise" blooms open and scatters into the pile. */
+@keyframes ${PREFIX}-ov-seed{
+  0%{opacity:1;transform:scale(1);filter:blur(0);}
+  100%{opacity:0;transform:scale(1.9);filter:blur(1.5px);}
+}
+/* Overture: the whole layer dissolves as the mechanism takes the stage. */
+@keyframes ${PREFIX}-ov-out{
+  from{opacity:1;}
+  to{opacity:0;}
+}
 @keyframes ${PREFIX}-soft-in{
   from{opacity:0;transform:translateY(4px);}
   to{opacity:1;transform:translateY(0);}
@@ -1177,6 +1341,12 @@ const CSS = `
     text-align:left;
     max-width:52ch;
   }
+  /* The stacked spread is much taller than the viewport, so centring the
+     overture in the whole page column would drop it below the fold. Centre it
+     in a viewport-height band anchored to the top of the page instead. */
+  .${PREFIX}-overture-layer{
+    height:min(100%,74svh);
+  }
 }
 
 /* ---- Ledger: wrap the sample note under the tally below 560px ---- */
@@ -1219,6 +1389,7 @@ const CSS = `
     transition:none !important;
   }
   .${PREFIX}-noise-field{display:none !important;}
+  .${PREFIX}-overture-layer{display:none !important;}
   .${PREFIX}-standfirst-band,
   .${PREFIX}-rail-label,
   .${PREFIX}-kicker,
