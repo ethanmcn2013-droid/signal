@@ -56,7 +56,7 @@ export function SiteFooter() {
           heading="Product"
           links={[
             { href: "/signal", label: "Signal" },
-            { href: "/method", label: "Method" },
+            { href: "/method", label: "Ten rules" },
             { href: "/demo", label: "Demo" },
             { href: "/app", label: "Open briefing" },
           ]}
