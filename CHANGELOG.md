@@ -3,6 +3,17 @@
 Convention: BRAND.md §6.5. Entries before 2026-05-14 keep their
 original shape; the new shape starts at the next cycle.
 
+## 2026-07-05 · A·21 · fixes · the briefing confirms your feedback tap to a screen reader
+
+**When you tap "Useful? Yes / Not really" on a briefing item, the buttons are replaced by a small "Thanks, noted." — now wrapped in a live region, so a screen-reader user hears the confirmation instead of silence.** This is the one feedback signal the product collects; the acknowledgement of a successful tap should reach every reader.
+
+- **Problem** — Tapping the feedback button removes it from the DOM and swaps in a plain `<p>`. Focus falls to the body and the confirmation text was not a live region, so a screen-reader user got no spoken feedback that their tap registered — a WCAG 4.1.3 (Status Messages) gap on the product's core interaction.
+- **Root cause** — The acknowledgement `<p>` was rendered without `role="status"` / `aria-live`, so assistive tech had no reason to announce a change it didn't move focus to.
+- **Files changed** — `src/components/brief/briefing-view.tsx`.
+- **Solution** — The acknowledgement paragraph now carries `role="status"` (an implicit `aria-live="polite"` region), so "Thanks, noted." / "Thanks, I'll show less of this." is announced when it appears. Visual rendering is unchanged.
+- **Expected user impact** — Screen-reader users get spoken confirmation that their feedback landed; sighted users see the same text as before.
+- **Expected engineering impact** — WCAG 4.1.3 satisfied on the feedback control. Verified by typecheck and lint; the change is a single ARIA attribute confined to the post-tap branch. End-to-end tap could not be driven headlessly here because the demo app chrome (Clerk `UserButton`) errors before the authed briefing renders — a pre-existing demo-mode limitation unrelated to this change.
+
 ## 2026-07-05 · A·20 · tightens · shared links carry the site name and locale
 
 **Every page's Open Graph card now declares `og:site_name`, `og:locale`, and `og:url`, so a Signal link shared to X, LinkedIn, iMessage, or Slack unfurls as "Signal", in Irish English, pointing at the canonical origin.** The suite promotes on those exact networks (the footer links four of them); a card missing its site name and locale reads as generic.

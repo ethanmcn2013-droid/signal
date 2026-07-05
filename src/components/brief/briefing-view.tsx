@@ -305,8 +305,16 @@ function FeedbackControl({
   const [, startTransition] = useTransition();
 
   if (chosen) {
+    // role="status" (aria-live polite): tapping a button removes it from the
+    // DOM, so focus falls to the body and a screen-reader user would otherwise
+    // hear nothing confirming the tap landed. The live region announces the
+    // acknowledgement.
     return (
-      <p className="mt-2 text-[11.5px]" style={{ color: "var(--ink-quiet)" }}>
+      <p
+        role="status"
+        className="mt-2 text-[11.5px]"
+        style={{ color: "var(--ink-quiet)" }}
+      >
         {chosen === "useful" ? "Thanks, noted." : "Thanks, I'll show less of this."}
       </p>
     );
