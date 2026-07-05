@@ -123,40 +123,58 @@ async function run(req: Request) {
     cadenceLabel: "daily" | "weekly",
     row: { userId: string; email: string },
   ) {
-    // E-5: gate email dispatch on workspace-tier. Free users can view
-    // their briefing on /app; only paid tiers receive emails. Cron is
-    // the only place email is dispatched, so the gate goes here.
-    //
-    // resolveEntitlement and fetchFirstName are independent network
-    // calls, run them in parallel to halve per-user latency.
-    const [{ tier }, firstName] = await Promise.all([
-      resolveEntitlement(row.userId),
-      fetchFirstName(clerk, row.userId),
-    ]);
-    if (!tierAtLeast(tier, "workspace")) {
+    // Fault isolation: one user's briefing build (source read) or
+    // personalisation call must never abort the fanout. dispatchBriefing
+    // already returns a typed failure rather than throwing, but
+    // buildBriefing reads the per-user source (a network call in prod) and
+    // can throw on a transient error or a poisoned row — which, under
+    // Promise.all below, would reject the whole chunk and skip every user
+    // processed after it. Wrap the unit of work so a throw becomes a
+    // surfaced { ok: false } failure and the fanout continues. A caught
+    // user leaves lastSentAt unset, so the next run retries them.
+    try {
+      // E-5: gate email dispatch on workspace-tier. Free users can view
+      // their briefing on /app; only paid tiers receive emails. Cron is
+      // the only place email is dispatched, so the gate goes here.
+      //
+      // resolveEntitlement and fetchFirstName are independent network
+      // calls, run them in parallel to halve per-user latency.
+      const [{ tier }, firstName] = await Promise.all([
+        resolveEntitlement(row.userId),
+        fetchFirstName(clerk, row.userId),
+      ]);
+      if (!tierAtLeast(tier, "workspace")) {
+        return {
+          userId: row.userId,
+          cadence: cadenceLabel,
+          result: {
+            ok: true as const,
+            skipped: true as const,
+            reason: "free-tier-no-email" as const,
+          },
+        };
+      }
+      const briefing = await buildBriefing(
+        source,
+        { userId: row.userId, email: row.email },
+        now,
+      );
+      const result = await dispatchBriefing({
+        userId: row.userId,
+        email: row.email,
+        briefing,
+        cadence: cadenceLabel,
+        firstName,
+      });
+      return { userId: row.userId, cadence: cadenceLabel, result };
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
       return {
         userId: row.userId,
         cadence: cadenceLabel,
-        result: {
-          ok: true as const,
-          skipped: true as const,
-          reason: "free-tier-no-email" as const,
-        },
+        result: { ok: false as const, error: message },
       };
     }
-    const briefing = await buildBriefing(
-      source,
-      { userId: row.userId, email: row.email },
-      now,
-    );
-    const result = await dispatchBriefing({
-      userId: row.userId,
-      email: row.email,
-      briefing,
-      cadence: cadenceLabel,
-      firstName,
-    });
-    return { userId: row.userId, cadence: cadenceLabel, result };
   }
 
   for (const [cadenceLabel, rows] of [

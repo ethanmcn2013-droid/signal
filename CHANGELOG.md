@@ -3,6 +3,17 @@
 Convention: BRAND.md §6.5. Entries before 2026-05-14 keep their
 original shape; the new shape starts at the next cycle.
 
+## 2026-07-05 · A·18 · fixes · one bad row can no longer take down the whole morning fanout
+
+**In the daily briefing cron, a single user whose briefing build throws would abort the entire run — every recipient processed after them silently got no email that day. Each user is now isolated, so one failure is reported and skipped while everyone else is still delivered.** This is the mechanism that delivers the whole product; its worst failure mode was a fanout-wide outage triggered by one poisoned row or one transient read.
+
+- **Problem** — `processOne` ran per user inside `Promise.all(chunk.map(...))`. `dispatchBriefing` returns a typed failure rather than throwing, but the earlier `buildBriefing(...)` reads the per-user source — a network call against the Tasks DB in production — and can throw on a transient error or a malformed row. A single throw rejects the whole `Promise.all`, which rethrows out of the chunk loop, 500s the route, and skips every remaining chunk **and** the entire weekly cadence. One user's data blip = no briefings for everyone after them until the next day's run.
+- **Root cause** — The unit of per-user work had no fault boundary. The design already assumed isolation (idempotency via `lastSentAt`, dispatch returning failures instead of throwing), but the `buildBriefing`/entitlement calls above `dispatchBriefing` were left unguarded, so a throw escaped the intended boundary.
+- **Files changed** — `src/app/api/cron/briefings/route.ts`.
+- **Solution** — `processOne`'s body is wrapped in try/catch; a throw becomes a `{ ok: false, error }` result — the same shape `dispatchBriefing` already returns — so the failure is counted in `failed`, surfaced in the JSON response's `failures[]`, and flips the Studio ping to `ok: false`. Because dispatch only stamps `lastSentAt` on success, a caught user is automatically retried on the next run, matching the existing 429 behaviour. No change to the happy path.
+- **Expected user impact** — A data or network problem affecting one subscriber no longer costs everyone else their morning briefing. Delivery degrades one user at a time instead of collapsing.
+- **Expected engineering impact** — The fanout is fault-isolated and the operator gets an accurate failure count and per-user error instead of an opaque 500. Verified: the failure shape typechecks against the dispatch return union, lint clean, and a standalone simulation confirms unguarded `Promise.all` aborts the batch on one throw while the wrapped form resolves per-row.
+
 ## 2026-07-05 · A·17 · fixes · the 404 and error pages get a real landmark, a real title, and the skip target
 
 **The 404 and root error pages now render a `<main>` landmark, carry the skip target, and the 404 shows its own tab title instead of impersonating the homepage.** These pages sit outside the marketing and app layouts, so nothing was providing them a `<main>` — they were landmark-less, and the skip link added in A·15 had nowhere to land on them.
