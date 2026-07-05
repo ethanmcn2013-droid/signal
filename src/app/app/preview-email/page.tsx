@@ -41,7 +41,7 @@ export default async function PreviewEmailPage() {
   );
 
   return (
-    <main className="mx-auto w-full max-w-[820px] px-6 py-10">
+    <div className="mx-auto w-full max-w-[820px] px-6 py-10">
       <p
         className="mb-3 text-[11px] font-semibold uppercase tracking-[0.14em]"
         style={{ color: "var(--ink-quiet)" }}
@@ -66,6 +66,6 @@ export default async function PreviewEmailPage() {
           background: "#fafafb",
         }}
       />
-    </main>
+    </div>
   );
 }

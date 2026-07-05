@@ -306,6 +306,38 @@ body::after { content: none; }
   scroll-margin-top: 72px;
 }
 
+/* ------ Skip link (WCAG 2.4.1 Bypass Blocks) --------------------------------------------------------------------------------------------------------- */
+/* The first focusable element on every page. Off-screen until focused,
+   then slides in over the sticky header so a keyboard or screen-reader
+   user can jump the nav straight to <main id="main-content">. */
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 10000; /* above the sticky header (z-40) and loading field (9999) */
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--bg);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.16);
+  transform: translateY(calc(-100% - 16px));
+  transition: transform 160ms var(--ease-out);
+}
+.skip-link:focus,
+.skip-link:focus-visible {
+  transform: translateY(0);
+  outline: 2px solid var(--bg);
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .skip-link {
+    transition: none;
+  }
+}
+
 /* ------ Rise animation ------------------------------------------------------------------------------------------------------------------------------ */
 /* Hero-only entrance. Uses --motion-slow (480ms) + spring-glide */
 /* for the opening feel. Not for repeated UI interactions.       */

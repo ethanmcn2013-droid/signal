@@ -88,6 +88,11 @@ export default function RootLayout({
         <style dangerouslySetInnerHTML={{ __html: "html{background:#fff}" }} />
       </head>
       <body className="min-h-full flex flex-col" style={{ background: "#fff" }}>
+        {/* WCAG 2.4.1: first focusable element on the page. Lets keyboard
+            and screen-reader users bypass the nav straight to the content. */}
+        <a href="#main-content" className="skip-link">
+          Skip to content
+        </a>
         <AuthShell>{children}</AuthShell>
       </body>
     </html>

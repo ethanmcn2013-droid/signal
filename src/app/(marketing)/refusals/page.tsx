@@ -56,7 +56,7 @@ const PROSE_MAX = {
 
 export default function RefusalsPage() {
   return (
-    <main style={{ background: "var(--bg)", paddingTop: 96, paddingBottom: 160 }}>
+    <div style={{ background: "var(--bg)", paddingTop: 96, paddingBottom: 160 }}>
       <div style={PROSE_MAX}>
         <p
           style={{
@@ -196,6 +196,6 @@ export default function RefusalsPage() {
           same cycle.
         </p>
       </div>
-    </main>
+    </div>
   );
 }

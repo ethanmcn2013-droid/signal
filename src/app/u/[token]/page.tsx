@@ -54,7 +54,7 @@ export default async function UnsubscribePage({
   }
 
   return (
-    <main className="mx-auto flex min-h-[70vh] w-full max-w-[520px] flex-col items-center justify-center px-6 py-16 text-center">
+    <main id="main-content" tabIndex={-1} className="mx-auto flex min-h-[70vh] w-full max-w-[520px] flex-col items-center justify-center px-6 py-16 text-center">
       <p
         className="mb-4 text-[11px] font-semibold uppercase tracking-[0.14em]"
         style={{ color: "var(--ink-quiet)" }}
@@ -97,7 +97,7 @@ export default async function UnsubscribePage({
 
 function DoneState() {
   return (
-    <main className="mx-auto flex min-h-[70vh] w-full max-w-[520px] flex-col items-center justify-center px-6 py-16 text-center">
+    <main id="main-content" tabIndex={-1} className="mx-auto flex min-h-[70vh] w-full max-w-[520px] flex-col items-center justify-center px-6 py-16 text-center">
       <p
         className="mb-4 text-[11px] font-semibold uppercase tracking-[0.14em]"
         style={{ color: "var(--ink-quiet)" }}
@@ -131,7 +131,7 @@ function DoneState() {
 
 function NotFoundState() {
   return (
-    <main className="mx-auto flex min-h-[70vh] w-full max-w-[520px] flex-col items-center justify-center px-6 py-16 text-center">
+    <main id="main-content" tabIndex={-1} className="mx-auto flex min-h-[70vh] w-full max-w-[520px] flex-col items-center justify-center px-6 py-16 text-center">
       <h1
         className="mb-4 text-[28px] font-semibold leading-[1.15]"
         style={{ color: "var(--ink)" }}

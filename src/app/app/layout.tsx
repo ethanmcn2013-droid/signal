@@ -40,7 +40,7 @@ export default function AppLayout({
         account={<UserButtonWithSuite current="analytics" />}
       />
 
-      <main style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+      <main id="main-content" tabIndex={-1} style={{ flex: 1, display: "flex", flexDirection: "column" }}>
         {/* Closed-beta gate: only allowlisted accounts reach the app content
             (production only). The wordmark loader paints during the check. */}
         <Suspense fallback={<AppLoading />}>

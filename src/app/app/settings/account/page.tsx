@@ -32,7 +32,7 @@ export default async function AccountPage() {
   }
 
   return (
-    <main className="mx-auto w-full max-w-[640px] px-6 py-16">
+    <div className="mx-auto w-full max-w-[640px] px-6 py-16">
       <p
         className="mb-4 text-[11px] font-semibold uppercase tracking-[0.14em]"
         style={{ color: "var(--ink-quiet)" }}
@@ -58,6 +58,6 @@ export default async function AccountPage() {
       <ManageIdentityButton />
 
       <DangerZone email={email} />
-    </main>
+    </div>
   );
 }
