@@ -46,8 +46,8 @@ import {
  *
  *   ACT III — REST / CLARITY. "The Morning Spread": an asymmetric editorial
  *            front page. A masthead + double Oxford rule, a standfirst band whose
- *            headline — "The signal, not the noise." — is the philosophy line
- *            said back to you now that you have watched it happen, a dominant
+ *            headline — "Three things need you today." — is the payoff, concrete
+ *            now that you have watched the mechanism find them, a dominant
  *            lead column beside a filed rail carrying stories 02/03 over a SET
  *            ASIDE index, one honest ledger line, then a restrained CTA row.
  *            Everything hangs to one left optical edge; the only colour is the
@@ -331,9 +331,9 @@ export function TheBriefHero() {
 
         {/* Standfirst band — promise flush left, subhead flush right on baseline. */}
         <div className={`${PREFIX}-standfirst-band`}>
-          <h1 className={`${PREFIX}-standfirst`}>The signal, not the noise.</h1>
+          <h1 className={`${PREFIX}-standfirst`}>Three things need you today.</h1>
           <p className={`${PREFIX}-subhead`}>
-            Every morning, Signal reads the pile and hands you the few that need you.
+            Signal reads the pile. You read one page.
           </p>
         </div>
 
@@ -433,9 +433,9 @@ export function TheBriefHero() {
         {/* Closing ledger — honest tally flush left, sample note flush right. */}
         <div className={`${PREFIX}-ledger`}>
           <p className={`${PREFIX}-tally`}>
-            Signal read <span className={`${PREFIX}-num`}>44</span> updates this morning
-            and set <span className={`${PREFIX}-num`}>41</span> aside. These{" "}
-            <span className={`${PREFIX}-three`}>three</span> need you.
+            Signal read <span className={`${PREFIX}-num`}>44</span> updates this morning.{" "}
+            <span className={`${PREFIX}-num`}>41</span> could wait. These{" "}
+            <span className={`${PREFIX}-three`}>three</span>{" "}couldn&rsquo;t.
           </p>
           <p className={`${PREFIX}-sample`}>
             This is a sample brief. Signal builds yours from your own tools.

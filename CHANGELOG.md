@@ -3,6 +3,10 @@
 Convention: BRAND.md §6.5. Entries before 2026-05-14 keep their
 original shape; the new shape starts at the next cycle.
 
+## 2026-07-07 · A·10 · tightens · the brief ends on the count, not the slogan
+
+**The settled spread now leads with the payoff instead of the philosophy: the standfirst reads "Three things need you today." and the subhead answers it in eight words, "Signal reads the pile. You read one page."** The old ending said the idea twice ("The signal, not the noise." over "Every morning, Signal reads the pile and hands you the few that need you.") after the overture had already taught it; now the overture keeps the philosophy and the spread states the concrete result. The closing ledger sharpens to match: "Signal read 44 updates this morning. 41 could wait. These three couldn't." Same acts, same timings, same reduced-motion and no-JS behaviour; only the landing got quieter and harder.
+
 ## 2026-07-06 · A·9 · tightens · the opener takes a breath
 
 **The noise-to-signal opener now runs slower: the overture holds each line long enough to read once and land before the next, and the distillation mechanism unhurries in step — the whole choreography paced up from ~8s to ~10.2s without changing a single beat.** OVERTURE_MS moves 5500→7000 and MECHANISM_MS 2500→3200, and every coupled `--sig5-*` timing is rescaled coherently: the three overture lines get more room, the *chaos* seed still begins to bloom 200ms before the pile emerges so the hand-off stays seamless, and the read → select → clear → promote → set-aside mechanism keeps its relative rhythm at the slower tempo. Reduced motion and no-JS still skip straight to the settled spread. DS drift gate clean.
