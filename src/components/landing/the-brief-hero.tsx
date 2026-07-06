@@ -189,8 +189,8 @@ type Stage = "idle" | "overture" | "mechanism" | "rest";
 // just before this, so the pile emerges out of it rather than after it). The
 // overture is paced unhurried on purpose — each line gets room to be read once
 // and land before the next arrives.
-const OVERTURE_MS = 5500;
-const MECHANISM_MS = 2500;
+const OVERTURE_MS = 7000;
+const MECHANISM_MS = 3200;
 
 export function TheBriefHero() {
   // Initial state is the SETTLED broadsheet, so server render === first client
@@ -500,35 +500,35 @@ const ROOT_VARS: CSSVars = {
   // holds while its seed word ("chaos") blooms open, and the pile emerges out of
   // that bloom. Keep the last beat (seed-at + its duration) in step with
   // OVERTURE_MS so the hand-off is seamless rather than a cut.
-  "--sig5-ov-dur": "1900ms", // on-screen life of lines 1 & 2 (in, hold, out)
-  "--sig5-ov-l1-at": "200ms",
-  "--sig5-ov-l2-at": "2100ms",
-  "--sig5-ov-l3-at": "4200ms",
-  "--sig5-ov-l3-dur": "1000ms", // line 3 sets and then holds (no scheduled out)
-  "--sig5-ov-seed-at": "5300ms", // the word chaos begins to scatter into the pile
-  "--sig5-ov-seed-dur": "900ms",
+  "--sig5-ov-dur": "2400ms", // on-screen life of lines 1 & 2 (in, hold, out)
+  "--sig5-ov-l1-at": "250ms",
+  "--sig5-ov-l2-at": "2800ms",
+  "--sig5-ov-l3-at": "5400ms",
+  "--sig5-ov-l3-dur": "1300ms", // line 3 sets and then holds (no scheduled out)
+  "--sig5-ov-seed-at": "6800ms", // the word chaos begins to scatter into the pile
+  "--sig5-ov-seed-dur": "1000ms",
   "--sig5-ov-out-dur": "460ms", // the whole overture dissolves as the pile arrives
   // Motion tuning. Eye reads: sweep -> select three -> clear the pile -> the
   // three promote into headlines -> set aside index + ledger.
-  "--sig5-sweep-dur": "560ms",
-  "--sig5-sweep-span": "360ms",
-  "--sig5-tick-dur": "300ms",
-  "--sig5-select-at": "440ms",
-  "--sig5-select-dur": "340ms",
-  "--sig5-clear-at": "820ms",
-  "--sig5-clear-span": "440ms",
-  "--sig5-clear-dur": "440ms",
-  "--sig5-promote-at": "1240ms",
-  "--sig5-promote-dur": "520ms",
-  "--sig5-standfirst-at": "1180ms",
-  "--sig5-lead-at": "1260ms",
-  "--sig5-lead-dur": "560ms",
-  "--sig5-marker-at": "1560ms",
-  "--sig5-marker-dur": "420ms",
-  "--sig5-deck-start": "1400ms",
-  "--sig5-deck-stagger": "150ms",
-  "--sig5-deck-dur": "520ms",
-  "--sig5-foot-at": "2080ms",
+  "--sig5-sweep-dur": "720ms",
+  "--sig5-sweep-span": "460ms",
+  "--sig5-tick-dur": "380ms",
+  "--sig5-select-at": "560ms",
+  "--sig5-select-dur": "440ms",
+  "--sig5-clear-at": "1050ms",
+  "--sig5-clear-span": "560ms",
+  "--sig5-clear-dur": "560ms",
+  "--sig5-promote-at": "1580ms",
+  "--sig5-promote-dur": "660ms",
+  "--sig5-standfirst-at": "1500ms",
+  "--sig5-lead-at": "1620ms",
+  "--sig5-lead-dur": "720ms",
+  "--sig5-marker-at": "2000ms",
+  "--sig5-marker-dur": "540ms",
+  "--sig5-deck-start": "1800ms",
+  "--sig5-deck-stagger": "190ms",
+  "--sig5-deck-dur": "660ms",
+  "--sig5-foot-at": "2660ms",
 };
 
 const CSS = `
