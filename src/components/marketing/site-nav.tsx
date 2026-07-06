@@ -6,16 +6,14 @@ import { SuiteLauncher } from "@/components/suite-launcher";
 import { SuiteHeader, type SuiteNavItem } from "@/components/chrome/suite-header";
 import { UserButton } from "@clerk/nextjs";
 
-// Nav labels: the noun IS the navigation. "Ten rules" (not "Method") puts the
-// no-LLM stance in the primary nav (row 8, Einstein's walkover).
+// One header contract (product-header-contract.md, 2026-07-06): the marketing
+// header nav is exactly Pricing · Design, both umbrella links. Ten rules,
+// Refusals, About and the self-link stay reachable from the footer and body.
+const UMBRELLA_PRICING = "https://signalstudio.ie/pricing";
 const UMBRELLA_DESIGN = "https://signalstudio.ie/design";
 
 const NAV: SuiteNavItem[] = [
-  { href: "/signal", label: "Signal" },
-  { href: "/method", label: "Ten rules" },
-  { href: "/refusals", label: "Refusals" },
-  { href: "/pricing", label: "Pricing" },
-  { href: "/about", label: "About" },
+  { href: UMBRELLA_PRICING, label: "Pricing", external: true },
   { href: UMBRELLA_DESIGN, label: "Design", external: true },
 ];
 
