@@ -148,7 +148,7 @@ const LEAD = {
   folio: "01",
   chip: "DUE TODAY",
   signal:
-    "Claire’s wedding needs the supplier answer today or Friday’s print window slips.",
+    "The supplier answer is due today. Wait, and Friday’s print window closes.",
 };
 
 // The rail: two filed stories with outline chips.
@@ -157,13 +157,13 @@ const DECKS: Deck[] = [
     label: "INVOICES",
     folio: "02",
     chip: "BY NOON",
-    signal: "Name the venue invoice owner before noon so the handoff does not stall.",
+    signal: "The venue invoice has no owner. Name one before noon or the handoff stalls.",
   },
   {
     label: "CASE STUDY",
     folio: "03",
     chip: "READY",
-    signal: "Maeve’s case study is ready for one review pass.",
+    signal: "Maeve’s case study has been waiting. One look is all it needs.",
   },
 ];
 
@@ -331,10 +331,7 @@ export function TheBriefHero() {
 
         {/* Standfirst band — promise flush left, subhead flush right on baseline. */}
         <div className={`${PREFIX}-standfirst-band`}>
-          <h1 className={`${PREFIX}-standfirst`}>Three things need you today.</h1>
-          <p className={`${PREFIX}-subhead`}>
-            Signal reads the pile. You read one page.
-          </p>
+          <h1 className={`${PREFIX}-standfirst`}>Three things won&rsquo;t wait.</h1>
         </div>
 
         {/* Drawn hairline — separates the promise from the day. */}
@@ -436,9 +433,6 @@ export function TheBriefHero() {
             Signal read <span className={`${PREFIX}-num`}>44</span> updates this morning.{" "}
             <span className={`${PREFIX}-num`}>41</span> could wait. These{" "}
             <span className={`${PREFIX}-three`}>three</span>{" "}couldn&rsquo;t.
-          </p>
-          <p className={`${PREFIX}-sample`}>
-            This is a sample brief. Signal builds yours from your own tools.
           </p>
         </div>
 
