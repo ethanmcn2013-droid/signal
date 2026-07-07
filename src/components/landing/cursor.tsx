@@ -73,20 +73,20 @@ export function Cursor({ x, y, visible, color, label, reading }: Props) {
         }}
         // --motion-base 220ms + --ease-out
         transition={{ duration: 0.22, ease: [0, 0, 0.2, 1] }}
-        className="font-mono"
+        className="font-mono uppercase"
         style={{
+          /* Mono tag, not a pill: the hero's chip radius + tracking. */
           position: "absolute",
           top: 18,
           left: 14,
-          padding: "2px 6px",
-          borderRadius: 999,
+          padding: "3px 6px 2px",
+          borderRadius: 2,
           background: color,
-          color: "white",
-          fontSize: 9.5,
+          color: "var(--paper)",
+          fontSize: 9,
           fontWeight: 600,
-          letterSpacing: "0.02em",
+          letterSpacing: "0.14em",
           whiteSpace: "nowrap",
-          boxShadow: "0 2px 6px rgba(20,21,26,0.18)",
         }}
       >
         {label ?? ""}

@@ -10,9 +10,12 @@ type Props = {
 
 /**
  * Audience picker for the Analytics cinematic briefing.
- * Modelled on Tasks's DomainToggle + Roadmap's AudienceToggle —
- * pill tab list with a sliding active pill via motion's layoutId,
- * two-line "Built for" caption above.
+ *
+ * Recut 2026-07-07 into the broadsheet register set by TheBriefHero: the
+ * floating pill tab-list became a newspaper section rail. Mono uppercase
+ * labels sit on a shared hairline; the active section carries a 2px indigo
+ * rule that slides between tabs via motion's layoutId. Same radiogroup
+ * semantics, same keyboard loop, same spring.
  */
 export function AudienceToggle({ domain, onChange }: Props) {
   const active = DOMAINS[domain];
@@ -24,7 +27,7 @@ export function AudienceToggle({ domain, onChange }: Props) {
           className="font-mono text-[11px] font-semibold uppercase"
           style={{
             color: "var(--ink-quiet)",
-            letterSpacing: "0.14em",
+            letterSpacing: "0.18em",
           }}
         >
           Built for
@@ -58,11 +61,9 @@ export function AudienceToggle({ domain, onChange }: Props) {
               ];
             onChange(next);
           }}
-          className="relative inline-flex flex-wrap items-center gap-0.5 rounded-full border p-1 backdrop-blur"
+          className="relative inline-flex flex-wrap items-center gap-x-6 gap-y-1"
           style={{
-            borderColor: "var(--border)",
-            background: "rgba(255, 255, 255, 0.8)",
-            boxShadow: "0 1px 2px rgba(20,21,26,0.04)",
+            borderBottom: "1px solid var(--hairline)",
           }}
         >
           {DOMAIN_ORDER.map((id) => {
@@ -75,26 +76,20 @@ export function AudienceToggle({ domain, onChange }: Props) {
                 aria-checked={isActive}
                 tabIndex={isActive ? 0 : -1}
                 onClick={() => onChange(id)}
-                className={
-                  "relative inline-flex items-center rounded-full px-3.5 py-1.5 text-[12.5px] font-medium transition-colors " +
-                  (isActive ? "text-white" : "")
-                }
-                style={
-                  isActive
-                    ? undefined
-                    : { color: "var(--ink-soft)" }
-                }
+                className="relative inline-flex items-center pb-2.5 pt-1 font-mono text-[10.5px] font-semibold uppercase transition-colors"
+                style={{
+                  letterSpacing: "0.14em",
+                  color: isActive ? "var(--ink)" : "var(--ink-faint)",
+                }}
               >
                 {isActive ? (
                   <motion.span
-                    layoutId="analytics-audience-pill"
-                    className="absolute inset-0 rounded-full"
+                    aria-hidden
+                    layoutId="analytics-audience-rule"
+                    className="absolute inset-x-0 -bottom-px"
                     style={{
-                      background:
-                        "linear-gradient(135deg, var(--brand) 0%, var(--brand-deep) 100%)",
-                      /* Calm register: reduced glow from 0.45 → 0.28 */
-                    boxShadow:
-                        "0 4px 12px -4px rgba(79,70,229,0.28), inset 0 1px 0 rgba(255,255,255,0.14)",
+                      height: 2,
+                      background: "var(--accent)",
                     }}
                     transition={{
                       type: "spring",

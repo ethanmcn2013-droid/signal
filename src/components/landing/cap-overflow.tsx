@@ -57,25 +57,14 @@ export function CapOverflow({ overflow, phase }: Props) {
                 className="flex items-baseline gap-2"
                 style={{ fontStyle: "normal" }}
               >
-                <span
-                  aria-hidden
-                  style={{
-                    width: 3,
-                    height: 3,
-                    borderRadius: "50%",
-                    background: "var(--ink-faint)",
-                    flexShrink: 0,
-                    transform: "translateY(-3px)",
-                    opacity: 0.45,
-                  }}
-                />
+                {/* Set-aside register: plain dim sentence, no bullet chrome,
+                    no italics. The silent drop stays silent. */}
                 <p
                   style={{
-                    fontSize: 13.5,
-                    color: "var(--ink-quiet)",
+                    fontSize: 13,
+                    color: "var(--ink-faint)",
                     lineHeight: 1.45,
                     margin: 0,
-                    fontStyle: "italic",
                   }}
                 >
                   {o.text}

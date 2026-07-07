@@ -27,6 +27,11 @@ import { useEffect, useRef, useState } from "react";
  *   - Focus pip drops on Suggested-focus item 2, then "Why this?"
  *     expands inline, the only real product affordance the anatomy
  *     dramatises (because it teaches the briefing's depth)
+ *
+ * Recut 2026-07-07 into TheBriefHero's broadsheet register: the gradient
+ * tray, ambient glow, floating shadows, and circle badges became hairline
+ * rules, a double Oxford rule, mono uppercase kickers with folio numbers,
+ * and an indigo read-wash spotlight. Choreography timings unchanged.
  */
 
 type Slot =
@@ -66,7 +71,7 @@ const ANN: { slot: Slot; label: string; note: string }[] = [
   {
     slot: "focus",
     label: "Suggested focus",
-    note: "Three actions for today, compressed from the full picture. The signal, not the noise.",
+    note: "Three actions for today, compressed from the full picture.",
   },
 ];
 
@@ -204,9 +209,8 @@ function spotlightAnim(slot: Slot, active: Slot | null, choreoHi: Slot | null) {
   const on = effective === slot;
   const off = !!effective && effective !== slot;
   return {
-    boxShadow: on
-      ? "0 0 0 2px rgba(79,70,229,0.20), 0 8px 18px -8px rgba(79,70,229,0.35)"
-      : "0 0 0 0px rgba(79,70,229,0), 0 0px 0px 0px rgba(79,70,229,0)",
+    /* Editorial spotlight: the hero's read-tick indigo wash, no glow ring. */
+    backgroundColor: on ? "rgba(79,70,229,0.07)" : "rgba(79,70,229,0)",
     opacity: off ? 0.5 : 1,
     y: on ? -0.5 : 0,
   };
@@ -325,43 +329,29 @@ function DemoCard({
   return (
     <div
       ref={wrapRef}
-      className="relative flex items-center justify-center"
+      className="relative flex items-start justify-center"
       style={{
-        borderRadius: 24,
-        border: "1px solid var(--border-soft)",
-        background:
-          "linear-gradient(180deg, var(--bg-elev) 0%, color-mix(in srgb, var(--bg-deep) 60%, var(--bg-elev)) 100%)",
-        padding: "48px 24px",
+        /* No tray, no gradient, no ambient glow: the clipping sits on the
+           page the way the hero's spread does. */
+        padding: "8px 0",
       }}
       onMouseLeave={() => setActive(null)}
     >
-      {/* Ambient indigo glow, intensifies on active or on Why-this expansion */}
-      <motion.div
-        aria-hidden
-        className="absolute inset-0 -z-10 pointer-events-none"
-        style={{
-          borderRadius: 24,
-          background:
-            "radial-gradient(ellipse at top, rgba(79,70,229,0.10), transparent 60%)",
-        }}
-        animate={{ opacity: active || stage.why ? 1 : 0.55 }}
-        transition={{ duration: 0.7, ease: EASE.inOut }}
-      />
-
       <motion.div
         style={{
           width: 320,
-          borderRadius: 14,
-          border: "1px solid var(--border)",
-          background: "#ffffff",
+          borderRadius: 0,
+          border: "1px solid var(--hairline)",
+          background: "var(--paper)",
           padding: "16px 18px",
         }}
         animate={{
-          y: active ? -2 : 0,
-          scale: active ? 1.018 : 1,
-          boxShadow: active
-            ? "0 24px 50px -16px rgba(20,21,26,0.22), 0 0 0 1px rgba(20,21,26,0.05)"
-            : "0 18px 44px -16px rgba(20,21,26,0.18), 0 0 0 1px rgba(20,21,26,0.04)",
+          /* Same beat as the old lift; the surface response is now a
+             hairline darkening instead of a floating shadow. */
+          y: active ? -1 : 0,
+          borderColor: active
+            ? "rgba(17,17,17,0.28)"
+            : "rgba(17,17,17,0.10)",
         }}
         transition={SPRING_SOFT}
       >
@@ -371,25 +361,34 @@ function DemoCard({
           animate={spotlightAnim("timestamp", active, stage.hi)}
           transition={SPRING_SNAP}
           style={{
-            borderRadius: 6,
+            borderRadius: 2,
             padding: "2px 6px",
-            margin: "-2px -6px 10px",
+            margin: "-2px -6px 0",
           }}
         >
           <p
             style={{
               fontSize: 10.5,
-              letterSpacing: "0.14em",
+              letterSpacing: "0.18em",
               fontWeight: 600,
               color: "var(--ink-quiet)",
               fontFamily: "var(--font-mono-stack)",
               textTransform: "uppercase",
               margin: 0,
+              fontVariantNumeric: "tabular-nums",
             }}
           >
             Daily Signal · 09:14
           </p>
         </motion.div>
+
+        {/* Double Oxford rule under the masthead line, the hero's anchor. */}
+        <div aria-hidden style={{ margin: "8px 0 12px" }}>
+          <div style={{ height: 1, background: "var(--ink)" }} />
+          <div
+            style={{ height: 1, marginTop: 1, background: "var(--hairline)" }}
+          />
+        </div>
 
         {/* Slot 2, Greeting */}
         <motion.div
@@ -397,7 +396,7 @@ function DemoCard({
           animate={spotlightAnim("greeting", active, stage.hi)}
           transition={SPRING_SNAP}
           style={{
-            borderRadius: 8,
+            borderRadius: 2,
             padding: "2px 6px",
             margin: "-2px -6px 18px",
           }}
@@ -421,7 +420,7 @@ function DemoCard({
           animate={spotlightAnim("needs", active, stage.hi)}
           transition={SPRING_SNAP}
           style={{
-            borderRadius: 8,
+            borderRadius: 2,
             padding: "6px 8px",
             margin: "-6px -8px",
           }}
@@ -435,8 +434,9 @@ function DemoCard({
             }}
           >
             <BucketHeading
-              dotColor="var(--status-flight)"
+              dotColor="var(--accent)"
               label="Needs attention"
+              folio="03"
             />
             <CapBar fill={stage.capFill} />
           </div>
@@ -453,14 +453,15 @@ function DemoCard({
           animate={spotlightAnim("moving", active, stage.hi)}
           transition={SPRING_SNAP}
           style={{
-            borderRadius: 8,
+            borderRadius: 2,
             padding: "6px 8px",
             margin: "-6px -8px",
           }}
         >
           <BucketHeading
-            dotColor="var(--status-shipped)"
+            dotColor="var(--ink-ghost)"
             label="Moving well"
+            folio="04"
           />
           <BucketItem>Client onboarding completed faster than usual</BucketItem>
           <BucketItem>Roadmap is ahead of schedule</BucketItem>
@@ -474,12 +475,12 @@ function DemoCard({
           animate={spotlightAnim("risks", active, stage.hi)}
           transition={SPRING_SNAP}
           style={{
-            borderRadius: 8,
+            borderRadius: 2,
             padding: "6px 8px",
             margin: "-6px -8px",
           }}
         >
-          <BucketHeading dotColor="#a89a64" label="Quiet risks" />
+          <BucketHeading dotColor="var(--ink-ghost)" label="Quiet risks" folio="05" />
           <BucketItem>Glenmara contract has been in Draft six days</BucketItem>
           <BucketItem>Last week's retro is still unwritten</BucketItem>
         </motion.div>
@@ -492,12 +493,12 @@ function DemoCard({
           animate={spotlightAnim("focus", active, stage.hi)}
           transition={SPRING_SNAP}
           style={{
-            borderRadius: 8,
+            borderRadius: 2,
             padding: "6px 8px",
             margin: "-6px -8px",
           }}
         >
-          <BucketHeading dotColor="var(--color-signal, #4f46e5)" label="Suggested focus" />
+          <BucketHeading dotColor="var(--accent)" label="Suggested focus" folio="06" />
           <FocusItem index={0}>
             Send the launch assets so the team can ship
           </FocusItem>
@@ -545,9 +546,9 @@ function DemoCard({
                   <p
                     style={{
                       fontSize: 10.5,
-                      letterSpacing: "0.12em",
+                      letterSpacing: "0.14em",
                       fontWeight: 600,
-                      color: "var(--color-signal, #4f46e5)",
+                      color: "var(--accent)",
                       fontFamily: "var(--font-mono-stack)",
                       textTransform: "uppercase",
                       margin: 0,
@@ -582,15 +583,18 @@ function DemoCard({
 function BucketHeading({
   dotColor,
   label,
+  folio,
 }: {
   dotColor: string;
   label: string;
+  /** Kicker folio number, pairs the card row with its annotation. */
+  folio?: string;
 }) {
   return (
     <p
       style={{
         fontSize: 10.5,
-        letterSpacing: "0.14em",
+        letterSpacing: "0.18em",
         fontWeight: 600,
         color: "var(--ink-quiet)",
         fontFamily: "var(--font-mono-stack)",
@@ -606,13 +610,24 @@ function BucketHeading({
         aria-hidden
         style={{
           display: "inline-block",
-          width: 6,
-          height: 6,
+          width: 5,
+          height: 5,
           borderRadius: 999,
           background: dotColor,
         }}
       />
       {label}
+      {folio ? (
+        <span
+          style={{
+            color: "var(--ink-faint)",
+            fontVariantNumeric: "tabular-nums",
+          }}
+        >
+          {"· "}
+          {folio}
+        </span>
+      ) : null}
     </p>
   );
 }
@@ -681,9 +696,7 @@ function FocusItem({
                 width: 5,
                 height: 5,
                 borderRadius: 999,
-                background: "var(--color-signal, #4f46e5)",
-                boxShadow:
-                  "0 0 0 3px color-mix(in srgb, var(--color-signal, #4f46e5) 18%, transparent)",
+                background: "var(--accent)",
               }}
             />
           ) : null}
@@ -732,8 +745,8 @@ function CapBar({ fill }: { fill: number }) {
             animate={{
               backgroundColor:
                 i < clamped
-                  ? "var(--color-signal, #4f46e5)"
-                  : "var(--border-soft)",
+                  ? "var(--accent)"
+                  : "var(--hairline-soft)",
               scale: i < clamped ? 1 : 0.85,
             }}
             transition={{ duration: 0.22, ease: EASE.glide }}
@@ -767,14 +780,17 @@ function Annotations({
         padding: 0,
         display: "flex",
         flexDirection: "column",
-        gap: 4,
+        borderTop: "1px solid var(--hairline-soft)",
       }}
     >
       {ANN.map((a, i) => {
         const isOn = active === a.slot;
         const isOff = !!active && active !== a.slot;
         return (
-          <li key={a.slot}>
+          <li
+            key={a.slot}
+            style={{ borderBottom: "1px solid var(--hairline-soft)" }}
+          >
             <motion.button
               type="button"
               onMouseEnter={() => setActive(a.slot)}
@@ -789,51 +805,47 @@ function Annotations({
               }}
               transition={{ duration: 0.22, ease: EASE.inOut }}
               style={{
+                /* Index rows on hairlines, not floating chips: mono folio in
+                   the margin, kicker label, plain sentence beneath. */
                 display: "grid",
                 gridTemplateColumns: "auto 1fr",
                 alignItems: "start",
-                gap: 12,
+                gap: 14,
                 width: "100%",
                 textAlign: "left",
                 border: "none",
                 cursor: "default",
-                padding: "12px 14px",
-                borderRadius: 12,
+                padding: "12px 10px",
+                borderRadius: 0,
                 outline: "none",
               }}
             >
               <motion.span
                 animate={{
-                  borderColor: isOn
-                    ? "rgba(79,70,229,0.55)"
-                    : "var(--border-soft)",
-                  backgroundColor: isOn
-                    ? "rgba(79,70,229,0.95)"
-                    : "#ffffff",
-                  color: isOn ? "#ffffff" : "var(--ink-soft)",
-                  scale: isOn ? 1.05 : 1,
+                  color: isOn ? "var(--accent)" : "var(--ink-faint)",
                 }}
-                transition={SPRING_SNAP}
+                transition={{ duration: 0.22, ease: EASE.inOut }}
                 style={{
                   marginTop: 2,
-                  display: "inline-flex",
-                  width: 24,
-                  height: 24,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderRadius: 999,
-                  border: "1px solid var(--border-soft)",
-                  fontSize: 11,
+                  display: "inline-block",
+                  minWidth: 20,
+                  fontFamily: "var(--font-mono-stack)",
+                  fontSize: 10.5,
                   fontWeight: 600,
+                  letterSpacing: "0.06em",
+                  fontVariantNumeric: "tabular-nums",
                 }}
               >
-                {i + 1}
+                {`0${i + 1}`.slice(-2)}
               </motion.span>
               <div>
                 <div
                   style={{
-                    fontSize: 13.5,
-                    fontWeight: 500,
+                    fontFamily: "var(--font-mono-stack)",
+                    fontSize: 10.5,
+                    fontWeight: 600,
+                    letterSpacing: "0.18em",
+                    textTransform: "uppercase",
                     color: "var(--ink)",
                   }}
                 >
@@ -841,7 +853,7 @@ function Annotations({
                 </div>
                 <div
                   style={{
-                    marginTop: 2,
+                    marginTop: 4,
                     fontSize: 13,
                     lineHeight: 1.55,
                     color: "var(--ink-soft)",

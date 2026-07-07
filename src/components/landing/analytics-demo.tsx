@@ -14,7 +14,18 @@ import { TickCursor } from "./tick-cursor";
 import { Cursor } from "./cursor";
 import { DemoToast } from "./toast";
 
-const CURSOR_COLOR = "#4f46e5";
+const CURSOR_COLOR = "var(--accent)";
+
+/* Broadsheet bucket grammar (the-brief-hero register): one indigo accent on
+   the bucket that needs you; ink tones for the quiet buckets. Overrides the
+   status colours carried in domains.ts data, marketing surfaces stay
+   single-accent. */
+const BUCKET_DOT: Record<string, string> = {
+  attention: "var(--accent)",
+  moving: "var(--ink-ghost)",
+  risks: "var(--ink-ghost)",
+  focus: "var(--accent)",
+};
 
 function emptyCursor(): CursorState {
   return {
@@ -327,22 +338,72 @@ export function AnalyticsDemo({ domain = "wedding" }: Props = {}) {
     [activeBlocks, leadBlock]
   );
 
-  const renderBlock = (block: DemoBlock) => (
+  const renderBlock = (block: DemoBlock) => {
+    const folio = `0${activeBlocks.indexOf(block) + 1}`.slice(-2);
+    const isLead = block.id === "attention";
+    return (
     <div key={block.id}>
-      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+      {/* Kicker row, mono label · folio, the hero's SUPPLIERS · 01 grammar. */}
+      <div style={{ display: "flex", alignItems: "baseline", gap: 8, marginBottom: 10 }}>
         <span
           aria-hidden
-          style={{ width: 6, height: 6, borderRadius: "50%", background: block.dot, flexShrink: 0 }}
+          style={{
+            width: 5,
+            height: 5,
+            borderRadius: "50%",
+            background: BUCKET_DOT[block.id] ?? "var(--ink-ghost)",
+            flexShrink: 0,
+            transform: "translateY(-1px)",
+          }}
         />
         <span
-          className="font-mono text-[11px] font-semibold uppercase"
-          style={{ color: "var(--ink-quiet)", letterSpacing: "0.12em" }}
+          className="font-mono text-[10.5px] font-semibold uppercase"
+          style={{ color: "var(--ink-faint)", letterSpacing: "0.18em" }}
         >
           {block.label}
         </span>
+        <span
+          aria-hidden
+          className="font-mono text-[10.5px]"
+          style={{ color: "var(--ink-faint)", letterSpacing: "0.18em" }}
+        >
+          ·
+        </span>
+        <span
+          className="font-mono text-[10.5px]"
+          style={{
+            color: "var(--ink-faint)",
+            letterSpacing: "0.18em",
+            fontVariantNumeric: "tabular-nums",
+          }}
+        >
+          {folio}
+        </span>
       </div>
 
-      <div style={{ display: "flex", flexDirection: "column", gap: 10, paddingLeft: 14 }}>
+      <div
+        style={{
+          position: "relative",
+          display: "flex",
+          flexDirection: "column",
+          gap: 10,
+          paddingLeft: 14,
+        }}
+      >
+        {/* Indigo editor's pencil in the gutter of the bucket that needs you. */}
+        {isLead ? (
+          <span
+            aria-hidden
+            style={{
+              position: "absolute",
+              left: 0,
+              top: 2,
+              bottom: 2,
+              width: 3,
+              background: "var(--accent)",
+            }}
+          />
+        ) : null}
         {block.items.map((item) => {
           const variantIndex = state.variantByItemId[item.id] ?? 0;
           const text = item.variants[variantIndex] ?? item.variants[0];
@@ -384,68 +445,61 @@ export function AnalyticsDemo({ domain = "wedding" }: Props = {}) {
         />
       ) : null}
     </div>
-  );
+    );
+  };
 
   return (
     <div
       ref={surfaceRef}
       className="relative w-full overflow-hidden"
       style={{
-        borderRadius: "var(--r-4)",
-        border: "1px solid var(--border)",
-        background: "var(--bg-elev)",
-        boxShadow: "var(--shadow-2, 0 2px 6px rgba(20,21,26,0.06))",
+        border: "1px solid var(--hairline)",
+        background: "var(--paper)",
       }}
     >
-      {/* Top bar, sender chrome */}
-      <div
-        className="flex items-center gap-3 border-b px-5 py-2.5"
-        style={{
-          borderColor: "var(--border-soft)",
-          background: "var(--bg-deep)",
-        }}
-      >
-        <span
-          aria-hidden
-          style={{
-            width: 22,
-            height: 22,
-            borderRadius: "50%",
-            background:
-              "linear-gradient(135deg, var(--brand) 0%, var(--brand-deep) 100%)",
-            color: "white",
-            fontSize: 9,
-            fontWeight: 700,
-            letterSpacing: "0.02em",
-            display: "inline-flex",
-            alignItems: "center",
-            justifyContent: "center",
-            flexShrink: 0,
-          }}
+      {/* Masthead, flag + workspace folio over a double Oxford rule.
+          Replaces the grey app chrome + gradient avatar. */}
+      <div style={{ padding: "18px 36px 0" }}>
+        <div
+          className="flex flex-wrap items-baseline justify-between"
+          style={{ gap: "4px 16px" }}
         >
-          S
-        </span>
-        <div className="flex flex-col flex-1 min-w-0">
-          <span
-            className="text-[12px]"
-            style={{
-              color: "var(--ink)",
-              fontWeight: 600,
-              letterSpacing: "-0.005em",
-            }}
-          >
-            Signal
+          <span className="inline-flex items-baseline" style={{ gap: 12 }}>
+            <span
+              className="font-mono text-[11px] font-semibold uppercase"
+              style={{ color: "var(--ink)", letterSpacing: "0.18em" }}
+            >
+              Signal
+            </span>
+            <span
+              className="font-mono text-[10.5px] uppercase"
+              style={{
+                color: "var(--ink-faint)",
+                letterSpacing: "0.18em",
+                fontVariantNumeric: "tabular-nums",
+              }}
+            >
+              For · {pack.workspaceName}
+            </span>
           </span>
           <span
-            className="font-mono text-[10.5px]"
+            className="font-mono text-[10px] uppercase"
             style={{
-              color: "var(--ink-quiet)",
-              letterSpacing: "0.02em",
-              textTransform: "lowercase",
+              color: "var(--ink-faint)",
+              letterSpacing: "0.18em",
+              fontVariantNumeric: "tabular-nums",
+              whiteSpace: "nowrap",
             }}
           >
-            for · {pack.workspaceName}
+            {pack.workspaceEyebrow}
           </span>
+        </div>
+        {/* Double Oxford rule, solid ink over hairline. */}
+        <div aria-hidden style={{ marginTop: 8 }}>
+          <div style={{ height: 1, background: "var(--ink)" }} />
+          <div
+            style={{ height: 1, marginTop: 1, background: "var(--hairline)" }}
+          />
         </div>
       </div>
 
@@ -455,7 +509,7 @@ export function AnalyticsDemo({ domain = "wedding" }: Props = {}) {
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.32, ease: [0, 0, 0.2, 1] }}
-        style={{ padding: "32px 36px 36px" }}
+        style={{ padding: "24px 36px 32px" }}
       >
         <div className="mb-5">
           <TickCursor delivered={state.delivered} />
@@ -463,11 +517,11 @@ export function AnalyticsDemo({ domain = "wedding" }: Props = {}) {
 
         <p
           style={{
-            fontSize: 26,
-            fontWeight: 500,
-            letterSpacing: "-0.025em",
+            fontSize: 24,
+            fontWeight: 560,
+            letterSpacing: "-0.02em",
             color: "var(--ink)",
-            marginBottom: 32,
+            marginBottom: 28,
             lineHeight: 1.1,
           }}
         >
@@ -476,8 +530,12 @@ export function AnalyticsDemo({ domain = "wedding" }: Props = {}) {
 
         {/* One thing leads, the signal that needs you today. */}
         <p
-          className="font-mono text-[11px] font-semibold uppercase"
-          style={{ color: "var(--brand, var(--ink))", letterSpacing: "0.14em", marginBottom: 12 }}
+          className="font-mono text-[10.5px] font-semibold uppercase"
+          style={{
+            color: "var(--ink-faint)",
+            letterSpacing: "0.18em",
+            marginBottom: 14,
+          }}
         >
           One thing needs you today
         </p>
@@ -504,31 +562,34 @@ export function AnalyticsDemo({ domain = "wedding" }: Props = {}) {
           </div>
         ) : null}
 
+        {/* Closing ledger, solid ink rule like the hero's honest tally. */}
         <div
           style={{
             marginTop: 32,
-            paddingTop: 16,
-            borderTop: "1px solid var(--border-soft)",
+            paddingTop: 14,
+            borderTop: "1px solid var(--ink)",
             display: "flex",
-            alignItems: "center",
+            alignItems: "baseline",
             justifyContent: "space-between",
             gap: 12,
           }}
         >
           <span
-            className="font-mono text-[11px] uppercase"
+            className="font-mono text-[10.5px] uppercase"
             style={{
               color: "var(--ink-faint)",
-              letterSpacing: "0.12em",
+              letterSpacing: "0.14em",
+              fontVariantNumeric: "tabular-nums",
             }}
           >
             Three items per block. Hard cap.
           </span>
           <span
-            className="font-mono text-[11px] uppercase"
+            className="font-mono text-[10.5px] uppercase"
             style={{
               color: "var(--ink-faint)",
-              letterSpacing: "0.12em",
+              letterSpacing: "0.14em",
+              fontVariantNumeric: "tabular-nums",
             }}
           >
             Daily briefing · 06:00

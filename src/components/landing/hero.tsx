@@ -22,7 +22,7 @@ export function Hero() {
       <div className="mx-auto w-full max-w-[1240px] px-5 md:px-6">
         <p
           className="font-mono text-[11px] font-semibold uppercase"
-          style={{ color: "var(--ink-quiet)", letterSpacing: "0.14em" }}
+          style={{ color: "var(--ink-quiet)", letterSpacing: "0.18em" }}
         >
           Signal &middot; Your work
         </p>
@@ -52,18 +52,21 @@ export function Hero() {
 
         <p
           className="mt-5 font-mono text-[10.5px] font-semibold uppercase"
-          style={{ color: "var(--ink-quiet)", letterSpacing: "0.16em" }}
+          style={{ color: "var(--ink-quiet)", letterSpacing: "0.18em" }}
         >
           Ten rules pick it. Written by hand. No model in the path.
         </p>
 
         <p
-          className="mt-7 inline-flex items-center gap-2 text-[12.5px]"
-          style={{ color: "var(--ink-faint, var(--ink-quiet))" }}
+          className="mt-7 inline-flex items-center gap-2 font-mono text-[10.5px] uppercase"
+          style={{
+            color: "var(--ink-faint, var(--ink-quiet))",
+            letterSpacing: "0.14em",
+          }}
         >
           <span
             className="block h-1.5 w-1.5 animate-pulse rounded-full"
-            style={{ background: "var(--status-shipped)" }}
+            style={{ background: "var(--accent)" }}
           />
           Demo is live &middot; pick a scenario
         </p>

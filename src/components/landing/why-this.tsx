@@ -40,10 +40,9 @@ export function WhyThis({ visible, reasons, revealChars, triggerName }: Props) {
         >
           <div
             style={{
-              borderRadius: "var(--r-2)",
-              border: "1px solid var(--border-soft)",
-              background: "var(--bg-deep)",
-              padding: "10px 14px",
+              /* Footnote under a hairline, not a grey app card. */
+              borderTop: "1px solid var(--hairline-soft)",
+              padding: "8px 0 2px",
               display: "flex",
               flexDirection: "column",
               gap: 4,

@@ -3,6 +3,10 @@
 Convention: BRAND.md §6.5. Entries before 2026-05-14 keep their
 original shape; the new shape starts at the next cycle.
 
+## 2026-07-07 · A·11 · tightens · the whole page goes to press
+
+**The two demo sections below the hero now share the hero's broadsheet register, so the page reads as one product instead of three eras.** The briefing demo sheds its floating app card (rounded corners, grey top bar, gradient avatar) for an editorial sheet: a SIGNAL masthead with folio and dateline over a double Oxford rule, mono kicker rows with folio numbers for the buckets, the indigo pencil rule in the lead gutter, items set as index lines, and an honest mono ledger for a footer. The scenario picker becomes a newspaper section rail with a sliding indigo rule. The anatomy section's gradient tray, ambient glow, and circled number badges are gone: the card is a broadsheet clipping, the annotations are hairline-separated index rows with mono folios that pair to the kickers on the card, and the spotlight is the hero's quiet indigo read-wash. Every choreography beat keeps its exact timing; reduced motion is untouched. Off-token colours in both sections (ambers, greens, the near-gold) are gone, one indigo remains. The anatomy's closing note also drops "The signal, not the noise.", the standfirst retired the slogan and the small print follows it.
+
 ## 2026-07-07 · A·10 · tightens · the brief ends on the count, not the slogan
 
 **The settled spread now leads with the payoff instead of the philosophy: the standfirst reads "Three things need you today." and the subhead answers it in eight words, "Signal reads the pile. You read one page."** The old ending said the idea twice ("The signal, not the noise." over "Every morning, Signal reads the pile and hands you the few that need you.") after the overture had already taught it; now the overture keeps the philosophy and the spread states the concrete result. The closing ledger sharpens to match: "Signal read 44 updates this morning. 41 could wait. These three couldn't." Same acts, same timings, same reduced-motion and no-JS behaviour; only the landing got quieter and harder.

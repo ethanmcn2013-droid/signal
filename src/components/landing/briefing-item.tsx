@@ -43,7 +43,7 @@ export function BriefingItem({
       }}
       data-item-id={itemId}
       style={{
-        borderRadius: 6,
+        borderRadius: 2,
         padding: highlight ? "4px 6px" : 0,
         margin: highlight ? "-4px -6px" : 0,
         background: highlight
@@ -53,72 +53,61 @@ export function BriefingItem({
         transition: "background var(--motion-base) var(--ease-out)",
       }}
     >
-      <div className="flex items-baseline gap-2">
-        <span
-          aria-hidden
-          style={{
-            width: 3,
-            height: 3,
-            borderRadius: "50%",
-            background: "var(--ink-faint)",
-            flexShrink: 0,
-            transform: "translateY(-3px)",
-            marginTop: 8,
-          }}
-        />
-        <div className="flex-1 min-w-0">
-          <AnimatePresence mode="wait">
-            {/* Phrasing swap, fast crossfade. --motion-fast 140ms + --ease-standard */}
-            <motion.p
-              key={variantKey}
-              initial={swapping ? { opacity: 0, y: -2 } : false}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 2 }}
-              transition={{ duration: 0.14, ease: [0.2, 0, 0, 1] }}
-              style={{
-                fontSize: 14.5,
-                color: "var(--ink-soft)",
-                lineHeight: 1.5,
-                margin: 0,
-              }}
-            >
-              {text}
-              {swapping ? (
-                <motion.span
-                  aria-hidden
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: [0, 0.9, 0] }}
-                  transition={{ duration: 0.42, times: [0, 0.4, 1] }}
-                  style={{
-                    display: "inline-block",
-                    marginLeft: 6,
-                    width: 4,
-                    height: 4,
-                    borderRadius: "50%",
-                    background: "var(--brand)",
-                    transform: "translateY(-1px)",
-                    verticalAlign: "middle",
-                  }}
-                />
-              ) : null}
-            </motion.p>
-          </AnimatePresence>
-          {provenance ? (
-            <p
-              className="font-mono"
-              style={{
-                fontSize: 10,
-                color: "var(--ink-faint)",
-                letterSpacing: "0.02em",
-                marginTop: 2,
-                marginBottom: 0,
-                textTransform: "lowercase",
-              }}
-            >
-              {provenance}
-            </p>
-          ) : null}
-        </div>
+      {/* Index-line grammar from the hero's SET ASIDE column:
+          sentence · mono source. No bullet chrome. */}
+      <div className="flex-1 min-w-0">
+        <AnimatePresence mode="wait">
+          {/* Phrasing swap, fast crossfade. --motion-fast 140ms + --ease-standard */}
+          <motion.p
+            key={variantKey}
+            initial={swapping ? { opacity: 0, y: -2 } : false}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 2 }}
+            transition={{ duration: 0.14, ease: [0.2, 0, 0, 1] }}
+            style={{
+              fontSize: 14,
+              color: "var(--ink-soft)",
+              lineHeight: 1.5,
+              margin: 0,
+            }}
+          >
+            {text}
+            {provenance ? (
+              <span
+                className="font-mono"
+                style={{
+                  fontSize: 10,
+                  color: "var(--ink-faint)",
+                  letterSpacing: "0.02em",
+                  textTransform: "lowercase",
+                  fontVariantNumeric: "tabular-nums",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {" "}
+                &middot; {provenance}
+              </span>
+            ) : null}
+            {swapping ? (
+              <motion.span
+                aria-hidden
+                initial={{ opacity: 0 }}
+                animate={{ opacity: [0, 0.9, 0] }}
+                transition={{ duration: 0.42, times: [0, 0.4, 1] }}
+                style={{
+                  display: "inline-block",
+                  marginLeft: 6,
+                  width: 4,
+                  height: 4,
+                  borderRadius: "50%",
+                  background: "var(--brand)",
+                  transform: "translateY(-1px)",
+                  verticalAlign: "middle",
+                }}
+              />
+            ) : null}
+          </motion.p>
+        </AnimatePresence>
       </div>
       {whyThisReasons ? (
         <WhyThis

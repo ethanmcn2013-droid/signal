@@ -47,17 +47,16 @@ export function DemoToast({ variant }: Props) {
             exit={{ opacity: 0, y: 6, scale: 0.95 }}
             // --motion-moderate 320ms + --ease-out
             transition={{ duration: 0.32, ease: [0, 0, 0.2, 1] }}
-            className="flex items-center gap-2 rounded-full border px-3 py-1.5 text-[11.5px] font-medium"
+            className="flex items-center gap-2 px-2.5 py-1 font-mono text-[9.5px] font-semibold uppercase"
             style={{
-              borderColor: "var(--border)",
-              background: "var(--bg-elev)",
-              color: "var(--ink)",
-              boxShadow: "0 8px 20px -8px rgba(20,21,26,0.18)",
-              fontWeight: 500,
-              letterSpacing: "-0.005em",
+              /* Solid-ink tag, the hero's DUE TODAY chip grammar. */
+              background: "var(--ink)",
+              color: "var(--paper)",
+              borderRadius: 2,
+              letterSpacing: "0.14em",
             }}
           >
-            <span style={{ color: "var(--brand)" }}>{active.icon}</span>
+            <span style={{ color: "var(--paper)" }}>{active.icon}</span>
             {active.text}
           </motion.div>
         ) : null}
