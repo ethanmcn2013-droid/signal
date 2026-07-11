@@ -7,6 +7,7 @@
 import { createClient, type Client, type Value } from "@libsql/client";
 import type { BriefingContext, BriefingSource } from "./source";
 import type { Lane, TaskSignal } from "./types";
+import { assertTasksBriefingQuery } from "./tasks-read-contract";
 
 /**
  * Reads the signed-in user's Tasks workspaces and maps them to
@@ -67,6 +68,7 @@ export function makeTasksDbSource(): BriefingSource | null {
 
   return {
     async getSignalsForUser(ctx: BriefingContext): Promise<TaskSignal[]> {
+      assertTasksBriefingQuery({ subject: ctx.userId });
       // Resolve immutable suite subject → Tasks user_id. Never use email for
       // authorization: it can change, collide, or be absent during linking.
       // Any Tasks DB outage / expired token / schema drift here must
