@@ -17,7 +17,9 @@
     "test:watch": "node --watch --import tsx --test 'src/lib/**/*.test.ts'",
     "test:coverage": "node --import tsx --test --experimental-test-coverage 'src/lib/**/*.test.ts'",
     "db:generate": "drizzle-kit generate",
-    "db:push": "drizzle-kit push",
+    "db:migrate": "drizzle-kit migrate",
+    "db:push:unsafe": "drizzle-kit push",
+    "db:contract": "node scripts/check-migration-contract.mjs",
     "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
