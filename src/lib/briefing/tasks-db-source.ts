@@ -10,8 +10,8 @@ import type { Lane, TaskSignal } from "./types";
 
 /**
  * Reads the signed-in user's Tasks workspaces and maps them to
- * TaskSignal[]. Joins on EMAIL (Tasks/Analytics may live in
- * different Clerk apps; clerk_id wouldn't match across them).
+ * TaskSignal[]. Joins on the immutable suite subject (`clerk_id`).
+ * Email is a display/delivery field only and is never an authorization key.
  *
  * Read-only by design, the token used here must be a Turso
  * read-only token. The data flow is Analytics ← Tasks; never the
@@ -67,7 +67,8 @@ export function makeTasksDbSource(): BriefingSource | null {
 
   return {
     async getSignalsForUser(ctx: BriefingContext): Promise<TaskSignal[]> {
-      // Resolve email → Tasks user_id. Email is the cross-product key.
+      // Resolve immutable suite subject → Tasks user_id. Never use email for
+      // authorization: it can change, collide, or be absent during linking.
       // Any Tasks DB outage / expired token / schema drift here must
       // not abort the cron run, return [] so the empty-state render
       // fires for this user and the fanout continues for the rest.
@@ -75,8 +76,8 @@ export function makeTasksDbSource(): BriefingSource | null {
       let tasksUserId: Value | undefined;
       try {
         const userRow = await getClient().execute({
-          sql: "SELECT id FROM users WHERE email = ? LIMIT 1",
-          args: [ctx.email],
+          sql: "SELECT id FROM users WHERE clerk_id = ? LIMIT 1",
+          args: [ctx.userId],
         });
         tasksUserId = userRow.rows[0]?.id;
       } catch (err) {
