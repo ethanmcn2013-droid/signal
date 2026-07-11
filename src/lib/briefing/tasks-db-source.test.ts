@@ -6,6 +6,13 @@ import {
   parseBlockedBy,
   parsePriority,
 } from "./tasks-db-source";
+import { assertTasksBriefingQuery, TASKS_READ_CONTRACT_VERSION } from "./tasks-read-contract";
+
+test("Signal consumes the versioned Tasks briefing contract", () => {
+  assert.equal(TASKS_READ_CONTRACT_VERSION, 1);
+  assert.doesNotThrow(() => assertTasksBriefingQuery({ subject: "user_1" }));
+  assert.throws(() => assertTasksBriefingQuery({ subject: "" }));
+});
 
 describe("canonicaliseLane", () => {
   test("maps Tasks lanes to engine lanes", () => {
