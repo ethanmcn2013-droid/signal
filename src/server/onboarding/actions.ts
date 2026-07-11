@@ -32,9 +32,8 @@ export async function completeOnboarding(formData: FormData): Promise<void> {
 
   // Verify the workspace is one the user can actually brief. Defends
   // against a tampered formData replaying a workspace id the user
-  // doesn't have access to. Pass email for the email-first identity
-  // fallback (D1) so the verification uses the same resolution chain
-  // as the picker that presented the candidates.
+  // doesn't have access to. Email is passed only for display/delivery;
+  // the data source authorizes by immutable clerkId.
   const me = await currentUser();
   const email = me?.primaryEmailAddress?.emailAddress ?? null;
   const candidates = await dataSource.listForUser({ clerkId: userId, email });

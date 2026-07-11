@@ -1,9 +1,9 @@
 import type { TaskSignal } from "./types";
 
 /**
- * Identity passed into a BriefingSource. Both fields are needed
- * because cross-product joins are *email-keyed*, Analytics and
- * Tasks may live in separate Clerk apps with non-shared userIds.
+ * Identity passed into a BriefingSource. `userId` is the immutable suite
+ * subject used for all cross-product authorization. `email` is retained only
+ * for delivery/presentation and must never be used as a join key.
  */
 export type BriefingContext = {
   userId: string;

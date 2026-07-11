@@ -23,7 +23,7 @@ export default async function OnboardingPage() {
     redirect("/app");
   }
 
-  // Resolve email for the email-first identity fallback (D1).
+  // Resolve email for display/delivery only; authorization uses clerkId.
   // currentUser() is a separate Clerk call but runs server-side; the cost
   // is acceptable here, onboarding is a one-time flow.
   const me = await currentUser();

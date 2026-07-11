@@ -10,7 +10,7 @@
  *   runs offline.
  */
 
-import { eq, or } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import type { WorkRead, TaskRead, ProjectRead, Status } from "./types";
 import { tasksDb, tasksDbConfigured } from "@/server/tasks-db/client";
 import {
@@ -29,12 +29,7 @@ export interface WorkspaceCandidate {
 export interface UserIdentity {
   /** Clerk user id (`user_2abc…`). Always present from auth(). */
   clerkId: string;
-  /**
-   * Primary email from Clerk. Used as the first-priority key to locate
-   * a Tasks user row, email is hydrated by the Clerk webhook, whereas
-   * clerk_id may not yet be written (webhook-race hole). Nullable when
-   * Clerk has no primary email on the account.
-   */
+  /** Primary email for display only; never an authorization key. */
   email: string | null;
 }
 
@@ -49,11 +44,8 @@ export interface DataSource {
   /**
    * Workspaces this user can brief (owner or member).
    *
-   * Resolution order (D1 decision):
-   *   1. email match  (canonical, hydrated by webhook, most reliable)
-   *   2. clerk_id match (belt-and-braces)
-   *   3. id === clerkId (legacy seed rows with no clerk_id / email set)
-   * Returns [] only when all three miss. Never throws to the page —
+   * Resolution uses only the immutable suite subject stored in `clerk_id`.
+   * Returns [] when the subject is not linked. Never throws to the page —
    * try/catch wraps DB reads.
    */
   listForUser(identity: UserIdentity): Promise<WorkspaceCandidate[]>;
@@ -165,34 +157,14 @@ function titleCaseTag(tag: string): string {
 // Drizzle's API is identical regardless of the underlying client.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function _listForUserFromDb(db: any, identity: UserIdentity): Promise<WorkspaceCandidate[]> {
-  const { clerkId, email } = identity;
+  const { clerkId } = identity;
   const candidates: Array<{ id: string; clerkId: string | null; email: string | null }> = await db
     .select({ id: usersTable.id, clerkId: usersTable.clerkId, email: usersTable.email })
     .from(usersTable)
-    .where(
-      or(
-        email ? eq(usersTable.email, email) : undefined,
-        eq(usersTable.clerkId, clerkId),
-        eq(usersTable.id, clerkId),
-      ),
-    );
+    .where(eq(usersTable.clerkId, clerkId));
 
   if (candidates.length === 0) return [];
-
-  let userId: string | null = null;
-  for (const row of candidates) {
-    if (email && row.email === email) { userId = row.id; break; }
-  }
-  if (!userId) {
-    for (const row of candidates) {
-      if (row.clerkId === clerkId) { userId = row.id; break; }
-    }
-  }
-  if (!userId) {
-    for (const row of candidates) {
-      if (row.id === clerkId) { userId = row.id; break; }
-    }
-  }
+  const userId = candidates[0]?.id;
   if (!userId) return [];
 
   const owned: Array<{ id: string; name: string }> = await db
