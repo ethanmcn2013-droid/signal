@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 /**
  * SuiteSwitcher, canonical always-visible 4-product pill switcher.
@@ -61,6 +61,32 @@ const PRODUCTS: { slug: ProductSlug; word: string; appUrl: string }[] = [
 ];
 
 const PRODUCT_ORIGINS = [NOTES_URL, TASKS_URL, TIMELINE_URL, SIGNAL_URL];
+
+type SuiteContextV2 = {
+  workspaceId: string | null;
+  planningPeriodId: string | null;
+};
+
+function readSuiteContext(): SuiteContextV2 {
+  if (typeof window === "undefined") return { workspaceId: null, planningPeriodId: null };
+  const params = new URLSearchParams(window.location.search);
+  if (params.get("contextVersion") !== "2") {
+    return { workspaceId: null, planningPeriodId: null };
+  }
+  return {
+    workspaceId: params.get("workspaceId"),
+    planningPeriodId: params.get("planningPeriodId"),
+  };
+}
+
+export function withSuiteContext(url: string, context: SuiteContextV2): string {
+  if (!context.workspaceId && !context.planningPeriodId) return url;
+  const next = new URL(url);
+  next.searchParams.set("contextVersion", "2");
+  if (context.workspaceId) next.searchParams.set("workspaceId", context.workspaceId);
+  if (context.planningPeriodId) next.searchParams.set("planningPeriodId", context.planningPeriodId);
+  return next.toString();
+}
 
 /**
  * Phase 3 (instant-jump): warm a sibling product on hover/focus so the
@@ -132,6 +158,10 @@ const SCOPED_CSS = `
  background:color-mix(in srgb,var(--ink,#111111) 5%,transparent)}
 .suitesw-pill--current{font-weight:600;color:var(--ink,#111111);
  background:color-mix(in srgb,${INDIGO} 9%,transparent);cursor:default}
+@media(max-width:520px){
+ .suitesw-anchor,.suitesw-sep{display:none}
+ .suitesw-pill{padding:4px 7px;font-size:12px}
+}
 `;
 
 export function SuiteSwitcher({
@@ -146,6 +176,21 @@ export function SuiteSwitcher({
   current?: ProductSlug;
   showUmbrella?: boolean;
 }) {
+  const [context, setContext] = useState<SuiteContextV2>({
+    workspaceId: null,
+    planningPeriodId: null,
+  });
+  useEffect(() => {
+    const refresh = () => setContext(readSuiteContext());
+    refresh();
+    window.addEventListener("signal-suite-context-change", refresh);
+    window.addEventListener("popstate", refresh);
+    return () => {
+      window.removeEventListener("signal-suite-context-change", refresh);
+      window.removeEventListener("popstate", refresh);
+    };
+  }, []);
+
   // Phase 3 (instant-jump): preconnect every sibling origin on mount so
   // the first cross-product hop has a warm TLS connection ready. The
   // pills are always visible, warm eagerly, there is no "on open".
@@ -186,6 +231,7 @@ export function SuiteSwitcher({
 
       {PRODUCTS.map((p) => {
         const isCurrent = p.slug === current;
+        const appUrl = withSuiteContext(p.appUrl, context);
         if (isCurrent) {
           return (
             <span
@@ -203,9 +249,9 @@ export function SuiteSwitcher({
         return (
           <a
             key={p.slug}
-            href={p.appUrl}
-            onMouseEnter={() => prefetchProduct(p.appUrl)}
-            onFocus={() => prefetchProduct(p.appUrl)}
+            href={appUrl}
+            onMouseEnter={() => prefetchProduct(appUrl)}
+            onFocus={() => prefetchProduct(appUrl)}
             onClick={(e) => {
               if (
                 e.metaKey ||
@@ -216,7 +262,7 @@ export function SuiteSwitcher({
               )
                 return;
               e.preventDefault();
-              suiteJump(p.appUrl);
+              suiteJump(appUrl);
             }}
             className="suitesw-pill suitesw-pill--link"
           >
