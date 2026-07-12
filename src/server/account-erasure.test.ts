@@ -25,6 +25,8 @@ async function freshDbs() {
     CREATE TABLE analytics_users (
       clerk_id text PRIMARY KEY NOT NULL,
       linked_workspace_id text,
+      scope_kind text,
+      planning_period_id text,
       timezone text,
       created_at integer NOT NULL DEFAULT (unixepoch()),
       updated_at integer NOT NULL DEFAULT (unixepoch())

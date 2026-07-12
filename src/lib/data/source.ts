@@ -10,7 +10,7 @@
  *   runs offline.
  */
 
-import { eq } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 import type { WorkRead, TaskRead, ProjectRead, Status } from "./types";
 import { tasksDb, tasksDbConfigured } from "@/server/tasks-db/client";
 import {
@@ -40,6 +40,7 @@ export type WorkspaceOnboarding = {
 
 export interface DataSource {
   read(workspaceId: string): Promise<WorkRead>;
+  readMany?(workspaceIds: string[]): Promise<WorkRead[]>;
   getWorkspaceOnboarding?(workspaceId: string): Promise<WorkspaceOnboarding | null>;
   /**
    * Workspaces this user can brief (owner or member).
@@ -69,6 +70,9 @@ export function mockSourceWith(opts: {
     },
     async listForUser(_identity: UserIdentity): Promise<WorkspaceCandidate[]> {
       return opts.workspaces;
+    },
+    async readMany(workspaceIds: string[]): Promise<WorkRead[]> {
+      return Promise.all(workspaceIds.map((workspaceId) => this.read(workspaceId)));
     },
     async getWorkspaceOnboarding(): Promise<WorkspaceOnboarding | null> {
       return opts.onboarding ?? null;
@@ -196,19 +200,10 @@ export async function _listForUserFromDb(db: any, identity: UserIdentity): Promi
   return out;
 }
 
-export const tasksDbSource: DataSource = {
-  async read(workspaceId: string): Promise<WorkRead> {
-    if (!tasksDb) {
-      throw new Error(
-        "tasksDbSource called without TASKS_DATABASE_URL configured",
-      );
-    }
-
-    const rows = await tasksDb
-      .select()
-      .from(tasksTable)
-      .where(eq(tasksTable.workspaceId, workspaceId));
-
+function buildWorkRead(
+  workspaceId: string,
+  rows: Array<typeof tasksTable.$inferSelect>,
+): WorkRead {
     const taskReads: TaskRead[] = rows.map((t) => {
       const tags = Array.isArray(t.tags) ? t.tags : [];
       const assignees = Array.isArray(t.assignees) ? t.assignees : [];
@@ -276,6 +271,36 @@ export const tasksDbSource: DataSource = {
       // Cycle 6.4 will populate this if any trigger needs the event log.
       events: [],
     };
+}
+
+export const tasksDbSource: DataSource = {
+  async read(workspaceId: string): Promise<WorkRead> {
+    const reads = await this.readMany!([workspaceId]);
+    return reads[0] ?? buildWorkRead(workspaceId, []);
+  },
+
+  async readMany(workspaceIds: string[]): Promise<WorkRead[]> {
+    if (!tasksDb) {
+      throw new Error(
+        "tasksDbSource called without TASKS_DATABASE_URL configured",
+      );
+    }
+    const ids = Array.from(new Set(workspaceIds.filter(Boolean))).slice(0, 50);
+    if (ids.length === 0) return [];
+    const rows = await tasksDb
+      .select()
+      .from(tasksTable)
+      .where(inArray(tasksTable.workspaceId, ids));
+    const byWorkspace = new Map<string, Array<typeof tasksTable.$inferSelect>>();
+    for (const row of rows) {
+      if (!row.workspaceId || !ids.includes(row.workspaceId)) continue;
+      const bucket = byWorkspace.get(row.workspaceId) ?? [];
+      bucket.push(row);
+      byWorkspace.set(row.workspaceId, bucket);
+    }
+    return ids.map((workspaceId) =>
+      buildWorkRead(workspaceId, byWorkspace.get(workspaceId) ?? []),
+    );
   },
 
   async listForUser(identity: UserIdentity): Promise<WorkspaceCandidate[]> {

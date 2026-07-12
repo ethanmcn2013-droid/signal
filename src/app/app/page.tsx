@@ -4,6 +4,9 @@ import { getAnalyticsUser } from "@/server/onboarding/queries";
 import { buildBriefingForUser } from "@/server/briefing/build-for-user";
 import { BriefingView } from "@/components/brief/briefing-view";
 import { isDemoMode } from "@/lib/access-mode";
+import { SignalScopeSwitcher } from "@/components/brief/scope-switcher";
+import { planningPeriodsEnabled, type SignalScope } from "@/lib/planning-periods/scope";
+import { recordPlanningEvent } from "@/server/planning-events";
 
 /**
  * /app, the authenticated landing surface.
@@ -14,7 +17,11 @@ import { isDemoMode } from "@/lib/access-mode";
  *   - otherwise build a daily briefing for the user (engine-driven,
  *     prose-rendered, rotation-persisted) and render it
  */
-export default async function AppPage() {
+export default async function AppPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
   const demo = isDemoMode();
 
   // Production path: real auth + workspace gate. Demo/Review skips both —
@@ -29,10 +36,18 @@ export default async function AppPage() {
     }
   }
 
+  const params = await searchParams;
+  const hintedScope: SignalScope | undefined =
+    planningPeriodsEnabled() && typeof params.workspaceId === "string"
+      ? { kind: "workspace", workspaceId: params.workspaceId }
+      : planningPeriodsEnabled() && typeof params.planningPeriodId === "string"
+        ? { kind: "planningPeriod", planningPeriodId: params.planningPeriodId }
+        : undefined;
   const [result, me] = await Promise.all([
     buildBriefingForUser({
       clerkId: userId ?? "demo-user",
       cadence: "daily",
+      scope: hintedScope,
     }),
     demo ? Promise.resolve(null) : currentUser(),
   ]);
@@ -43,5 +58,29 @@ export default async function AppPage() {
     redirect("/app/onboarding");
   }
 
-  return <BriefingView briefing={result.briefing} firstName={me?.firstName ?? null} />;
+  if (result.authorizedScope.scope.kind === "planningPeriod") {
+    await recordPlanningEvent({
+      eventName: "period_signal_viewed",
+      scopeKind: "planningPeriod",
+      workspaceCount: result.authorizedScope.workspaces.length,
+    });
+  }
+
+  return (
+    <>
+      {planningPeriodsEnabled() ? (
+        <SignalScopeSwitcher
+          catalog={result.catalog}
+          activeScope={result.authorizedScope.scope}
+          demo={demo}
+        />
+      ) : null}
+      <BriefingView
+        briefing={result.briefing}
+        firstName={me?.firstName ?? null}
+        scopeLabel={result.authorizedScope.label}
+        scopeKind={result.authorizedScope.scope.kind}
+      />
+    </>
+  );
 }

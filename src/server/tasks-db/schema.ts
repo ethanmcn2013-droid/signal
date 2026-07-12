@@ -40,6 +40,22 @@ export const workspaces = sqliteTable("workspaces", {
   ownerUserId: text("owner_user_id"),
   activeDomain: text("active_domain"),
   primaryUseCase: text("primary_use_case"),
+  planningPeriodId: text("planning_period_id"),
+  contextType: text("context_type"),
+  primaryDate: text("primary_date"),
+  primaryDateLabel: text("primary_date_label"),
+  archivedAt: integer("archived_at", { mode: "timestamp" }),
+});
+
+export const planningPeriods = sqliteTable("planning_periods", {
+  id: text("id").primaryKey(),
+  ownerUserId: text("owner_user_id").notNull(),
+  name: text("name").notNull(),
+  contextType: text("context_type").notNull(),
+  startDate: text("start_date"),
+  endDate: text("end_date"),
+  timezone: text("timezone").notNull(),
+  archivedAt: integer("archived_at", { mode: "timestamp" }),
 });
 
 export const users = sqliteTable("users", {

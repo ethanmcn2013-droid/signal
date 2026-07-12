@@ -47,12 +47,16 @@ export async function completeOnboarding(formData: FormData): Promise<void> {
     .values({
       clerkId: userId,
       linkedWorkspaceId: workspaceId,
+      scopeKind: "workspace",
+      planningPeriodId: null,
       timezone,
     })
     .onConflictDoUpdate({
       target: analyticsUsers.clerkId,
       set: {
         linkedWorkspaceId: workspaceId,
+        scopeKind: "workspace",
+        planningPeriodId: null,
         timezone,
         updatedAt: sql`(unixepoch())`,
       },

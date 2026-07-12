@@ -8,6 +8,7 @@ import {
   useState,
   type CSSProperties,
 } from "react";
+import { formatFrozenDateline } from "@/lib/frozen-dateline";
 
 /**
  * Signal homepage opener — "The Brief."
@@ -319,9 +320,11 @@ export function TheBriefHero() {
             <span className={`${PREFIX}-folio-mast`}>VOL. 1 · No. 04</span>
           </span>
           <span className={`${PREFIX}-datestack`}>
-            <span className={`${PREFIX}-dateline`}>FRIDAY · 4 JULY 2026</span>
+            <span className={`${PREFIX}-dateline`}>
+              {formatFrozenDateline("2026-07-04")}
+            </span>
             <span className={`${PREFIX}-dateline-sub`}>
-              MORNING EDITION · COMPILED 8:42
+              FROZEN EXAMPLE · COMPILED 8:42
             </span>
           </span>
         </header>

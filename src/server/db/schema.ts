@@ -20,6 +20,10 @@ export const analyticsUsers = sqliteTable("analytics_users", {
    *  the user completes onboarding. Once set, the briefing pipeline
    *  uses this id when calling `dataSource.read()`. */
   linkedWorkspaceId: text("linked_workspace_id"),
+  /** Discriminated briefing scope. linkedWorkspaceId remains the v1
+   * rollback value and workspace branch payload. */
+  scopeKind: text("scope_kind").$type<"workspace" | "planningPeriod">(),
+  planningPeriodId: text("planning_period_id"),
   /** IANA timezone string (e.g. "Europe/Dublin"). Captured from the
    *  browser at onboarding via Intl.DateTimeFormat().resolvedOptions().
    *  Null until the user completes onboarding. */
@@ -33,6 +37,19 @@ export const analyticsUsers = sqliteTable("analytics_users", {
 });
 
 export type AnalyticsUser = typeof analyticsUsers.$inferSelect;
+
+/** Aggregate first-party product events. Payload is enums/counts only. */
+export const planningEvents = sqliteTable("planning_events", {
+  id: text("id").primaryKey(),
+  eventName: text("event_name").$type<
+    "signal_scope_changed" | "period_signal_viewed"
+  >().notNull(),
+  scopeKind: text("scope_kind").$type<"workspace" | "planningPeriod">().notNull(),
+  workspaceCount: integer("workspace_count").notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .notNull()
+    .default(sql`(unixepoch())`),
+});
 
 /**
  * Per-user, per-trigger phrasing rotation cursor.
