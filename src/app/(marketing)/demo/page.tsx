@@ -100,11 +100,13 @@ export default function DemoPage() {
           >
             <video
               src="/demo-typography.mp4"
-              autoPlay
+              poster="/demo-typography-poster.jpg"
+              preload="metadata"
               muted
               loop
               playsInline
               controls
+              aria-label="Play the Signal typography demo"
               style={{
                 width: "100%",
                 height: "100%",
