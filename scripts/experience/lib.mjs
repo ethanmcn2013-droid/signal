@@ -24,7 +24,8 @@ export function writeStableJson(value) {
 }
 
 function hashText(text) {
-  return createHash("sha256").update(text).digest("hex").slice(0, 16);
+  const normalized = text.replace(/^\uFEFF/, "").replace(/\r\n?/g, "\n");
+  return createHash("sha256").update(normalized).digest("hex").slice(0, 16);
 }
 
 function hashFile(file) {
