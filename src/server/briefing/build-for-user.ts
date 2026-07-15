@@ -54,6 +54,10 @@ export type BriefingForUserResult =
     }
   | { kind: "no-workspace" };
 
+// Fixed synthetic clock for deterministic demo/review screenshots and audits.
+// 07:42 UTC is 08:42 in Europe/London on 15 July 2026.
+export const DEMO_BRIEFING_NOW = Date.UTC(2026, 6, 15, 7, 42);
+
 /**
  * Build a briefing for a Clerk user at the given cadence.
  *
@@ -148,6 +152,7 @@ export async function buildBriefingForUser(opts: {
         userId: clerkId || "demo-user",
         email: "",
       },
+      DEMO_BRIEFING_NOW,
     );
     const emptyCopy = getBriefingEmptyCopy({
       primaryUseCase: planningPeriodsEnabled() ? "student" : "venue",

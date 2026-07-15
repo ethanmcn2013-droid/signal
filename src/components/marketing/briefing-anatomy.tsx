@@ -106,10 +106,7 @@ function useChoreography(active: boolean, reduced: boolean) {
   const [stage, setStage] = useState<Stage>(BASE);
 
   useEffect(() => {
-    if (!active || reduced) {
-      setStage(BASE);
-      return;
-    }
+    if (!active || reduced) return;
     let cancelled = false;
     // Only do the 0→3 cap-fill animation on the first iteration, that
     // beat is the "lesson". On subsequent loops, the cap stays at 3 and
@@ -201,7 +198,7 @@ function useChoreography(active: boolean, reduced: boolean) {
     };
   }, [active, reduced]);
 
-  return stage;
+  return active && !reduced ? stage : BASE;
 }
 
 function spotlightAnim(slot: Slot, active: Slot | null, choreoHi: Slot | null) {
@@ -482,7 +479,7 @@ function DemoCard({
         >
           <BucketHeading dotColor="var(--ink-ghost)" label="Quiet risks" folio="05" />
           <BucketItem>Glenmara contract has been in Draft six days</BucketItem>
-          <BucketItem>Last week's retro is still unwritten</BucketItem>
+          <BucketItem>Last week&apos;s retro is still unwritten</BucketItem>
         </motion.div>
 
         <div style={{ height: 10 }} />
@@ -506,7 +503,7 @@ function DemoCard({
             Block 90 mins for the planning brief
           </FocusItem>
           <FocusItem index={2}>
-            Write the retro before Wednesday's roundup
+            Write the retro before Wednesday&apos;s roundup
           </FocusItem>
 
           {/* Why-this inline expansion */}
