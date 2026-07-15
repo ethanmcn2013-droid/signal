@@ -23,11 +23,18 @@ export function OnboardingPicker({
   const [pending, startTransition] = useTransition();
 
   useEffect(() => {
-    try {
-      setTimezone(Intl.DateTimeFormat().resolvedOptions().timeZone);
-    } catch {
-      setTimezone("UTC");
-    }
+    let cancelled = false;
+    queueMicrotask(() => {
+      if (cancelled) return;
+      try {
+        setTimezone(Intl.DateTimeFormat().resolvedOptions().timeZone);
+      } catch {
+        setTimezone("UTC");
+      }
+    });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const single = candidates.length === 1;

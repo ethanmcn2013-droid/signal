@@ -27,7 +27,7 @@ export function Hero() {
           Signal &middot; Your work
         </p>
 
-        <h1
+        <h2
           className="mt-5 max-w-[18ch] text-balance"
           style={{
             fontSize: "clamp(2.6rem, 1.8rem + 4.6vw, 5.5rem)",
@@ -38,7 +38,7 @@ export function Hero() {
           }}
         >
           Whatever you run, Signal reads it.
-        </h1>
+        </h2>
 
         {/* Escalation from the opener: that brief was a sample; this makes it
             the visitor's own. The audience toggle is the interactive proof. */}

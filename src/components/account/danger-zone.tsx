@@ -79,7 +79,7 @@ export function DangerZone({ email }: { email: string }) {
       >
         Closes your Signal account across every product, Tasks, Notes,
         Timeline, Signal. Your briefings stop immediately. Workspaces you
-        own are removed, along with everyone you've invited. There's no undo.
+        own are removed, along with everyone you invited. This cannot be undone.
       </p>
 
       {!confirming ? (

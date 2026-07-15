@@ -68,7 +68,7 @@ export function mockSourceWith(opts: {
         events: [],
       };
     },
-    async listForUser(_identity: UserIdentity): Promise<WorkspaceCandidate[]> {
+    async listForUser(): Promise<WorkspaceCandidate[]> {
       return opts.workspaces;
     },
     async readMany(workspaceIds: string[]): Promise<WorkRead[]> {
