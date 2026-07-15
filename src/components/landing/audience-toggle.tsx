@@ -54,12 +54,16 @@ export function AudienceToggle({ domain, onChange }: Props) {
             const step = dirs[e.key];
             if (!step) return;
             e.preventDefault();
+            e.stopPropagation();
             const i = DOMAIN_ORDER.indexOf(domain);
-            const next =
-              DOMAIN_ORDER[
-                (i + step + DOMAIN_ORDER.length) % DOMAIN_ORDER.length
-              ];
+            const nextIndex =
+              (i + step + DOMAIN_ORDER.length) % DOMAIN_ORDER.length;
+            const next = DOMAIN_ORDER[nextIndex];
+            const radios = e.currentTarget.querySelectorAll<HTMLButtonElement>(
+              '[role="radio"]',
+            );
             onChange(next);
+            radios[nextIndex]?.focus();
           }}
           className="relative inline-flex flex-wrap items-center gap-x-6 gap-y-1"
           style={{

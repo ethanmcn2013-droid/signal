@@ -20,7 +20,7 @@ import { buildBriefing } from "@/lib/briefing/build";
 import type { Briefing } from "@/lib/briefing/types";
 import type { BriefingSource } from "@/lib/briefing/source";
 import type { TriggerId } from "@/lib/triggers/types";
-import { getRotations, bumpRotations } from "./rotation";
+import { bumpRotations } from "./rotation";
 import {
   getDismissedKeys,
   getSurfacedAges,
@@ -33,6 +33,10 @@ import { mockBriefingSource } from "@/lib/briefing/mock-source";
 export type BriefingForUserResult =
   | { kind: "ok"; briefing: Briefing }
   | { kind: "no-workspace" };
+
+// Fixed synthetic clock for deterministic demo/review screenshots and audits.
+// 07:42 UTC is 08:42 in Europe/London on 15 July 2026.
+export const DEMO_BRIEFING_NOW = Date.UTC(2026, 6, 15, 7, 42);
 
 /**
  * Build a briefing for a Clerk user at the given cadence.
@@ -52,10 +56,14 @@ export async function buildBriefingForUser(opts: {
   // rotation read/write. The product reads exactly as it will in production —
   // only the data is synthetic.
   if (isDemoMode()) {
-    const briefing = await buildBriefing(mockBriefingSource, {
-      userId: clerkId || "demo-user",
-      email: "",
-    });
+    const briefing = await buildBriefing(
+      mockBriefingSource,
+      {
+        userId: clerkId || "demo-user",
+        email: "",
+      },
+      DEMO_BRIEFING_NOW,
+    );
     const emptyCopy = getBriefingEmptyCopy({ primaryUseCase: "venue" });
     return {
       kind: "ok",
@@ -82,8 +90,6 @@ export async function buildBriefingForUser(opts: {
     primaryUseCase: onboarding?.primaryUseCase,
   });
 
-  const rotationsBefore = await getRotations(clerkId);
-
   // Adapt the DataSource (workspace-keyed) into the BriefingSource
   // (user-context-keyed) interface that buildBriefing expects.
   // The rotation lookup and self-user id are wired via the day-rotation
@@ -91,7 +97,7 @@ export async function buildBriefingForUser(opts: {
   // orchestrator level (the cron already filters by cadence before
   // calling buildBriefingForUser).
   const source: BriefingSource = {
-    getSignalsForUser: async (_ctx) => {
+    getSignalsForUser: async () => {
       const work = await dataSource.read(workspaceId);
       // Flatten TaskReads into TaskSignals. The data/source layer
       // maps Tasks lanes → Analytics Status; we translate back to

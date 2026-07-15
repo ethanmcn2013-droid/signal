@@ -130,11 +130,11 @@ export default function LawPage() {
           <svg
             viewBox={`0 0 ${W} ${H}`}
             width="100%"
-            height="auto"
             role="img"
             aria-label="Twelve work items plotted by count and attention-cost. Three above the briefing-cut line are kept; nine below are dropped."
             style={{
               display: "block",
+              height: "auto",
               background: "transparent",
               fontFamily: "var(--font-mono-stack)",
             }}

@@ -32,12 +32,19 @@ export function DevBanner() {
 
   useEffect(() => {
     if (!bannerEnabled()) return;
-    try {
-      if (sessionStorage.getItem(DISMISS_KEY) === "1") return;
-    } catch {
-      /* sessionStorage unavailable, show anyway */
-    }
-    setHidden(false);
+    let cancelled = false;
+    queueMicrotask(() => {
+      if (cancelled) return;
+      try {
+        if (sessionStorage.getItem(DISMISS_KEY) === "1") return;
+      } catch {
+        /* sessionStorage unavailable, show anyway */
+      }
+      setHidden(false);
+    });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   if (hidden) return null;

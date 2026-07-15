@@ -3,6 +3,7 @@ import { SuiteSwitcher } from "@/components/suite-switcher-pills";
 import { UserButtonWithSuite } from "@/components/user-button-with-suite";
 import { SuiteHeader } from "@/components/chrome/suite-header";
 import { AppAccessGate } from "@/components/app-access-gate";
+import { isDemoMode } from "@/lib/access-mode";
 import AppLoading from "./loading";
 
 /**
@@ -28,6 +29,8 @@ export default function AppLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const demo = isDemoMode();
+
   return (
     <div
       style={{ minHeight: "100vh", background: "var(--bg)", display: "flex", flexDirection: "column" }}
@@ -37,7 +40,7 @@ export default function AppLayout({
       <SuiteHeader
         launcher={<SuiteSwitcher current="analytics" />}
         nav={[]}
-        account={<UserButtonWithSuite current="analytics" />}
+        account={demo ? null : <UserButtonWithSuite current="analytics" />}
       />
 
       <main style={{ flex: 1, display: "flex", flexDirection: "column" }}>

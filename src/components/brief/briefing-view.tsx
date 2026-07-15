@@ -26,7 +26,6 @@ import {
 //
 // Duration budget (UI ≤ --motion-moderate = 320ms):
 //   fadeUp: --motion-base   220ms  page-settle entrance
-//   dim:    --motion-base   220ms  hover cross-fade
 //   arrow:  --motion-fast   140ms  micro-affordance rotation
 //   expand: --motion-moderate 320ms accordion open/close
 //
@@ -35,7 +34,7 @@ import {
 // ─────────────────────────────────────────────────────────────
 // --ease-out: cubic-bezier(0, 0, 0.2, 1) , confident arrivals
 const EASE_OUT = [0, 0, 0.2, 1] as const;
-// --ease-standard: cubic-bezier(0.2, 0, 0, 1), crossfades / dim
+// --ease-standard: cubic-bezier(0.2, 0, 0, 1), quiet pulse timing
 const EASE_STANDARD = [0.2, 0, 0, 1] as const;
 
 const bucketAccents = {
@@ -166,9 +165,8 @@ function Header({ stamp }: { stamp: string }) {
 }
 
 /**
- * One bucket. Items use a "reader cursor" hover affordance —
- * hovering any item lights it up and dims the others in the same
- * bucket. Lifted from the marketing demo's cursor pattern.
+ * One bucket. Items use a quiet reader-cursor affordance: the active row
+ * gains an accent rule while every other row keeps full readable contrast.
  */
 function Bucket({
   title,
@@ -211,6 +209,11 @@ function Bucket({
       <ul
         className="space-y-5"
         onMouseLeave={() => setActiveId(null)}
+        onBlur={(event) => {
+          if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+            setActiveId(null);
+          }
+        }}
       >
         {items.map((item) => (
           <BriefRow
@@ -242,18 +245,12 @@ function BriefRow({
 }) {
   const [open, setOpen] = useState(false);
   const isActive = activeId === item.id;
-  const isDim = activeId !== null && !isActive;
 
   return (
     <motion.li
       variants={fadeUp}
       onMouseEnter={() => setActiveId(item.id)}
       onFocus={() => setActiveId(item.id)}
-      animate={{
-        opacity: isDim ? 0.45 : 1,
-      }}
-      // --motion-base 220ms + --ease-standard (crossfade)
-      transition={{ duration: 0.22, ease: EASE_STANDARD }}
       className="relative pl-3"
       style={{
         borderLeft: `2px solid ${isActive ? accent : "transparent"}`,

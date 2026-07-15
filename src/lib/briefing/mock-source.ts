@@ -113,7 +113,7 @@ function makeMockSignals(now: number): TaskSignal[] {
 }
 
 export const mockBriefingSource: BriefingSource = {
-  async getSignalsForUser(_ctx) {
+  async getSignalsForUser() {
     return makeMockSignals(Date.now());
   },
 };

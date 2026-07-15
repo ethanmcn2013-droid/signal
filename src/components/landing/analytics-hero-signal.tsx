@@ -53,7 +53,6 @@ export function AnalyticsHeroSignal() {
     const barEls    = [...root.querySelectorAll<HTMLElement>(".anl-bar")];
 
     // ── Config ─────────────────────────────────────────────────────────
-    const INTRO_MS           = 2600;
     const ENTRY_SETTLE_MS    = 3000;
     const SETTLE_BEFORE_SCAN = 600;
     const SCAN_DURATION_MS   = 1400;
@@ -185,7 +184,7 @@ export function AnalyticsHeroSignal() {
       bloomLabelEl!.style.top        = "0px";
       bloomLabelEl!.style.transform  = "translateX(-50%) translateY(-118%)";
       bloomLabelEl!.style.opacity    = "0";
-      bloomLabelEl!.offsetHeight;    // flush
+      void bloomLabelEl!.offsetHeight; // flush
       bloomLabelEl!.style.transition = "opacity 320ms cubic-bezier(0,0,.2,1), transform 320ms cubic-bezier(0,0,.2,1)"; // ds-allow: signal hero choreography
       bloomLabelEl!.style.opacity    = "1";
       bloomLabelEl!.style.transform  = "translateX(-50%) translateY(-100%)";
@@ -431,7 +430,7 @@ export function AnalyticsHeroSignal() {
         el.classList.remove("anl-risen");
         el.style.opacity = "";
         el.style.height  = "";
-        el.offsetHeight; // flush
+        void el.offsetHeight; // flush
         el.style.transition = "height 360ms cubic-bezier(.22,.7,.2,1), opacity 300ms ease"; // ds-allow: signal hero choreography
       });
 
@@ -449,7 +448,7 @@ export function AnalyticsHeroSignal() {
       captionEl!.textContent      = CAP_INIT;
       captionEl!.style.animation  = "none";
       captionEl!.style.opacity    = "";
-      captionEl!.offsetHeight;    // flush
+      void captionEl!.offsetHeight; // flush
       captionEl!.style.animation  = CAPTION_ANIM;
 
       // Restart CSS animations (none → reflow → restore)
@@ -457,7 +456,7 @@ export function AnalyticsHeroSignal() {
       [trail1El, trail2El, trail3El, rippleEl, rippleSlowEl].forEach(el => {
         el!.style.animation = "none";
       });
-      dotEl!.offsetHeight;
+      void dotEl!.offsetHeight;
       dotEl!.style.animation         = DOT_ANIM;
       trail1El!.style.animation      = TRAIL_1_ANIM;
       trail2El!.style.animation      = TRAIL_2_ANIM;
@@ -494,8 +493,6 @@ export function AnalyticsHeroSignal() {
       cancelAnimationFrame(rafId);
       window.removeEventListener("resize", onResize);
     };
-    // INTRO_MS deliberately excluded, it's a constant that doesn't change between renders
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

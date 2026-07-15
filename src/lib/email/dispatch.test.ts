@@ -1,5 +1,5 @@
 import { strict as assert } from "node:assert";
-import { afterEach, beforeEach, describe, test } from "node:test";
+import { beforeEach, describe, test } from "node:test";
 import { dispatchBriefing, type EmailSender } from "./dispatch";
 import type { Briefing } from "@/lib/briefing/types";
 
@@ -33,11 +33,6 @@ function fullBriefing(): Briefing {
     ],
   };
 }
-
-const okSender: EmailSender = async () => ({
-  data: { id: "fake-resend-id" },
-  error: null,
-});
 
 // ─────────────────────────────────────────────────────────────
 // dispatchBriefing, early-return branches don't need DB or net.
