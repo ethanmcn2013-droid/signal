@@ -3,6 +3,10 @@
     {
       "path": "/api/cron/briefings",
       "schedule": "0 6 * * *"
+    },
+    {
+      "path": "/api/cron/signal-analytics",
+      "schedule": "30 2-23 * * *"
     }
   ]
 }

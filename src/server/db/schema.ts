@@ -1,5 +1,12 @@
 import { sql } from "drizzle-orm";
-import { sqliteTable, text, integer, primaryKey } from "drizzle-orm/sqlite-core";
+import {
+  index,
+  integer,
+  primaryKey,
+  real,
+  sqliteTable,
+  text,
+} from "drizzle-orm/sqlite-core";
 
 /**
  * Analytics prefs DB schema.
@@ -152,3 +159,127 @@ export const surfacedItems = sqliteTable(
 );
 
 export type SurfacedItem = typeof surfacedItems.$inferSelect;
+
+/**
+ * Per-user composition choices for Signal Overview.
+ *
+ * This stores identifiers only, never source records. The composite tenant
+ * key prevents a preference from one workspace changing another workspace's
+ * recommended composition.
+ */
+export const analyticsViewPreferences = sqliteTable(
+  "analytics_view_preferences",
+  {
+    clerkId: text("clerk_id").notNull(),
+    workspaceId: text("workspace_id").notNull(),
+    hiddenCardIds: text("hidden_card_ids", { mode: "json" })
+      .$type<string[]>()
+      .notNull()
+      .default(sql`'[]'`),
+    pinnedCardIds: text("pinned_card_ids", { mode: "json" })
+      .$type<string[]>()
+      .notNull()
+      .default(sql`'[]'`),
+    cardOrder: text("card_order", { mode: "json" })
+      .$type<string[]>()
+      .notNull()
+      .default(sql`'[]'`),
+    schemaVersion: integer("schema_version").notNull().default(1),
+    createdAt: integer("created_at", { mode: "timestamp" })
+      .notNull()
+      .default(sql`(unixepoch())`),
+    updatedAt: integer("updated_at", { mode: "timestamp" })
+      .notNull()
+      .default(sql`(unixepoch())`),
+  },
+  (table) => [
+    primaryKey({ columns: [table.clerkId, table.workspaceId] }),
+    index("analytics_view_preferences_workspace_idx").on(table.workspaceId),
+  ],
+);
+
+export type AnalyticsViewPreference = typeof analyticsViewPreferences.$inferSelect;
+
+/**
+ * Bounded aggregate history. Values and coverage only; no titles, Note text,
+ * source identifiers, or record payloads are permitted in this table.
+ */
+export const analyticsMetricSnapshots = sqliteTable(
+  "analytics_metric_snapshots",
+  {
+    id: text("id").primaryKey(),
+    workspaceId: text("workspace_id").notNull(),
+    projectId: text("project_id"),
+    metricKey: text("metric_key").notNull(),
+    snapshotAt: integer("snapshot_at", { mode: "timestamp" }).notNull(),
+    numericValue: real("numeric_value"),
+    aggregateValue: text("aggregate_value", { mode: "json" })
+      .$type<Record<string, number | null>>()
+      .notNull()
+      .default(sql`'{}'`),
+    coverage: text("coverage", { mode: "json" })
+      .$type<Record<string, string | number | boolean | null>>()
+      .notNull()
+      .default(sql`'{}'`),
+    metricVersion: text("metric_version").notNull(),
+    createdAt: integer("created_at", { mode: "timestamp" })
+      .notNull()
+      .default(sql`(unixepoch())`),
+    updatedAt: integer("updated_at", { mode: "timestamp" })
+      .notNull()
+      .default(sql`(unixepoch())`),
+  },
+  (table) => [
+    index("analytics_metric_snapshots_workspace_time_idx").on(
+      table.workspaceId,
+      table.snapshotAt,
+    ),
+    index("analytics_metric_snapshots_metric_time_idx").on(
+      table.workspaceId,
+      table.metricKey,
+      table.snapshotAt,
+    ),
+    index("analytics_metric_snapshots_project_time_idx").on(
+      table.workspaceId,
+      table.projectId,
+      table.snapshotAt,
+    ),
+  ],
+);
+
+/** Idempotent scheduler receipt; safe diagnostics only. */
+export const analyticsSnapshotRuns = sqliteTable(
+  "analytics_snapshot_runs",
+  {
+    id: text("id").primaryKey(),
+    workspaceId: text("workspace_id").notNull(),
+    status: text("status").notNull(),
+    startedAt: integer("started_at", { mode: "timestamp" }).notNull(),
+    completedAt: integer("completed_at", { mode: "timestamp" }),
+    sourceWatermark: text("source_watermark"),
+    coverage: text("coverage", { mode: "json" })
+      .$type<Record<string, string | number | boolean | null>>()
+      .notNull()
+      .default(sql`'{}'`),
+    schemaVersion: integer("schema_version").notNull().default(1),
+    errorCode: text("error_code"),
+    createdAt: integer("created_at", { mode: "timestamp" })
+      .notNull()
+      .default(sql`(unixepoch())`),
+  },
+  (table) => [
+    index("analytics_snapshot_runs_workspace_started_idx").on(
+      table.workspaceId,
+      table.startedAt,
+    ),
+  ],
+);
+
+/** Version ledger for the separate Signal state migration stream. */
+export const analyticsSchemaVersions = sqliteTable("analytics_schema_versions", {
+  stream: text("stream").primaryKey(),
+  version: integer("version").notNull(),
+  updatedAt: integer("updated_at", { mode: "timestamp" })
+    .notNull()
+    .default(sql`(unixepoch())`),
+});

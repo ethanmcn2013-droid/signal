@@ -4,13 +4,15 @@
 
 Drafted in Plan 1 · Cycle 1.1 (Strategic Foundation). Companion to BRAND.md.
 
+> **Progressive-depth amendment · 2026-07-13.** The approved Signal analytics direction in sections 3-11 supersedes the older clauses that required four briefing blocks, limited the read model to Tasks, prohibited every graph or metric card, prohibited all customization, or made curated prose the only permitted narrative path. The surface promise has not changed: Signal opens on zero to three things that genuinely need the user now. Overview, Trends, and Evidence exist beneath that promise. They do not turn Signal into a generic dashboard.
+
 ---
 
 ## 1 · Position
 
-Signal is **attention clarity**. Where Tasks runs the work and Timeline explains the work, Signal tells you *what to do about the work today*. It is one product in the Signal Studio suite. Its job is to read the state of work and write a short briefing that says what needs attention, what is moving well, what is quietly at risk, and what to do next.
+Signal is **attention clarity**. Where Notes captures the work, Tasks runs it, and Timeline explains where it is going, Signal tells you *what to do about it today*. It is one product in the Signal Studio suite. Its job is to read the connected state of work, surface the few things that need attention, and let the user inspect the facts underneath without changing products or losing context.
 
-It is not a dashboard. It is not productivity tracking. It is not enterprise software. The briefing replaces the dashboard.
+It is not a generic dashboard, productivity tracker, or employee scorecard. The briefing replaces the dashboard as the first screen. Overview, Trends, and Evidence add depth only when the user asks for it.
 
 ---
 
@@ -34,30 +36,54 @@ Banned framings: "engineering teams", "product orgs", "stakeholders", "leadershi
 
 > A briefing, not a dashboard. Two minutes a day. Plain English. Everything important. Nothing distracting.
 
-The promise has three parts and they are non-negotiable:
+The promise has four parts and they are non-negotiable:
 
-1. **Briefing, not data.** The output is sentences a person would write. Never numbers without a sentence around them. Never a graph without a written claim about what it means.
-2. **Compressed, not complete.** A list of every open task is not a briefing. The briefing surfaces the small set that matters today and *explicitly suppresses* the rest.
-3. **No configuration.** The user does not write rules, set thresholds, build dashboards, or pick widgets. They sign in and the briefing is there.
+1. **Briefing first.** Signal opens on zero to three plain-English observations. Never a number without a conclusion. Never a graph without a written account of what it means.
+2. **Compressed, not padded.** A list of every open task is not a briefing. Signal suppresses the rest and does not manufacture a third concern to fill the page.
+3. **Depth on demand.** Briefing answers what needs attention now. Overview answers what is true across the selected workspace or project. Trends answers what is changing. Evidence shows the Notes, Tasks, decisions, dependencies, milestones, and events behind the claim.
+4. **Useful before customization.** Recommended views appear without setup. A user may later hide, pin, or reorder approved cards. They may not write rules, tune risk thresholds, build a blank grid, or invent formulas.
 
-If any of these three drift, the product is no longer Signal — it has become a different category of product (a dashboard tool, a metrics platform, an alerting system) and is no longer brand-coherent.
+If Briefing stops being the default, if the page becomes a wall of charts, if the user has to design the Overview before it is useful, or if a claim cannot show its evidence, the product has drifted out of Signal.
 
 ---
 
-## 4 · The artifact: the Daily Signal
+## 4 · The product shape
 
-The briefing has four blocks. Always four. Always in this order. The contents change; the structure does not.
+Signal has one default and three progressive layers:
 
-| Block | Color dot | Job |
+| Layer | Question | Contract |
 |---|---|---|
-| **Needs attention** | `--status-flight` (#f59e0b) | Things actively costing time or money if left alone today. Blocked work, overload, missed deadlines, dependency failures. Two to three items, never more. |
-| **Moving well** | `--status-shipped` (#10b981) | Quiet wins. Where momentum is. Calibrates the briefing against pure-bad-news fatigue. Two to three items. |
-| **Quiet risks** | neutral grey (#71717a) | What is invisible but accumulating. Inactive projects, single points of failure, drift toward a deadline with no visible progress. The block dashboards miss. |
-| **Suggested focus** | brand indigo (#4f46e5) | One to three actions worth doing today. Not a sorted to-do list. A considered read of where effort would do the most before the day ends. |
+| **Briefing** | What genuinely needs my attention now? | Zero to three ranked observations. Every observation has a useful action and can open Evidence. |
+| **Overview** | What is true across this workspace or project right now? | A recommended composition of summary, comparable projects, one primary trend, and an actionable queue. Useful on first open. |
+| **Trends** | What is changing over time? | One selected metric at a time, one primary visualization, a plain-language interpretation, comparison basis, coverage, and contributing records. |
+| **Evidence** | Why did Signal say this? | A consistent right-side drawer with the deterministic rule, comparison basis, contributing source records, scope, period, freshness, coverage, and actions. |
 
-**Three cadences, one format.** The same four blocks render at three rhythms: Daily (every morning, two-minute read), Weekly (every Friday, ten-minute read with trend lines in plain sentences), Launch (before a ship event, fifteen-minute read of edges and outstanding items).
+Briefing remains the default route. Workspace or project scope, period, owner, status, selected metric, and the open Evidence item persist when the user moves between Signal views or uses browser back and forward.
 
-**Hard size limits.** Daily ≤ 350 words. Weekly ≤ 900 words. Launch ≤ 1200 words. These are caps, not targets — most days run shorter. The cap is the discipline.
+### 4.1 Briefing contract
+
+Each observation includes a conclusion-led title, a concise explanation, why it matters, scope, period, confidence or coverage when needed, evidence count, primary action, secondary Evidence or Trends action, and freshness. A repeated observation may be suppressed or combined with another observation about the same underlying work.
+
+On a healthy day Signal says:
+
+> Nothing needs you right now.<br>
+> Work is moving normally.
+
+Signal may name the next meaningful milestone or review date. It does not manufacture concern.
+
+### 4.2 Overview contract
+
+Overview is assembled for the selected scope. Workspace scope prefers projects needing attention, the next milestone, work completed in the current period, a bounded projects table, one useful trend, and an actionable queue. Project scope emphasizes current state, the next milestone, completion pace, decisions, waiting work, ownership gaps, and deadline movement. Cards appear only when their data and context justify them.
+
+### 4.3 Trends contract
+
+Trends shows one metric at a time. Initial periods are four weeks, twelve weeks, six months, and twelve months. It may break down by project, owner, status, or work type. It never interpolates missing history. When coverage is too thin, the result is **Not enough history yet** with a direct explanation of what will appear later.
+
+### 4.4 Customization boundary
+
+Normal mode is for reading, filtering, opening Evidence, and taking action. Customize mode may hide, pin, reorder, or restore recommended cards. Version one does not include arbitrary grids, resizing, formulas, authored queries, nested filter builders, generated dashboards, or public embeds.
+
+Daily, weekly, and launch cadences may still use the Briefing artifact. The in-product Briefing is capped at three observations; email and shareable variants must preserve the same compression and evidence honesty.
 
 ---
 
@@ -67,26 +93,28 @@ Internally the product runs on three pillars. The marketing site already names t
 
 ### 5.1 Attention Engine
 
-A continuously-running set of deterministic detectors that scan the user's work data and surface candidate items for the briefing. Built-in. Not configurable. Not learned.
+A versioned set of deterministic metrics and rules scans only the work the current user may access. It produces Briefing candidates, Overview cards, Trends series, project states, and Evidence records from the same normalized facts. Thresholds and weights live in code, not in the UI.
 
-**Triggers in v1** (each maps to a Block when it fires):
+**Initial metric catalogue:**
 
-| Trigger | Definition | Default Block |
-|---|---|---|
-| `blocked` | A task with status `blocked` for ≥ 2 days, or a task with an unresolved blocker referenced from another item | Needs attention |
-| `overdue` | A task past its due date with no `done` status and no `pushed-to` date | Needs attention |
-| `overload` | A single assignee holding > 8 active tasks (or > 60% of all active tasks in their workspace) | Needs attention |
-| `dependency-stall` | A task waiting on another task that has had no activity for ≥ 5 days | Needs attention |
-| `momentum-positive` | A project with ≥ 3 completions in the last 7 days *and* completion rate above its 28-day average | Moving well |
-| `streak` | An assignee with ≥ 5 completions in the last 7 days | Moving well |
-| `inactive-project` | An active project with no activity for ≥ 8 days | Quiet risks |
-| `single-point-of-failure` | > 70% of a project's open work assigned to one person | Quiet risks |
-| `slow-burn-deadline` | A project with a deadline ≤ 7 days away and < 30% of items closed | Quiet risks |
-| `unresolved-recurring-block` | The same blocker pattern appears ≥ 3 times across the project's history | Quiet risks |
+| Metric | Deterministic definition |
+|---|---|
+| Work completed | Work entering a terminal state during the selected period. Use the canonical completion timestamp when transition history is unavailable, and disclose that fallback. |
+| Open overdue work | Non-terminal work with a due date before the relevant current time, using workspace or site timezone semantics. |
+| Open work age | Time from creation to now for non-terminal work. |
+| Stalled work | Non-terminal work with no meaningful activity for the configured interval. Cosmetic metadata edits do not count as progress. |
+| Blocked work | Explicitly blocked work or work with an unresolved dependency. Explicit and inferred blocking remain distinguishable. |
+| Unowned work | Active non-terminal work without an owner. |
+| Completion pace change | Current-period completions compared with the median of the prior three equal periods. Suppressed when history is insufficient. |
+| Milestone movement | Count and net movement of stored milestone-date changes. No prior date is inferred. |
+| Open decisions | Structured decisions whose current state is open or unresolved. |
+| Follow-up completion | Structured follow-ups completed or remaining in the selected period. |
+| Workload concentration | Distribution of active work by owner. It is not an individual productivity measure. |
+| Cross-product milestone risk | An upcoming milestone linked to blocked or overdue Tasks, open decisions, or unresolved dependencies. Every contributing record is exposed. |
 
-**Suggested focus** is computed differently — it is a ranked compression of *all* triggered items, not a separate trigger set. Ranking weights: cascade potential (does this block other work?), reversibility (is this irreversible if missed?), proximity (does it matter today vs this week?). Top 1–3 surface; the rest are suppressed.
+**Candidate detection and ranking:** remove candidates with inadequate evidence; suppress repeated low-value candidates; combine candidates about the same underlying issue; require a useful action; then rank by impact, urgency, confidence, and recency. Briefing takes the first zero to three. Project state is limited to **On track**, **Watch**, or **Needs attention**, always with explicit reasons. No black-box score is calculated or shown.
 
-**No learning. No model. No external API.** The detector set is code. Adding a trigger is a code change with a code review. This is a feature, not a limitation: it makes the briefing's behavior auditable and makes "why did I see this?" answerable in one sentence.
+Every metric and rule carries a version. Adding or changing one is a reviewed code change. This is a feature, not a limitation: "Why did I see this?" must always have a deterministic answer.
 
 ### 5.2 Plain-English Insights
 
@@ -107,39 +135,39 @@ Once a trigger fires, it produces an *insight* — one sentence describing what 
 - Calibrated confidence. Triggers either fire or they don't — no "may have", "possibly", "could be". If the trigger is uncertain, raise its threshold.
 - No metric names in the sentence. "Sprint velocity dropped 14%" never. "This project is slowing down" yes.
 
-**Why curated prose, not LLM generation:** explored in Section 9 below. Locked decision: no LLM in the briefing path for v1.
+Curated templates remain the required fallback and the default path. Section 9 defines the narrow optional narrative boundary.
 
 ### 5.3 Priority Compression
 
 The deliberate act of *not* surfacing things. After triggers fire and insights are written, compression decides what makes it into the briefing and what gets dropped.
 
 **Compression rules:**
-- Hard cap of 3 items per block (Needs attention, Moving well, Quiet risks).
-- Hard cap of 3 items in Suggested focus.
-- If more than the cap qualify, rank by: (1) cascade potential, (2) consequence × reversibility, (3) proximity in time.
-- Items below the cap are suppressed silently. They are *not* moved to a "more" section. They do not appear.
-- A trigger that fires on the same item two days in a row is *de-emphasized* on day two: it stays in the block, but moves to the bottom and gets a shorter phrasing. On day three it is suppressed unless the underlying severity has worsened.
+- Hard cap of three observations across the entire Briefing, not three per category.
+- Zero is a valid and successful result.
+- Candidates without adequate evidence, a useful action, or permission-safe source records do not surface.
+- Candidates about the same underlying work are combined before ranking.
+- Repeated low-value observations are de-emphasized and then suppressed unless severity or evidence materially changes.
+- Suppressed observations do not move into an "and more" list. Overview and Trends provide deliberate depth; Briefing does not leak the candidate queue.
 
 **The discipline:** a briefing that lists "and 14 more items" is no longer a briefing. The compression is the product.
 
-**Marketing hero contract:** Three Things Only. The hero may show many raw candidate items, but the motion must visibly suppress most of them and resolve into a readable Daily Signal block with one receipt sentence and three briefing lines. The final state is the briefing, not a chart. Reduced motion renders the briefing directly.
+**Marketing hero contract:** Three Things Only. The hero may show many raw candidate items, but the motion must visibly suppress most of them and resolve into a readable Daily Signal with one receipt sentence and no more than three observations. The final state is the briefing, not a chart. Reduced motion renders the briefing directly.
 
 ---
 
 ## 6 · What it reads
 
-In v1, Signal reads from **Signal Tasks** (the suite-internal data source). This is a deliberate scoping decision:
+Signal normalizes facts from the three source products without copying their canonical records into a second system.
 
-- It avoids needing to integrate with Asana / Linear / Jira / Trello / Notion at v1, which would multiply surface area.
-- It strengthens the suite — Tasks becomes the data layer, Signal becomes the read layer.
-- It validates the model end-to-end before opening to external sources.
+- **Notes provider:** note identifier, workspace and project, structured decisions and their state, structured follow-ups and owners, open questions, links to Tasks or milestones, timestamps, and the existing deep link. Raw Note bodies are not required for canonical metrics and are not stored in analytics.
+- **Tasks provider:** task identifier, workspace and project, status and terminal state, owners, dates, creation and completion times, meaningful activity, explicit blocking, unresolved dependencies, existing priority where available, and the existing deep link.
+- **Timeline provider:** milestone identifier, workspace and project, current and previously stored dates, dependencies, state, associated Tasks and decisions, and the existing deep link.
 
-**Read model** (locked for v1):
-- Tasks: id, project, title, assignee, status, due date, blocker references, status history, activity timestamps.
-- Projects: id, name, members, deadline, status, activity timestamps.
-- Activity events: created, updated, status-changed, assigned, blocked, unblocked, commented (event timestamps only — no comment text in v1).
+Adapters enforce the existing membership and record permissions before data reaches metrics. Stable source identifiers connect records across products. Signal stores only bounded derived preferences, snapshots, or cache entries when the current query path needs them; it does not create shadow Notes, Tasks, decisions, or milestones.
 
-**How Tasks data maps to Signal's read model** (locked Cycle 6.3):
+Provider coverage is allowed to be partial. A metric that its sources cannot support returns explicit coverage metadata or **Not enough history yet**. It never substitutes demo data, infers missing historical dates, or treats an unavailable provider as an empty healthy workspace.
+
+**How the current Tasks adapter maps data into Signal's normalized read model** (locked Cycle 6.3 and retained as a compatibility fallback):
 
 Tasks's actual schema has no `projects` table — work segmentation lives in the free-form `tags` array on each task. Signal translates this into its own `ProjectRead` shape using the rule: **each unique tag in a workspace = one Signal "project"**. Specifically:
 
@@ -171,12 +199,12 @@ Two derivation rules sit on top:
 
 Unknown lanes (if Tasks adds vocabulary) log once and map to `next` defensively. Triggers never see Tasks's vocabulary; they read `Status` only.
 
-**Out of scope for v1** (deferred to a later cycle, do not promise on the marketing site):
+**Out of scope for the first progressive-depth release** (do not promise on the marketing site):
 - Calendar reads.
 - Email reads.
 - Slack / Teams reads.
-- Document edit reads.
-- Timeline reads. (The Timeline product is *direction* clarity; mixing its data into the daily briefing would conflate the two.)
+- Unstructured document-body analysis.
+- External project tools.
 
 ---
 
@@ -184,99 +212,78 @@ Unknown lanes (if Tasks adds vocabulary) log once and map to `next` defensively.
 
 These are not "future considerations". These are decisions to *never* build. Each is a sentence the product team can point at when the request comes up.
 
-- **Not a dashboard.** No metric tiles. No graphs. No counters. No "score". Briefing is sentences.
-- **Not productivity tracking.** No per-person scores. No leaderboards. No completion-rate rankings. Counting people does not make work move.
-- **Not configurable.** No rule editor. No threshold sliders. No widget composer. If the product needs a settings page beyond account/billing/integrations, the product is wrong.
+- **Not a separate dashboard product.** Analytics depth lives inside Signal. Briefing is the default. Overview is recommended, not blank. Trends shows one question at a time. Evidence explains the claim.
+- **Not a wall of metrics.** No mosaic of unrelated mini-charts, ornamental gauges, chart junk, or black-box health score. A graph earns its place only when a written conclusion, coverage, and source records accompany it.
+- **Not productivity tracking.** No per-person score, leaderboard, completion-rate ranking, or employee-performance label. Workload distribution describes the work, not a person's worth.
+- **Not freely configurable.** No rule editor, threshold slider, arbitrary widget composer, custom formula, authored query language, or generated dashboard. Hide, pin, reorder, and restore are the complete first-release customization boundary.
 - **Not a notification stream.** Briefings fire on a fixed cadence. The product does not interrupt during the day. It does not push. It does not ping.
-- **Not enterprise software.** No roles, permissions, audit logs, or SSO at v1. (Defer to demand.)
+- **Not a permission bypass.** Signal inherits workspace, project, membership, tenant, and source-record permissions. Evidence never reveals a record the viewer cannot open.
 - **Not AI-marketed.** Even if a future cycle introduces an LLM somewhere in the pipeline, the marketing surface never says "AI", "intelligent", "smart", "agent", "copilot". The voice rules in BRAND.md govern.
-- **Not real-time.** Daily Signal is daily. Weekly Signal is weekly. Launch Signal is on demand. If a user wants a live view, they want Tasks, not Signal.
+- **Not false real-time.** Every view states when it was calculated. Stale data is visibly stale. A refresh control cannot imply that unavailable source history suddenly exists.
 
 ---
 
 ## 8 · Success and anti-success
 
-**v1 ships when:**
-- A real user (not Ethan) reads three Daily Signals in a row and acts on at least one item per briefing.
-- The user can describe what the product does in one sentence without using the word "AI", "dashboard", or "tracker".
-- Time-to-first-briefing from sign-up is under 5 minutes.
-- A briefing has never surfaced an item that, on review, was clearly not worth surfacing (false positive rate ≈ 0 in the trigger set).
+**The progressive-depth release succeeds when:**
+- A real user reads three Daily Signals in a row and acts on at least one grounded observation.
+- Briefing returns zero to three observations and the healthy empty state feels like success.
+- The user can move from a conclusion to its Evidence, then to a real Note, Task, or milestone, without losing Signal context.
+- Overview is useful before the user customizes it.
+- Trends refuses to make a confident claim when history is too thin.
+- The same scope and permission boundary produces consistent facts across Briefing, Overview, Trends, and Evidence.
+- The user can describe Signal in one sentence without using "AI", "productivity score", or "dashboard builder".
 
-**v1 has failed if:**
-- Users routinely ignore the briefing and go to Tasks for the actual answer. (Briefing is purely vestigial.)
-- Users ask for a "metric view" or "dashboard view". (Brief failed to be sufficient.)
-- Users ask which AI model is behind it. (Mechanism leaked through to the experience.)
-- Briefing prose feels templated within 5 days of use. (Curated prose library too thin — triggers section 9's revisit clause.)
+**The release has failed if:**
+- Briefing becomes a teaser for a dense metrics page rather than a complete first answer.
+- Signal pads the Briefing, invents history, hides weak coverage, or labels an unavailable provider as healthy.
+- An observation cannot show the records and rule that produced it.
+- Users must configure cards before Overview makes sense.
+- Any view crosses a workspace, tenant, project, or source-record permission boundary.
+- The prose sounds confident when the facts are not.
 
 ---
 
-## 9 · How the briefing is generated — locked decision
+## 9 · Deterministic core and narrative boundary
 
-This is the question Plan 1.1 was created to answer. Three mechanisms were considered.
+Canonical metrics, candidate detection, ranking, suppression, project state, comparisons, coverage, and Evidence are deterministic. A narrative provider never changes a value, selects a candidate, invents a cause, overrides a permission, or turns weak coverage into confidence.
 
-### Option A — Rules + templated slot-filling
-Triggers fire, slots fill from a single template per trigger.
-**Rejected** because single-template prose reads robotic by day two.
+Curated templates remain the default and required fallback. If the repository's existing server-side provider abstraction is enabled later, it may only:
 
-### Option B — Rules + LLM polish layer
-Triggers fire, an LLM rewrites the slot-filled draft into natural prose.
-**Rejected for v1** because:
-1. Re-introduces AI dependency the brand has spent its first year purging.
-2. Any disclosure ("Powered by Claude / GPT / etc") undermines the position.
-3. Hallucination risk on a product whose value depends on *trust the briefing*.
-4. Cost and latency on what should be a sub-second render.
+- phrase verified facts more naturally
+- summarize the bounded Evidence already returned to the user
+- draft a concise weekly review from those facts
 
-### Option C — Rules + curated prose library *(LOCKED)*
-Triggers fire, one phrasing is selected from a hand-written library of 4–8 per trigger.
-**Locked because:**
-1. Fully honest. The "AI-invisible" claim is true because there is no AI in the path.
-2. Naturalistic enough — at 4–8 phrasings per trigger and rotation logic, repetition is suppressed for weeks.
-3. Moves the work from ML tuning (no Ethan edge) to voice curation (Ethan's edge as a designer).
-4. Auditable. "Why did I see this?" has a one-sentence answer.
+The server sends only the minimum verified fields needed for that wording. Raw Note bodies are excluded unless a separate, explicit, permitted use case requires them. Provider keys never reach browser code. Responses are validated, time-bounded, and cached only within the same permission scope. Timeout, invalid output, missing consent, missing configuration, or provider failure returns the curated deterministic wording.
 
-### Honest dissent — when option C will break
-At scale (1k+ users with broad work-shape diversity), 4–8 hand-curated phrasings per trigger will start to repeat noticeably across the population. At that point the choice becomes:
-1. Expand the prose library (slow, manual, hits diminishing returns around 12 phrasings per trigger).
-2. Introduce option B (LLM polish) with a careful "we use no AI in *what* surfaces, only in *how it reads*" framing — but this still violates the current voice ban.
-3. Ship templated prose (option A) and accept the robotic-but-honest tradeoff.
-
-**Defined revisit trigger:** revisit this decision when *any* of the following occur:
-- A real user describes the briefing as "templated" or "robotic" without prompting.
-- The same phrasing fires for the same user twice within a 14-day window for the same trigger.
-- We onboard the 100th active user.
-
-Until one of those fires, the curated prose library is the mechanism. Calendar dates do not trigger a revisit.
+The marketing refusal remains absolute: Signal is never sold as an AI feature. The system works fully with no narrative provider configured.
 
 ---
 
 ## 10 · Implementation map
 
-This section is intentionally short — it is not a build plan, it is a pointer to where build plans live.
+The accepted implementation and release contract lives in `docs/ADR-2026-07-13-SIGNAL-PROGRESSIVE-ANALYTICS.md`.
 
-| Concern | Where it gets built | Plan |
-|---|---|---|
-| Architecture + data layer | analytics repo, new `src/lib/data/` | Plan 6.1 |
-| Auth + onboarding | analytics repo, sign-in flow exists; expand in 6.2 | Plan 6.2 |
-| Tasks data integration | Read directly from Tasks DB (Turso) — read-only credentials | Plan 6.3 |
-| Attention engine triggers | analytics repo, `src/lib/triggers/` (one file per trigger) | Plan 6.4 |
-| Prose library | analytics repo, `src/lib/prose/` (one file per trigger, returns phrasings array) | Plan 6.4 |
-| Compression + ranking | analytics repo, `src/lib/compression/` | Plan 6.4 |
-| Briefing renderer | analytics repo, `src/components/briefing/` + email render via Resend | Plan 6.5 |
-| Cadence scheduler | Vercel Cron — daily 7am local, weekly Friday 4pm local, launch on demand | Plan 6.5 |
-| Marketing site reality alignment | analytics repo, `/method` and `/signal` copy revisions | Plan 6.6 |
+| Concern | Boundary |
+|---|---|
+| Source facts | Provider adapters around canonical Notes, Tasks, and Timeline data. No shadow records. |
+| Analytics domain | Normalized facts, versioned metrics, versioned rules, ranking, coverage, and Evidence assembly. |
+| Product delivery | Existing authenticated Signal shell and route system. Briefing is the default; Overview and Trends preserve URL context. |
+| History | Stored source events where available, plus bounded, versioned prospective metric snapshots in Signal's isolated additive migration stream. Never synthesize history. |
+| Preferences | Signal's application-state database, scoped to the current user and workspace and limited to analytics card order, pin, and hide state. |
+| Release | One centralized feature flag. Production is off when unset; non-production is on when unset for review and may be explicitly disabled. Promotion still requires permission, coverage, and live-data proof. |
 
 ---
 
-## 11 · Open questions (carry into Plan 6 build cycles)
+## 11 · Resolved operating decisions and honest gaps
 
-Numbered so they can be referenced later. Do not answer in this document — answer in the cycle that resolves them.
-
-1. **Time zones.** Daily Signal fires at user's local 7am, but how is "local" determined for a user with no calendar connected? Browser TZ at sign-up? Ask in onboarding?
-2. **Multi-workspace users.** A freelancer with one workspace per client — one briefing or one per workspace? Recommendation TBD.
-3. **First-day behavior.** New user signs up, has 4 tasks, no history. What does day-one briefing look like? "Welcome" briefing? Or wait until there is real signal?
-4. **No-signal day.** Real users will have days where genuinely nothing fires. Ship a "Nothing to flag today" briefing? Skip the briefing entirely? Brand-coherent answer matters here.
-5. **Email vs in-app.** Briefing is web by default, but most "morning briefing" patterns succeed in email. Email-first or app-first? (Resend is wired in, so email is technically free.)
-6. **Pricing.** Free tier shape? Per-user pricing? Per-workspace? Defer to after Plan 6.3 ships and there is real usage signal.
+1. **No-signal day is resolved.** Show the healthy empty state. Never skip the in-product page or manufacture concern.
+2. **First-day history is resolved.** Briefing may use current-state rules that have enough evidence. Trends says **Not enough history yet** until real history exists.
+3. **Context is resolved.** Workspace or project scope persists across Signal views and, where the existing suite links support it, when switching products.
+4. **Customization is resolved.** Hide, pin, reorder, restore. Nothing more in the first release.
+5. **History remains source-dependent.** Milestone movement and transition-based metrics ship only where canonical history exists. Versioned metric snapshots may build bounded history prospectively; they cannot repair the past.
+6. **Cross-product coverage remains environment-dependent.** A missing provider is shown as partial or unavailable, never as zero.
+7. **Email remains a Briefing delivery channel.** Overview, Trends, and Evidence are in-product depth; email does not become a portable dashboard.
 
 ---
 
@@ -284,10 +291,10 @@ Numbered so they can be referenced later. Do not answer in this document — ans
 
 When the live marketing site says one thing and this document says another, one of them is wrong. The fix is not to leave them inconsistent.
 
-When a build cycle in Plan 6 wants to ship something this document forbids — the build cycle does not silently break the contract. It changes this document first, with a recorded reason, and then ships against the new contract.
+When an implementation wants to ship something this document forbids, it does not silently break the contract. It changes this document first, records the reason, and then ships against the amended contract.
 
 When this document is wrong, fix it here first. Then the code. Then the marketing site.
 
 ---
 
-*Locked 2026-05-09 in Plan 1 · Cycle 1.1 (Strategic Foundation). Companion documents: BRAND.md (voice and visual rules), notes/PRODUCT.md (sibling product definition — drafted next in Cycle 1.2).*
+*Locked 2026-05-09 in Plan 1 · Cycle 1.1 (Strategic Foundation). Progressively amended 2026-07-13 by the accepted Signal analytics direction. Companion documents: BRAND.md, docs/COLLABORATION_LOOP.md, and docs/ADR-2026-07-13-SIGNAL-PROGRESSIVE-ANALYTICS.md.*

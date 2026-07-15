@@ -87,6 +87,18 @@ if (switcher.file) {
     "from \"@/lib/suite-products\"",
     "the portable switcher should not drift behind a repo-specific manifest",
   );
+  mustContain(
+    switcher.file,
+    switcher.source,
+    "readSuiteNavigationContext",
+    "cross-product links must read the current workspace/project context",
+  );
+  mustContain(
+    switcher.file,
+    switcher.source,
+    "buildSuiteProductHref",
+    "cross-product links must carry the version-one SuiteContext query",
+  );
   // Loading canon (2026-07-01 review, specimens 01 + 03): the cross-product
   // jump paints a quiet 10px boundary dot on a paper field, then the
   // destination owns arrival. It must never bloom. This guards the regression

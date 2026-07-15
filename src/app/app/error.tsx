@@ -5,7 +5,7 @@ import Link from "next/link";
 
 /**
  * App-segment error boundary, shown inside the authenticated shell
- * when /app/* routes throw. Wordmark link goes to /app/brief.
+ * when /app/* routes throw. Recovery returns to Signal's canonical Briefing.
  */
 export default function AppError({
   error,
@@ -53,7 +53,7 @@ export default function AppError({
           margin: 0,
         }}
       >
-        Could not load the briefing.
+        Could not load Signal.
       </h1>
       <p
         style={{
@@ -85,7 +85,7 @@ export default function AppError({
           Try again
         </button>
         <Link
-          href="/app/brief"
+          href="/app"
           style={{
             fontSize: 13,
             color: "var(--ink)",

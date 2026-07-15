@@ -40,6 +40,7 @@ const OWNER_TABLES = [
   "phrasingRotations",
   "briefingFeedback",
   "userPreferences",
+  "analyticsViewPreferences",
 ];
 // A statement is "scoped" if it mentions any of these tokens.
 const SCOPE_TOKENS = ["clerkId", "userId", "user_id", "unsubscribeToken"];
