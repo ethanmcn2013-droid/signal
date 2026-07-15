@@ -112,7 +112,7 @@
       "lastReviewedAt": "2026-07-15",
       "approvedBaselineReference": null,
       "intentionalExceptions": [],
-      "materialityHash": "f5e892d8a87b1415"
+      "materialityHash": "74b8942dac895809"
     },
     {
       "id": "signal.page.app-brief",
@@ -163,7 +163,7 @@
       "lastReviewedAt": null,
       "approvedBaselineReference": null,
       "intentionalExceptions": [],
-      "materialityHash": "26a9726cb355236d"
+      "materialityHash": "883dd17e39d4425f"
     },
     {
       "id": "signal.page.app-onboarding",
@@ -209,7 +209,7 @@
       "lastReviewedAt": null,
       "approvedBaselineReference": null,
       "intentionalExceptions": [],
-      "materialityHash": "9cd146db03c05702"
+      "materialityHash": "ecb5a119697f0344"
     },
     {
       "id": "signal.page.app-preview-email",
@@ -253,7 +253,7 @@
       "lastReviewedAt": null,
       "approvedBaselineReference": null,
       "intentionalExceptions": [],
-      "materialityHash": "34b928f8476fe6c2"
+      "materialityHash": "8c190b8c549e4ac4"
     },
     {
       "id": "signal.page.app-settings-account",
@@ -297,7 +297,7 @@
       "lastReviewedAt": null,
       "approvedBaselineReference": null,
       "intentionalExceptions": [],
-      "materialityHash": "2ee8d47c2bc06919"
+      "materialityHash": "e24f019fcdfe65d0"
     },
     {
       "id": "signal.page.app-settings-notifications",
@@ -341,7 +341,7 @@
       "lastReviewedAt": null,
       "approvedBaselineReference": null,
       "intentionalExceptions": [],
-      "materialityHash": "a1e1ea852e27a0f9"
+      "materialityHash": "67cd9e2d53c23af2"
     },
     {
       "id": "signal.page.changelog",
@@ -470,7 +470,7 @@
       "lastReviewedAt": null,
       "approvedBaselineReference": null,
       "intentionalExceptions": [],
-      "materialityHash": "840aaf9cfbcc7e88"
+      "materialityHash": "53648918a476c760"
     },
     {
       "id": "signal.page.method",
@@ -513,7 +513,7 @@
       "lastReviewedAt": null,
       "approvedBaselineReference": null,
       "intentionalExceptions": [],
-      "materialityHash": "ef41eef41b4729d7"
+      "materialityHash": "49e518f0846e672c"
     },
     {
       "id": "signal.page.pricing",
@@ -556,7 +556,7 @@
       "lastReviewedAt": null,
       "approvedBaselineReference": null,
       "intentionalExceptions": [],
-      "materialityHash": "52b9040d3920d4dc"
+      "materialityHash": "7b751e7afa784b3b"
     },
     {
       "id": "signal.page.privacy",
@@ -599,7 +599,7 @@
       "lastReviewedAt": null,
       "approvedBaselineReference": null,
       "intentionalExceptions": [],
-      "materialityHash": "ada3ff6d7849c1cc"
+      "materialityHash": "a054d950222d03b5"
     },
     {
       "id": "signal.page.refusals",
@@ -773,7 +773,7 @@
       "lastReviewedAt": null,
       "approvedBaselineReference": null,
       "intentionalExceptions": [],
-      "materialityHash": "bf44f8c3edc625ce"
+      "materialityHash": "9109b5efbc0e52f1"
     },
     {
       "id": "signal.page.sign-up-by-sign-up",
@@ -818,7 +818,7 @@
       "lastReviewedAt": null,
       "approvedBaselineReference": null,
       "intentionalExceptions": [],
-      "materialityHash": "f8a9c6d91b9c0f87"
+      "materialityHash": "d1c82953045af06d"
     },
     {
       "id": "signal.page.signal",
@@ -904,7 +904,7 @@
       "lastReviewedAt": null,
       "approvedBaselineReference": null,
       "intentionalExceptions": [],
-      "materialityHash": "fc65ebbdd1a8cc8d"
+      "materialityHash": "da8d6eb523517056"
     },
     {
       "id": "signal.page.u-by-token",
@@ -949,7 +949,7 @@
       "lastReviewedAt": null,
       "approvedBaselineReference": null,
       "intentionalExceptions": [],
-      "materialityHash": "53b16a87fbbd7cd7"
+      "materialityHash": "15fcb47376b33bc4"
     },
     {
       "id": "signal.page.waitlist",
@@ -1213,7 +1213,7 @@
       "lastReviewedAt": null,
       "approvedBaselineReference": null,
       "intentionalExceptions": [],
-      "materialityHash": "d48565ed2dc1ce3b"
+      "materialityHash": "c63e64c52f4f3606"
     },
     {
       "id": "signal.state.root-loading",
@@ -1296,7 +1296,7 @@
       "lastReviewedAt": null,
       "approvedBaselineReference": null,
       "intentionalExceptions": [],
-      "materialityHash": "c7c5815b5616f2e3"
+      "materialityHash": "c9f33879c1dc49b7"
     },
     {
       "id": "signal.surface.audience-scenario-switcher",
@@ -1339,7 +1339,7 @@
       "lastReviewedAt": null,
       "approvedBaselineReference": null,
       "intentionalExceptions": [],
-      "materialityHash": "d662b1bf07d92f5f"
+      "materialityHash": "7486997eda0afb3c"
     },
     {
       "id": "signal.surface.briefing-view",
@@ -1390,7 +1390,7 @@
       "lastReviewedAt": "2026-07-15",
       "approvedBaselineReference": null,
       "intentionalExceptions": [],
-      "materialityHash": "e0c8e554ba57dbe3"
+      "materialityHash": "a6c5485d6ebebc10"
     }
   ]
 }
