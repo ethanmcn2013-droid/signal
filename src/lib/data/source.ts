@@ -280,6 +280,7 @@ export const tasksDbSource: DataSource = {
   },
 
   async readMany(workspaceIds: string[]): Promise<WorkRead[]> {
+    const tasksDb = getTasksDb();
     if (!tasksDb) {
       throw new Error(
         "tasksDbSource called without TASKS_DATABASE_URL configured",
