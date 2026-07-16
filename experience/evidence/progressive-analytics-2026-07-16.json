@@ -1,0 +1,127 @@
+{
+  "schemaVersion": "signal-experience-evidence/1",
+  "capturedAt": "2026-07-16T18:36:00.000Z",
+  "product": "signal",
+  "environment": {
+    "accessMode": "review",
+    "baseUrl": "http://127.0.0.1:4193",
+    "browser": "Chromium via @playwright/cli",
+    "build": "Next.js production build running with VERCEL_ENV=preview",
+    "dataBoundary": "Synthetic analytics fixtures; canonical databases were not queried",
+    "axeCoreVersion": "4.11.4",
+    "colorScheme": "light",
+    "locale": "en-GB",
+    "reducedMotion": true,
+    "viewports": [
+      { "name": "mobile", "width": 390, "height": 844 },
+      { "name": "tablet", "width": 768, "height": 1024 },
+      { "name": "desktop", "width": 1280, "height": 900 },
+      { "name": "wide", "width": 1440, "height": 960 }
+    ]
+  },
+  "sourceMaterialityHashes": {
+    "signal.page.app": "3223ffe0332fab6b",
+    "signal.page.app-overview": "8defe49f10f876e7",
+    "signal.page.app-trends": "6062b4e57720743b",
+    "signal.surface.evidence-drawer": "40ad503087dd5dfd",
+    "signal.surface.customize-overview": "f3d1a00b8099133d"
+  },
+  "automatedChecks": [
+    {
+      "command": "npm test",
+      "result": "271 passed across 46 suites",
+      "proves": "Metric rules, ranking, authorization, pagination, cache boundaries, preferences, evidence, fixtures, and URL state remain deterministic."
+    },
+    {
+      "command": "npm run build",
+      "result": "37 routes built",
+      "proves": "Briefing, Overview, Trends, evidence APIs, and the analytics cron compile in the production application graph."
+    },
+    {
+      "command": "axe-core 4.11.4 WCAG 2 A/AA, 2.1 A/AA, and 2.2 AA matrix",
+      "result": "0 violations across Briefing, Overview, and Trends at all four registered breakpoints",
+      "proves": "The primary progressive analytics views passed the automated accessibility rules available to Axe."
+    },
+    {
+      "command": "axe-core 4.11.4 evidence-drawer matrix",
+      "result": "0 violations at all four registered breakpoints",
+      "proves": "The open modal drawer and its background state passed the same automated accessibility rules."
+    }
+  ],
+  "routeAssertions": [
+    { "experienceId": "signal.page.app", "state": "populated", "route": "/app?fixture=signature", "status": 200 },
+    { "experienceId": "signal.page.app", "state": "healthy", "route": "/app?fixture=healthy", "status": 200, "text": "Nothing needs you right now. Work is moving normally." },
+    { "experienceId": "signal.page.app", "state": "empty", "route": "/app?fixture=empty", "status": 200 },
+    { "experienceId": "signal.page.app", "state": "stale", "route": "/app?fixture=stale", "status": 200 },
+    { "experienceId": "signal.page.app", "state": "partial-failure", "route": "/app?fixture=provider_failure", "status": 200 },
+    { "experienceId": "signal.page.app-overview", "state": "workspace", "route": "/app/overview?fixture=signature", "status": 200 },
+    { "experienceId": "signal.page.app-overview", "state": "project", "route": "/app/overview?fixture=signature&scope_type=project&scope_id=launch&workspace_id=ws-signal-fixture", "status": 200 },
+    { "experienceId": "signal.page.app-trends", "state": "populated", "route": "/app/trends?fixture=signature&period=twelve_weeks", "status": 200 },
+    { "experienceId": "signal.page.app-trends", "state": "insufficient-history", "route": "/app/trends?fixture=insufficient_history", "status": 200, "text": "Not enough history yet" },
+    { "experienceId": "signal.api.briefing", "state": "authorized", "route": "/api/signal-studio/v1/briefing?scope_type=workspace&scope_id=ws-signal-fixture&fixture=signature", "status": 200 },
+    { "experienceId": "signal.api.briefing", "state": "unauthorized-project", "route": "/api/signal-studio/v1/briefing?scope_type=project&scope_id=private-client&workspace_id=ws-signal-fixture&fixture=unauthorized", "status": 403 }
+  ],
+  "accessibilityAssertions": {
+    "allPrimaryViewsAtAllBreakpoints": {
+      "mainLandmarkCount": 1,
+      "h1Count": 1,
+      "horizontalOverflowPixels": 0,
+      "unlabelledInteractiveControls": 0,
+      "duplicateIds": 0,
+      "headingLevelSkips": 0,
+      "reducedMotionActive": true,
+      "axeViolations": 0
+    },
+    "zoom200": {
+      "route": "/app?fixture=signature",
+      "viewport": "desktop",
+      "horizontalOverflowPixels": 0,
+      "mainLandmarkCount": 1,
+      "h1Count": 1
+    },
+    "signal.surface.evidence-drawer": {
+      "deepLinkPreserved": true,
+      "nativeModalDialog": true,
+      "focusOnOpen": "Close",
+      "escapeCloses": true,
+      "focusAfterClose": "See why",
+      "verifiedBreakpoints": ["mobile", "tablet", "desktop", "wide"],
+      "axeViolations": 0
+    }
+  },
+  "runtimeAssertions": {
+    "consoleErrors": 0,
+    "consoleWarnings": 0,
+    "failedRequests": 0,
+    "briefingObservationLimit": 3,
+    "contextPersistsAcrossViews": true,
+    "customizeModeControls": ["Move up", "Move down", "Pin", "Hide", "Save overview", "Restore recommended defaults"]
+  },
+  "captures": [
+    { "experienceId": "signal.page.app", "viewport": "mobile", "state": "populated", "motion": "reduced", "artifact": "output/playwright/release-2026-07-16/mobile-briefing.png", "sha256": "d32281e3300bb5c329b69c88db6ecd4d921882b19c425cef63580cf33de07045" },
+    { "experienceId": "signal.page.app-overview", "viewport": "mobile", "state": "workspace", "motion": "reduced", "artifact": "output/playwright/release-2026-07-16/mobile-overview.png", "sha256": "8a9547441c30f01de2bdcac275c3497b607c906f4ea80a88ecc64b506bc844ab" },
+    { "experienceId": "signal.page.app-trends", "viewport": "mobile", "state": "populated", "motion": "reduced", "artifact": "output/playwright/release-2026-07-16/mobile-trends.png", "sha256": "684eef08f188e2a3fdbfae7dfe2274d814cf9a9fcc7e843c293bea2c99fc4b76" },
+    { "experienceId": "signal.surface.evidence-drawer", "viewport": "mobile", "state": "populated", "motion": "reduced", "artifact": "output/playwright/release-2026-07-16/mobile-evidence-drawer.png", "sha256": "4859eba092931b3e03e2f65fcc3a0174def4e02b9f16fc30a3dc9c0aa41af3e7" },
+    { "experienceId": "signal.page.app", "viewport": "tablet", "state": "populated", "motion": "reduced", "artifact": "output/playwright/release-2026-07-16/tablet-briefing.png", "sha256": "583fb763b80cb4ca10e25be3fd6ddf82ba1f371bff428976a3e87983da7f97d3" },
+    { "experienceId": "signal.page.app-overview", "viewport": "tablet", "state": "workspace", "motion": "reduced", "artifact": "output/playwright/release-2026-07-16/tablet-overview.png", "sha256": "58e068796259a4611dd4fc32e56d86b09430eeb669f79504275720da1b383c49" },
+    { "experienceId": "signal.page.app-trends", "viewport": "tablet", "state": "populated", "motion": "reduced", "artifact": "output/playwright/release-2026-07-16/tablet-trends.png", "sha256": "05db4aba00af97263236f4f300ee801d06c1dde489e6e2764b71f56d1703256c" },
+    { "experienceId": "signal.surface.evidence-drawer", "viewport": "tablet", "state": "populated", "motion": "reduced", "artifact": "output/playwright/release-2026-07-16/tablet-evidence-drawer.png", "sha256": "fa5ae8113fa54456a0e8c6b0131a07cd4b2116e10c65fafecad68ef47a031c36" },
+    { "experienceId": "signal.page.app", "viewport": "desktop", "state": "populated", "motion": "reduced", "artifact": "output/playwright/release-2026-07-16/desktop-briefing.png", "sha256": "b640c0b8a06a881bef4941c49b68990a790689c74aec4b31d860534077686b0e" },
+    { "experienceId": "signal.page.app-overview", "viewport": "desktop", "state": "workspace", "motion": "reduced", "artifact": "output/playwright/release-2026-07-16/desktop-overview.png", "sha256": "d80387928b27e3b9bf3d0dd4174e51ccba66b76e1719ba373530df55aa87887d" },
+    { "experienceId": "signal.page.app-trends", "viewport": "desktop", "state": "populated", "motion": "reduced", "artifact": "output/playwright/release-2026-07-16/desktop-trends.png", "sha256": "2c1af9d66aed38e37e30f6ced6b539b9a5051eacbeeb1dbf9aced19221172039" },
+    { "experienceId": "signal.surface.evidence-drawer", "viewport": "desktop", "state": "populated", "motion": "reduced", "artifact": "output/playwright/release-2026-07-16/desktop-evidence-drawer.png", "sha256": "425621187fda5dc6ed8822d1d6021c0f5afdc724ac25194bc060130aa8b34aa3" },
+    { "experienceId": "signal.page.app", "viewport": "wide", "state": "populated", "motion": "reduced", "artifact": "output/playwright/release-2026-07-16/wide-briefing.png", "sha256": "ce97eda596cc769a991673d87825714b47b8c84564fb0f030df92b962df92df8" },
+    { "experienceId": "signal.page.app-overview", "viewport": "wide", "state": "workspace", "motion": "reduced", "artifact": "output/playwright/release-2026-07-16/wide-overview.png", "sha256": "dff1d40c47050c64d93617ccd8c10a235a8e8bd61b9c363fef0cea18f7fecc20" },
+    { "experienceId": "signal.page.app-trends", "viewport": "wide", "state": "populated", "motion": "reduced", "artifact": "output/playwright/release-2026-07-16/wide-trends.png", "sha256": "8361d02c2a1c1e6fba50eb5491d1a97326c9675735e95f472001e748ccf4d6e0" },
+    { "experienceId": "signal.surface.evidence-drawer", "viewport": "wide", "state": "populated", "motion": "reduced", "artifact": "output/playwright/release-2026-07-16/wide-evidence-drawer.png", "sha256": "c4dcf838500291594e3e9b8112c2de194073ef1740bdf1fa0b3c41735e5f1595" },
+    { "experienceId": "signal.page.app", "viewport": "wide", "state": "healthy", "motion": "reduced", "artifact": "output/playwright/release-2026-07-16/desktop-briefing-healthy.png", "sha256": "18a5388f1582acc051682608e5d327395f9ec31146dc4833c249e35e1b98d5e5" },
+    { "experienceId": "signal.page.app-overview", "viewport": "wide", "state": "project", "motion": "reduced", "artifact": "output/playwright/release-2026-07-16/desktop-project-overview.png", "sha256": "4ac20567efc8a650335d1a7a35bf448ebea7e66ed4631af651f0da7b782d7ca8" },
+    { "experienceId": "signal.surface.customize-overview", "viewport": "desktop", "state": "default", "motion": "reduced", "artifact": "output/playwright/release-2026-07-16/desktop-customize-overview.png", "sha256": "fb09441a316f0290370fbcd414cdc4797878dbf40b03e978575042c8abfbc099" }
+  ],
+  "coverageNotes": [
+    "Briefing, Overview, Trends, and Evidence were captured at every registered breakpoint with reduced motion active.",
+    "Healthy Briefing, project Overview, insufficient-history Trends, provider failure, stale data, empty data, customization, and unauthorized API behavior were reviewed as additional states.",
+    "The screenshot PNGs are generated review artifacts. Their logical paths and SHA-256 digests are recorded here; private product data is not present in them.",
+    "Automated component coverage remains partial because this repository does not carry a browser-component test harness; production-mode browser verification and domain/API tests cover the release path instead."
+  ]
+}
