@@ -19,6 +19,33 @@
       { "name": "wide", "width": 1440, "height": 960 }
     ]
   },
+  "remotePreview": {
+    "verifiedAt": "2026-07-16T19:18:00.000Z",
+    "deploymentId": "dpl_AgzfSVvqaphtDaVWvK1mVwCkVYAw",
+    "baseUrl": "https://analytics-3gag1wj39-ethanmcn2013-1730s-projects.vercel.app",
+    "gitCommit": "4a89d09126cd246630dceb604d851babe6658f1d",
+    "accessMode": "review",
+    "protection": "Vercel authenticated deployment protection",
+    "dataBoundary": "Branch-scoped synthetic analytics fixtures; canonical databases were not queried",
+    "build": {
+      "status": "ready",
+      "routes": 37,
+      "framework": "Next.js 16.2.4"
+    },
+    "httpAssertions": [
+      { "route": "/app?fixture=signature", "status": 200 },
+      { "route": "/app/overview?fixture=signature", "status": 200 },
+      { "route": "/app/trends?fixture=signature", "status": 200 },
+      { "route": "/api/signal-studio/v1/briefing", "status": 200, "observations": 2 },
+      { "route": "/api/signal-studio/v1/overview", "status": 200, "projects": 3, "actionQueueItems": 4 },
+      { "route": "/api/signal-studio/v1/trends", "status": 200, "contributingRecords": 4 },
+      { "route": "/api/signal-studio/v1/briefing?fixture=unauthorized", "status": 403 },
+      { "route": "/api/signal-studio/v1/preferences", "method": "PATCH", "origin": "missing", "status": 403 },
+      { "route": "/api/signal-studio/v1/preferences", "method": "PATCH", "origin": "same-origin", "status": 200 },
+      { "route": "/api/signal-studio/v1/evidence/{observationId}", "status": 200, "totalRecords": 150, "page1Records": 100, "page2Records": 50 }
+    ],
+    "releaseBoundary": "This proves the deployed current-head build against synthetic data. Live Clerk, provider-token, migration, and scheduled-cron proof remain intentionally unclaimed."
+  },
   "sourceMaterialityHashes": {
     "signal.page.app": "3223ffe0332fab6b",
     "signal.page.app-overview": "8defe49f10f876e7",
