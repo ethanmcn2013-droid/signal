@@ -6,7 +6,7 @@
     },
     {
       "path": "/api/cron/signal-analytics",
-      "schedule": "30 2-23 * * *"
+      "schedule": "30 2 * * *"
     }
   ]
 }

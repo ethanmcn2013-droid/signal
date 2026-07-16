@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useSyncExternalStore } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
 import {
   buildSuiteProductHref,
   readSuiteNavigationContext,
@@ -192,9 +193,17 @@ export function SuiteSwitcher({
     getLocationSnapshot,
     getServerLocationSnapshot,
   );
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const routeHref = locationHref
+    ? new URL(
+        `${pathname}${searchParams.size ? `?${searchParams.toString()}` : ""}`,
+        locationHref,
+      ).toString()
+    : "";
   const sourceProduct = current ? SUITE_PRODUCT_BY_SLUG[current] : "studio";
-  const context = locationHref
-    ? readSuiteNavigationContext(new URL(locationHref), sourceProduct)
+  const context = routeHref
+    ? readSuiteNavigationContext(new URL(routeHref), sourceProduct)
     : null;
 
   // Phase 3 (instant-jump): preconnect every sibling origin on mount so

@@ -21,6 +21,7 @@ export interface AnalyticsWorkspaceOption {
   id: string;
   name: string;
   role: "owner" | "member";
+  planningPeriodId: string | null;
 }
 
 export interface AnalyticsPageContext {
@@ -73,7 +74,12 @@ export async function resolveAnalyticsPageContext(
     return {
       authorization,
       state,
-      workspaces: [{ id: fixture.query.scope.workspaceId, name: "Signal fixture", role: "owner" }],
+      workspaces: [{
+        id: fixture.query.scope.workspaceId,
+        name: "Signal fixture",
+        role: "owner",
+        planningPeriodId: null,
+      }],
       preferences: { hiddenCardIds: [], pinnedCardIds: [], cardOrder: [], updatedAt: null },
     };
   }
@@ -151,12 +157,21 @@ async function listWorkspaceOptions(clerkId: string): Promise<AnalyticsWorkspace
   if (!identity) return [];
   const [owned, memberships] = await Promise.all([
     db
-      .select({ id: workspaces.id, name: workspaces.name })
+      .select({
+        id: workspaces.id,
+        name: workspaces.name,
+        planningPeriodId: workspaces.planningPeriodId,
+      })
       .from(workspaces)
       .where(eq(workspaces.ownerUserId, identity.id))
       .limit(100),
     db
-      .select({ id: workspaces.id, name: workspaces.name, role: workspaceMembers.role })
+      .select({
+        id: workspaces.id,
+        name: workspaces.name,
+        planningPeriodId: workspaces.planningPeriodId,
+        role: workspaceMembers.role,
+      })
       .from(workspaces)
       .innerJoin(workspaceMembers, eq(workspaces.id, workspaceMembers.workspaceId))
       .where(eq(workspaceMembers.userId, identity.id))
@@ -166,7 +181,12 @@ async function listWorkspaceOptions(clerkId: string): Promise<AnalyticsWorkspace
   for (const item of owned) options.set(item.id, { ...item, role: "owner" });
   for (const item of memberships) {
     if (!options.has(item.id)) {
-      options.set(item.id, { id: item.id, name: item.name, role: item.role === "owner" ? "owner" : "member" });
+      options.set(item.id, {
+        id: item.id,
+        name: item.name,
+        planningPeriodId: item.planningPeriodId,
+        role: item.role === "owner" ? "owner" : "member",
+      });
     }
   }
   return Array.from(options.values());

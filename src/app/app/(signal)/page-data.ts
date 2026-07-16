@@ -114,6 +114,14 @@ export function canonicalSignalParams(
     view,
   };
   const params = serializeAnalyticsUrlState(state);
+  const workspace = context.workspaces.find(
+    (candidate) => candidate.id === context.state.query.scope.workspaceId,
+  );
+  params.set("contextVersion", "2");
+  params.set("workspaceId", context.state.query.scope.workspaceId);
+  if (workspace?.planningPeriodId) {
+    params.set("planningPeriodId", workspace.planningPeriodId);
+  }
   const fixture = first(searchParams.fixture);
   if (fixture) params.set("fixture", fixture);
   return params;
