@@ -28,6 +28,25 @@ function task(overrides: Partial<TaskSignal> = {}): TaskSignal {
   };
 }
 
+test("Priority Compression caps the whole briefing at three with stable ties", async () => {
+  const signals = [
+    task({ id: "d", dueAt: NOW - DAY }),
+    task({ id: "c", dueAt: NOW - DAY }),
+    task({ id: "b", idleDays: 9 }),
+    task({ id: "a", idleDays: 9 }),
+    task({ id: "z", lane: "shipped", movedToShippedAt: NOW - 1_000 }),
+  ];
+  const first = await buildBriefing(source(signals), CTX, NOW);
+  const second = await buildBriefing(source([...signals].reverse()), CTX, NOW);
+  const ids = (briefing: typeof first) => [
+    ...briefing.needsAttention,
+    ...briefing.movingWell,
+    ...briefing.quietRisks,
+  ].map((item) => item.id);
+  assert.equal(ids(first).length, 3);
+  assert.deepEqual(ids(first), ids(second));
+});
+
 // ─────────────────────────────────────────────────────────────
 // Engine output
 // ─────────────────────────────────────────────────────────────
@@ -173,7 +192,7 @@ describe("buildBriefing, crowded-week orchestration", () => {
     assert.equal(inRisks, false);
   });
 
-  test("when due-soon and crowded-week both fire, attention bucket carries both", async () => {
+  test("global compression keeps the strongest three when due-soon and crowded-week compete", async () => {
     // Five items in 7-day window, three of them in ≤ 2 days (due-soon)
     // plus the cluster signal from crowded-week.
     const signals = [
@@ -186,7 +205,10 @@ describe("buildBriefing, crowded-week orchestration", () => {
     const b = await buildBriefing(source(signals), CTX, NOW);
     const triggers = new Set(b.needsAttention.map((i) => i.trigger));
     assert.ok(triggers.has("due-soon"));
-    assert.ok(triggers.has("crowded-week"));
+    assert.equal(
+      b.needsAttention.length + b.movingWell.length + b.quietRisks.length,
+      3,
+    );
   });
 
   test("crowded-week ranks between due-soon and stuck-work in focus block", async () => {
@@ -362,7 +384,10 @@ describe("buildBriefing, full Wedding 2026 shape", () => {
     const b = await buildBriefing(source(signals), CTX, NOW);
     assert.equal(b.isEmpty, false);
     assert.ok(b.needsAttention.length >= 1, "should surface the overdue invitations");
-    assert.ok(b.movingWell.length >= 1, "should surface save-the-dates as just shipped");
+    assert.ok(
+      b.needsAttention.length + b.movingWell.length + b.quietRisks.length <= 3,
+      "the whole briefing is compressed to three",
+    );
     assert.ok(b.suggestedFocus.length >= 1);
   });
 });

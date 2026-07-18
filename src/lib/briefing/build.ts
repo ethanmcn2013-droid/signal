@@ -10,6 +10,11 @@ import {
   type Triggered,
 } from "./triggers";
 import type { BriefItem, Briefing, FocusItem, TriggerKind } from "./types";
+import {
+  calendarDayDifference,
+  localHour,
+  localWeekday,
+} from "./calendar-time";
 
 const BUCKET_CAP = 3;
 const DAY = 86_400_000;
@@ -31,6 +36,7 @@ const DAY = 86_400_000;
 export type ReadState = {
   suppressed?: ReadonlySet<string>;
   ages?: ReadonlyMap<string, number>;
+  timezone?: string;
 };
 
 /**
@@ -48,15 +54,16 @@ export async function buildBriefing(
   const userId = ctx.userId;
 
   const suppressed = readState.suppressed ?? new Set<string>();
+  const timezone = readState.timezone ?? "UTC";
   const notDismissed = (t: Triggered) =>
     !suppressed.has(`${t.trigger}:${t.task.id}`) &&
     !suppressed.has(`*:${t.task.id}`);
 
   const stuck = detectStuckWork(signals).filter(notDismissed);
-  const dueSoon = detectDueSoon(signals, now).filter(notDismissed);
+  const dueSoon = detectDueSoon(signals, now, timezone).filter(notDismissed);
   const shipped = detectJustShipped(signals, now).filter(notDismissed);
   const overload = detectOverload(signals).filter(notDismissed);
-  const crowded = detectCrowdedWeek(signals, now).filter(notDismissed);
+  const crowded = detectCrowdedWeek(signals, now, timezone).filter(notDismissed);
   const blocked = detectBlockedTooLong(signals).filter(notDismissed);
 
   // Build a {taskId → title} map once so blocked-too-long prose can
@@ -70,37 +77,41 @@ export async function buildBriefing(
   // ─ Needs attention: due-soon (incl. overdue) + overload + crowded-week,
   // ordered by severity. The week-cluster signal lands here because it's
   // load-this-week, not background.
-  const attention = pickTop(
-    [...dueSoon, ...overload, ...crowded].sort(
-      (a, b) => b.severity - a.severity,
-    ),
-    BUCKET_CAP,
-  );
+  const bestByTask = new Map<string, Triggered>();
+  for (const candidate of [
+    ...dueSoon,
+    ...overload,
+    ...crowded,
+    ...stuck,
+    ...blocked,
+    ...shipped,
+  ]) {
+    const current = bestByTask.get(candidate.task.id);
+    if (!current || compareCandidates(candidate, current) < 0) {
+      bestByTask.set(candidate.task.id, candidate);
+    }
+  }
+  const selected = Array.from(bestByTask.values())
+    .sort(compareCandidates)
+    .slice(0, BUCKET_CAP);
+  const attentionKinds = new Set<TriggerKind>([
+    "due-soon",
+    "overload",
+    "crowded-week",
+  ]);
+  const attention = selected.filter((item) => attentionKinds.has(item.trigger));
 
   // ─ Moving well: just-shipped, ordered by recency.
-  const moving = pickTop(
-    [...shipped].sort(
-      (a, b) =>
-        (b.task.movedToShippedAt ?? 0) - (a.task.movedToShippedAt ?? 0),
-    ),
-    BUCKET_CAP,
-  );
+  const moving = selected.filter((item) => item.trigger === "just-shipped");
 
   // ─ Quiet risks: stuck-work, ordered by severity, EXCLUDING items
   // already in attention (so a stuck-work item that's also overdue
   // appears once, in attention, not twice).
-  const usedIds = new Set([
-    ...attention.map((t) => t.task.id),
-    ...moving.map((t) => t.task.id),
-  ]);
   // Quiet risks: stuck-work + blocked-too-long, severity-sorted,
   // excluding anything already in attention or moving. blocked-too-long
   // lives here because it's about a long-tail issue, not today's load.
-  const risks = pickTop(
-    [...stuck, ...blocked]
-      .filter((t) => !usedIds.has(t.task.id))
-      .sort((a, b) => b.severity - a.severity),
-    BUCKET_CAP,
+  const risks = selected.filter(
+    (item) => item.trigger === "stuck-work" || item.trigger === "blocked-too-long",
   );
 
   // ─ Suggested focus: top 3 across attention + risks. due-soon
@@ -125,16 +136,16 @@ export async function buildBriefing(
     ageOf(t) >= 2 ? { ...item, ageDays: ageOf(t) } : item;
 
   const needsAttention: BriefItem[] = freshFirst(attention).map((t) =>
-    withAge(t, toItem(t, rotationIndex, now, titlesById)),
+    withAge(t, toItem(t, rotationIndex, now, titlesById, timezone)),
   );
   const movingWell: BriefItem[] = moving.map((t) =>
-    toItem(t, rotationIndex, now, titlesById),
+    toItem(t, rotationIndex, now, titlesById, timezone),
   );
   const quietRisks: BriefItem[] = freshFirst(risks).map((t) =>
-    withAge(t, toItem(t, rotationIndex, now, titlesById)),
+    withAge(t, toItem(t, rotationIndex, now, titlesById, timezone)),
   );
   const suggestedFocus: FocusItem[] = focusSource.map((t) =>
-    toFocus(t, rotationIndex, now),
+    toFocus(t, rotationIndex, now, timezone),
   );
 
   const isEmpty =
@@ -145,7 +156,7 @@ export async function buildBriefing(
   return {
     userId,
     generatedAt: now,
-    greetingHour: new Date(now).getUTCHours(),
+    greetingHour: localHour(now, timezone),
     needsAttention,
     movingWell,
     quietRisks,
@@ -154,18 +165,17 @@ export async function buildBriefing(
   };
 }
 
-function pickTop(list: Triggered[], cap: number): Triggered[] {
-  return list.slice(0, cap);
-}
-
 function toItem(
   t: Triggered,
   rotation: number,
   now: number,
   titlesById: Map<string, string>,
+  timezone: string,
 ): BriefItem {
   const daysOut =
-    t.task.dueAt != null ? (t.task.dueAt - now) / DAY : undefined;
+    t.task.dueAt != null
+      ? calendarDayDifference(t.task.dueAt, now, timezone)
+      : undefined;
   const blockedByTitles = t.task.blockedBy
     .map((id) => titlesById.get(id))
     .filter((title): title is string => Boolean(title));
@@ -180,14 +190,16 @@ function toItem(
     sourceLabel: t.task.sourceLabel,
     trigger: t.trigger,
     reasons: t.reasons,
+    workspaceId: t.task.workspaceId,
+    planningPeriodId: t.task.planningPeriodId,
   };
 }
 
-function toFocus(t: Triggered, rotation: number, now: number): FocusItem {
+function toFocus(t: Triggered, rotation: number, now: number, timezone: string): FocusItem {
   return {
     id: t.task.id,
     text: focusText(t),
-    due: focusDue(t, now),
+    due: focusDue(t, now, timezone),
     trigger: t.trigger,
   };
 }
@@ -214,23 +226,19 @@ function focusText(t: Triggered): string {
   }
 }
 
-function focusDue(t: Triggered, now: number): string {
+function focusDue(t: Triggered, now: number, timezone: string): string {
   if (t.trigger === "due-soon" && t.task.dueAt != null) {
-    const daysOut = (t.task.dueAt - now) / DAY;
+    const daysOut = calendarDayDifference(t.task.dueAt, now, timezone);
     if (daysOut < 0) return "overdue";
     if (daysOut < 1) return "today";
     if (daysOut < 2) return "tomorrow";
-    if (daysOut < 5) return `by ${weekday(t.task.dueAt)}`;
+    if (daysOut < 5) return `by ${localWeekday(t.task.dueAt, timezone)}`;
     return "this week";
   }
   if (t.trigger === "overload") return "today";
   if (t.trigger === "crowded-week") return "this week";
   if (t.trigger === "blocked-too-long") return "this week";
   return "this week";
-}
-
-function weekday(ts: number): string {
-  return new Date(ts).toLocaleDateString("en-IE", { weekday: "long" });
 }
 
 /** Focus ranking, locked weights for the six v1 triggers.
@@ -250,6 +258,16 @@ function focusWeight(t: Triggered): number {
     "just-shipped": 100,
   };
   return base[t.trigger] + t.severity;
+}
+
+function compareCandidates(a: Triggered, b: Triggered): number {
+  const byWeight = focusWeight(b) - focusWeight(a);
+  if (byWeight !== 0) return byWeight;
+  const bySeverity = b.severity - a.severity;
+  if (bySeverity !== 0) return bySeverity;
+  const byTrigger = a.trigger.localeCompare(b.trigger);
+  if (byTrigger !== 0) return byTrigger;
+  return a.task.id.localeCompare(b.task.id);
 }
 
 /** Stable per-day rotation index so the same user gets a different

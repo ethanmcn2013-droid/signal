@@ -23,6 +23,43 @@ try {
     experiences: [],
   };
   const registered = discoverRegistry({ repoRoot: root, registered: seed });
+  const initialErrors = validateRegistry({
+    registry: registered,
+    discovered: discoverRegistry({ repoRoot: root, registered }),
+    repoRoot: root,
+  });
+  if (initialErrors.length > 0) {
+    throw new Error(
+      `self-test failed: initial baseline introduction was rejected\n${initialErrors.join("\n")}`,
+    );
+  }
+  const lfMaterialityHash = registered.experiences[0].materialityHash;
+  writeFileSync(
+    path.join(appRoot, "page.tsx"),
+    "\uFEFFexport default function Page(){return null}\r\n",
+  );
+  const crlfRegistry = discoverRegistry({ repoRoot: root, registered });
+  if (crlfRegistry.experiences[0].materialityHash !== lfMaterialityHash) {
+    throw new Error("self-test failed: materiality hash depends on line endings or BOM");
+  }
+  writeFileSync(
+    path.join(appRoot, "page.tsx"),
+    "export default function Page(){return <main>Changed</main>}\n",
+  );
+  const changedErrors = validateRegistry({
+    registry: registered,
+    discovered: discoverRegistry({ repoRoot: root, registered }),
+    repoRoot: root,
+  });
+  if (!changedErrors.some((error) => error.includes("changed experience lacks complete"))) {
+    throw new Error(
+      `self-test failed: subsequent material change bypassed evidence ratchet\n${changedErrors.join("\n")}`,
+    );
+  }
+  writeFileSync(
+    path.join(appRoot, "page.tsx"),
+    "export default function Page(){return null}\r\n",
+  );
   registered.experiences[0].fixtureCoverage = "partial";
   registered.experiences[0].lastReviewedAt = "2026-07-15";
   const rediscovered = discoverRegistry({ repoRoot: root, registered });

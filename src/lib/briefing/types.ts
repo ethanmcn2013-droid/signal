@@ -26,6 +26,9 @@ export type TaskSignal = {
   sourceLabel: string; // e.g. "Tasks · Wedding 2026"
   // Recent shipped detection
   movedToShippedAt: number | null;
+  /** Canonical scope ids stay internal, provenance copy uses sourceLabel. */
+  workspaceId?: string;
+  planningPeriodId?: string | null;
 };
 
 /**
@@ -44,6 +47,8 @@ export type BriefItem = {
    *  ("still waiting, day 3") and the engine sorts carry-overs to
    *  the bottom of their block (PRODUCT.md §5.3 de-emphasis). */
   ageDays?: number;
+  workspaceId?: string;
+  planningPeriodId?: string | null;
 };
 
 export type TriggerKind =

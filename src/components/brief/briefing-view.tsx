@@ -51,9 +51,13 @@ const bucketAccents = {
 export function BriefingView({
   briefing,
   firstName,
+  scopeLabel,
+  scopeKind,
 }: {
   briefing: Briefing;
   firstName?: string | null;
+  scopeLabel?: string;
+  scopeKind?: "workspace" | "planningPeriod";
 }) {
   const stamp = new Date(briefing.generatedAt).toLocaleString("en-IE", {
     weekday: "long",
@@ -74,7 +78,7 @@ export function BriefingView({
           shown: { transition: { staggerChildren: 0.06, delayChildren: 0.08 } },
         }}
       >
-        <Header stamp={stamp} />
+        <Header stamp={stamp} scopeLabel={scopeLabel} scopeKind={scopeKind} />
 
         {briefing.isEmpty ? (
           <AllClear
@@ -151,7 +155,15 @@ const fadeUp = {
   },
 };
 
-function Header({ stamp }: { stamp: string }) {
+function Header({
+  stamp,
+  scopeLabel,
+  scopeKind,
+}: {
+  stamp: string;
+  scopeLabel?: string;
+  scopeKind?: "workspace" | "planningPeriod";
+}) {
   return (
     <motion.div className="mb-6" variants={fadeUp}>
       <p
@@ -160,6 +172,11 @@ function Header({ stamp }: { stamp: string }) {
       >
         Daily Signal · {stamp}
       </p>
+      {scopeLabel ? (
+        <p className="mt-2 text-[13px]" style={{ color: "var(--ink-soft)" }}>
+          {scopeKind === "planningPeriod" ? "Planning period" : "Workspace"} · {scopeLabel}
+        </p>
+      ) : null}
     </motion.div>
   );
 }
@@ -434,8 +451,8 @@ function WhyThisAccordion({
  */
 function AllClear({
   greetingLine,
-  headline = "Nothing needs you today.",
-  body = "No briefing email is sent on quiet days. When something needs you, it lands here first.",
+  headline = "Nothing needs your attention right now.",
+  body = "No item in this scope crossed Signal's attention rules.",
 }: {
   greetingLine: string;
   headline?: string;

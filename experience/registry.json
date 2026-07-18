@@ -61,7 +61,7 @@
       "lastReviewedAt": null,
       "approvedBaselineReference": null,
       "intentionalExceptions": [],
-      "materialityHash": "de27353a6200691a"
+      "materialityHash": "3905ae3a882f4035"
     },
     {
       "id": "signal.page.app",
@@ -112,7 +112,7 @@
       "lastReviewedAt": "2026-07-15",
       "approvedBaselineReference": null,
       "intentionalExceptions": [],
-      "materialityHash": "f5e892d8a87b1415"
+      "materialityHash": "6eaea283870dd440"
     },
     {
       "id": "signal.page.app-brief",
@@ -163,7 +163,7 @@
       "lastReviewedAt": null,
       "approvedBaselineReference": null,
       "intentionalExceptions": [],
-      "materialityHash": "26a9726cb355236d"
+      "materialityHash": "f0188bb229fa1e24"
     },
     {
       "id": "signal.page.app-onboarding",
@@ -209,7 +209,7 @@
       "lastReviewedAt": null,
       "approvedBaselineReference": null,
       "intentionalExceptions": [],
-      "materialityHash": "9cd146db03c05702"
+      "materialityHash": "e03984a4f6ed6324"
     },
     {
       "id": "signal.page.app-preview-email",
@@ -384,7 +384,7 @@
       "lastReviewedAt": null,
       "approvedBaselineReference": null,
       "intentionalExceptions": [],
-      "materialityHash": "71441351f976e302"
+      "materialityHash": "1d003cf2ea670577"
     },
     {
       "id": "signal.page.demo",
@@ -420,14 +420,14 @@
       "auditStatus": "registered",
       "auditScore": null,
       "openFindingIds": [],
-      "automatedTestCoverage": "none",
-      "screenshotCoverage": "none",
-      "accessibilityCoverage": "none",
-      "fixtureCoverage": "none",
-      "lastReviewedAt": null,
+      "automatedTestCoverage": "complete",
+      "screenshotCoverage": "complete",
+      "accessibilityCoverage": "complete",
+      "fixtureCoverage": "complete",
+      "lastReviewedAt": "2026-07-15",
       "approvedBaselineReference": null,
       "intentionalExceptions": [],
-      "materialityHash": "9b7f4cc3f1d17399"
+      "materialityHash": "613e52512d496f1a"
     },
     {
       "id": "signal.page.law",
@@ -642,7 +642,7 @@
       "lastReviewedAt": null,
       "approvedBaselineReference": null,
       "intentionalExceptions": [],
-      "materialityHash": "5ecde1e603f4e905"
+      "materialityHash": "ed03ae263bdb42d8"
     },
     {
       "id": "signal.page.root",
@@ -685,7 +685,7 @@
       "lastReviewedAt": "2026-07-15",
       "approvedBaselineReference": null,
       "intentionalExceptions": [],
-      "materialityHash": "8cc25e1d58a12844"
+      "materialityHash": "d90a27fe5b62d3f4"
     },
     {
       "id": "signal.page.security",
@@ -728,7 +728,7 @@
       "lastReviewedAt": null,
       "approvedBaselineReference": null,
       "intentionalExceptions": [],
-      "materialityHash": "a41f648ddfa16ba3"
+      "materialityHash": "52b95c7e22bcb0b4"
     },
     {
       "id": "signal.page.sign-in-by-sign-in",
@@ -861,7 +861,7 @@
       "lastReviewedAt": null,
       "approvedBaselineReference": null,
       "intentionalExceptions": [],
-      "materialityHash": "4811ea8fb2fb7123"
+      "materialityHash": "d2dbc075e70c64ed"
     },
     {
       "id": "signal.page.terms",
@@ -999,7 +999,7 @@
       "lastReviewedAt": null,
       "approvedBaselineReference": null,
       "intentionalExceptions": [],
-      "materialityHash": "1dffe11200c133c2"
+      "materialityHash": "102230d8e61e7502"
     },
     {
       "id": "signal.page.wedding-planning",
@@ -1044,7 +1044,7 @@
       "lastReviewedAt": null,
       "approvedBaselineReference": null,
       "intentionalExceptions": [],
-      "materialityHash": "0d53ff1cacef0af0"
+      "materialityHash": "9f914818c36a3f32"
     },
     {
       "id": "signal.state.app-brief-loading",
@@ -1087,7 +1087,7 @@
       "lastReviewedAt": null,
       "approvedBaselineReference": null,
       "intentionalExceptions": [],
-      "materialityHash": "117bac9c064f0f90"
+      "materialityHash": "4728aeb81469871c"
     },
     {
       "id": "signal.state.app-error",
@@ -1129,7 +1129,7 @@
       "lastReviewedAt": null,
       "approvedBaselineReference": null,
       "intentionalExceptions": [],
-      "materialityHash": "f1394fde695d260e"
+      "materialityHash": "375198f5ad50103e"
     },
     {
       "id": "signal.state.app-loading",
@@ -1172,7 +1172,7 @@
       "lastReviewedAt": null,
       "approvedBaselineReference": null,
       "intentionalExceptions": [],
-      "materialityHash": "48d6d2e630532373"
+      "materialityHash": "f7ca8719d9bc1050"
     },
     {
       "id": "signal.state.root-error",
@@ -1255,7 +1255,7 @@
       "lastReviewedAt": null,
       "approvedBaselineReference": null,
       "intentionalExceptions": [],
-      "materialityHash": "ec6acc37684551ab"
+      "materialityHash": "bd0627738c0cd4f2"
     },
     {
       "id": "signal.state.root-not-found",
@@ -1390,7 +1390,7 @@
       "lastReviewedAt": "2026-07-15",
       "approvedBaselineReference": null,
       "intentionalExceptions": [],
-      "materialityHash": "e0c8e554ba57dbe3"
+      "materialityHash": "ffca7d007fef5dd0"
     }
   ]
 }

@@ -46,11 +46,11 @@ import Link from "next/link";
 
 export type SuiteNavItem = { href: string; label: string; external?: boolean };
 
-const HAIRLINE = "var(--suite-header-hairline, rgba(17, 17, 17, 0.08))";
-const BG = "color-mix(in srgb, var(--bg, #ffffff) 88%, transparent)";
-const INK = "var(--ink, #14151a)";
-const INK_SOFT = "var(--ink-soft, #52525b)";
-const INK_FAINT = "var(--ink-faint, #a1a1aa)";
+const HAIRLINE = "var(--suite-header-hairline, var(--hairline-soft))";
+const BG = "color-mix(in srgb, var(--paper) 88%, transparent)";
+const INK = "var(--ink)";
+const INK_SOFT = "var(--ink-soft)";
+const INK_FAINT = "var(--ink-faint)";
 
 function ExternalGlyph() {
   return (
@@ -156,7 +156,11 @@ export function SuiteHeader({
                   target="_blank"
                   rel="noopener noreferrer"
                   className="suite-header-link"
-                  style={{ color: INK_SOFT, textDecoration: "none", transition: "color 140ms ease" }}
+                  style={{
+                    color: INK_SOFT,
+                    textDecoration: "none",
+                    transition: "color var(--motion-fast) var(--ease-out)",
+                  }}
                 >
                   {item.label}
                 </a>
@@ -165,7 +169,11 @@ export function SuiteHeader({
                   key={item.href}
                   href={item.href}
                   className="suite-header-link"
-                  style={{ color: INK_SOFT, textDecoration: "none", transition: "color 140ms ease" }}
+                  style={{
+                    color: INK_SOFT,
+                    textDecoration: "none",
+                    transition: "color var(--motion-fast) var(--ease-out)",
+                  }}
                 >
                   {item.label}
                 </Link>

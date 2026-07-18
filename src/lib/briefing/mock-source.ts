@@ -117,3 +117,50 @@ export const mockBriefingSource: BriefingSource = {
     return makeMockSignals(Date.now());
   },
 };
+
+function makePlanningPeriodMockSignals(now: number): TaskSignal[] {
+  return [
+    {
+      id: "t-mock-paper",
+      title: "Mock paper preparation",
+      lane: "in-flight",
+      priority: 0,
+      dueAt: now - 2 * DAY,
+      idleDays: 4,
+      commentCount: 0,
+      blockedBy: [],
+      sourceLabel: "Tasks · 6th Year Geography",
+      movedToShippedAt: null,
+    },
+    {
+      id: "t-revision-guide",
+      title: "Revision guide",
+      lane: "next",
+      priority: 1,
+      dueAt: now + 4 * DAY,
+      idleDays: 2,
+      commentCount: 0,
+      blockedBy: [],
+      sourceLabel: "Tasks · 5th Year History",
+      movedToShippedAt: null,
+    },
+    {
+      id: "t-fieldwork-maps",
+      title: "Order fieldwork maps",
+      lane: "in-flight",
+      priority: 1,
+      dueAt: null,
+      idleDays: 11,
+      commentCount: 0,
+      blockedBy: [],
+      sourceLabel: "Tasks · Leaving Cert Politics",
+      movedToShippedAt: null,
+    },
+  ];
+}
+
+export const mockPlanningPeriodBriefingSource: BriefingSource = {
+  async getSignalsForUser() {
+    return makePlanningPeriodMockSignals(Date.now());
+  },
+};

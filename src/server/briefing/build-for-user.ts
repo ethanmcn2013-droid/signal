@@ -28,10 +28,30 @@ import {
 } from "./read-state";
 import { getBriefingEmptyCopy } from "@/lib/onboarding/personalization";
 import { isDemoMode } from "@/lib/access-mode";
-import { mockBriefingSource } from "@/lib/briefing/mock-source";
+import {
+  mockBriefingSource,
+  mockPlanningPeriodBriefingSource,
+} from "@/lib/briefing/mock-source";
+import {
+  authorizeSignalScope,
+  listPlanningCatalogForUser,
+  planningPeriodsEnabled,
+  type AuthorizedSignalScope,
+  type PlanningCatalog,
+  type SignalScope,
+} from "@/lib/planning-periods/scope";
+import {
+  calendarDayDifference,
+  dateOnlyToTimestamp,
+} from "@/lib/briefing/calendar-time";
 
 export type BriefingForUserResult =
-  | { kind: "ok"; briefing: Briefing }
+  | {
+      kind: "ok";
+      briefing: Briefing;
+      authorizedScope: AuthorizedSignalScope;
+      catalog: PlanningCatalog;
+    }
   | { kind: "no-workspace" };
 
 // Fixed synthetic clock for deterministic demo/review screenshots and audits.
@@ -48,6 +68,7 @@ export const DEMO_BRIEFING_NOW = Date.UTC(2026, 6, 15, 7, 42);
 export async function buildBriefingForUser(opts: {
   clerkId: string;
   cadence: Cadence;
+  scope?: SignalScope;
 }): Promise<BriefingForUserResult> {
   const { clerkId } = opts;
 
@@ -56,15 +77,86 @@ export async function buildBriefingForUser(opts: {
   // rotation read/write. The product reads exactly as it will in production —
   // only the data is synthetic.
   if (isDemoMode()) {
+    const catalog: PlanningCatalog = {
+      periods: [
+        {
+          id: "period_demo_school",
+          name: "2026–27 School year",
+          contextType: "school_year",
+          startDate: "2026-09-01",
+          endDate: "2027-06-30",
+          timezone: "Europe/Dublin",
+        },
+      ],
+      workspaces: [
+        {
+          id: "ws_demo_geography",
+          name: "6th Year Geography",
+          role: "owner",
+          planningPeriodId: "period_demo_school",
+          contextType: "class",
+          primaryDate: "2027-06-09",
+          primaryDateLabel: "State examinations",
+        },
+        {
+          id: "ws_demo_history",
+          name: "5th Year History",
+          role: "owner",
+          planningPeriodId: "period_demo_school",
+          contextType: "class",
+          primaryDate: "2027-06-09",
+          primaryDateLabel: "State examinations",
+        },
+        {
+          id: "ws_demo_politics",
+          name: "Leaving Cert Politics",
+          role: "owner",
+          planningPeriodId: "period_demo_school",
+          contextType: "class",
+          primaryDate: "2027-06-09",
+          primaryDateLabel: "State examinations",
+        },
+      ],
+      planningSchemaAvailable: true,
+    };
+    const authorizedScope = authorizeSignalScope(
+      catalog,
+      opts.scope ?? {
+        kind: "planningPeriod",
+        planningPeriodId: "period_demo_school",
+      },
+      "Europe/Dublin",
+    ) ?? authorizeSignalScope(
+      catalog,
+      { kind: "planningPeriod", planningPeriodId: "period_demo_school" },
+      "Europe/Dublin",
+    );
+    if (!authorizedScope) return { kind: "no-workspace" };
+    const demoSource: BriefingSource = planningPeriodsEnabled()
+      ? {
+          getSignalsForUser: async (context) => {
+            const signals = await mockPlanningPeriodBriefingSource.getSignalsForUser(
+              context,
+            );
+            return authorizedScope.scope.kind === "workspace"
+              ? signals.filter((signal) =>
+                  signal.sourceLabel?.endsWith(authorizedScope.label),
+                )
+              : signals;
+          },
+        }
+      : mockBriefingSource;
     const briefing = await buildBriefing(
-      mockBriefingSource,
+      demoSource,
       {
         userId: clerkId || "demo-user",
         email: "",
       },
       DEMO_BRIEFING_NOW,
     );
-    const emptyCopy = getBriefingEmptyCopy({ primaryUseCase: "venue" });
+    const emptyCopy = getBriefingEmptyCopy({
+      primaryUseCase: planningPeriodsEnabled() ? "student" : "venue",
+    });
     return {
       kind: "ok",
       briefing: {
@@ -72,22 +164,66 @@ export async function buildBriefingForUser(opts: {
         emptyStateHeadline: emptyCopy.headline,
         emptyStateBody: emptyCopy.body,
       },
+      authorizedScope,
+      catalog,
     };
   }
 
   const rows = await db
-    .select({ workspaceId: analyticsUsers.linkedWorkspaceId })
+    .select({
+      workspaceId: analyticsUsers.linkedWorkspaceId,
+      scopeKind: analyticsUsers.scopeKind,
+      planningPeriodId: analyticsUsers.planningPeriodId,
+      timezone: analyticsUsers.timezone,
+    })
     .from(analyticsUsers)
     .where(eq(analyticsUsers.clerkId, clerkId))
     .limit(1);
 
-  const workspaceId = rows[0]?.workspaceId ?? null;
-  if (!workspaceId) return { kind: "no-workspace" };
+  const prefs = rows[0];
+  const persistedScope: SignalScope | null =
+    prefs?.scopeKind === "planningPeriod" && prefs.planningPeriodId
+      ? { kind: "planningPeriod", planningPeriodId: prefs.planningPeriodId }
+      : prefs?.workspaceId
+        ? { kind: "workspace", workspaceId: prefs.workspaceId }
+        : null;
+  const requestedScope = planningPeriodsEnabled()
+    ? opts.scope ?? persistedScope
+    : prefs?.workspaceId
+      ? { kind: "workspace" as const, workspaceId: prefs.workspaceId }
+      : null;
+  if (!requestedScope) return { kind: "no-workspace" };
+
+  const catalog = await listPlanningCatalogForUser({ clerkId, email: null });
+  let authorizedScope = authorizeSignalScope(
+    catalog,
+    requestedScope,
+    prefs?.timezone ?? "UTC",
+  );
+  if (!authorizedScope && opts.scope && persistedScope) {
+    authorizedScope = authorizeSignalScope(
+      catalog,
+      persistedScope,
+      prefs?.timezone ?? "UTC",
+    );
+  }
+  if (!authorizedScope) return { kind: "no-workspace" };
+  const workspaceIds = authorizedScope.workspaces.map((workspace) => workspace.id);
+  const workspaceNames = new Map(
+    authorizedScope.workspaces.map((workspace) => [workspace.id, workspace.name]),
+  );
+  const now = Date.now();
 
   const onboarding =
-    (await dataSource.getWorkspaceOnboarding?.(workspaceId)) ?? null;
+    (await dataSource.getWorkspaceOnboarding?.(workspaceIds[0]!)) ?? null;
   const emptyCopy = getBriefingEmptyCopy({
-    primaryUseCase: onboarding?.primaryUseCase,
+    primaryUseCase:
+      authorizedScope.period?.contextType === "wedding"
+        ? "wedding"
+        : authorizedScope.period?.contextType === "school_year" ||
+            authorizedScope.period?.contextType === "semester"
+          ? "student"
+          : onboarding?.primaryUseCase,
   });
 
   // Adapt the DataSource (workspace-keyed) into the BriefingSource
@@ -98,11 +234,15 @@ export async function buildBriefingForUser(opts: {
   // calling buildBriefingForUser).
   const source: BriefingSource = {
     getSignalsForUser: async () => {
-      const work = await dataSource.read(workspaceId);
+      const workspaces = dataSource.readMany
+        ? await dataSource.readMany(workspaceIds)
+        : await Promise.all(
+            workspaceIds.map((workspaceId) => dataSource.read(workspaceId)),
+          );
       // Flatten TaskReads into TaskSignals. The data/source layer
       // maps Tasks lanes → Analytics Status; we translate back to
       // the TaskSignal contract buildBriefing expects.
-      return work.tasks.map((t) => ({
+      return workspaces.flatMap((work) => work.tasks.map((t) => ({
         id: t.id,
         title: t.title,
         lane: ((): import("@/lib/briefing/types").Lane => {
@@ -113,18 +253,23 @@ export async function buildBriefingForUser(opts: {
           return "next";
         })(),
         priority: 2 as const,
-        dueAt: t.dueDate ? new Date(t.dueDate).getTime() : null,
+        dueAt: t.dueDate ? dateOnlyToTimestamp(t.dueDate) : null,
         idleDays: (() => {
           const last = new Date(t.lastActivityAt).getTime();
-          return Math.floor((Date.now() - last) / 86_400_000);
+          return Math.max(
+            0,
+            calendarDayDifference(now, last, authorizedScope.timezone),
+          );
         })(),
         commentCount: 0,
         blockedBy: t.blockedBy,
-        sourceLabel: `Tasks · ${workspaceId}`,
+        sourceLabel: `Tasks · ${workspaceNames.get(work.workspaceId) ?? "Workspace"}`,
         movedToShippedAt: t.status === "shipped"
           ? new Date(t.lastStatusChangeAt).getTime()
           : null,
-      }));
+        workspaceId: work.workspaceId,
+        planningPeriodId: authorizedScope.period?.id ?? null,
+      })));
     },
   };
 
@@ -132,7 +277,6 @@ export async function buildBriefingForUser(opts: {
   // stays out under that trigger) and carry-overs age honestly
   // ("still waiting, day 3"). Both reads are fail-safe, a missing
   // table degrades to no suppression / no aging, never a failed brief.
-  const now = Date.now();
   const [suppressed, ages] = await Promise.all([
     getDismissedKeys(clerkId),
     getSurfacedAges(clerkId, now),
@@ -142,7 +286,7 @@ export async function buildBriefingForUser(opts: {
     source,
     { userId: clerkId, email: "" },
     now,
-    { suppressed, ages },
+    { suppressed, ages, timezone: authorizedScope.timezone },
   );
 
   // Advance rotation only for triggers that actually surfaced.
@@ -178,5 +322,7 @@ export async function buildBriefingForUser(opts: {
       emptyStateHeadline: emptyCopy.headline,
       emptyStateBody: emptyCopy.body,
     },
+    authorizedScope,
+    catalog,
   };
 }

@@ -1,4 +1,5 @@
 import type { TaskSignal, TriggerKind } from "./types";
+import { calendarDayDifference } from "./calendar-time";
 
 const DAY = 86_400_000;
 
@@ -42,12 +43,13 @@ export function detectStuckWork(signals: TaskSignal[]): Triggered[] {
 export function detectDueSoon(
   signals: TaskSignal[],
   now: number = Date.now(),
+  timezone = "UTC",
 ): Triggered[] {
   return signals
     .filter((s) => s.lane !== "shipped" && s.dueAt != null)
     .map((task): Triggered | null => {
       const dueAt = task.dueAt!;
-      const daysOut = (dueAt - now) / DAY;
+      const daysOut = calendarDayDifference(dueAt, now, timezone);
       if (daysOut > 2) return null;
       const isOverdue = daysOut < 0;
       const overdueDays = Math.round(Math.abs(daysOut));
@@ -107,14 +109,14 @@ export function detectJustShipped(
 export function detectCrowdedWeek(
   signals: TaskSignal[],
   now: number = Date.now(),
+  timezone = "UTC",
 ): Triggered[] {
-  const horizon = 7 * DAY;
   const upcoming = signals.filter(
     (s) =>
       s.lane !== "shipped" &&
       s.dueAt != null &&
-      s.dueAt - now > 0 &&
-      s.dueAt - now <= horizon,
+      calendarDayDifference(s.dueAt, now, timezone) > 0 &&
+      calendarDayDifference(s.dueAt, now, timezone) <= 7,
   );
   if (upcoming.length < 3) return [];
 
