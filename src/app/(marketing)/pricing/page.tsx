@@ -41,7 +41,7 @@ export default function PricingPage() {
             }}
           >
             Pricing lands when Signal is generally available. Until
-            then, request access by email.
+            then, request access below.
           </p>
 
           {/* Request access */}
@@ -63,7 +63,7 @@ export default function PricingPage() {
               Request access
             </p>
             <a
-              href="mailto:hello@signalstudio.ie?subject=Signal%20access%20request"
+              href="/waitlist?source=pricing&product=signal"
               style={{
                 fontSize: 20,
                 fontWeight: 500,

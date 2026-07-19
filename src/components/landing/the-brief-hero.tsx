@@ -443,7 +443,7 @@ export function TheBriefHero() {
         <div className={`${PREFIX}-cta`}>
           <a
             className={`${PREFIX}-cta-primary`}
-            href="mailto:hello@signalstudio.ie?subject=Signal%20access"
+            href="/waitlist?source=home_hero&product=signal"
           >
             Request access
           </a>

@@ -395,7 +395,7 @@ export default function SignalPage() {
             <p style={{ fontSize: 16, color: "var(--ink-soft)", lineHeight: 1.6 }}>
               Signal is in private beta.{" "}
               <a
-                href="mailto:hello@signalstudio.ie?subject=Signal%20access%20request"
+                href="/waitlist?source=signal_page&product=signal"
                 style={{ color: "var(--ink)", textDecoration: "underline" }}
               >
                 Request access
