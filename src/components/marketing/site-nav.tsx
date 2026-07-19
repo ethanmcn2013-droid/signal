@@ -91,11 +91,11 @@ export function SiteNav({ isAuthed = false }: { isAuthed?: boolean }) {
           </div>
         ) : (
           <Link
-            href="/sign-in"
-            className="inline-flex min-h-8 items-center rounded-full px-3.5 text-[13px] font-medium"
-            style={{ color: "var(--ink-soft)", transition: "color 140ms ease" }}
+            href="/waitlist?source=header&product=signal"
+            className="inline-flex min-h-8 items-center rounded-full px-3.5 text-[13px] font-medium text-white transition-transform hover:-translate-y-px"
+            style={{ background: "var(--ink)" }}
           >
-            Sign in
+            Join the waitlist
           </Link>
         )
       }
