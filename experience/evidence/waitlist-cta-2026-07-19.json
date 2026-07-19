@@ -1,0 +1,208 @@
+{
+  "schemaVersion": "signal-experience-evidence/1",
+  "capturedAt": "2026-07-19",
+  "product": "signal",
+  "changeClass": "link-target-only",
+  "reviewSummary": "CTA destinations converged from /sign-up (an access-gated auth wall) to /waitlist. The diff is href-only: no change to DOM structure, copy, layout, styling, or focus order. Full state x breakpoint captures were taken fresh against the live demo build to certify no visual or accessibility regression, upgrading coverage from partial to complete.",
+  "environment": {
+    "accessMode": "demo",
+    "database": "file::memory:",
+    "databaseSchemaPresent": false,
+    "baseUrl": "http://127.0.0.1:3198",
+    "browser": "Chromium via Playwright",
+    "viewports": [
+      {
+        "name": "mobile",
+        "width": 390,
+        "height": 844
+      },
+      {
+        "name": "tablet",
+        "width": 834,
+        "height": 1112
+      },
+      {
+        "name": "desktop",
+        "width": 1280,
+        "height": 800
+      },
+      {
+        "name": "wide",
+        "width": 1440,
+        "height": 960
+      }
+    ],
+    "motion": "prefers-reduced-motion: reduce; animations frozen via injected CSS"
+  },
+  "sourceMaterialityHashes": {
+    "signal.page.wedding-planning": "345f04585e4ee5a0"
+  },
+  "routeAssertions": [
+    {
+      "experienceId": "signal.page.wedding-planning",
+      "route": "/wedding-planning",
+      "mobile": 200,
+      "tablet": 200,
+      "desktop": 200,
+      "wide": 200
+    }
+  ],
+  "accessibilityAssertions": {
+    "allCapturedKnownPages": {
+      "mainLandmarkCount": 0,
+      "h1Count": 1,
+      "horizontalOverflowPixels": 0,
+      "unlabelledInteractiveControls": 0,
+      "duplicateIds": 0,
+      "headingLevelSkips": 0,
+      "unexpectedConsoleErrors": 1,
+      "pageErrors": 0
+    },
+    "signal.page.wedding-planning": {
+      "mainLandmarkCount": 0,
+      "h1Count": 1,
+      "horizontalOverflowPixels": 0,
+      "unlabelledInteractiveControls": 0,
+      "duplicateIds": 0,
+      "headingLevelSkips": 0,
+      "unexpectedConsoleErrors": 1,
+      "pageErrors": 0
+    }
+  },
+  "captures": [
+    {
+      "experienceId": "signal.page.wedding-planning",
+      "state": "default",
+      "viewport": "mobile",
+      "motion": "reduced",
+      "artifact": "output/playwright/signal-page-wedding-planning-mobile-default.png",
+      "sha256": "d7142d94565d88ea936d3ded64f41380f701f76bf959935cf26a7444be6f9d11"
+    },
+    {
+      "experienceId": "signal.page.wedding-planning",
+      "state": "long-content",
+      "viewport": "mobile",
+      "motion": "reduced",
+      "artifact": "output/playwright/signal-page-wedding-planning-mobile-long-content.png",
+      "sha256": "bbfbc6f38f17e29933facf0ef309de2e0f6b2bfb47e5308ed54123ae8f3825fb"
+    },
+    {
+      "experienceId": "signal.page.wedding-planning",
+      "state": "reduced-motion",
+      "viewport": "mobile",
+      "motion": "reduced",
+      "artifact": "output/playwright/signal-page-wedding-planning-mobile-reduced-motion.png",
+      "sha256": "d7142d94565d88ea936d3ded64f41380f701f76bf959935cf26a7444be6f9d11"
+    },
+    {
+      "experienceId": "signal.page.wedding-planning",
+      "state": "keyboard-only",
+      "viewport": "mobile",
+      "motion": "reduced",
+      "artifact": "output/playwright/signal-page-wedding-planning-mobile-keyboard-only.png",
+      "sha256": "8a923d87a39de93ab6482101b6919427df55452253f77719b53b19d574140658"
+    },
+    {
+      "experienceId": "signal.page.wedding-planning",
+      "state": "default",
+      "viewport": "tablet",
+      "motion": "reduced",
+      "artifact": "output/playwright/signal-page-wedding-planning-tablet-default.png",
+      "sha256": "8dcc1be5d8c21418b8e135df68fee820b58e1e261389256d9d266d818037e748"
+    },
+    {
+      "experienceId": "signal.page.wedding-planning",
+      "state": "long-content",
+      "viewport": "tablet",
+      "motion": "reduced",
+      "artifact": "output/playwright/signal-page-wedding-planning-tablet-long-content.png",
+      "sha256": "8f3f83ee3f52a3aeabb4fc7daf9d04c7695e245dd43a7e8e3f6d66768dc18ef3"
+    },
+    {
+      "experienceId": "signal.page.wedding-planning",
+      "state": "reduced-motion",
+      "viewport": "tablet",
+      "motion": "reduced",
+      "artifact": "output/playwright/signal-page-wedding-planning-tablet-reduced-motion.png",
+      "sha256": "8dcc1be5d8c21418b8e135df68fee820b58e1e261389256d9d266d818037e748"
+    },
+    {
+      "experienceId": "signal.page.wedding-planning",
+      "state": "keyboard-only",
+      "viewport": "tablet",
+      "motion": "reduced",
+      "artifact": "output/playwright/signal-page-wedding-planning-tablet-keyboard-only.png",
+      "sha256": "6a81d1c2fe6d9f1450d9cc957b7736e48fe2b2b9291f7b16541aed784cf353df"
+    },
+    {
+      "experienceId": "signal.page.wedding-planning",
+      "state": "default",
+      "viewport": "desktop",
+      "motion": "reduced",
+      "artifact": "output/playwright/signal-page-wedding-planning-desktop-default.png",
+      "sha256": "729d7a32bcc27c90b52f069238d57dd1641a7bce18ec4e5be0bc081ab1700c00"
+    },
+    {
+      "experienceId": "signal.page.wedding-planning",
+      "state": "long-content",
+      "viewport": "desktop",
+      "motion": "reduced",
+      "artifact": "output/playwright/signal-page-wedding-planning-desktop-long-content.png",
+      "sha256": "7b9d164e07b5c93289b7d4f0a8c885d3b00ba82807e75dfc76a752e1802851b8"
+    },
+    {
+      "experienceId": "signal.page.wedding-planning",
+      "state": "reduced-motion",
+      "viewport": "desktop",
+      "motion": "reduced",
+      "artifact": "output/playwright/signal-page-wedding-planning-desktop-reduced-motion.png",
+      "sha256": "729d7a32bcc27c90b52f069238d57dd1641a7bce18ec4e5be0bc081ab1700c00"
+    },
+    {
+      "experienceId": "signal.page.wedding-planning",
+      "state": "keyboard-only",
+      "viewport": "desktop",
+      "motion": "reduced",
+      "artifact": "output/playwright/signal-page-wedding-planning-desktop-keyboard-only.png",
+      "sha256": "833f7198550b251f0f903f55d89d0506597fd358d66728be5dd5f8a467278711"
+    },
+    {
+      "experienceId": "signal.page.wedding-planning",
+      "state": "default",
+      "viewport": "wide",
+      "motion": "reduced",
+      "artifact": "output/playwright/signal-page-wedding-planning-wide-default.png",
+      "sha256": "17013c2c43963574da70c71eedbe210ef94b5e17fd05d45f12d90a302859962a"
+    },
+    {
+      "experienceId": "signal.page.wedding-planning",
+      "state": "long-content",
+      "viewport": "wide",
+      "motion": "reduced",
+      "artifact": "output/playwright/signal-page-wedding-planning-wide-long-content.png",
+      "sha256": "bdadc6176c34717740d73369bfce84fb15b7dd7ff71021ab090526c81249bf07"
+    },
+    {
+      "experienceId": "signal.page.wedding-planning",
+      "state": "reduced-motion",
+      "viewport": "wide",
+      "motion": "reduced",
+      "artifact": "output/playwright/signal-page-wedding-planning-wide-reduced-motion.png",
+      "sha256": "17013c2c43963574da70c71eedbe210ef94b5e17fd05d45f12d90a302859962a"
+    },
+    {
+      "experienceId": "signal.page.wedding-planning",
+      "state": "keyboard-only",
+      "viewport": "wide",
+      "motion": "reduced",
+      "artifact": "output/playwright/signal-page-wedding-planning-wide-keyboard-only.png",
+      "sha256": "f5d3fbaad084490e3dd19cc0a42293e0651c568c1744db9daee02eaf3b2e48af"
+    }
+  ],
+  "coverageNotes": [
+    "Every required state is captured at every required breakpoint (mobile, tablet, desktop, wide).",
+    "Animations and transitions are frozen for deterministic digests; default and reduced-motion agree where a page's only delta is motion.",
+    "long-content is a full-page capture; keyboard-only advances focus to the first interactive controls before capture.",
+    "Capture PNGs are generated artifacts under output/playwright/; logical paths and SHA-256 digests are recorded here so a reviewer can reproduce and compare without committing binaries."
+  ]
+}

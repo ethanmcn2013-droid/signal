@@ -4,6 +4,9 @@ node_modules/
 .pnp.js
 .yarn/install-state.gz
 
+# experience capture artifacts (generated PNGs; digests live in experience/evidence/*.json)
+output/
+
 # This repo is npm-only. pnpm artifacts keep regenerating from tool
 # auto-detection and break Vercel's package-manager inference — keep
 # them out of the tree entirely. See CONTRIBUTING.md "Trap 2".
