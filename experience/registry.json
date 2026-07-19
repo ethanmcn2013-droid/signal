@@ -1038,13 +1038,13 @@
       "auditScore": null,
       "openFindingIds": [],
       "automatedTestCoverage": "none",
-      "screenshotCoverage": "none",
-      "accessibilityCoverage": "none",
-      "fixtureCoverage": "none",
-      "lastReviewedAt": null,
-      "approvedBaselineReference": null,
+      "screenshotCoverage": "complete",
+      "accessibilityCoverage": "complete",
+      "fixtureCoverage": "complete",
+      "lastReviewedAt": "2026-07-19",
+      "approvedBaselineReference": "experience/evidence/waitlist-cta-2026-07-19.json#signal.page.wedding-planning",
       "intentionalExceptions": [],
-      "materialityHash": "9f914818c36a3f32"
+      "materialityHash": "345f04585e4ee5a0"
     },
     {
       "id": "signal.state.app-brief-loading",
