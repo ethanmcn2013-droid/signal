@@ -427,7 +427,7 @@
       "lastReviewedAt": "2026-07-15",
       "approvedBaselineReference": null,
       "intentionalExceptions": [],
-      "materialityHash": "613e52512d496f1a"
+      "materialityHash": "935e879190c58dd8"
     },
     {
       "id": "signal.page.law",
@@ -556,7 +556,7 @@
       "lastReviewedAt": null,
       "approvedBaselineReference": null,
       "intentionalExceptions": [],
-      "materialityHash": "52b9040d3920d4dc"
+      "materialityHash": "a7622aaf57eea356"
     },
     {
       "id": "signal.page.privacy",
@@ -685,7 +685,7 @@
       "lastReviewedAt": "2026-07-15",
       "approvedBaselineReference": null,
       "intentionalExceptions": [],
-      "materialityHash": "d90a27fe5b62d3f4"
+      "materialityHash": "c3b41feb2bc61d51"
     },
     {
       "id": "signal.page.security",
@@ -861,7 +861,7 @@
       "lastReviewedAt": null,
       "approvedBaselineReference": null,
       "intentionalExceptions": [],
-      "materialityHash": "d2dbc075e70c64ed"
+      "materialityHash": "64227258cbb92736"
     },
     {
       "id": "signal.page.terms",

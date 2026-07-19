@@ -205,7 +205,7 @@ export default function DemoPage() {
                 Ready to try it?
               </p>
               <a
-                href="mailto:hello@signalstudio.ie?subject=Signal%20access%20request"
+                href="/waitlist?source=demo&product=signal"
                 style={{
                   fontSize: 13,
                   color: "var(--ink)",

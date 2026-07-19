@@ -4,8 +4,7 @@ import { Hero } from "@/components/landing/hero";
 import { BriefingAnatomy } from "@/components/marketing/briefing-anatomy";
 import { SuiteArrows } from "@/components/suite-arrows";
 
-const REQUEST_ACCESS_HREF =
-  "mailto:hello@signalstudio.ie?subject=Signal%20access";
+const REQUEST_ACCESS_HREF = "/waitlist?source=home&product=signal";
 
 /**
  * Analytics marketing homepage, structure:
