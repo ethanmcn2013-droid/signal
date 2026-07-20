@@ -20,6 +20,12 @@ import { SuiteHeader } from "@/components/chrome/suite-header";
  * Note: SiteNavConditional in root layout.tsx hides the marketing SiteNav
  * when pathname starts with /app, so there is no double-nav here.
  */
+
+// The authenticated app mounts Clerk client components (UserButton, and pages
+// like /app/brief that call useUser). Render this segment at request time so a
+// preview build without a Clerk provider does not fail prerendering it.
+export const dynamic = "force-dynamic";
+
 export default function AppLayout({
   children,
 }: {
