@@ -205,7 +205,7 @@ export default function DemoPage() {
                 Ready to try it?
               </p>
               <a
-                href="/waitlist?source=demo&product=signal"
+                href="https://signalstudio.ie/waitlist?source=demo&product=signal"
                 style={{
                   fontSize: 13,
                   color: "var(--ink)",

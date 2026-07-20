@@ -63,7 +63,7 @@ export default function PricingPage() {
               Request access
             </p>
             <a
-              href="/waitlist?source=pricing&product=signal"
+              href="https://signalstudio.ie/waitlist?source=pricing&product=signal"
               style={{
                 fontSize: 20,
                 fontWeight: 500,

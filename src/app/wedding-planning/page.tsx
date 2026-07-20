@@ -448,7 +448,7 @@ export default function WeddingPlanningBriefingPage() {
                 Secondary: pill border so it reads as an action, not plain text. */}
             <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 8 }}>
               <Link
-                href="/waitlist?source=wedding_planning&product=signal"
+                href="https://signalstudio.ie/waitlist?source=wedding_planning&product=signal"
                 style={{
                   display: "inline-block",
                   padding: "10px 20px",

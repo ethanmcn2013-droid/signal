@@ -7,14 +7,16 @@ import { SuiteHeader, type SuiteNavItem } from "@/components/chrome/suite-header
 import { UserButton } from "@clerk/nextjs";
 
 // One header contract (product-header-contract.md, 2026-07-06): the marketing
-// header nav is exactly Pricing · Design, both umbrella links. Ten rules,
-// Refusals, About and the self-link stay reachable from the footer and body.
+// header nav is Pricing · Design · About, all umbrella links. Ten rules,
+// Refusals and the self-link stay reachable from the footer and body.
 const UMBRELLA_PRICING = "https://signalstudio.ie/pricing";
 const UMBRELLA_DESIGN = "https://signalstudio.ie/design";
+const UMBRELLA_ABOUT = "https://signalstudio.ie/about";
 
 const NAV: SuiteNavItem[] = [
   { href: UMBRELLA_PRICING, label: "Pricing", external: true },
   { href: UMBRELLA_DESIGN, label: "Design", external: true },
+  { href: UMBRELLA_ABOUT, label: "About", external: true },
 ];
 
 /** §14 owner escape hatch: suppress the M→app redirect for this tab session. */
@@ -91,9 +93,9 @@ export function SiteNav({ isAuthed = false }: { isAuthed?: boolean }) {
           </div>
         ) : (
           <Link
-            href="/waitlist?source=header&product=signal"
-            className="inline-flex min-h-8 items-center rounded-full px-3.5 text-[13px] font-medium text-white transition-transform hover:-translate-y-px"
-            style={{ background: "var(--ink)" }}
+            href="https://signalstudio.ie/waitlist?source=header&product=signal"
+            className="inline-flex min-h-8 items-center rounded-full px-3.5 text-[13px] font-medium"
+            style={{ color: "var(--ink-soft)", transition: "color 140ms ease" }}
           >
             Join the waitlist
           </Link>
