@@ -547,7 +547,7 @@
       "lastReviewedAt": "2026-07-15",
       "approvedBaselineReference": null,
       "intentionalExceptions": [],
-      "materialityHash": "935e879190c58dd8"
+      "materialityHash": "d3b5d7eb2dd70b5b"
     },
     {
       "id": "signal.page.law",
@@ -676,7 +676,7 @@
       "lastReviewedAt": null,
       "approvedBaselineReference": null,
       "intentionalExceptions": [],
-      "materialityHash": "a7622aaf57eea356"
+      "materialityHash": "11d050895905f08e"
     },
     {
       "id": "signal.page.privacy",
@@ -981,7 +981,7 @@
       "lastReviewedAt": null,
       "approvedBaselineReference": null,
       "intentionalExceptions": [],
-      "materialityHash": "64227258cbb92736"
+      "materialityHash": "5aea7831fa34b7f6"
     },
     {
       "id": "signal.page.terms",
@@ -1164,7 +1164,7 @@
       "lastReviewedAt": "2026-07-19",
       "approvedBaselineReference": "experience/evidence/waitlist-cta-2026-07-19.json#signal.page.wedding-planning",
       "intentionalExceptions": [],
-      "materialityHash": "345f04585e4ee5a0"
+      "materialityHash": "b184b0e6d6d9088f"
     },
     {
       "id": "signal.state.app-brief-loading",
