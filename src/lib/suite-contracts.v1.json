@@ -10,5 +10,14 @@
   "roles": ["owner", "admin", "member", "guest"],
   "permissions": ["workspace.read", "workspace.write", "workspace.manage", "object.read", "object.write", "object.share"],
   "objectRef": { "version": 1, "required": ["product", "type", "id", "canonicalUrl"], "optional": ["workspaceId", "sourceRef"] },
-  "context": { "version": 1, "required": ["sourceProduct"], "optional": ["workspaceId", "projectId", "objectRef", "returnUrl"] }
+  "context": {
+    "version": 1,
+    "required": ["sourceProduct"],
+    "optional": ["workspaceId", "projectId", "objectRef", "returnUrl"],
+    "transport": {
+      "encoding": "url-query",
+      "parameters": ["sourceProduct", "workspaceId", "projectId", "objectRef", "returnUrl"],
+      "returnUrlPolicy": "signal-studio-or-local-review-origin"
+    }
+  }
 }

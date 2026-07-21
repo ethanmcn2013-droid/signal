@@ -1,6 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useSyncExternalStore } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
+import {
+  buildSuiteProductHref,
+  readSuiteNavigationContext,
+  type SuiteProductId,
+} from "@/lib/suite-context";
 
 /**
  * SuiteSwitcher, canonical always-visible 4-product pill switcher.
@@ -62,30 +68,36 @@ const PRODUCTS: { slug: ProductSlug; word: string; appUrl: string }[] = [
 
 const PRODUCT_ORIGINS = [NOTES_URL, TASKS_URL, TIMELINE_URL, SIGNAL_URL];
 
-type SuiteContextV2 = {
-  workspaceId: string | null;
-  planningPeriodId: string | null;
+const SUITE_PRODUCT_BY_SLUG: Record<ProductSlug, SuiteProductId> = {
+  notes: "notes",
+  tasks: "tasks",
+  roadmap: "timeline",
+  analytics: "signal",
 };
 
-function readSuiteContext(): SuiteContextV2 {
-  if (typeof window === "undefined") return { workspaceId: null, planningPeriodId: null };
-  const params = new URLSearchParams(window.location.search);
-  if (params.get("contextVersion") !== "2") {
-    return { workspaceId: null, planningPeriodId: null };
-  }
-  return {
-    workspaceId: params.get("workspaceId"),
-    planningPeriodId: params.get("planningPeriodId"),
+function subscribeToLocationChange(onStoreChange: () => void) {
+  const handleChange = () => onStoreChange();
+  const navigation = (
+    window as Window & { navigation?: EventTarget }
+  ).navigation;
+  window.addEventListener("popstate", handleChange);
+  window.addEventListener("hashchange", handleChange);
+  window.addEventListener("signal-suite-context-change", handleChange);
+  navigation?.addEventListener("navigate", handleChange);
+  return () => {
+    window.removeEventListener("popstate", handleChange);
+    window.removeEventListener("hashchange", handleChange);
+    window.removeEventListener("signal-suite-context-change", handleChange);
+    navigation?.removeEventListener("navigate", handleChange);
   };
 }
 
-export function withSuiteContext(url: string, context: SuiteContextV2): string {
-  if (!context.workspaceId && !context.planningPeriodId) return url;
-  const next = new URL(url);
-  next.searchParams.set("contextVersion", "2");
-  if (context.workspaceId) next.searchParams.set("workspaceId", context.workspaceId);
-  if (context.planningPeriodId) next.searchParams.set("planningPeriodId", context.planningPeriodId);
-  return next.toString();
+function getLocationSnapshot() {
+  return window.location.href;
+}
+
+function getServerLocationSnapshot() {
+  return "";
 }
 
 /**
@@ -176,20 +188,23 @@ export function SuiteSwitcher({
   current?: ProductSlug;
   showUmbrella?: boolean;
 }) {
-  const [context, setContext] = useState<SuiteContextV2>({
-    workspaceId: null,
-    planningPeriodId: null,
-  });
-  useEffect(() => {
-    const refresh = () => setContext(readSuiteContext());
-    refresh();
-    window.addEventListener("signal-suite-context-change", refresh);
-    window.addEventListener("popstate", refresh);
-    return () => {
-      window.removeEventListener("signal-suite-context-change", refresh);
-      window.removeEventListener("popstate", refresh);
-    };
-  }, []);
+  const locationHref = useSyncExternalStore(
+    subscribeToLocationChange,
+    getLocationSnapshot,
+    getServerLocationSnapshot,
+  );
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const routeHref = locationHref
+    ? new URL(
+        `${pathname}${searchParams.size ? `?${searchParams.toString()}` : ""}`,
+        locationHref,
+      ).toString()
+    : "";
+  const sourceProduct = current ? SUITE_PRODUCT_BY_SLUG[current] : "studio";
+  const context = routeHref
+    ? readSuiteNavigationContext(new URL(routeHref), sourceProduct)
+    : null;
 
   // Phase 3 (instant-jump): preconnect every sibling origin on mount so
   // the first cross-product hop has a warm TLS connection ready. The
@@ -231,7 +246,9 @@ export function SuiteSwitcher({
 
       {PRODUCTS.map((p) => {
         const isCurrent = p.slug === current;
-        const appUrl = withSuiteContext(p.appUrl, context);
+        const href = context
+          ? buildSuiteProductHref(p.appUrl, context)
+          : p.appUrl;
         if (isCurrent) {
           return (
             <span
@@ -249,9 +266,9 @@ export function SuiteSwitcher({
         return (
           <a
             key={p.slug}
-            href={appUrl}
-            onMouseEnter={() => prefetchProduct(appUrl)}
-            onFocus={() => prefetchProduct(appUrl)}
+            href={href}
+            onMouseEnter={() => prefetchProduct(href)}
+            onFocus={() => prefetchProduct(href)}
             onClick={(e) => {
               if (
                 e.metaKey ||
@@ -262,7 +279,7 @@ export function SuiteSwitcher({
               )
                 return;
               e.preventDefault();
-              suiteJump(appUrl);
+              suiteJump(href);
             }}
             className="suitesw-pill suitesw-pill--link"
           >

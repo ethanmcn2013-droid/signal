@@ -15,8 +15,10 @@ export const tasks = sqliteTable("tasks", {
   id: text("id").primaryKey(),
   workspaceId: text("workspace_id"),
   title: text("title").notNull(),
+  description: text("description"),
   /** Tasks's lane field, Analytics maps to Status. */
   lane: text("lane").notNull(),
+  priority: text("priority").notNull(),
   /** JSON-encoded array of user ids. First entry treated as the
    *  primary assignee in Analytics's TaskRead. */
   assignees: text("assignees", { mode: "json" }).$type<string[]>(),
@@ -29,6 +31,9 @@ export const tasks = sqliteTable("tasks", {
   dueAt: integer("due_at", { mode: "timestamp" }),
   /** JSON-encoded array of task ids that block this one. */
   blockedBy: text("blocked_by", { mode: "json" }).$type<string[]>(),
+  idleDays: integer("idle_days"),
+  sourceNoteId: text("source_note_id"),
+  isMilestone: integer("is_milestone", { mode: "boolean" }).notNull(),
   createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
   updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
 });
@@ -66,10 +71,23 @@ export const users = sqliteTable("users", {
    *  This is the canonical identity key used by Analytics to locate
    *  a Tasks user when clerkId hasn't been written yet (webhook-race). */
   email: text("email"),
+  name: text("name"),
+  initials: text("initials").notNull(),
 });
 
 export const workspaceMembers = sqliteTable("workspace_members", {
   workspaceId: text("workspace_id").notNull(),
   userId: text("user_id").notNull(),
   role: text("role").notNull(),
+});
+
+/** Bounded event history used for deterministic completion and change metrics. */
+export const activities = sqliteTable("activities", {
+  id: text("id").primaryKey(),
+  workspaceId: text("workspace_id"),
+  taskId: text("task_id").notNull(),
+  userId: text("user_id").notNull(),
+  kind: text("kind").notNull(),
+  payload: text("payload", { mode: "json" }).$type<Record<string, unknown>>().notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
 });

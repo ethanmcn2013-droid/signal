@@ -1,6 +1,6 @@
 import { sql } from "drizzle-orm";
 import { dataSource, type UserIdentity } from "@/lib/data/source";
-import { tasksDb } from "@/server/tasks-db/client";
+import { getTasksDb } from "@/server/tasks-db/client";
 
 export type SignalScope =
   | { kind: "workspace"; workspaceId: string }
@@ -81,6 +81,7 @@ export async function listPlanningCatalogForUser(
     })),
     planningSchemaAvailable: false,
   };
+  const tasksDb = getTasksDb();
   if (!tasksDb) return fallback;
 
   try {

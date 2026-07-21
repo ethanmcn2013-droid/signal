@@ -23,18 +23,27 @@ import { isDemoMode } from "@/lib/access-mode";
  */
 
 // The app cannot serve real users without these.
-const REQUIRED_IN_PRODUCTION: ReadonlyArray<readonly [string, string]> = [
+const REQUIRED_IN_PRODUCTION: Array<readonly [string, string]> = [
   ["TURSO_ANALYTICS_DATABASE_URL", "main analytics database"],
   ["TURSO_ANALYTICS_AUTH_TOKEN", "main analytics database auth token"],
   ["NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY", "Clerk auth (browser key)"],
   ["CLERK_SECRET_KEY", "Clerk auth (server key)"],
 ];
 
+if (["true", "1"].includes(process.env.SIGNAL_ANALYTICS_V1_ENABLED?.toLowerCase() ?? "")) {
+  REQUIRED_IN_PRODUCTION.push(
+    ["TASKS_DATABASE_URL", "read-only Tasks analytics source"],
+    ["TASKS_AUTH_TOKEN", "read-only Tasks analytics token"],
+    ["TURSO_DATABASE_URL", "Signal application-state database"],
+    ["TURSO_AUTH_TOKEN", "Signal application-state database auth token"],
+  );
+}
+
 // Specific features break without these, but the app still boots.
 const RECOMMENDED_IN_PRODUCTION: ReadonlyArray<readonly [string, string]> = [
   ["TURSO_DATABASE_URL", "user-preferences database"],
   ["RESEND_API_KEY", "briefing + transactional email"],
-  ["CRON_SECRET", "daily-briefing cron authentication"],
+  ["CRON_SECRET", "briefing and analytics cron authentication"],
 ];
 
 let validated = false;

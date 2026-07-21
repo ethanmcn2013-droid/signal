@@ -1,6 +1,6 @@
 {
   "schemaVersion": "signal-experience/1",
-  "generatedAt": "2026-07-15",
+  "generatedAt": "2026-07-16",
   "breakpoints": {
     "mobile": {
       "width": 390,
@@ -68,11 +68,11 @@
       "product": "signal",
       "surfaceType": "page",
       "route": "/app",
-      "source": "src/app/app/page.tsx",
+      "source": "src/app/app/(signal)/page.tsx",
       "parentJourney": "signed-in-work",
       "archetype": "dashboard-or-command-centre",
-      "primaryJob": "Understand and use app.",
-      "primaryAction": "Complete the primary action on app.",
+      "primaryJob": "See no more than three grounded observations that need attention now.",
+      "primaryAction": "Open evidence or act on the underlying work.",
       "roles": [
         "owner",
         "member"
@@ -96,23 +96,31 @@
         "desktop",
         "wide"
       ],
-      "componentDependencies": [],
-      "patternDependencies": [],
+      "componentDependencies": [
+        "src/components/signal/signal-app-shell.tsx",
+        "src/components/signal/briefing-view.tsx",
+        "src/components/signal/observation-card.tsx",
+        "src/components/signal/evidence-drawer.tsx"
+      ],
+      "patternDependencies": [
+        "analytics-url-state-v1",
+        "signal-evidence-drawer-v1"
+      ],
       "reviewTier": "critical",
       "designOwner": "product-taste-design-integrity",
       "engineeringOwner": "engineering-systems-architecture",
-      "implementationStatus": "legacy",
-      "auditStatus": "registered",
+      "implementationStatus": "current",
+      "auditStatus": "passing",
       "auditScore": null,
       "openFindingIds": [],
       "automatedTestCoverage": "partial",
-      "screenshotCoverage": "partial",
-      "accessibilityCoverage": "partial",
-      "fixtureCoverage": "partial",
-      "lastReviewedAt": "2026-07-15",
-      "approvedBaselineReference": null,
+      "screenshotCoverage": "complete",
+      "accessibilityCoverage": "complete",
+      "fixtureCoverage": "complete",
+      "lastReviewedAt": "2026-07-16",
+      "approvedBaselineReference": "experience/evidence/progressive-analytics-2026-07-16.json#signal.page.app",
       "intentionalExceptions": [],
-      "materialityHash": "6eaea283870dd440"
+      "materialityHash": "3223ffe0332fab6b"
     },
     {
       "id": "signal.page.app-brief",
@@ -163,7 +171,7 @@
       "lastReviewedAt": null,
       "approvedBaselineReference": null,
       "intentionalExceptions": [],
-      "materialityHash": "f0188bb229fa1e24"
+      "materialityHash": "3de6ac090cedd8f4"
     },
     {
       "id": "signal.page.app-onboarding",
@@ -210,6 +218,63 @@
       "approvedBaselineReference": null,
       "intentionalExceptions": [],
       "materialityHash": "e03984a4f6ed6324"
+    },
+    {
+      "id": "signal.page.app-overview",
+      "product": "signal",
+      "surfaceType": "page",
+      "route": "/app/overview",
+      "source": "src/app/app/(signal)/overview/page.tsx",
+      "parentJourney": "signed-in-work",
+      "archetype": "dashboard-or-command-centre",
+      "primaryJob": "Understand what is true across the selected workspace or project.",
+      "primaryAction": "Inspect evidence or move the underlying work.",
+      "roles": [
+        "owner",
+        "member"
+      ],
+      "requiredStates": [
+        "empty",
+        "populated",
+        "partial-failure",
+        "restricted",
+        "dense",
+        "long-content",
+        "customize",
+        "reduced-motion",
+        "keyboard-only"
+      ],
+      "requiredBreakpoints": [
+        "mobile",
+        "tablet",
+        "desktop",
+        "wide"
+      ],
+      "componentDependencies": [
+        "src/components/signal/overview-view.tsx",
+        "src/components/signal/project-status-table.tsx",
+        "src/components/signal/action-queue.tsx",
+        "src/components/signal/customize-mode.tsx"
+      ],
+      "patternDependencies": [
+        "analytics-url-state-v1",
+        "signal-evidence-drawer-v1"
+      ],
+      "reviewTier": "core",
+      "designOwner": "product-taste-design-integrity",
+      "engineeringOwner": "engineering-systems-architecture",
+      "implementationStatus": "current",
+      "auditStatus": "passing",
+      "auditScore": null,
+      "openFindingIds": [],
+      "automatedTestCoverage": "partial",
+      "screenshotCoverage": "complete",
+      "accessibilityCoverage": "complete",
+      "fixtureCoverage": "complete",
+      "lastReviewedAt": "2026-07-16",
+      "approvedBaselineReference": "experience/evidence/progressive-analytics-2026-07-16.json#signal.page.app-overview",
+      "intentionalExceptions": [],
+      "materialityHash": "8defe49f10f876e7"
     },
     {
       "id": "signal.page.app-preview-email",
@@ -344,6 +409,61 @@
       "materialityHash": "a1e1ea852e27a0f9"
     },
     {
+      "id": "signal.page.app-trends",
+      "product": "signal",
+      "surfaceType": "page",
+      "route": "/app/trends",
+      "source": "src/app/app/(signal)/trends/page.tsx",
+      "parentJourney": "signed-in-work",
+      "archetype": "list-and-data-table",
+      "primaryJob": "Understand how one selected metric is changing over time.",
+      "primaryAction": "Inspect a chart datum or its contributing records.",
+      "roles": [
+        "owner",
+        "member"
+      ],
+      "requiredStates": [
+        "populated",
+        "insufficient-history",
+        "partial-failure",
+        "restricted",
+        "dense",
+        "long-content",
+        "reduced-motion",
+        "keyboard-only"
+      ],
+      "requiredBreakpoints": [
+        "mobile",
+        "tablet",
+        "desktop",
+        "wide"
+      ],
+      "componentDependencies": [
+        "src/components/signal/trends-view.tsx",
+        "src/components/signal/trend-chart.tsx",
+        "src/components/signal/source-record-list.tsx"
+      ],
+      "patternDependencies": [
+        "analytics-url-state-v1",
+        "signal-evidence-drawer-v1"
+      ],
+      "reviewTier": "core",
+      "designOwner": "product-taste-design-integrity",
+      "engineeringOwner": "engineering-systems-architecture",
+      "implementationStatus": "current",
+      "auditStatus": "passing",
+      "auditScore": null,
+      "openFindingIds": [],
+      "automatedTestCoverage": "partial",
+      "screenshotCoverage": "complete",
+      "accessibilityCoverage": "complete",
+      "fixtureCoverage": "complete",
+      "lastReviewedAt": "2026-07-16",
+      "approvedBaselineReference": "experience/evidence/progressive-analytics-2026-07-16.json#signal.page.app-trends",
+      "intentionalExceptions": [],
+      "materialityHash": "6062b4e57720743b"
+    },
+    {
       "id": "signal.page.changelog",
       "product": "signal",
       "surfaceType": "page",
@@ -427,7 +547,7 @@
       "lastReviewedAt": "2026-07-15",
       "approvedBaselineReference": null,
       "intentionalExceptions": [],
-      "materialityHash": "935e879190c58dd8"
+      "materialityHash": "d3b5d7eb2dd70b5b"
     },
     {
       "id": "signal.page.law",
@@ -556,7 +676,7 @@
       "lastReviewedAt": null,
       "approvedBaselineReference": null,
       "intentionalExceptions": [],
-      "materialityHash": "a7622aaf57eea356"
+      "materialityHash": "11d050895905f08e"
     },
     {
       "id": "signal.page.privacy",
@@ -861,7 +981,7 @@
       "lastReviewedAt": null,
       "approvedBaselineReference": null,
       "intentionalExceptions": [],
-      "materialityHash": "64227258cbb92736"
+      "materialityHash": "5aea7831fa34b7f6"
     },
     {
       "id": "signal.page.terms",
@@ -1044,7 +1164,7 @@
       "lastReviewedAt": "2026-07-19",
       "approvedBaselineReference": "experience/evidence/waitlist-cta-2026-07-19.json#signal.page.wedding-planning",
       "intentionalExceptions": [],
-      "materialityHash": "345f04585e4ee5a0"
+      "materialityHash": "b184b0e6d6d9088f"
     },
     {
       "id": "signal.state.app-brief-loading",
@@ -1129,10 +1249,10 @@
       "lastReviewedAt": null,
       "approvedBaselineReference": null,
       "intentionalExceptions": [],
-      "materialityHash": "375198f5ad50103e"
+      "materialityHash": "00c4ee3ba1548f90"
     },
     {
-      "id": "signal.state.app-loading",
+      "id": "signal.state.app-loading-default",
       "product": "signal",
       "surfaceType": "loading",
       "route": "/app",
@@ -1173,6 +1293,49 @@
       "approvedBaselineReference": null,
       "intentionalExceptions": [],
       "materialityHash": "f7ca8719d9bc1050"
+    },
+    {
+      "id": "signal.state.app-loading-signal",
+      "product": "signal",
+      "surfaceType": "loading",
+      "route": "/app",
+      "source": "src/app/app/(signal)/loading.tsx",
+      "parentJourney": "signed-in-work",
+      "archetype": "feedback-interruption-and-exception",
+      "primaryJob": "Understand and use app.",
+      "primaryAction": "Complete the primary action on app.",
+      "roles": [
+        "owner",
+        "member"
+      ],
+      "requiredStates": [
+        "loading",
+        "slow-loading",
+        "reduced-motion"
+      ],
+      "requiredBreakpoints": [
+        "mobile",
+        "tablet",
+        "desktop",
+        "wide"
+      ],
+      "componentDependencies": [],
+      "patternDependencies": [],
+      "reviewTier": "critical",
+      "designOwner": "product-taste-design-integrity",
+      "engineeringOwner": "engineering-systems-architecture",
+      "implementationStatus": "legacy",
+      "auditStatus": "registered",
+      "auditScore": null,
+      "openFindingIds": [],
+      "automatedTestCoverage": "none",
+      "screenshotCoverage": "none",
+      "accessibilityCoverage": "none",
+      "fixtureCoverage": "none",
+      "lastReviewedAt": null,
+      "approvedBaselineReference": null,
+      "intentionalExceptions": [],
+      "materialityHash": "1b1d6e1d8a1be09a"
     },
     {
       "id": "signal.state.root-error",
@@ -1391,6 +1554,110 @@
       "approvedBaselineReference": null,
       "intentionalExceptions": [],
       "materialityHash": "ffca7d007fef5dd0"
+    },
+    {
+      "id": "signal.surface.customize-overview",
+      "product": "signal",
+      "surfaceType": "nested-view",
+      "trigger": "Choose Customize overview",
+      "source": "src/components/signal/customize-mode.tsx",
+      "parentJourney": "signed-in-work",
+      "archetype": "settings-and-administration",
+      "primaryJob": "Pin, hide, or reorder Overview cards without changing analytics facts.",
+      "primaryAction": "Save preferences or restore recommended defaults.",
+      "roles": [
+        "owner",
+        "member"
+      ],
+      "requiredStates": [
+        "default",
+        "dirty",
+        "saving",
+        "saved",
+        "error",
+        "reduced-motion",
+        "keyboard-only"
+      ],
+      "requiredBreakpoints": [
+        "mobile",
+        "tablet",
+        "desktop",
+        "wide"
+      ],
+      "componentDependencies": [
+        "src/components/signal/overview-view.tsx"
+      ],
+      "patternDependencies": [
+        "analytics-preferences-v1"
+      ],
+      "reviewTier": "core",
+      "designOwner": "product-taste-design-integrity",
+      "engineeringOwner": "engineering-systems-architecture",
+      "implementationStatus": "current",
+      "auditStatus": "passing",
+      "auditScore": null,
+      "openFindingIds": [],
+      "automatedTestCoverage": "partial",
+      "screenshotCoverage": "partial",
+      "accessibilityCoverage": "partial",
+      "fixtureCoverage": "partial",
+      "lastReviewedAt": "2026-07-16",
+      "approvedBaselineReference": null,
+      "intentionalExceptions": [],
+      "materialityHash": "f3d1a00b8099133d"
+    },
+    {
+      "id": "signal.surface.evidence-drawer",
+      "product": "signal",
+      "surfaceType": "drawer",
+      "trigger": "Open evidence from a Signal observation, metric, chart datum, project state, or queue item",
+      "source": "src/components/signal/evidence-drawer.tsx",
+      "parentJourney": "signed-in-work",
+      "archetype": "review-and-approval-workspace",
+      "primaryJob": "Understand exactly what produced a Signal conclusion.",
+      "primaryAction": "Open a contributing source record or related trend.",
+      "roles": [
+        "owner",
+        "member"
+      ],
+      "requiredStates": [
+        "loading",
+        "populated",
+        "partial-failure",
+        "paginated",
+        "deep-linked",
+        "reduced-motion",
+        "keyboard-only"
+      ],
+      "requiredBreakpoints": [
+        "mobile",
+        "tablet",
+        "desktop",
+        "wide"
+      ],
+      "componentDependencies": [
+        "src/components/signal/source-record-list.tsx",
+        "src/components/signal/action-link.tsx"
+      ],
+      "patternDependencies": [
+        "modal-focus-management",
+        "analytics-url-state-v1"
+      ],
+      "reviewTier": "critical",
+      "designOwner": "product-taste-design-integrity",
+      "engineeringOwner": "engineering-systems-architecture",
+      "implementationStatus": "current",
+      "auditStatus": "passing",
+      "auditScore": null,
+      "openFindingIds": [],
+      "automatedTestCoverage": "partial",
+      "screenshotCoverage": "complete",
+      "accessibilityCoverage": "complete",
+      "fixtureCoverage": "complete",
+      "lastReviewedAt": "2026-07-16",
+      "approvedBaselineReference": "experience/evidence/progressive-analytics-2026-07-16.json#signal.surface.evidence-drawer",
+      "intentionalExceptions": [],
+      "materialityHash": "40ad503087dd5dfd"
     }
   ]
 }

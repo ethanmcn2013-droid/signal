@@ -3,27 +3,25 @@ import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Daily Signal, Signal",
-  description: "One short morning read on what needs attention today.",
+  description: "One short read on what genuinely needs attention now.",
 };
 
-/**
- * One briefing path. The former /app/brief implementation bypassed the linked
- * scope and read every Tasks workspace. Preserve validated context hints while
- * canonicalizing to /app, whose orchestrator rechecks current membership.
- */
-export default async function BriefPage({
+type LegacyBriefSearchParams = Promise<
+  Record<string, string | string[] | undefined>
+>;
+
+/** Keep old briefing links alive while converging on `/app`. */
+export default async function LegacyBriefPage({
   searchParams,
 }: {
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
+  searchParams: LegacyBriefSearchParams;
 }) {
-  const incoming = await searchParams;
-  const outgoing = new URLSearchParams();
-  if (incoming.contextVersion === "2") outgoing.set("contextVersion", "2");
-  if (typeof incoming.workspaceId === "string") {
-    outgoing.set("workspaceId", incoming.workspaceId);
+  const raw = await searchParams;
+  const params = new URLSearchParams();
+  for (const [key, value] of Object.entries(raw)) {
+    if (Array.isArray(value)) value.forEach((item) => params.append(key, item));
+    else if (value !== undefined) params.set(key, value);
   }
-  if (typeof incoming.planningPeriodId === "string") {
-    outgoing.set("planningPeriodId", incoming.planningPeriodId);
-  }
-  redirect(outgoing.size ? `/app?${outgoing.toString()}` : "/app");
+  const query = params.toString();
+  redirect(query ? `/app?${query}` : "/app");
 }

@@ -2,6 +2,7 @@ import { eq } from "drizzle-orm";
 import type { LibSQLDatabase } from "drizzle-orm/libsql";
 import {
   analyticsUsers,
+  analyticsViewPreferences,
   briefingFeedback,
   phrasingRotations,
   surfacedItems,
@@ -28,7 +29,7 @@ export async function exportAccountData(
   libDatabase: LibDb,
   clerkId: string,
 ) {
-  const [users, rotations, feedback, surfaced, prefs] = await Promise.all([
+  const [users, rotations, feedback, surfaced, viewPreferences, prefs] = await Promise.all([
     prefsDatabase
       .select()
       .from(analyticsUsers)
@@ -45,6 +46,10 @@ export async function exportAccountData(
       .select()
       .from(surfacedItems)
       .where(eq(surfacedItems.clerkId, clerkId)),
+    prefsDatabase
+      .select()
+      .from(analyticsViewPreferences)
+      .where(eq(analyticsViewPreferences.clerkId, clerkId)),
     libDatabase
       .select({
         userId: userPreferences.userId,
@@ -66,6 +71,7 @@ export async function exportAccountData(
     phrasingRotations: rotations,
     briefingFeedback: feedback,
     surfacedItems: surfaced,
+    analyticsViewPreferences: viewPreferences,
     // Token-free by design, see the security note above.
     emailSubscription: prefs[0] ?? null,
   };

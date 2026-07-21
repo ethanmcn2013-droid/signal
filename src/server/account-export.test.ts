@@ -44,6 +44,16 @@ async function freshDbs() {
       run_days integer NOT NULL DEFAULT 1,
       PRIMARY KEY (clerk_id, item_key, trigger_id)
     );
+    CREATE TABLE analytics_view_preferences (
+      clerk_id text NOT NULL, workspace_id text NOT NULL,
+      hidden_card_ids text NOT NULL DEFAULT '[]',
+      pinned_card_ids text NOT NULL DEFAULT '[]',
+      card_order text NOT NULL DEFAULT '[]',
+      schema_version integer NOT NULL DEFAULT 1,
+      created_at integer NOT NULL DEFAULT (unixepoch()),
+      updated_at integer NOT NULL DEFAULT (unixepoch()),
+      PRIMARY KEY (clerk_id, workspace_id)
+    );
     INSERT INTO analytics_users (clerk_id, linked_workspace_id) VALUES
       ('u-target','ws-1'), ('u-bystander','ws-2');
     INSERT INTO phrasing_rotations (clerk_id, trigger_id, last_index) VALUES
@@ -53,6 +63,9 @@ async function freshDbs() {
     INSERT INTO surfaced_items (clerk_id, item_key, trigger_id, first_day, last_day, run_days) VALUES
       ('u-target','item-a','due-soon',20000,20002,3),
       ('u-bystander','item-c','stuck-work',20001,20001,1);
+    INSERT INTO analytics_view_preferences (clerk_id, workspace_id, hidden_card_ids) VALUES
+      ('u-target','ws-1','["recent_changes"]'),
+      ('u-bystander','ws-2','["open_work"]');
   `);
 
   const libClient = createClient({ url: ":memory:" });
@@ -86,6 +99,8 @@ test("export is caller-scoped across both DBs and omits the unsubscribe token", 
     assert.equal(data.briefingFeedback.length, 1);
     assert.equal(data.surfacedItems.length, 1);
     assert.equal(data.surfacedItems[0]?.itemKey, "item-a");
+    assert.equal(data.analyticsViewPreferences.length, 1);
+    assert.equal(data.analyticsViewPreferences[0]?.workspaceId, "ws-1");
     assert.equal(data.emailSubscription?.email, "t@x.com");
 
     assert.ok(

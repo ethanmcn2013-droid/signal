@@ -56,6 +56,16 @@ async function freshDbs() {
       run_days integer NOT NULL DEFAULT 1,
       PRIMARY KEY (clerk_id, item_key, trigger_id)
     );
+    CREATE TABLE analytics_view_preferences (
+      clerk_id text NOT NULL, workspace_id text NOT NULL,
+      hidden_card_ids text NOT NULL DEFAULT '[]',
+      pinned_card_ids text NOT NULL DEFAULT '[]',
+      card_order text NOT NULL DEFAULT '[]',
+      schema_version integer NOT NULL DEFAULT 1,
+      created_at integer NOT NULL DEFAULT (unixepoch()),
+      updated_at integer NOT NULL DEFAULT (unixepoch()),
+      PRIMARY KEY (clerk_id, workspace_id)
+    );
   `);
 
   const libClient = createClient({ url: ":memory:" });
@@ -94,6 +104,9 @@ async function seed(prefsClient: Client, libClient: Client) {
     INSERT INTO surfaced_items (clerk_id, item_key, trigger_id, first_day, last_day, run_days) VALUES
       ('u-target','item-a','due-soon',20000,20002,3),
       ('u-bystander','item-c','stuck-work',20001,20001,1);
+    INSERT INTO analytics_view_preferences (clerk_id, workspace_id, hidden_card_ids) VALUES
+      ('u-target','ws-1','["recent_changes"]'),
+      ('u-bystander','ws-2','["open_work"]');
   `);
   await libClient.executeMultiple(`
     INSERT INTO user_preferences (user_id, email, unsubscribe_token) VALUES
@@ -115,6 +128,7 @@ test("erasure clears all five tables across both DBs incl. surfaced_items", asyn
       "phrasing_rotations WHERE clerk_id='u-target'",
       "briefing_feedback WHERE clerk_id='u-target'",
       "surfaced_items WHERE clerk_id='u-target'",
+      "analytics_view_preferences WHERE clerk_id='u-target'",
     ]) {
       assert.equal(await count(prefsClient, where), 0, `residual in ${where}`);
     }
@@ -129,6 +143,7 @@ test("erasure clears all five tables across both DBs incl. surfaced_items", asyn
     assert.equal(await count(prefsClient, "phrasing_rotations"), 1);
     assert.equal(await count(prefsClient, "briefing_feedback"), 1);
     assert.equal(await count(prefsClient, "surfaced_items"), 1);
+    assert.equal(await count(prefsClient, "analytics_view_preferences"), 1);
     assert.equal(await count(libClient, "user_preferences"), 1);
 
     // Idempotent.

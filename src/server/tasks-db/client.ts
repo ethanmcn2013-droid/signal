@@ -1,5 +1,5 @@
-import { drizzle } from "drizzle-orm/libsql";
-import { createClient } from "@libsql/client";
+import { drizzle, type LibSQLDatabase } from "drizzle-orm/libsql";
+import { createClient, type Client } from "@libsql/client";
 import * as schema from "./schema";
 
 /**
@@ -14,11 +14,38 @@ import * as schema from "./schema";
  * when the env vars aren't set in dev.
  */
 
-const url = process.env.TASKS_DATABASE_URL;
-const authToken = process.env.TASKS_AUTH_TOKEN;
+export const tasksDbConfigured = Boolean(process.env.TASKS_DATABASE_URL);
 
-export const tasksDbConfigured = Boolean(url);
+type TasksDb = LibSQLDatabase<typeof schema>;
 
-const client = url ? createClient({ url, authToken }) : null;
+let database: TasksDb | null | undefined;
+let rawClient: Client | null | undefined;
 
-export const tasksDb = client ? drizzle(client, { schema }) : null;
+export function getTasksClient(): Client | null {
+  if (rawClient !== undefined) return rawClient;
+  const url = process.env.TASKS_DATABASE_URL;
+  rawClient = url
+    ? createClient({ url, authToken: process.env.TASKS_AUTH_TOKEN })
+    : null;
+  return rawClient;
+}
+
+/**
+ * Resolve the read-only Tasks client at request time.
+ *
+ * Keeping client construction out of module evaluation lets `next build` and
+ * marketing-only processes load this module without production credentials.
+ * It also prevents a changed test environment from retaining a client created
+ * with a previous URL.
+ */
+export function getTasksDb(): TasksDb | null {
+  if (database !== undefined) return database;
+
+  const client = getTasksClient();
+  if (!client) {
+    database = null;
+    return database;
+  }
+  database = drizzle(client, { schema });
+  return database;
+}

@@ -12,7 +12,7 @@
 
 import { eq, inArray } from "drizzle-orm";
 import type { WorkRead, TaskRead, ProjectRead, Status } from "./types";
-import { tasksDb, tasksDbConfigured } from "@/server/tasks-db/client";
+import { getTasksDb, tasksDbConfigured } from "@/server/tasks-db/client";
 import {
   tasks as tasksTable,
   workspaces as workspacesTable,
@@ -280,6 +280,7 @@ export const tasksDbSource: DataSource = {
   },
 
   async readMany(workspaceIds: string[]): Promise<WorkRead[]> {
+    const tasksDb = getTasksDb();
     if (!tasksDb) {
       throw new Error(
         "tasksDbSource called without TASKS_DATABASE_URL configured",
@@ -304,6 +305,7 @@ export const tasksDbSource: DataSource = {
   },
 
   async listForUser(identity: UserIdentity): Promise<WorkspaceCandidate[]> {
+    const tasksDb = getTasksDb();
     if (!tasksDb) {
       // tasksDb is null when TASKS_DATABASE_URL is unset (Preview / dev without env).
       // Return [] rather than throwing, the onboarding page handles empty gracefully.
@@ -321,6 +323,7 @@ export const tasksDbSource: DataSource = {
   async getWorkspaceOnboarding(
     workspaceId: string,
   ): Promise<WorkspaceOnboarding | null> {
+    const tasksDb = getTasksDb();
     if (!tasksDb) return null;
     try {
       const [row] = await tasksDb

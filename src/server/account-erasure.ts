@@ -2,6 +2,7 @@ import { eq } from "drizzle-orm";
 import type { LibSQLDatabase } from "drizzle-orm/libsql";
 import {
   analyticsUsers,
+  analyticsViewPreferences,
   briefingFeedback,
   phrasingRotations,
   surfacedItems,
@@ -50,6 +51,9 @@ export async function eraseAccountData(
   await prefsDatabase
     .delete(surfacedItems)
     .where(eq(surfacedItems.clerkId, clerkId));
+  await prefsDatabase
+    .delete(analyticsViewPreferences)
+    .where(eq(analyticsViewPreferences.clerkId, clerkId));
   await prefsDatabase
     .delete(analyticsUsers)
     .where(eq(analyticsUsers.clerkId, clerkId));
