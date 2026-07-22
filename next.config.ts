@@ -116,6 +116,22 @@ const nextConfig: NextConfig = {
           "https://tasks.signalstudio.ie/app/brief/settings/notifications",
         permanent: true,
       },
+      // Marketing → umbrella (1:1 where it exists, else the umbrella home).
+      // /u/:token, /api/unsubscribe and /sign-in are NOT matched here.
+      { source: "/", destination: "https://signalstudio.ie/", permanent: true },
+      { source: "/about", destination: "https://signalstudio.ie/about", permanent: true },
+      { source: "/pricing", destination: "https://signalstudio.ie/pricing", permanent: true },
+      { source: "/changelog", destination: "https://signalstudio.ie/changelog", permanent: true },
+      { source: "/security", destination: "https://signalstudio.ie/security", permanent: true },
+      { source: "/privacy", destination: "https://signalstudio.ie/privacy", permanent: true },
+      { source: "/terms", destination: "https://signalstudio.ie/terms", permanent: true },
+      { source: "/waitlist", destination: "https://signalstudio.ie/waitlist", permanent: true },
+      { source: "/law", destination: "https://signalstudio.ie/", permanent: true },
+      { source: "/method", destination: "https://signalstudio.ie/", permanent: true },
+      { source: "/refusals", destination: "https://signalstudio.ie/", permanent: true },
+      { source: "/demo", destination: "https://signalstudio.ie/", permanent: true },
+      { source: "/signal", destination: "https://signalstudio.ie/", permanent: true },
+      { source: "/wedding-planning", destination: "https://signalstudio.ie/", permanent: true },
     ];
   },
   async headers() {
