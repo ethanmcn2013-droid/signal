@@ -68,6 +68,56 @@ const nextConfig: NextConfig = {
     // what we call. Roadmap/Tasks/Notes carry the same shape (Phase 6.2).
     optimizePackageImports: ["@clerk/nextjs", "motion"],
   },
+  // Stage C — traffic convergence into the unified app (tasks.signalstudio.ie).
+  // The authed Signal surface now lives at /app/brief in the unified app.
+  // /app/settings/account stays served here (GDPR — MIGRATION-P08-007).
+  // Never-retire routes (/u/:token, /api/unsubscribe/:token), marketing and
+  // /api are untouched (all sources below are under /app).
+  async redirects() {
+    return [
+      {
+        source: "/app",
+        destination: "https://tasks.signalstudio.ie/app/brief",
+        permanent: true,
+      },
+      {
+        source: "/app/brief",
+        destination: "https://tasks.signalstudio.ie/app/brief",
+        permanent: true,
+      },
+      {
+        source: "/app/overview",
+        destination: "https://tasks.signalstudio.ie/app/brief",
+        permanent: true,
+      },
+      {
+        source: "/app/trends",
+        destination: "https://tasks.signalstudio.ie/app/brief",
+        permanent: true,
+      },
+      {
+        source: "/app/preview-email",
+        destination: "https://tasks.signalstudio.ie/app/brief",
+        permanent: true,
+      },
+      {
+        source: "/app/onboarding",
+        destination: "https://tasks.signalstudio.ie/app/brief/onboarding",
+        permanent: true,
+      },
+      {
+        source: "/app/settings",
+        destination: "https://tasks.signalstudio.ie/app/brief",
+        permanent: true,
+      },
+      {
+        source: "/app/settings/notifications",
+        destination:
+          "https://tasks.signalstudio.ie/app/brief/settings/notifications",
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {
