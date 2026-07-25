@@ -6,13 +6,9 @@ import {
   motion,
   useReducedMotion,
 } from "motion/react";
-import { useState, useTransition } from "react";
+import { useState } from "react";
 import type { BriefItem, Briefing } from "@/lib/briefing/types";
 import { ageNote, graceNote, greeting, summaryLine } from "@/lib/briefing/voice";
-import {
-  recordBriefingFeedback,
-  type FeedbackVerdict,
-} from "@/app/app/brief/feedback-actions";
 
 // ─────────────────────────────────────────────────────────────
 // Motion grammar · Signal Studio Motion Contract v1.
@@ -71,7 +67,7 @@ export function BriefingView({
       {/* Page-settle entrance: gentle stagger, not a feed pop.
           staggerChildren 0.06s × ~5 children ≤ --motion-moderate. */}
       <motion.article
-        className="mx-auto w-full max-w-[640px] px-6 py-12"
+        className="mx-auto w-full max-w-[960px] px-6 py-8"
         initial="hidden"
         animate="shown"
         variants={{
@@ -88,23 +84,23 @@ export function BriefingView({
           />
         ) : (
           <>
-            <motion.h1
-              className="mb-3 text-[32px] font-semibold leading-[1.15] tracking-[-0.035em]"
+            <motion.div
+              className="mb-8 flex flex-wrap items-end justify-between gap-4 border-b border-[color:var(--hairline)] pb-5"
               style={{ color: "var(--ink)" }}
               variants={fadeUp}
             >
-              {greeting(briefing.greetingHour, firstName)}
-            </motion.h1>
-
-            {summaryLine(briefing) ? (
-              <motion.p
-                className="mb-10 text-[15.5px] leading-[1.55]"
-                style={{ color: "var(--ink-soft)" }}
-                variants={fadeUp}
-              >
-                {summaryLine(briefing)}
-              </motion.p>
-            ) : null}
+              <div>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.14em]" style={{ color: "var(--ink-quiet)" }}>
+                  Today&apos;s signal
+                </p>
+                <h1 className="mt-2 text-[21px] font-semibold leading-[1.2] tracking-[-0.02em]" style={{ color: "var(--ink)" }}>
+                  {summaryLine(briefing) || "A short read of what deserves attention."}
+                </h1>
+              </div>
+              <p className="font-mono text-[11px] tracking-[0.02em]" style={{ color: "var(--ink-quiet)" }}>
+                {briefing.needsAttention.length + briefing.quietRisks.length} signals · {briefing.needsAttention.length ? "attention first" : "quiet read"}
+              </p>
+            </motion.div>
 
             <Bucket
               title="Needs attention"
@@ -201,13 +197,13 @@ function Bucket({
 
   return (
     <motion.section
-      className="mb-9"
+      className="mb-8"
       variants={{
         shown: { transition: { staggerChildren: 0.06, delayChildren: 0.05 } },
       }}
     >
       <motion.div
-        className="mb-4 flex items-center gap-2.5"
+        className="mb-2 flex items-center gap-2.5"
         variants={fadeUp}
       >
         <span
@@ -216,7 +212,7 @@ function Bucket({
           style={{ background: accent }}
         />
         <h2
-          className="text-[13px] font-semibold uppercase tracking-[0.06em]"
+          className="text-[11px] font-semibold uppercase tracking-[0.12em]"
           style={{ color: muted ? "var(--ink-soft)" : "var(--ink)" }}
         >
           {title}
@@ -224,7 +220,7 @@ function Bucket({
       </motion.div>
 
       <ul
-        className="space-y-5"
+        className="divide-y divide-[color:var(--hairline-soft)]"
         onMouseLeave={() => setActiveId(null)}
         onBlur={(event) => {
           if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
@@ -268,20 +264,20 @@ function BriefRow({
       variants={fadeUp}
       onMouseEnter={() => setActiveId(item.id)}
       onFocus={() => setActiveId(item.id)}
-      className="relative pl-3"
+      className="relative py-4 pl-3 first:pt-2"
       style={{
         borderLeft: `2px solid ${isActive ? accent : "transparent"}`,
         transition: "border-color 220ms ease",
       }}
     >
       <p
-        className="text-[16px] leading-[1.5]"
+        className="max-w-[72ch] text-[15px] leading-[1.45]"
         style={{ color: "var(--ink)" }}
       >
         {item.text}
       </p>
       <p
-        className="mt-1 text-[12px]"
+        className="mt-1 text-[11px]"
         style={{ color: "var(--ink-quiet)" }}
       >
         from {item.sourceLabel}
@@ -294,69 +290,7 @@ function BriefRow({
           reasons={item.reasons}
         />
       )}
-      {!muted && (
-        <FeedbackControl itemKey={item.id} triggerId={item.trigger} />
-      )}
     </motion.li>
-  );
-}
-
-/**
- * Useful / not-useful, the one feedback signal the product collects
- * (PRODUCT.md §2.4). One quiet tap per item; tuning happens off the
- * aggregate. Optimistic: the tap is acknowledged immediately and the
- * write is fire-and-forget through a fail-safe server action, so the
- * reader never waits and never sees an error if the store isn't ready.
- */
-function FeedbackControl({
-  itemKey,
-  triggerId,
-}: {
-  itemKey: string;
-  triggerId: string;
-}) {
-  const [chosen, setChosen] = useState<FeedbackVerdict | null>(null);
-  const [, startTransition] = useTransition();
-
-  if (chosen) {
-    return (
-      <p className="mt-2 text-[11.5px]" style={{ color: "var(--ink-quiet)" }}>
-        {chosen === "useful" ? "Thanks, noted." : "Thanks, I'll show less of this."}
-      </p>
-    );
-  }
-
-  const tap = (verdict: FeedbackVerdict) => {
-    setChosen(verdict);
-    startTransition(() => {
-      void recordBriefingFeedback(itemKey, verdict, triggerId);
-    });
-  };
-
-  return (
-    <div className="mt-2 flex items-center gap-3">
-      <span className="text-[11.5px]" style={{ color: "var(--ink-quiet)" }}>
-        Useful?
-      </span>
-      <button
-        type="button"
-        onClick={() => tap("useful")}
-        className="text-[11.5px] transition-colors"
-        style={{ color: "var(--ink-soft)" }}
-        aria-label="This was useful"
-      >
-        Yes
-      </button>
-      <button
-        type="button"
-        onClick={() => tap("not-useful")}
-        className="text-[11.5px] transition-colors"
-        style={{ color: "var(--ink-soft)" }}
-        aria-label="This was not useful"
-      >
-        Not really
-      </button>
-    </div>
   );
 }
 

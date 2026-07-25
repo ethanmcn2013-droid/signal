@@ -14,6 +14,13 @@ import { SiteNav } from "./site-nav";
  */
 export function SiteNavConditionalClient({ isAuthed }: { isAuthed: boolean }) {
   const pathname = usePathname() ?? "";
-  if (pathname === "/app" || pathname.startsWith("/app/")) return null;
+  if (
+    pathname === "/app" ||
+    pathname.startsWith("/app/") ||
+    pathname === "/__design-lab/signal" ||
+    pathname.startsWith("/__design-lab/signal/")
+  ) {
+    return null;
+  }
   return <SiteNav isAuthed={isAuthed} />;
 }

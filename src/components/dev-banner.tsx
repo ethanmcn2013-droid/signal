@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
 /**
  * DevBanner, a subtle, premium "in development" marker.
@@ -28,6 +29,7 @@ function bannerEnabled(): boolean {
 const DISMISS_KEY = "signal_devbanner_dismissed";
 
 export function DevBanner() {
+  const pathname = usePathname();
   const [hidden, setHidden] = useState(true);
 
   useEffect(() => {
@@ -47,7 +49,7 @@ export function DevBanner() {
     };
   }, []);
 
-  if (hidden) return null;
+  if (hidden || pathname.startsWith("/__design-lab/signal")) return null;
 
   const text =
     process.env.NEXT_PUBLIC_DEV_BANNER_TEXT ??
