@@ -9,6 +9,7 @@ import { eq } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { userPreferences } from "@/lib/db/schema";
 import type { Briefing } from "@/lib/briefing/types";
+import { APP_URL } from "@/lib/product-urls";
 import { BriefingEmail } from "./briefing-email";
 import { renderBriefingText } from "./plain-text";
 import { generateUnsubscribeToken } from "./tokens";
@@ -122,8 +123,8 @@ export async function dispatchBriefing({
   const base = siteBaseUrl();
   const unsubscribeUrl = `${base}/u/${encodeURIComponent(newToken)}`;
   const unsubscribePostUrl = `${base}/api/unsubscribe/${encodeURIComponent(newToken)}`;
-  const preferencesUrl = `${base}/app/settings/notifications`;
-  const viewInBrowserUrl = `${base}/app/brief`;
+  const preferencesUrl = `${APP_URL}/app/signal/settings/notifications`;
+  const viewInBrowserUrl = `${APP_URL}/app/signal`;
 
   const html = await render(
     BriefingEmail({
