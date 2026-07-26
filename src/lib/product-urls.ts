@@ -5,6 +5,9 @@ const suiteProducts = suiteContracts.products;
 export const STUDIO_URL =
   process.env.NEXT_PUBLIC_STUDIO_URL ?? suiteProducts.studio.canonicalUrl;
 
+export const APP_URL =
+  process.env.NEXT_PUBLIC_APP_URL ?? "https://app.signalstudio.ie";
+
 export const TASKS_URL =
   process.env.NEXT_PUBLIC_TASKS_URL ?? suiteProducts.tasks.canonicalUrl;
 
